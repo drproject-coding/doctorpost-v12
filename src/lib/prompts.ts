@@ -1,4 +1,5 @@
 import { TonePrompt } from "./types";
+import { generateAIContent } from "./api";
 
 // Collection of tone prompts for different writing styles
 export const tonePrompts: TonePrompt[] = [
@@ -184,6 +185,5 @@ export const preparePromptTemplate = (
 
 // Generate a post using the backend AI service
 export const generatePost = async (prompt: string): Promise<string> => {
-  const { generateAIContent } = await import("./api");
   return generateAIContent(prompt);
 };

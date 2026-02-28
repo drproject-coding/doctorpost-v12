@@ -1,11 +1,16 @@
 import React from 'react';
-import { Menu, Bell } from 'lucide-react';
+import { Menu, Bell, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface HeaderProps {
   toggleSidebar: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
+  const { user, logout } = useAuth();
+
+  const initials = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
+
   return (
     <header className="bg-ivory-white border-b-neo border-neo-border py-4 px-6 flex items-center justify-between">
       <div className="flex items-center">
@@ -25,11 +30,27 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
         </button>
 
         <div className="flex items-center space-x-2">
-          <div className="w-9 h-9 rounded-neo border-neo border-neo-border bg-purple-electric text-white flex items-center justify-center font-bold">
-            J
-          </div>
-          <span className="hidden md:block font-medium">Jane Doe</span>
+          {user?.picture ? (
+            <img
+              src={user.picture}
+              alt={user.name ?? 'User'}
+              className="w-9 h-9 rounded-neo border-neo border-neo-border object-cover"
+            />
+          ) : (
+            <div className="w-9 h-9 rounded-neo border-neo border-neo-border bg-purple-electric text-white flex items-center justify-center font-bold">
+              {initials}
+            </div>
+          )}
+          <span className="hidden md:block font-medium">{user?.name ?? 'User'}</span>
         </div>
+
+        <button
+          onClick={logout}
+          className="p-2 rounded-neo border-neo border-neo-border hover:bg-gray-100"
+          title="Sign out"
+        >
+          <LogOut size={18} />
+        </button>
       </div>
     </header>
   );

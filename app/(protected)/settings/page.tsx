@@ -1,26 +1,176 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { getBrandProfile, updateBrandProfile } from "@/lib/api";
+import { BrandProfile, AiProviderType, AiModel, StraicoUserInfo } from "@/lib/types";
+import { validateClaudeKey } from "@/lib/ai/claudeService";
 import {
-  getBrandProfile,
-  updateBrandProfile,
-  validateOpenAIKey,
-} from "@/lib/api";
-import { BrandProfile } from "@/lib/types";
-import { Loader, CheckCircle, XCircle } from "lucide-react";
+  validateStraicoKey,
+  fetchStraicoUserInfo,
+} from "@/lib/ai/straicoService";
+import { validateOneForAllKey } from "@/lib/ai/oneforallService";
+import { fetchModels } from "@/lib/ai/modelService";
+import { ONEFORALL_MODELS, STRAICO_MODELS } from "@/lib/ai/constants";
+import { StraicoModelPicker } from "@/components/settings/StraicoModelPicker";
+import {
+  Loader,
+  CheckCircle,
+  XCircle,
+  ChevronDown,
+  ChevronRight,
+  Eye,
+  EyeOff,
+  Key,
+  ShieldCheck,
+  AlertCircle,
+} from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+
+type ValidationState =
+  | { state: "idle" }
+  | { state: "validating" }
+  | { state: "valid" }
+  | { state: "error"; message: string };
+
+function ValidationBadge({ status }: { status: ValidationState }) {
+  if (status.state === "idle") return null;
+  if (status.state === "validating") {
+    return (
+      <span
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 4,
+          padding: "2px 8px",
+          fontSize: 10,
+          fontWeight: 700,
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
+          background: "rgba(59, 130, 246, 0.1)",
+          color: "#2563eb",
+        }}
+      >
+        <Loader size={10} className="animate-spin" />
+        Verifying
+      </span>
+    );
+  }
+  if (status.state === "valid") {
+    return (
+      <span
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 4,
+          padding: "2px 8px",
+          fontSize: 10,
+          fontWeight: 700,
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
+          background: "rgba(22, 163, 74, 0.1)",
+          color: "#16a34a",
+        }}
+      >
+        <ShieldCheck size={10} />
+        Verified
+      </span>
+    );
+  }
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 4,
+        padding: "2px 8px",
+        fontSize: 10,
+        fontWeight: 700,
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
+        background: "rgba(239, 68, 68, 0.1)",
+        color: "#dc2626",
+      }}
+    >
+      <AlertCircle size={10} />
+      Invalid
+    </span>
+  );
+}
+
+function StatusBadge({ connected, label }: { connected: boolean; label?: string }) {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 4,
+        padding: "2px 8px",
+        fontSize: 10,
+        fontWeight: 700,
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
+        background: connected ? "rgba(22, 163, 74, 0.1)" : "rgba(0,0,0,0.05)",
+        color: connected ? "#16a34a" : "var(--bru-grey)",
+      }}
+    >
+      {connected ? <CheckCircle size={10} /> : <XCircle size={10} />}
+      {label || (connected ? "Connected" : "Not connected")}
+    </span>
+  );
+}
 
 export default function SettingsPage() {
   const { user } = useAuth();
   const [profile, setProfile] = useState<BrandProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [openAIKey, setOpenAIKey] = useState("");
-  const [keyValidation, setKeyValidation] = useState<{
-    success: boolean;
-    message: string;
-    timestamp?: string;
-  } | null>(null);
-  const [keyValidating, setKeyValidating] = useState(false);
+  const [profileLoaded, setProfileLoaded] = useState(false);
+
+  const [activeProvider, setActiveProvider] = useState<AiProviderType>("claude");
+  const [claudeApiKey, setClaudeApiKey] = useState("");
+  const [straicoApiKey, setStraicoApiKey] = useState("");
+  const [straicoModel, setStraicoModel] = useState("openai/gpt-4o-mini");
+  const [oneforallApiKey, setOneforallApiKey] = useState("");
+  const [oneforallModel, setOneforallModel] = useState("anthropic/claude-4-sonnet");
+
+  // Show/hide key toggles
+  const [showClaudeKey, setShowClaudeKey] = useState(false);
+  const [showStraicoKey, setShowStraicoKey] = useState(false);
+  const [showOneforallKey, setShowOneforallKey] = useState(false);
+
+  // Expandable provider cards
+  const [expandedProvider, setExpandedProvider] = useState<AiProviderType | null>(null);
+
+  // Per-provider validation states
+  const [claudeValidation, setClaudeValidation] = useState<ValidationState>({ state: "idle" });
+  const [straicoValidation, setStraicoValidation] = useState<ValidationState>({ state: "idle" });
+  const [oneforallValidation, setOneforallValidation] = useState<ValidationState>({ state: "idle" });
+
+  // Dynamic model lists
+  const [straicoModels, setStraicoModels] = useState<AiModel[]>([...STRAICO_MODELS]);
+  const [oneforallModels, setOneforallModels] = useState<AiModel[]>([...ONEFORALL_MODELS]);
+  const [modelsLoading, setModelsLoading] = useState<Record<string, boolean>>({});
+
+  const [straicoUserInfo, setStraicoUserInfo] = useState<StraicoUserInfo | null>(null);
+
+  // Fetch models when a provider card is expanded
+  const loadModels = useCallback(
+    async (provider: AiProviderType) => {
+      if (provider === "claude") return;
+      setModelsLoading((prev) => ({ ...prev, [provider]: true }));
+      const apiKey = provider === "1forall" ? oneforallApiKey : straicoApiKey;
+      const result = await fetchModels(provider, apiKey);
+      if (provider === "1forall") {
+        setOneforallModels(result.models.length > 0 ? result.models : [...ONEFORALL_MODELS]);
+      } else {
+        setStraicoModels(result.models.length > 0 ? result.models : [...STRAICO_MODELS]);
+        if (apiKey) {
+          fetchStraicoUserInfo(apiKey).then(setStraicoUserInfo).catch(() => {});
+        }
+      }
+      setModelsLoading((prev) => ({ ...prev, [provider]: false }));
+    },
+    [oneforallApiKey, straicoApiKey],
+  );
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -31,372 +181,981 @@ export default function SettingsPage() {
       try {
         const data = await getBrandProfile(user.id);
         setProfile(data);
-        setOpenAIKey(data.openAIKey ?? "");
+        setActiveProvider(data.aiProvider ?? "claude");
+        setClaudeApiKey(data.claudeApiKey ?? "");
+        setStraicoApiKey(data.straicoApiKey ?? "");
+        setStraicoModel(data.straicoModel ?? "openai/gpt-4o-mini");
+        setOneforallApiKey(data.oneforallApiKey ?? "");
+        setOneforallModel(data.oneforallModel ?? "anthropic/claude-4-sonnet");
+        setProfileLoaded(true);
       } catch (error) {
         console.error("Failed to load profile:", error);
       } finally {
         setLoading(false);
       }
     };
-
     void fetchProfile();
   }, [user?.id]);
 
-  const handleOpenAIKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOpenAIKey(e.target.value);
-    setKeyValidation(null);
-  };
+  // Auto-validate keys on initial load
+  useEffect(() => {
+    if (!profileLoaded) return;
 
-  const handleValidateKey = async () => {
-    if (!openAIKey) {
-      setKeyValidation({
-        success: false,
-        message: "API key cannot be empty.",
-      });
-      return;
-    }
-
-    setKeyValidating(true);
-    try {
-      const result = await validateOpenAIKey(openAIKey);
-      setKeyValidation(result);
-
-      if (result.success) {
-        await handleSaveProfile(true);
-        setKeyValidation((prev) =>
-          prev
-            ? { ...prev, message: "API key validated and saved successfully!" }
-            : null,
+    if (claudeApiKey.trim()) {
+      setClaudeValidation({ state: "validating" });
+      validateClaudeKey(claudeApiKey)
+        .then(() => setClaudeValidation({ state: "valid" }))
+        .catch((err) =>
+          setClaudeValidation({
+            state: "error",
+            message: err instanceof Error ? err.message : "Validation failed",
+          }),
         );
-      }
-    } catch (error) {
-      console.error("Error validating OpenAI key:", error);
-      setKeyValidation({
-        success: false,
-        message: "An error occurred during validation. Please try again.",
-      });
-    } finally {
-      setKeyValidating(false);
     }
-  };
 
-  const handleSaveProfile = async (isAutoSave = false) => {
+    if (straicoApiKey.trim()) {
+      setStraicoValidation({ state: "validating" });
+      validateStraicoKey(straicoApiKey)
+        .then(() => setStraicoValidation({ state: "valid" }))
+        .catch((err) =>
+          setStraicoValidation({
+            state: "error",
+            message: err instanceof Error ? err.message : "Validation failed",
+          }),
+        );
+    }
+
+    if (oneforallApiKey.trim()) {
+      setOneforallValidation({ state: "validating" });
+      validateOneForAllKey(oneforallApiKey)
+        .then(() => setOneforallValidation({ state: "valid" }))
+        .catch((err) =>
+          setOneforallValidation({
+            state: "error",
+            message: err instanceof Error ? err.message : "Validation failed",
+          }),
+        );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileLoaded]);
+
+  const handleSaveAll = async () => {
     if (!profile) return;
-
     setSaving(true);
+
+    const validations: Promise<void>[] = [];
+
+    if (claudeApiKey.trim()) {
+      setClaudeValidation({ state: "validating" });
+      validations.push(
+        validateClaudeKey(claudeApiKey)
+          .then(() => setClaudeValidation({ state: "valid" }))
+          .catch((err) => {
+            setClaudeValidation({
+              state: "error",
+              message: err instanceof Error ? err.message : "Validation failed",
+            });
+          }),
+      );
+    } else {
+      setClaudeValidation({ state: "idle" });
+    }
+
+    if (straicoApiKey.trim()) {
+      setStraicoValidation({ state: "validating" });
+      validations.push(
+        validateStraicoKey(straicoApiKey)
+          .then(() => setStraicoValidation({ state: "valid" }))
+          .catch((err) => {
+            setStraicoValidation({
+              state: "error",
+              message: err instanceof Error ? err.message : "Validation failed",
+            });
+          }),
+      );
+    } else {
+      setStraicoValidation({ state: "idle" });
+    }
+
+    if (oneforallApiKey.trim()) {
+      setOneforallValidation({ state: "validating" });
+      validations.push(
+        validateOneForAllKey(oneforallApiKey)
+          .then(() => setOneforallValidation({ state: "valid" }))
+          .catch((err) => {
+            setOneforallValidation({
+              state: "error",
+              message: err instanceof Error ? err.message : "Validation failed",
+            });
+          }),
+      );
+    } else {
+      setOneforallValidation({ state: "idle" });
+    }
+
     try {
-      const updatedProfile = { ...profile, openAIKey: openAIKey };
-      await updateBrandProfile(updatedProfile);
+      const updatedProfile: BrandProfile = {
+        ...profile,
+        aiProvider: activeProvider,
+        claudeApiKey,
+        straicoApiKey,
+        straicoModel,
+        oneforallApiKey,
+        oneforallModel,
+      };
+      await Promise.all([updateBrandProfile(updatedProfile), ...validations]);
       setProfile(updatedProfile);
-      if (!isAutoSave) {
-        alert("Settings saved successfully!");
-      }
     } catch (error) {
-      console.error("Failed to save profile:", error);
-      if (!isAutoSave) {
-        alert("Failed to save settings. Please try again.");
-      }
+      console.error("Failed to save settings:", error);
     } finally {
       setSaving(false);
     }
   };
 
+  const updateField = (field: keyof BrandProfile, value: string) => {
+    setProfile((prev) => (prev ? { ...prev, [field]: value } : prev));
+  };
+
+  const isClaude = activeProvider === "claude";
+  const isOneforall = activeProvider === "1forall";
+  const isStraico = activeProvider === "straico";
+
+  function statusLabel(validation: ValidationState, configured: boolean): string {
+    if (validation.state === "valid") return "Verified";
+    if (validation.state === "validating") return "Verifying...";
+    if (validation.state === "error") return "Invalid key";
+    if (configured) return "Not verified";
+    return "Not configured";
+  }
+
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Settings</h1>
-          <div className="bru-card bru-card--raised flex items-center justify-center p-12">
-            <p>Loading settings...</p>
-          </div>
-        </div>
+      <div
+        className="bru-card bru-card--raised"
+        style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 200 }}
+      >
+        <p>Loading settings...</p>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Settings</h1>
+    <>
+      <h1
+        style={{
+          fontSize: "var(--bru-text-h3)",
+          fontWeight: 700,
+          marginBottom: "var(--bru-space-6)",
+        }}
+      >
+        Settings
+      </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Profile Settings */}
-          <div className="bru-card bru-card--raised lg:col-span-2">
-            <h2 className="text-xl font-bold mb-6">Brand Profile</h2>
+      {/* Integration Status Overview Bar */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "var(--bru-space-4)",
+          padding: "var(--bru-space-3)",
+          border: "var(--bru-border)",
+          background: "var(--bru-white)",
+          marginBottom: "var(--bru-space-6)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--bru-space-2)" }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}>Claude:</span>
+          <StatusBadge
+            connected={claudeValidation.state === "valid"}
+            label={statusLabel(claudeValidation, !!claudeApiKey.trim())}
+          />
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--bru-space-2)" }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}>Straico:</span>
+          <StatusBadge
+            connected={straicoValidation.state === "valid"}
+            label={statusLabel(straicoValidation, !!straicoApiKey.trim())}
+          />
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--bru-space-2)" }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}>1ForAll:</span>
+          <StatusBadge
+            connected={oneforallValidation.state === "valid"}
+            label={statusLabel(oneforallValidation, !!oneforallApiKey.trim())}
+          />
+        </div>
+      </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label htmlFor="firstName" className="bru-field__label">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  className="bru-input"
-                  value={profile?.firstName ?? ""}
-                  onChange={(e) =>
-                    setProfile((prev) =>
-                      prev ? { ...prev, firstName: e.target.value } : prev,
-                    )
-                  }
-                />
-              </div>
+      {/* Main 2-column grid: Brand Profile (2/3) + AI Provider (1/3) */}
+      <div
+        className="settings-grid"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "2fr 1fr",
+          gap: "var(--bru-space-6)",
+        }}
+      >
+        {/* ── Brand Profile Card ── */}
+        <div className="bru-card bru-card--raised">
+          <h2
+            style={{
+              fontSize: "var(--bru-text-h5)",
+              fontWeight: 700,
+              marginBottom: "var(--bru-space-6)",
+            }}
+          >
+            Brand Profile
+          </h2>
 
-              <div>
-                <label htmlFor="lastName" className="bru-field__label">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  className="bru-input"
-                  value={profile?.lastName ?? ""}
-                  onChange={(e) =>
-                    setProfile((prev) =>
-                      prev ? { ...prev, lastName: e.target.value } : prev,
-                    )
-                  }
-                />
-              </div>
-
-              <div>
-                <label htmlFor="companyName" className="bru-field__label">
-                  Company Name
-                </label>
-                <input
-                  type="text"
-                  id="companyName"
-                  className="bru-input"
-                  value={profile?.companyName ?? ""}
-                  onChange={(e) =>
-                    setProfile((prev) =>
-                      prev ? { ...prev, companyName: e.target.value } : prev,
-                    )
-                  }
-                />
-              </div>
-
-              <div>
-                <label htmlFor="role" className="bru-field__label">
-                  Role
-                </label>
-                <input
-                  type="text"
-                  id="role"
-                  className="bru-input"
-                  value={profile?.role ?? ""}
-                  onChange={(e) =>
-                    setProfile((prev) =>
-                      prev ? { ...prev, role: e.target.value } : prev,
-                    )
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <label htmlFor="industry" className="bru-field__label">
-                Industry
+          <div className="bru-form-row" style={{ marginBottom: "var(--bru-space-4)" }}>
+            <div className="bru-field">
+              <label htmlFor="firstName" className="bru-field__label">
+                First Name
               </label>
               <input
                 type="text"
-                id="industry"
+                id="firstName"
                 className="bru-input"
-                value={profile?.industry ?? ""}
-                onChange={(e) =>
-                  setProfile((prev) =>
-                    prev ? { ...prev, industry: e.target.value } : prev,
-                  )
-                }
+                style={{ width: "100%" }}
+                value={profile?.firstName ?? ""}
+                onChange={(e) => updateField("firstName", e.target.value)}
               />
             </div>
-
-            <div className="mb-6">
-              <label className="bru-field__label">Audience</label>
-              <div className="bru-card bru-card--raised p-3 bg-gray-50">
-                {profile?.audience.map((audience, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between mb-2 last:mb-0"
-                  >
-                    <span className="text-sm font-medium">{audience}</span>
-                    <button className="text-xs bg-gray-200 p-1 px-2 rounded-bru-md border-2 border-black font-bold">
-                      Edit
-                    </button>
-                  </div>
-                ))}
-                <button className="text-sm text-bru-purple font-bold mt-2">
-                  + Add Audience
-                </button>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <button
-                className="bru-btn bru-btn--primary px-6 py-2"
-                onClick={() => void handleSaveProfile()}
-                disabled={saving}
-              >
-                {saving ? "Saving..." : "Save Profile"}
-              </button>
-            </div>
-          </div>
-
-          {/* API Keys & Integration */}
-          <div className="bru-card bru-card--raised">
-            <h2 className="text-xl font-bold mb-6">API Keys & Integration</h2>
-
-            <div className="mb-6">
-              <label htmlFor="openAIKey" className="bru-field__label">
-                OpenAI API Key
+            <div className="bru-field">
+              <label htmlFor="lastName" className="bru-field__label">
+                Last Name
               </label>
               <input
-                type="password"
-                id="openAIKey"
-                className="bru-input mb-2"
-                value={openAIKey}
-                onChange={handleOpenAIKeyChange}
-                placeholder="sk-..."
+                type="text"
+                id="lastName"
+                className="bru-input"
+                style={{ width: "100%" }}
+                value={profile?.lastName ?? ""}
+                onChange={(e) => updateField("lastName", e.target.value)}
               />
-
-              <div className="flex space-x-2 items-center">
-                <button
-                  className="bru-btn bru-btn--primary px-4 py-2 text-sm"
-                  onClick={() => void handleValidateKey()}
-                  disabled={keyValidating}
-                >
-                  {keyValidating ? (
-                    <>
-                      <Loader size={16} className="animate-spin mr-2" />{" "}
-                      Validating...
-                    </>
-                  ) : (
-                    "Validate Key"
-                  )}
-                </button>
-
-                {keyValidation && (
-                  <div
-                    className={`text-sm flex items-center font-bold mt-1 ${keyValidation.success ? "text-green-600" : "text-red-600"}`}
-                  >
-                    {keyValidation.success ? (
-                      <CheckCircle size={16} className="mr-1" />
-                    ) : (
-                      <XCircle size={16} className="mr-1" />
-                    )}
-                    {keyValidation.message}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <label className="bru-field__label">LinkedIn Integration</label>
-              <div className="bru-card bru-card--raised p-3 bg-gray-50">
-                <p className="text-sm font-medium mb-2">
-                  Status: Not Connected
-                </p>
-                <button className="bru-btn bru-btn--primary px-4 py-2 text-sm w-full">
-                  Connect LinkedIn
-                </button>
-              </div>
-            </div>
-
-            <h3 className="text-lg font-bold mt-8 mb-4">Notifications</h3>
-
-            <div className="space-y-3">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="emailNotif"
-                  className="rounded-bru-md border-2 border-black h-5 w-5 mr-2"
-                />
-                <label htmlFor="emailNotif" className="text-sm font-medium">
-                  Email Notifications
-                </label>
-              </div>
-
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="slackNotif"
-                  className="rounded-bru-md border-2 border-black h-5 w-5 mr-2"
-                />
-                <label htmlFor="slackNotif" className="text-sm font-medium">
-                  Slack Notifications
-                </label>
-              </div>
             </div>
           </div>
 
-          {/* Brand Guidelines */}
-          <div className="bru-card bru-card--raised lg:col-span-3">
-            <h2 className="text-xl font-bold mb-6">Brand Guidelines</h2>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="copyGuideline" className="bru-field__label">
-                  Copy Guideline
-                </label>
-                <textarea
-                  id="copyGuideline"
-                  className="bru-input h-32"
-                  value={profile?.copyGuideline ?? ""}
-                  onChange={(e) =>
-                    setProfile((prev) =>
-                      prev ? { ...prev, copyGuideline: e.target.value } : prev,
-                    )
-                  }
-                ></textarea>
-              </div>
-
-              <div>
-                <label htmlFor="contentStrategy" className="bru-field__label">
-                  Content Strategy
-                </label>
-                <textarea
-                  id="contentStrategy"
-                  className="bru-input h-32"
-                  value={profile?.contentStrategy ?? ""}
-                  onChange={(e) =>
-                    setProfile((prev) =>
-                      prev
-                        ? { ...prev, contentStrategy: e.target.value }
-                        : prev,
-                    )
-                  }
-                ></textarea>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <label htmlFor="definition" className="bru-field__label">
-                Brand Definition
+          <div className="bru-form-row" style={{ marginBottom: "var(--bru-space-4)" }}>
+            <div className="bru-field">
+              <label htmlFor="companyName" className="bru-field__label">
+                Company Name
               </label>
-              <textarea
-                id="definition"
+              <input
+                type="text"
+                id="companyName"
                 className="bru-input"
-                value={profile?.definition ?? ""}
-                onChange={(e) =>
-                  setProfile((prev) =>
-                    prev ? { ...prev, definition: e.target.value } : prev,
-                  )
-                }
-              ></textarea>
+                style={{ width: "100%" }}
+                value={profile?.companyName ?? ""}
+                onChange={(e) => updateField("companyName", e.target.value)}
+              />
             </div>
+            <div className="bru-field">
+              <label htmlFor="role" className="bru-field__label">
+                Role
+              </label>
+              <input
+                type="text"
+                id="role"
+                className="bru-input"
+                style={{ width: "100%" }}
+                value={profile?.role ?? ""}
+                onChange={(e) => updateField("role", e.target.value)}
+              />
+            </div>
+          </div>
 
-            <div className="mt-6 flex justify-end">
+          <div className="bru-field" style={{ marginBottom: "var(--bru-space-4)" }}>
+            <label htmlFor="industry" className="bru-field__label">
+              Industry
+            </label>
+            <input
+              type="text"
+              id="industry"
+              className="bru-input"
+              style={{ width: "100%" }}
+              value={profile?.industry ?? ""}
+              onChange={(e) => updateField("industry", e.target.value)}
+            />
+          </div>
+
+          <div className="bru-field" style={{ marginBottom: "var(--bru-space-4)" }}>
+            <label className="bru-field__label">Audience</label>
+            <div
+              style={{
+                border: "var(--bru-border)",
+                padding: "var(--bru-space-3)",
+                background: "var(--bru-cream)",
+              }}
+            >
+              {profile?.audience.map((audience, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom:
+                      index < (profile?.audience.length ?? 0) - 1
+                        ? "var(--bru-space-2)"
+                        : 0,
+                  }}
+                >
+                  <span style={{ fontSize: "var(--bru-text-md)", fontWeight: 500 }}>
+                    {audience}
+                  </span>
+                  <button className="bru-btn bru-btn--sm">Edit</button>
+                </div>
+              ))}
               <button
-                className="bru-btn bru-btn--primary px-6 py-2"
-                onClick={() => void handleSaveProfile()}
-                disabled={saving}
+                style={{
+                  marginTop: "var(--bru-space-2)",
+                  fontSize: "var(--bru-text-md)",
+                  fontWeight: 700,
+                  color: "var(--bru-purple)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                  fontFamily: "var(--bru-font-primary)",
+                }}
               >
-                {saving ? "Saving..." : "Save Guidelines"}
+                + Add Audience
               </button>
             </div>
+          </div>
+
+          <button
+            className="bru-btn bru-btn--primary"
+            onClick={() => void handleSaveAll()}
+            disabled={saving}
+          >
+            {saving ? "Saving..." : "Save Profile"}
+          </button>
+        </div>
+
+        {/* ── AI Providers Card ── */}
+        <div className="bru-card bru-card--raised">
+          <h2
+            style={{
+              fontSize: "var(--bru-text-h5)",
+              fontWeight: 700,
+              marginBottom: "var(--bru-space-6)",
+            }}
+          >
+            AI Providers
+          </h2>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--bru-space-3)",
+            }}
+          >
+            {/* ── Claude Card ── */}
+            {(() => {
+              const isExpanded = expandedProvider === "claude";
+              return (
+                <div
+                  style={{
+                    border: isClaude
+                      ? "2px solid var(--bru-purple)"
+                      : "var(--bru-border)",
+                    background: isClaude
+                      ? "rgba(174, 122, 255, 0.05)"
+                      : "var(--bru-white)",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setExpandedProvider(isExpanded ? null : "claude")}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "var(--bru-space-3)",
+                      textAlign: "left",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "var(--bru-font-primary)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "var(--bru-space-3)",
+                      }}
+                    >
+                      {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                      <span style={{ fontSize: "var(--bru-text-md)", fontWeight: 700 }}>
+                        Claude
+                      </span>
+                      <ValidationBadge status={claudeValidation} />
+                      {isClaude && (
+                        <span
+                          style={{
+                            fontSize: 10,
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            color: "var(--bru-purple)",
+                            background: "rgba(174, 122, 255, 0.1)",
+                            padding: "2px 6px",
+                          }}
+                        >
+                          Active
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                  {isExpanded && (
+                    <div
+                      style={{
+                        padding: "0 var(--bru-space-4) var(--bru-space-4)",
+                        borderTop: "1px solid rgba(0,0,0,0.1)",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "var(--bru-space-3)",
+                      }}
+                    >
+                      {!isClaude && (
+                        <button
+                          className="bru-btn bru-btn--sm bru-btn--primary"
+                          style={{ marginTop: "var(--bru-space-3)", alignSelf: "flex-start" }}
+                          onClick={() => setActiveProvider("claude")}
+                        >
+                          Set as Active
+                        </button>
+                      )}
+                      <div style={{ marginTop: "var(--bru-space-3)" }}>
+                        <label
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            color: "var(--bru-grey)",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 6,
+                            marginBottom: "var(--bru-space-2)",
+                          }}
+                        >
+                          <Key size={12} /> API Key
+                        </label>
+                        <div style={{ position: "relative" }}>
+                          <input
+                            type={showClaudeKey ? "text" : "password"}
+                            value={claudeApiKey}
+                            onChange={(e) => {
+                              setClaudeApiKey(e.target.value);
+                              setClaudeValidation({ state: "idle" });
+                            }}
+                            placeholder="sk-ant-..."
+                            className="bru-input"
+                            style={{ width: "100%", paddingRight: 40 }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowClaudeKey((v) => !v)}
+                            style={{
+                              position: "absolute",
+                              right: 10,
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              background: "none",
+                              border: "none",
+                              cursor: "pointer",
+                              color: "var(--bru-grey)",
+                              padding: 0,
+                            }}
+                          >
+                            {showClaudeKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                          </button>
+                        </div>
+                        {claudeValidation.state === "error" && (
+                          <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
+                            {claudeValidation.message}
+                          </p>
+                        )}
+                      </div>
+                      <p style={{ fontSize: 10, color: "var(--bru-grey)" }}>
+                        Claude uses direct browser API — model selection is automatic (Claude
+                        Sonnet 4.5).
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            {/* ── Straico Card ── */}
+            {(() => {
+              const isExpanded = expandedProvider === "straico";
+              return (
+                <div
+                  style={{
+                    border: isStraico
+                      ? "2px solid var(--bru-purple)"
+                      : "var(--bru-border)",
+                    background: isStraico
+                      ? "rgba(174, 122, 255, 0.05)"
+                      : "var(--bru-white)",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = isExpanded ? null : ("straico" as AiProviderType);
+                      setExpandedProvider(next);
+                      if (next === "straico") void loadModels("straico");
+                    }}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "var(--bru-space-3)",
+                      textAlign: "left",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "var(--bru-font-primary)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "var(--bru-space-3)",
+                      }}
+                    >
+                      {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                      <span style={{ fontSize: "var(--bru-text-md)", fontWeight: 700 }}>
+                        Straico
+                      </span>
+                      <ValidationBadge status={straicoValidation} />
+                      {isStraico && (
+                        <span
+                          style={{
+                            fontSize: 10,
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            color: "var(--bru-purple)",
+                            background: "rgba(174, 122, 255, 0.1)",
+                            padding: "2px 6px",
+                          }}
+                        >
+                          Active
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                  {isExpanded && (
+                    <div
+                      style={{
+                        padding: "0 var(--bru-space-4) var(--bru-space-4)",
+                        borderTop: "1px solid rgba(0,0,0,0.1)",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "var(--bru-space-3)",
+                      }}
+                    >
+                      {!isStraico && (
+                        <button
+                          className="bru-btn bru-btn--sm bru-btn--primary"
+                          style={{ marginTop: "var(--bru-space-3)", alignSelf: "flex-start" }}
+                          onClick={() => setActiveProvider("straico")}
+                        >
+                          Set as Active
+                        </button>
+                      )}
+                      <div style={{ marginTop: "var(--bru-space-3)" }}>
+                        <label
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            color: "var(--bru-grey)",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 6,
+                            marginBottom: "var(--bru-space-2)",
+                          }}
+                        >
+                          <Key size={12} /> API Key
+                        </label>
+                        <div style={{ position: "relative" }}>
+                          <input
+                            type={showStraicoKey ? "text" : "password"}
+                            value={straicoApiKey}
+                            onChange={(e) => {
+                              setStraicoApiKey(e.target.value);
+                              setStraicoValidation({ state: "idle" });
+                            }}
+                            placeholder="Your Straico API key"
+                            className="bru-input"
+                            style={{ width: "100%", paddingRight: 40 }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowStraicoKey((v) => !v)}
+                            style={{
+                              position: "absolute",
+                              right: 10,
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              background: "none",
+                              border: "none",
+                              cursor: "pointer",
+                              color: "var(--bru-grey)",
+                              padding: 0,
+                            }}
+                          >
+                            {showStraicoKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                          </button>
+                        </div>
+                        {straicoValidation.state === "error" && (
+                          <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
+                            {straicoValidation.message}
+                          </p>
+                        )}
+                      </div>
+                      <StraicoModelPicker
+                        models={straicoModels}
+                        selectedModelId={straicoModel}
+                        onSelectModel={(id) => setStraicoModel(id)}
+                        loading={modelsLoading["straico"]}
+                        userInfo={straicoUserInfo}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            {/* ── 1ForAll Card ── */}
+            {(() => {
+              const isExpanded = expandedProvider === "1forall";
+              return (
+                <div
+                  style={{
+                    border: isOneforall
+                      ? "2px solid var(--bru-purple)"
+                      : "var(--bru-border)",
+                    background: isOneforall
+                      ? "rgba(174, 122, 255, 0.05)"
+                      : "var(--bru-white)",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = isExpanded ? null : ("1forall" as AiProviderType);
+                      setExpandedProvider(next);
+                      if (next === "1forall") void loadModels("1forall");
+                    }}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "var(--bru-space-3)",
+                      textAlign: "left",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "var(--bru-font-primary)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "var(--bru-space-3)",
+                      }}
+                    >
+                      {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                      <span style={{ fontSize: "var(--bru-text-md)", fontWeight: 700 }}>
+                        1ForAll
+                      </span>
+                      <ValidationBadge status={oneforallValidation} />
+                      {isOneforall && (
+                        <span
+                          style={{
+                            fontSize: 10,
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            color: "var(--bru-purple)",
+                            background: "rgba(174, 122, 255, 0.1)",
+                            padding: "2px 6px",
+                          }}
+                        >
+                          Active
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                  {isExpanded && (
+                    <div
+                      style={{
+                        padding: "0 var(--bru-space-4) var(--bru-space-4)",
+                        borderTop: "1px solid rgba(0,0,0,0.1)",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "var(--bru-space-3)",
+                      }}
+                    >
+                      {!isOneforall && (
+                        <button
+                          className="bru-btn bru-btn--sm bru-btn--primary"
+                          style={{ marginTop: "var(--bru-space-3)", alignSelf: "flex-start" }}
+                          onClick={() => setActiveProvider("1forall")}
+                        >
+                          Set as Active
+                        </button>
+                      )}
+                      <div style={{ marginTop: "var(--bru-space-3)" }}>
+                        <label
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            color: "var(--bru-grey)",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 6,
+                            marginBottom: "var(--bru-space-2)",
+                          }}
+                        >
+                          <Key size={12} /> API Key
+                        </label>
+                        <div style={{ position: "relative" }}>
+                          <input
+                            type={showOneforallKey ? "text" : "password"}
+                            value={oneforallApiKey}
+                            onChange={(e) => {
+                              setOneforallApiKey(e.target.value);
+                              setOneforallValidation({ state: "idle" });
+                            }}
+                            placeholder="Your 1ForAll API key"
+                            className="bru-input"
+                            style={{ width: "100%", paddingRight: 40 }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowOneforallKey((v) => !v)}
+                            style={{
+                              position: "absolute",
+                              right: 10,
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              background: "none",
+                              border: "none",
+                              cursor: "pointer",
+                              color: "var(--bru-grey)",
+                              padding: 0,
+                            }}
+                          >
+                            {showOneforallKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                          </button>
+                        </div>
+                        {oneforallValidation.state === "error" && (
+                          <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
+                            {oneforallValidation.message}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            color: "var(--bru-grey)",
+                            marginBottom: "var(--bru-space-2)",
+                            display: "block",
+                          }}
+                        >
+                          Model
+                        </label>
+                        <div style={{ position: "relative" }}>
+                          <select
+                            value={oneforallModel}
+                            onChange={(e) => setOneforallModel(e.target.value)}
+                            className="bru-select"
+                            style={{ width: "100%" }}
+                            disabled={modelsLoading["1forall"]}
+                          >
+                            {oneforallModels.map((model) => (
+                              <option key={model.id} value={model.id}>
+                                {model.label}
+                              </option>
+                            ))}
+                          </select>
+                          {modelsLoading["1forall"] && (
+                            <Loader
+                              size={14}
+                              className="animate-spin"
+                              style={{
+                                position: "absolute",
+                                right: 32,
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                                color: "var(--bru-purple)",
+                              }}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Save All button */}
+          <button
+            className="bru-btn bru-btn--primary bru-btn--block"
+            style={{ marginTop: "var(--bru-space-6)" }}
+            onClick={() => void handleSaveAll()}
+            disabled={saving}
+          >
+            {saving ? (
+              <>
+                <Loader size={16} className="animate-spin" />
+                Saving & Validating...
+              </>
+            ) : (
+              "Save & Validate All"
+            )}
+          </button>
+
+          {/* LinkedIn Integration */}
+          <div className="bru-field" style={{ marginTop: "var(--bru-space-8)" }}>
+            <label className="bru-field__label">LinkedIn Integration</label>
+            <div
+              style={{
+                border: "var(--bru-border)",
+                padding: "var(--bru-space-3)",
+                background: "var(--bru-cream)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--bru-space-2)",
+              }}
+            >
+              <p style={{ fontSize: "var(--bru-text-md)", fontWeight: 500 }}>
+                Status: Not Connected
+              </p>
+              <button className="bru-btn bru-btn--primary bru-btn--block">
+                Connect LinkedIn
+              </button>
+            </div>
+          </div>
+
+          {/* Notifications */}
+          <h3
+            style={{
+              fontSize: "var(--bru-text-h6)",
+              fontWeight: 700,
+              marginTop: "var(--bru-space-8)",
+              marginBottom: "var(--bru-space-4)",
+            }}
+          >
+            Notifications
+          </h3>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--bru-space-3)",
+            }}
+          >
+            <label className="bru-checkbox">
+              <input type="checkbox" id="emailNotif" />
+              Email Notifications
+            </label>
+            <label className="bru-checkbox">
+              <input type="checkbox" id="slackNotif" />
+              Slack Notifications
+            </label>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* ── Brand Guidelines Card (full width) ── */}
+      <div className="bru-card bru-card--raised" style={{ marginTop: "var(--bru-space-6)" }}>
+        <h2
+          style={{
+            fontSize: "var(--bru-text-h5)",
+            fontWeight: 700,
+            marginBottom: "var(--bru-space-6)",
+          }}
+        >
+          Brand Guidelines
+        </h2>
+
+        <div className="bru-form-row" style={{ marginBottom: "var(--bru-space-4)" }}>
+          <div className="bru-field">
+            <label htmlFor="copyGuideline" className="bru-field__label">
+              Copy Guideline
+            </label>
+            <textarea
+              id="copyGuideline"
+              className="bru-input"
+              style={{ width: "100%", minHeight: 120, resize: "vertical" }}
+              value={profile?.copyGuideline ?? ""}
+              onChange={(e) => updateField("copyGuideline", e.target.value)}
+            />
+          </div>
+          <div className="bru-field">
+            <label htmlFor="contentStrategy" className="bru-field__label">
+              Content Strategy
+            </label>
+            <textarea
+              id="contentStrategy"
+              className="bru-input"
+              style={{ width: "100%", minHeight: 120, resize: "vertical" }}
+              value={profile?.contentStrategy ?? ""}
+              onChange={(e) => updateField("contentStrategy", e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="bru-field" style={{ marginBottom: "var(--bru-space-4)" }}>
+          <label htmlFor="definition" className="bru-field__label">
+            Brand Definition
+          </label>
+          <textarea
+            id="definition"
+            className="bru-input"
+            style={{ width: "100%", minHeight: 120, resize: "vertical" }}
+            value={profile?.definition ?? ""}
+            onChange={(e) => updateField("definition", e.target.value)}
+          />
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <button
+            className="bru-btn bru-btn--primary"
+            onClick={() => void handleSaveAll()}
+            disabled={saving}
+          >
+            {saving ? "Saving..." : "Save Guidelines"}
+          </button>
+        </div>
+      </div>
+    </>
   );
 }

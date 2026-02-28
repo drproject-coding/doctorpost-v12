@@ -65,7 +65,7 @@ const PerformanceBadge: React.FC<{
 }> = ({ indicator, isTrending }) => {
   if (!indicator && !isTrending) return null;
 
-  const baseClasses = "text-xs font-bold py-0.5 px-1.5 rounded-md border";
+  const baseClasses = "text-xs font-bold py-0.5 px-1.5 border";
   let indicatorClasses = "";
   let indicatorLabel = "";
 
@@ -109,7 +109,7 @@ const CompatibilityBadge: React.FC<{
 }> = ({ status, reason }) => {
   if (!status || status === "neutral") return null;
 
-  const baseClasses = "text-xs font-bold py-0.5 px-1.5 rounded-md border ml-1";
+  const baseClasses = "text-xs font-bold py-0.5 px-1.5 border ml-1";
   let statusClasses = "";
   let statusIcon: React.ReactNode = null;
   let statusLabel = "";

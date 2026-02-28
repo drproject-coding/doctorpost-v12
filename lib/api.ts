@@ -332,23 +332,6 @@ export const getAnalytics = async (_userId: string): Promise<AnalyticsData> => {
   };
 };
 
-// --- Legacy AI wrapper (used by prompts.ts) ---
-export const generateAIContent = async (
-  prompt: string,
-  settings?: AiSettings,
-): Promise<string> => {
-  const { AI_SETTINGS_DEFAULTS } = await import("./ai/constants");
-  const effectiveSettings = settings ?? AI_SETTINGS_DEFAULTS;
-  const response = await generateWithAi(
-    {
-      systemPrompt: "You are a professional LinkedIn content writer.",
-      userMessage: prompt,
-    },
-    effectiveSettings,
-  );
-  return response.content;
-};
-
 // --- AI Services (client-side, multi-provider) ---
 
 export const findSubtopics = async (
@@ -417,46 +400,6 @@ Only return the JSON object, no other text.`;
     return JSON.parse(cleaned) as PostRecommendation;
   } catch {
     throw new Error("Failed to parse recommendations from AI response");
-  }
-};
-
-// --- OpenAI Key Validation ---
-export const validateOpenAIKey = async (
-  apiKey: string,
-): Promise<{ success: boolean; message: string }> => {
-  if (!apiKey || !apiKey.startsWith("sk-")) {
-    return {
-      success: false,
-      message: "Invalid API key format. OpenAI keys start with 'sk-'.",
-    };
-  }
-
-  try {
-    const res = await fetch("https://api.openai.com/v1/models", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${apiKey}` },
-    });
-
-    if (res.ok) {
-      return { success: true, message: "API key is valid!" };
-    }
-
-    if (res.status === 401) {
-      return {
-        success: false,
-        message: "Invalid API key. Please check and try again.",
-      };
-    }
-
-    return {
-      success: false,
-      message: `Validation failed (HTTP ${res.status}). Try again later.`,
-    };
-  } catch {
-    return {
-      success: false,
-      message: "Could not reach OpenAI. Check your internet connection.",
-    };
   }
 };
 

@@ -1,5 +1,5 @@
-import { TonePrompt } from "./types";
-import { generateAIContent } from "./api";
+import { TonePrompt, AiSettings, OnProgress } from "./types";
+import { generateWithAi } from "./ai/aiService";
 
 // Collection of tone prompts for different writing styles
 export const tonePrompts: TonePrompt[] = [
@@ -183,7 +183,18 @@ export const preparePromptTemplate = (
   return preparedPrompt;
 };
 
-// Generate a post using the backend AI service
-export const generatePost = async (prompt: string): Promise<string> => {
-  return generateAIContent(prompt);
+// Generate a post using the client-side AI service
+export const generatePost = async (
+  prompt: string,
+  settings: AiSettings,
+  onProgress?: OnProgress,
+  signal?: AbortSignal,
+): Promise<string> => {
+  const response = await generateWithAi(
+    { systemPrompt: "", userMessage: prompt },
+    settings,
+    onProgress,
+    signal,
+  );
+  return response.content;
 };

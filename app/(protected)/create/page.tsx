@@ -9,6 +9,7 @@ import {
   PostGenerationParameters,
   PostStatus,
   ScheduledPost,
+  AiSettings,
 } from "@/lib/types";
 import {
   getBrandProfile,
@@ -39,7 +40,7 @@ export default function CreatePage() {
   const [contentPillar, setContentPillar] = useState("");
   const [selectedToneId, setSelectedToneId] = useState("");
 
-  // New state for subtopic feature
+  // Subtopic feature
   const [topic, setTopic] = useState("");
   const [subtopics, setSubtopics] = useState<SubtopicSuggestion[]>([]);
   const [selectedSubtopic, setSelectedSubtopic] =
@@ -51,14 +52,14 @@ export default function CreatePage() {
     useState<PostRecommendation | null>(null);
   const [loadingRecommendation, setLoadingRecommendation] = useState(false);
 
-  // Additional parameters for post generation
+  // Additional parameters
   const [coreTakeaway, setCoreTakeaway] = useState<string>("");
   const [ctaGoal, setCtaGoal] = useState<string>("");
   const [triggerPostGeneration, setTriggerPostGeneration] = useState(0);
   const [generatedContent, setGeneratedContent] = useState<string>("");
   const postGeneratorRef = useRef<PostGeneratorRef>(null);
 
-  // State for Schedule Post Modal
+  // Schedule Post Modal
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -72,7 +73,6 @@ export default function CreatePage() {
       try {
         const data = await getBrandProfile(user.id);
         setProfile(data);
-
         setSelectedToneId("casual-witty");
         if (enhancedContentPillars.length > 0) {
           setContentPillar(enhancedContentPillars[0].value);
@@ -83,9 +83,20 @@ export default function CreatePage() {
         setLoading(false);
       }
     };
-
     void fetchProfile();
   }, [user?.id]);
+
+  const aiSettings: AiSettings | null = useMemo(() => {
+    if (!profile) return null;
+    return {
+      activeProvider: profile.aiProvider,
+      claudeApiKey: profile.claudeApiKey,
+      straicoApiKey: profile.straicoApiKey,
+      straicoModel: profile.straicoModel,
+      oneforallApiKey: profile.oneforallApiKey,
+      oneforallModel: profile.oneforallModel,
+    };
+  }, [profile]);
 
   const handleTopicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTopic(e.target.value);
@@ -98,16 +109,14 @@ export default function CreatePage() {
 
   const handleFindSubtopics = async () => {
     if (!topic.trim()) return;
-
     setLoadingSubtopics(true);
     setSubtopics([]);
     setSelectedSubtopic(null);
     setRecommendation(null);
     setTriggerPostGeneration(0);
     setGeneratedContent("");
-
     try {
-      const results = await findSubtopics(topic);
+      const results = await findSubtopics(topic, 5, aiSettings ?? undefined);
       setSubtopics(results);
     } catch (error) {
       console.error("Failed to find subtopics:", error);
@@ -121,12 +130,14 @@ export default function CreatePage() {
     setTopic(subtopic.text);
     setTriggerPostGeneration(0);
     setGeneratedContent("");
-
     setLoadingRecommendation(true);
     try {
-      const result = await getPostRecommendations(topic, subtopic.text);
+      const result = await getPostRecommendations(
+        topic,
+        subtopic.text,
+        aiSettings ?? undefined,
+      );
       setRecommendation(result);
-
       setPostType(
         enhancedPostTypes.some((opt) => opt.value === result.postType)
           ? result.postType
@@ -177,7 +188,6 @@ export default function CreatePage() {
       setTimeout(() => setSaveFeedback(null), 3000);
       return;
     }
-
     setSaveFeedback(null);
     setGeneratedContent("");
     setTriggerPostGeneration((prev) => prev + 1);
@@ -193,7 +203,6 @@ export default function CreatePage() {
       setTimeout(() => setSaveFeedback(null), 3000);
       return;
     }
-
     setSaving(true);
     setSaveFeedback(null);
     try {
@@ -232,7 +241,6 @@ export default function CreatePage() {
       setTimeout(() => setSaveFeedback(null), 3000);
       return;
     }
-
     setSaving(true);
     setSaveFeedback(null);
     try {
@@ -271,7 +279,6 @@ export default function CreatePage() {
 
   const getCompatibilityMap = (rec: PostRecommendation | null) => {
     if (!rec) return {};
-
     const map: CompatibilityMap = {};
 
     enhancedPostTypes.forEach((opt) => {
@@ -280,8 +287,7 @@ export default function CreatePage() {
       } else if (rec.compatiblePostTypes.includes(opt.value)) {
         map[opt.id] = {
           status: "caution",
-          reason:
-            "This is a compatible option, but not the primary recommendation for this subtopic.",
+          reason: "Compatible option, but not the primary recommendation.",
         };
       } else {
         map[opt.id] = { status: "neutral" };
@@ -297,8 +303,7 @@ export default function CreatePage() {
       } else if (rec.compatibleHookPatterns.includes(opt.value)) {
         map[opt.id] = {
           status: "caution",
-          reason:
-            "This is a compatible option, but not the primary recommendation for this subtopic.",
+          reason: "Compatible option, but not the primary recommendation.",
         };
       } else {
         map[opt.id] = { status: "neutral" };
@@ -314,8 +319,7 @@ export default function CreatePage() {
       } else if (rec.compatibleContentPillars.includes(opt.value)) {
         map[opt.id] = {
           status: "caution",
-          reason:
-            "This is a compatible option, but not the primary recommendation for this subtopic.",
+          reason: "Compatible option, but not the primary recommendation.",
         };
       } else {
         map[opt.id] = { status: "neutral" };
@@ -328,8 +332,7 @@ export default function CreatePage() {
       } else if (rec.compatibleTones.includes(opt.id)) {
         map[opt.id] = {
           status: "caution",
-          reason:
-            "This is a compatible option, but not the primary recommendation for this subtopic.",
+          reason: "Compatible option, but not the primary recommendation.",
         };
       } else {
         map[opt.id] = { status: "neutral" };
@@ -346,123 +349,157 @@ export default function CreatePage() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Create Post</h1>
-          <div className="bru-card bru-card--raised flex items-center justify-center p-12">
-            <p>Loading brand profile...</p>
-          </div>
-        </div>
+      <div className="bru-card bru-card--raised" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 200 }}>
+        <p>Loading brand profile...</p>
       </div>
     );
   }
 
   if (!profile) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Create Post</h1>
-          <div className="bru-card bru-card--raised flex items-center justify-center p-12 text-red-500 font-bold">
-            <p>Failed to load brand profile. Please check settings.</p>
-          </div>
-        </div>
+      <div className="bru-card bru-card--raised" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 200, color: "var(--bru-error-dark)" }}>
+        <p style={{ fontWeight: 700 }}>Failed to load brand profile. Please check settings.</p>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Create New Post</h1>
+    <>
+      <h1 style={{ fontSize: "var(--bru-text-h3)", fontWeight: 700, marginBottom: "var(--bru-space-6)" }}>
+        Create New Post
+      </h1>
 
-        <div className="flex space-x-4 mb-6">
-          <button
-            onClick={() => setActiveSubNav("generate-post")}
-            className={`bru-btn ${activeSubNav === "generate-post" ? "bru-btn--primary" : ""}`}
-          >
-            Generate Post
-          </button>
-          <button
-            onClick={() => setActiveSubNav("content-strategy")}
-            className={`bru-btn ${activeSubNav === "content-strategy" ? "bru-btn--primary" : ""}`}
-          >
-            Content Strategy
-          </button>
-        </div>
+      {/* Sub-navigation tabs */}
+      <div style={{ display: "flex", gap: "var(--bru-space-2)", marginBottom: "var(--bru-space-6)" }}>
+        <button
+          onClick={() => setActiveSubNav("generate-post")}
+          className={`bru-btn ${activeSubNav === "generate-post" ? "bru-btn--primary" : ""}`}
+        >
+          Generate Post
+        </button>
+        <button
+          onClick={() => setActiveSubNav("content-strategy")}
+          className={`bru-btn ${activeSubNav === "content-strategy" ? "bru-btn--primary" : ""}`}
+        >
+          Content Strategy
+        </button>
+      </div>
 
-        {activeSubNav === "generate-post" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left Column: Input Form */}
-            <div className="bru-card bru-card--raised">
-              <h2 className="text-xl font-bold mb-4">Post Details</h2>
+      {activeSubNav === "generate-post" && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "var(--bru-space-6)",
+          }}
+          className="create-grid"
+        >
+          {/* Left Column: Input Form */}
+          <div className="bru-card bru-card--raised">
+            <h2 style={{ fontSize: "var(--bru-text-h5)", fontWeight: 700, marginBottom: "var(--bru-space-4)" }}>
+              Post Details
+            </h2>
 
-              <div className="mb-4">
+            <div className="bru-form-stack">
+              {/* Topic field */}
+              <div className="bru-field bru-field--has-icon">
                 <label htmlFor="topic-input" className="bru-field__label">
                   Topic
                 </label>
-                <div className="relative">
+                <div style={{ position: "relative" }}>
                   <input
                     type="text"
                     id="topic-input"
-                    className="bru-input pr-10"
+                    className="bru-input"
+                    style={{ width: "100%", paddingRight: 40 }}
                     value={topic}
                     onChange={handleTopicChange}
                     placeholder="e.g., 'AI in healthcare'"
                   />
                   <button
                     onClick={() => void handleFindSubtopics()}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-bru-md hover:bg-gray-100"
                     disabled={loadingSubtopics || !topic.trim()}
                     aria-label="Find Subtopics"
+                    style={{
+                      position: "absolute",
+                      right: 8,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 4,
+                    }}
                   >
                     {loadingSubtopics ? (
-                      <Loader
-                        size={20}
-                        className="animate-spin text-bru-purple"
-                      />
+                      <Loader size={20} className="animate-spin" style={{ color: "var(--bru-purple)" }} />
                     ) : (
-                      <Search size={20} className="text-gray-600" />
+                      <Search size={20} style={{ color: "var(--bru-grey)" }} />
                     )}
                   </button>
                 </div>
+
                 {subtopics.length > 0 && (
-                  <div className="space-y-2 mt-4">
-                    <p className="text-xs font-bold uppercase text-gray-500 mt-3 mb-1">
-                      Subtopic Suggestions:
-                    </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--bru-space-2)", marginTop: "var(--bru-space-3)" }}>
+                    <span className="bru-field__label">Subtopic Suggestions</span>
                     {subtopics.map((sub) => (
-                      <div
+                      <button
                         key={sub.id}
-                        className={`flex items-center justify-between p-2 border-2 border-black rounded-bru-md cursor-pointer transition-colors hover:border-bru-purple ${selectedSubtopic?.id === sub.id ? "bg-bru-purple/10 border-bru-purple" : "bg-bru-cream"}`}
+                        type="button"
                         onClick={() => void handleSelectSubtopic(sub)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "var(--bru-space-2) var(--bru-space-3)",
+                          border: selectedSubtopic?.id === sub.id ? "2px solid var(--bru-purple)" : "var(--bru-border)",
+                          background: selectedSubtopic?.id === sub.id ? "rgba(174, 122, 255, 0.1)" : "var(--bru-cream)",
+                          cursor: "pointer",
+                          textAlign: "left",
+                          width: "100%",
+                          fontFamily: "var(--bru-font-primary)",
+                          fontSize: "var(--bru-text-md)",
+                        }}
                       >
-                        <span className="text-sm font-medium">{sub.text}</span>
+                        <span style={{ fontWeight: 500 }}>{sub.text}</span>
                         <span
-                          className={`bru-tag bru-tag--filled ${sub.source === "google_trends" ? "bru-tag--purple" : sub.source === "google_questions" ? "bru-tag--mint" : "bru-tag--yellow"}`}
-                          style={{ fontSize: "11px", padding: "2px 8px" }}
+                          className="bru-tag bru-tag--filled"
+                          style={{
+                            fontSize: 11,
+                            padding: "2px 8px",
+                            background:
+                              sub.source === "google_trends"
+                                ? "var(--bru-purple-20)"
+                                : sub.source === "google_questions"
+                                  ? "rgba(152, 233, 171, 0.2)"
+                                  : "rgba(250, 232, 164, 0.3)",
+                          }}
                         >
                           {getSourceBadgeLabel(sub.source)}
                         </span>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 )}
               </div>
 
-              <div className="mb-4">
+              {/* Core Takeaway */}
+              <div className="bru-field">
                 <label htmlFor="coreTakeaway" className="bru-field__label">
                   Core Takeaway (Optional)
                 </label>
                 <textarea
                   id="coreTakeaway"
-                  className="bru-input h-24 resize-y"
+                  className="bru-input"
+                  style={{ width: "100%", minHeight: 80, resize: "vertical" }}
                   value={coreTakeaway}
                   onChange={(e) => setCoreTakeaway(e.target.value)}
                   placeholder="What's the single most important thing readers should remember?"
-                ></textarea>
+                />
               </div>
 
-              <div className="mb-6">
+              {/* CTA Goal */}
+              <div className="bru-field">
                 <label htmlFor="ctaGoal" className="bru-field__label">
                   Call to Action Goal (Optional)
                 </label>
@@ -470,14 +507,16 @@ export default function CreatePage() {
                   type="text"
                   id="ctaGoal"
                   className="bru-input"
+                  style={{ width: "100%" }}
                   value={ctaGoal}
                   onChange={(e) => setCtaGoal(e.target.value)}
                   placeholder="e.g., 'Visit my website', 'Share your thoughts'"
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div className="form-field-recommendation">
+              {/* Dropdown grid: 2 columns */}
+              <div className="bru-form-row">
+                <div style={{ position: "relative" }}>
                   <EnhancedDropdown
                     label="Post Type"
                     options={enhancedPostTypes}
@@ -488,13 +527,13 @@ export default function CreatePage() {
                     loading={loadingRecommendation}
                   />
                   {recommendation && postType === recommendation.postType && (
-                    <span className="recommendation-tag smart-choice-badge">
-                      <TrendingUp size={12} className="mr-1" /> Smart Choice
+                    <span className="smart-choice-badge" style={{ marginTop: "var(--bru-space-1)" }}>
+                      <TrendingUp size={12} /> Smart Choice
                     </span>
                   )}
                 </div>
 
-                <div className="form-field-recommendation">
+                <div style={{ position: "relative" }}>
                   <EnhancedDropdown
                     label="Hook Pattern"
                     options={enhancedHookPatterns}
@@ -504,15 +543,14 @@ export default function CreatePage() {
                     compatibilityMap={compatibilityMap}
                     loading={loadingRecommendation}
                   />
-                  {recommendation &&
-                    hookPattern === recommendation.hookPattern && (
-                      <span className="recommendation-tag smart-choice-badge">
-                        <TrendingUp size={12} className="mr-1" /> Smart Choice
-                      </span>
-                    )}
+                  {recommendation && hookPattern === recommendation.hookPattern && (
+                    <span className="smart-choice-badge" style={{ marginTop: "var(--bru-space-1)" }}>
+                      <TrendingUp size={12} /> Smart Choice
+                    </span>
+                  )}
                 </div>
 
-                <div className="form-field-recommendation">
+                <div style={{ position: "relative" }}>
                   <EnhancedDropdown
                     label="Content Pillar"
                     options={enhancedContentPillars}
@@ -522,15 +560,14 @@ export default function CreatePage() {
                     compatibilityMap={compatibilityMap}
                     loading={loadingRecommendation}
                   />
-                  {recommendation &&
-                    contentPillar === recommendation.contentPillar && (
-                      <span className="recommendation-tag smart-choice-badge">
-                        <TrendingUp size={12} className="mr-1" /> Smart Choice
-                      </span>
-                    )}
+                  {recommendation && contentPillar === recommendation.contentPillar && (
+                    <span className="smart-choice-badge" style={{ marginTop: "var(--bru-space-1)" }}>
+                      <TrendingUp size={12} /> Smart Choice
+                    </span>
+                  )}
                 </div>
 
-                <div className="form-field-recommendation">
+                <div style={{ position: "relative" }}>
                   <EnhancedDropdown
                     label="Tone"
                     options={enhancedToneOptions}
@@ -540,18 +577,18 @@ export default function CreatePage() {
                     compatibilityMap={compatibilityMap}
                     loading={loadingRecommendation}
                   />
-                  {recommendation &&
-                    selectedToneId === recommendation.toneId && (
-                      <span className="recommendation-tag smart-choice-badge">
-                        <TrendingUp size={12} className="mr-1" /> Smart Choice
-                      </span>
-                    )}
+                  {recommendation && selectedToneId === recommendation.toneId && (
+                    <span className="smart-choice-badge" style={{ marginTop: "var(--bru-space-1)" }}>
+                      <TrendingUp size={12} /> Smart Choice
+                    </span>
+                  )}
                 </div>
               </div>
 
+              {/* Generate button */}
               <button
                 onClick={handleGeneratePostClick}
-                className="bru-btn bru-btn--primary w-full"
+                className="bru-btn bru-btn--primary bru-btn--block"
                 disabled={
                   loadingRecommendation ||
                   !topic ||
@@ -562,122 +599,116 @@ export default function CreatePage() {
                 }
               >
                 {loadingRecommendation ? (
-                  <span className="flex items-center justify-center">
-                    <Loader size={20} className="animate-spin mr-2" /> Getting
-                    Recommendations...
-                  </span>
+                  <>
+                    <Loader size={18} className="animate-spin" />
+                    Getting Recommendations...
+                  </>
                 ) : (
-                  <span className="flex items-center justify-center">
-                    <ArrowRight size={20} className="mr-2" /> Generate Post
-                  </span>
+                  <>
+                    <ArrowRight size={18} />
+                    Generate Post
+                  </>
                 )}
               </button>
 
               {saveFeedback && (
                 <div
-                  className={`mt-4 p-3 rounded-bru-md text-sm font-medium ${saveFeedback.includes("successfully") ? "bg-green-100 text-green-800 border-green-300" : "bg-red-100 text-red-800 border-red-300"} border-2`}
+                  style={{
+                    padding: "var(--bru-space-3)",
+                    border: "var(--bru-border)",
+                    fontSize: "var(--bru-text-md)",
+                    fontWeight: 500,
+                    background: saveFeedback.includes("successfully")
+                      ? "rgba(152, 233, 171, 0.2)"
+                      : "rgba(233, 152, 152, 0.2)",
+                    color: saveFeedback.includes("successfully")
+                      ? "var(--bru-success-dark)"
+                      : "var(--bru-error-dark)",
+                  }}
                 >
                   {saveFeedback}
                 </div>
               )}
             </div>
+          </div>
 
-            {/* Right Column: Generated Post */}
-            <div>
-              <PostGenerator
-                ref={postGeneratorRef}
-                parameters={postGenerationParams}
-                profile={profile}
-                triggerGeneration={triggerPostGeneration}
-                onContentGenerated={handleContentGenerated}
-              />
-              {generatedContent && (
-                <div className="flex space-x-3 mt-4">
-                  <button
-                    onClick={() => void handleSaveDraft()}
-                    className="bru-btn flex-1"
-                    disabled={saving}
-                  >
-                    {saving ? (
-                      <Loader size={16} className="animate-spin mr-2" />
-                    ) : null}{" "}
-                    Save as Draft
-                  </button>
-                  <button
-                    onClick={handleOpenScheduleModal}
-                    className="bru-btn bru-btn--primary flex-1"
-                    disabled={saving}
-                  >
-                    Schedule Post
-                  </button>
-                </div>
-              )}
+          {/* Right Column: Generated Post */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--bru-space-4)" }}>
+            <PostGenerator
+              ref={postGeneratorRef}
+              parameters={postGenerationParams}
+              profile={profile}
+              aiSettings={aiSettings!}
+              triggerGeneration={triggerPostGeneration}
+              onContentGenerated={handleContentGenerated}
+            />
+            {generatedContent && (
+              <div className="bru-form-actions">
+                <button
+                  onClick={() => void handleSaveDraft()}
+                  className="bru-btn"
+                  style={{ flex: 1 }}
+                  disabled={saving}
+                >
+                  {saving && <Loader size={16} className="animate-spin" />}
+                  Save as Draft
+                </button>
+                <button
+                  onClick={handleOpenScheduleModal}
+                  className="bru-btn bru-btn--primary"
+                  style={{ flex: 1 }}
+                  disabled={saving}
+                >
+                  Schedule Post
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {activeSubNav === "content-strategy" && (
+        <div className="bru-card bru-card--raised">
+          <h2 style={{ fontSize: "var(--bru-text-h5)", fontWeight: 700, marginBottom: "var(--bru-space-4)" }}>
+            Your Content Strategy
+          </h2>
+          <div className="bru-form-stack">
+            <div className="bru-field">
+              <h3 className="bru-field__label">Content Strategy Overview</h3>
+              <p>{profile.contentStrategy ?? "No content strategy defined yet. Go to Settings to add one."}</p>
+            </div>
+            <div className="bru-field">
+              <h3 className="bru-field__label">Brand Definition</h3>
+              <p>{profile.definition ?? "No brand definition provided. Go to Settings to add one."}</p>
+            </div>
+            <div className="bru-field">
+              <h3 className="bru-field__label">Copy Guidelines</h3>
+              <p>{profile.copyGuideline ?? "No copy guidelines set. Go to Settings to add them."}</p>
+            </div>
+            <div className="bru-field">
+              <h3 className="bru-field__label">Audience</h3>
+              <p>{profile.audience.join(", ") || "No audience defined. Go to Settings to add one."}</p>
+            </div>
+            <div className="bru-field">
+              <h3 className="bru-field__label">Tones</h3>
+              <p>{profile.tones.join(", ") || "No tones defined. Go to Settings to add them."}</p>
+            </div>
+            <div className="bru-field">
+              <h3 className="bru-field__label">Offers</h3>
+              <p>{profile.offers.join(", ") || "No offers defined. Go to Settings to add them."}</p>
+            </div>
+            <div className="bru-field">
+              <h3 className="bru-field__label">Taboos</h3>
+              <p>{profile.taboos.join(", ") || "No taboo topics defined. Go to Settings to add them."}</p>
+            </div>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Link href="/settings" className="bru-btn">
+                Edit Strategy in Settings
+              </Link>
             </div>
           </div>
-        )}
-
-        {activeSubNav === "content-strategy" && (
-          <div className="bru-card bru-card--raised">
-            <h2 className="text-xl font-bold mb-4">Your Content Strategy</h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="bru-field__label">Content Strategy Overview</h3>
-                <p>
-                  {profile.contentStrategy ??
-                    "No content strategy defined yet. Go to Settings to add one."}
-                </p>
-              </div>
-              <div>
-                <h3 className="bru-field__label">Brand Definition</h3>
-                <p>
-                  {profile.definition ??
-                    "No brand definition provided. Go to Settings to add one."}
-                </p>
-              </div>
-              <div>
-                <h3 className="bru-field__label">Copy Guidelines</h3>
-                <p>
-                  {profile.copyGuideline ??
-                    "No copy guidelines set. Go to Settings to add them."}
-                </p>
-              </div>
-              <div>
-                <h3 className="bru-field__label">Audience</h3>
-                <p>
-                  {profile.audience.join(", ") ||
-                    "No audience defined. Go to Settings to add one."}
-                </p>
-              </div>
-              <div>
-                <h3 className="bru-field__label">Tones</h3>
-                <p>
-                  {profile.tones.join(", ") ||
-                    "No tones defined. Go to Settings to add them."}
-                </p>
-              </div>
-              <div>
-                <h3 className="bru-field__label">Offers</h3>
-                <p>
-                  {profile.offers.join(", ") ||
-                    "No offers defined. Go to Settings to add them."}
-                </p>
-              </div>
-              <div>
-                <h3 className="bru-field__label">Taboos</h3>
-                <p>
-                  {profile.taboos.join(", ") ||
-                    "No taboo topics defined. Go to Settings to add them."}
-                </p>
-              </div>
-              <div className="flex justify-end">
-                <Link href="/settings" className="bru-btn">
-                  Edit Strategy in Settings
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       <SchedulePostModal
         isOpen={isScheduleModalOpen}
@@ -686,6 +717,6 @@ export default function CreatePage() {
         initialDate={new Date().toISOString().split("T")[0]}
         initialStatus="scheduled"
       />
-    </div>
+    </>
   );
 }

@@ -1,7 +1,12 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
-import { BrandProfile, AiProviderType, AiModel, StraicoUserInfo } from "@/lib/types";
+import {
+  BrandProfile,
+  AiProviderType,
+  AiModel,
+  StraicoUserInfo,
+} from "@/lib/types";
 import { validateClaudeKey } from "@/lib/ai/claudeService";
 import {
   validateStraicoKey,
@@ -96,7 +101,13 @@ function ValidationBadge({ status }: { status: ValidationState }) {
   );
 }
 
-function StatusBadge({ connected, label }: { connected: boolean; label?: string }) {
+function StatusBadge({
+  connected,
+  label,
+}: {
+  connected: boolean;
+  label?: string;
+}) {
   return (
     <span
       style={{
@@ -125,12 +136,15 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [profileLoaded, setProfileLoaded] = useState(false);
 
-  const [activeProvider, setActiveProvider] = useState<AiProviderType>("claude");
+  const [activeProvider, setActiveProvider] =
+    useState<AiProviderType>("claude");
   const [claudeApiKey, setClaudeApiKey] = useState("");
   const [straicoApiKey, setStraicoApiKey] = useState("");
   const [straicoModel, setStraicoModel] = useState("openai/gpt-4o-mini");
   const [oneforallApiKey, setOneforallApiKey] = useState("");
-  const [oneforallModel, setOneforallModel] = useState("anthropic/claude-4-sonnet");
+  const [oneforallModel, setOneforallModel] = useState(
+    "anthropic/claude-4-sonnet",
+  );
 
   // Show/hide key toggles
   const [showClaudeKey, setShowClaudeKey] = useState(false);
@@ -138,39 +152,148 @@ export default function SettingsPage() {
   const [showOneforallKey, setShowOneforallKey] = useState(false);
 
   // Expandable provider cards
-  const [expandedProvider, setExpandedProvider] = useState<AiProviderType | null>(null);
+  const [expandedProvider, setExpandedProvider] =
+    useState<AiProviderType | null>(null);
 
   // Per-provider validation states
-  const [claudeValidation, setClaudeValidation] = useState<ValidationState>({ state: "idle" });
-  const [straicoValidation, setStraicoValidation] = useState<ValidationState>({ state: "idle" });
-  const [oneforallValidation, setOneforallValidation] = useState<ValidationState>({ state: "idle" });
+  const [claudeValidation, setClaudeValidation] = useState<ValidationState>({
+    state: "idle",
+  });
+  const [straicoValidation, setStraicoValidation] = useState<ValidationState>({
+    state: "idle",
+  });
+  const [oneforallValidation, setOneforallValidation] =
+    useState<ValidationState>({ state: "idle" });
 
   // Dynamic model lists
-  const [straicoModels, setStraicoModels] = useState<AiModel[]>([...STRAICO_MODELS]);
-  const [oneforallModels, setOneforallModels] = useState<AiModel[]>([...ONEFORALL_MODELS]);
-  const [modelsLoading, setModelsLoading] = useState<Record<string, boolean>>({});
-
-  const [straicoUserInfo, setStraicoUserInfo] = useState<StraicoUserInfo | null>(null);
-
-  // Fetch models when a provider card is expanded
-  const loadModels = useCallback(
-    async (provider: AiProviderType) => {
-      if (provider === "claude") return;
-      setModelsLoading((prev) => ({ ...prev, [provider]: true }));
-      const apiKey = provider === "1forall" ? oneforallApiKey : straicoApiKey;
-      const result = await fetchModels(provider, apiKey);
-      if (provider === "1forall") {
-        setOneforallModels(result.models.length > 0 ? result.models : [...ONEFORALL_MODELS]);
-      } else {
-        setStraicoModels(result.models.length > 0 ? result.models : [...STRAICO_MODELS]);
-        if (apiKey) {
-          fetchStraicoUserInfo(apiKey).then(setStraicoUserInfo).catch(() => {});
-        }
-      }
-      setModelsLoading((prev) => ({ ...prev, [provider]: false }));
-    },
-    [oneforallApiKey, straicoApiKey],
+  const [straicoModels, setStraicoModels] = useState<AiModel[]>([
+    ...STRAICO_MODELS,
+  ]);
+  const [oneforallModels, setOneforallModels] = useState<AiModel[]>([
+    ...ONEFORALL_MODELS,
+  ]);
+  const [modelsLoading, setModelsLoading] = useState<Record<string, boolean>>(
+    {},
   );
+
+  const [straicoUserInfo, setStraicoUserInfo] =
+    useState<StraicoUserInfo | null>(null);
+
+  // Auto-save profile to NCB (silent, no validation)
+  const saveProfileSilent = useCallback(
+    async (overrides?: Partial<BrandProfile>) => {
+      if (!profile) return;
+      try {
+        const updatedProfile: BrandProfile = {
+          ...profile,
+          aiProvider: activeProvider,
+          claudeApiKey,
+          straicoApiKey,
+          straicoModel,
+          oneforallApiKey,
+          oneforallModel,
+          ...overrides,
+        };
+        await updateBrandProfile(updatedProfile);
+        setProfile(updatedProfile);
+      } catch (error) {
+        console.error("Failed to save profile:", error);
+      }
+    },
+    [
+      profile,
+      activeProvider,
+      claudeApiKey,
+      straicoApiKey,
+      straicoModel,
+      oneforallApiKey,
+      oneforallModel,
+    ],
+  );
+
+  // Per-provider validate: validate key → on success load data → auto-save
+  const handleValidateClaude = useCallback(async () => {
+    if (!claudeApiKey.trim()) {
+      setClaudeValidation({ state: "error", message: "API key is required" });
+      return;
+    }
+    setClaudeValidation({ state: "validating" });
+    try {
+      await validateClaudeKey(claudeApiKey);
+      setClaudeValidation({ state: "valid" });
+      await saveProfileSilent();
+    } catch (err) {
+      setClaudeValidation({
+        state: "error",
+        message: err instanceof Error ? err.message : "Validation failed",
+      });
+    }
+  }, [claudeApiKey, saveProfileSilent]);
+
+  const handleValidateStraico = useCallback(async () => {
+    if (!straicoApiKey.trim()) {
+      setStraicoValidation({ state: "error", message: "API key is required" });
+      return;
+    }
+    setStraicoValidation({ state: "validating" });
+    try {
+      // Step 1: Validate key against Straico auth
+      await validateStraicoKey(straicoApiKey);
+      setStraicoValidation({ state: "valid" });
+
+      // Step 2: On success, load models + user info in parallel
+      setModelsLoading((prev) => ({ ...prev, straico: true }));
+      const [modelsResult, userInfo] = await Promise.all([
+        fetchModels("straico", straicoApiKey),
+        fetchStraicoUserInfo(straicoApiKey),
+      ]);
+      if (modelsResult.models.length > 0) {
+        setStraicoModels(modelsResult.models);
+      }
+      setStraicoUserInfo(userInfo);
+      setModelsLoading((prev) => ({ ...prev, straico: false }));
+
+      // Step 3: Auto-save
+      await saveProfileSilent();
+    } catch (err) {
+      setStraicoValidation({
+        state: "error",
+        message: err instanceof Error ? err.message : "Validation failed",
+      });
+      setModelsLoading((prev) => ({ ...prev, straico: false }));
+    }
+  }, [straicoApiKey, saveProfileSilent]);
+
+  const handleValidateOneforall = useCallback(async () => {
+    if (!oneforallApiKey.trim()) {
+      setOneforallValidation({
+        state: "error",
+        message: "API key is required",
+      });
+      return;
+    }
+    setOneforallValidation({ state: "validating" });
+    try {
+      await validateOneForAllKey(oneforallApiKey);
+      setOneforallValidation({ state: "valid" });
+
+      // Fetch models from API (like Straico)
+      setModelsLoading((prev) => ({ ...prev, "1forall": true }));
+      const modelsResult = await fetchModels("1forall", oneforallApiKey);
+      if (modelsResult.models.length > 0) {
+        setOneforallModels(modelsResult.models);
+      }
+      setModelsLoading((prev) => ({ ...prev, "1forall": false }));
+
+      await saveProfileSilent();
+    } catch (err) {
+      setOneforallValidation({
+        state: "error",
+        message: err instanceof Error ? err.message : "Validation failed",
+      });
+      setModelsLoading((prev) => ({ ...prev, "1forall": false }));
+    }
+  }, [oneforallApiKey, saveProfileSilent]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -197,44 +320,18 @@ export default function SettingsPage() {
     void fetchProfile();
   }, [user?.id]);
 
-  // Auto-validate keys on initial load
+  // Auto-validate all configured keys on initial load
   useEffect(() => {
     if (!profileLoaded) return;
 
     if (claudeApiKey.trim()) {
-      setClaudeValidation({ state: "validating" });
-      validateClaudeKey(claudeApiKey)
-        .then(() => setClaudeValidation({ state: "valid" }))
-        .catch((err) =>
-          setClaudeValidation({
-            state: "error",
-            message: err instanceof Error ? err.message : "Validation failed",
-          }),
-        );
+      void handleValidateClaude();
     }
-
     if (straicoApiKey.trim()) {
-      setStraicoValidation({ state: "validating" });
-      validateStraicoKey(straicoApiKey)
-        .then(() => setStraicoValidation({ state: "valid" }))
-        .catch((err) =>
-          setStraicoValidation({
-            state: "error",
-            message: err instanceof Error ? err.message : "Validation failed",
-          }),
-        );
+      void handleValidateStraico();
     }
-
     if (oneforallApiKey.trim()) {
-      setOneforallValidation({ state: "validating" });
-      validateOneForAllKey(oneforallApiKey)
-        .then(() => setOneforallValidation({ state: "valid" }))
-        .catch((err) =>
-          setOneforallValidation({
-            state: "error",
-            message: err instanceof Error ? err.message : "Validation failed",
-          }),
-        );
+      void handleValidateOneforall();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileLoaded]);
@@ -242,71 +339,8 @@ export default function SettingsPage() {
   const handleSaveAll = async () => {
     if (!profile) return;
     setSaving(true);
-
-    const validations: Promise<void>[] = [];
-
-    if (claudeApiKey.trim()) {
-      setClaudeValidation({ state: "validating" });
-      validations.push(
-        validateClaudeKey(claudeApiKey)
-          .then(() => setClaudeValidation({ state: "valid" }))
-          .catch((err) => {
-            setClaudeValidation({
-              state: "error",
-              message: err instanceof Error ? err.message : "Validation failed",
-            });
-          }),
-      );
-    } else {
-      setClaudeValidation({ state: "idle" });
-    }
-
-    if (straicoApiKey.trim()) {
-      setStraicoValidation({ state: "validating" });
-      validations.push(
-        validateStraicoKey(straicoApiKey)
-          .then(() => setStraicoValidation({ state: "valid" }))
-          .catch((err) => {
-            setStraicoValidation({
-              state: "error",
-              message: err instanceof Error ? err.message : "Validation failed",
-            });
-          }),
-      );
-    } else {
-      setStraicoValidation({ state: "idle" });
-    }
-
-    if (oneforallApiKey.trim()) {
-      setOneforallValidation({ state: "validating" });
-      validations.push(
-        validateOneForAllKey(oneforallApiKey)
-          .then(() => setOneforallValidation({ state: "valid" }))
-          .catch((err) => {
-            setOneforallValidation({
-              state: "error",
-              message: err instanceof Error ? err.message : "Validation failed",
-            });
-          }),
-      );
-    } else {
-      setOneforallValidation({ state: "idle" });
-    }
-
     try {
-      const updatedProfile: BrandProfile = {
-        ...profile,
-        aiProvider: activeProvider,
-        claudeApiKey,
-        straicoApiKey,
-        straicoModel,
-        oneforallApiKey,
-        oneforallModel,
-      };
-      await Promise.all([updateBrandProfile(updatedProfile), ...validations]);
-      setProfile(updatedProfile);
-    } catch (error) {
-      console.error("Failed to save settings:", error);
+      await saveProfileSilent();
     } finally {
       setSaving(false);
     }
@@ -320,7 +354,10 @@ export default function SettingsPage() {
   const isOneforall = activeProvider === "1forall";
   const isStraico = activeProvider === "straico";
 
-  function statusLabel(validation: ValidationState, configured: boolean): string {
+  function statusLabel(
+    validation: ValidationState,
+    configured: boolean,
+  ): string {
     if (validation.state === "valid") return "Verified";
     if (validation.state === "validating") return "Verifying...";
     if (validation.state === "error") return "Invalid key";
@@ -332,7 +369,12 @@ export default function SettingsPage() {
     return (
       <div
         className="bru-card bru-card--raised"
-        style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 200 }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: 200,
+        }}
       >
         <p>Loading settings...</p>
       </div>
@@ -363,22 +405,52 @@ export default function SettingsPage() {
           marginBottom: "var(--bru-space-6)",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--bru-space-2)" }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}>Claude:</span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--bru-space-2)",
+          }}
+        >
+          <span
+            style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}
+          >
+            Claude:
+          </span>
           <StatusBadge
             connected={claudeValidation.state === "valid"}
             label={statusLabel(claudeValidation, !!claudeApiKey.trim())}
           />
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--bru-space-2)" }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}>Straico:</span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--bru-space-2)",
+          }}
+        >
+          <span
+            style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}
+          >
+            Straico:
+          </span>
           <StatusBadge
             connected={straicoValidation.state === "valid"}
             label={statusLabel(straicoValidation, !!straicoApiKey.trim())}
           />
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--bru-space-2)" }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}>1ForAll:</span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--bru-space-2)",
+          }}
+        >
+          <span
+            style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}
+          >
+            1ForAll:
+          </span>
           <StatusBadge
             connected={oneforallValidation.state === "valid"}
             label={statusLabel(oneforallValidation, !!oneforallApiKey.trim())}
@@ -386,716 +458,773 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Main 2-column grid: Brand Profile (2/3) + AI Provider (1/3) */}
+      {/* ── Brand Profile Card (full width) ── */}
       <div
-        className="settings-grid"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "2fr 1fr",
-          gap: "var(--bru-space-6)",
-        }}
+        className="bru-card bru-card--raised"
+        style={{ marginBottom: "var(--bru-space-6)" }}
       >
-        {/* ── Brand Profile Card ── */}
-        <div className="bru-card bru-card--raised">
-          <h2
-            style={{
-              fontSize: "var(--bru-text-h5)",
-              fontWeight: 700,
-              marginBottom: "var(--bru-space-6)",
-            }}
-          >
-            Brand Profile
-          </h2>
+        <h2
+          style={{
+            fontSize: "var(--bru-text-h5)",
+            fontWeight: 700,
+            marginBottom: "var(--bru-space-6)",
+          }}
+        >
+          Brand Profile
+        </h2>
 
-          <div className="bru-form-row" style={{ marginBottom: "var(--bru-space-4)" }}>
-            <div className="bru-field">
-              <label htmlFor="firstName" className="bru-field__label">
-                First Name
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                className="bru-input"
-                style={{ width: "100%" }}
-                value={profile?.firstName ?? ""}
-                onChange={(e) => updateField("firstName", e.target.value)}
-              />
-            </div>
-            <div className="bru-field">
-              <label htmlFor="lastName" className="bru-field__label">
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                className="bru-input"
-                style={{ width: "100%" }}
-                value={profile?.lastName ?? ""}
-                onChange={(e) => updateField("lastName", e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="bru-form-row" style={{ marginBottom: "var(--bru-space-4)" }}>
-            <div className="bru-field">
-              <label htmlFor="companyName" className="bru-field__label">
-                Company Name
-              </label>
-              <input
-                type="text"
-                id="companyName"
-                className="bru-input"
-                style={{ width: "100%" }}
-                value={profile?.companyName ?? ""}
-                onChange={(e) => updateField("companyName", e.target.value)}
-              />
-            </div>
-            <div className="bru-field">
-              <label htmlFor="role" className="bru-field__label">
-                Role
-              </label>
-              <input
-                type="text"
-                id="role"
-                className="bru-input"
-                style={{ width: "100%" }}
-                value={profile?.role ?? ""}
-                onChange={(e) => updateField("role", e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="bru-field" style={{ marginBottom: "var(--bru-space-4)" }}>
-            <label htmlFor="industry" className="bru-field__label">
-              Industry
+        <div
+          className="bru-form-row"
+          style={{ marginBottom: "var(--bru-space-4)" }}
+        >
+          <div className="bru-field">
+            <label htmlFor="firstName" className="bru-field__label">
+              First Name
             </label>
             <input
               type="text"
-              id="industry"
+              id="firstName"
               className="bru-input"
               style={{ width: "100%" }}
-              value={profile?.industry ?? ""}
-              onChange={(e) => updateField("industry", e.target.value)}
+              value={profile?.firstName ?? ""}
+              onChange={(e) => updateField("firstName", e.target.value)}
             />
           </div>
+          <div className="bru-field">
+            <label htmlFor="lastName" className="bru-field__label">
+              Last Name
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              className="bru-input"
+              style={{ width: "100%" }}
+              value={profile?.lastName ?? ""}
+              onChange={(e) => updateField("lastName", e.target.value)}
+            />
+          </div>
+        </div>
 
-          <div className="bru-field" style={{ marginBottom: "var(--bru-space-4)" }}>
-            <label className="bru-field__label">Audience</label>
-            <div
+        <div
+          className="bru-form-row"
+          style={{ marginBottom: "var(--bru-space-4)" }}
+        >
+          <div className="bru-field">
+            <label htmlFor="companyName" className="bru-field__label">
+              Company Name
+            </label>
+            <input
+              type="text"
+              id="companyName"
+              className="bru-input"
+              style={{ width: "100%" }}
+              value={profile?.companyName ?? ""}
+              onChange={(e) => updateField("companyName", e.target.value)}
+            />
+          </div>
+          <div className="bru-field">
+            <label htmlFor="role" className="bru-field__label">
+              Role
+            </label>
+            <input
+              type="text"
+              id="role"
+              className="bru-input"
+              style={{ width: "100%" }}
+              value={profile?.role ?? ""}
+              onChange={(e) => updateField("role", e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div
+          className="bru-field"
+          style={{ marginBottom: "var(--bru-space-4)" }}
+        >
+          <label htmlFor="industry" className="bru-field__label">
+            Industry
+          </label>
+          <input
+            type="text"
+            id="industry"
+            className="bru-input"
+            style={{ width: "100%" }}
+            value={profile?.industry ?? ""}
+            onChange={(e) => updateField("industry", e.target.value)}
+          />
+        </div>
+
+        <div
+          className="bru-field"
+          style={{ marginBottom: "var(--bru-space-4)" }}
+        >
+          <label className="bru-field__label">Audience</label>
+          <div
+            style={{
+              border: "var(--bru-border)",
+              padding: "var(--bru-space-3)",
+              background: "var(--bru-cream)",
+            }}
+          >
+            {profile?.audience.map((audience, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom:
+                    index < (profile?.audience.length ?? 0) - 1
+                      ? "var(--bru-space-2)"
+                      : 0,
+                }}
+              >
+                <span
+                  style={{ fontSize: "var(--bru-text-md)", fontWeight: 500 }}
+                >
+                  {audience}
+                </span>
+                <button className="bru-btn bru-btn--sm">Edit</button>
+              </div>
+            ))}
+            <button
               style={{
-                border: "var(--bru-border)",
-                padding: "var(--bru-space-3)",
-                background: "var(--bru-cream)",
+                marginTop: "var(--bru-space-2)",
+                fontSize: "var(--bru-text-md)",
+                fontWeight: 700,
+                color: "var(--bru-purple)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                fontFamily: "var(--bru-font-primary)",
               }}
             >
-              {profile?.audience.map((audience, index) => (
-                <div
-                  key={index}
+              + Add Audience
+            </button>
+          </div>
+        </div>
+
+        <button
+          className="bru-btn bru-btn--primary"
+          onClick={() => void handleSaveAll()}
+          disabled={saving}
+        >
+          {saving ? "Saving..." : "Save Profile"}
+        </button>
+      </div>
+
+      {/* ── AI Providers Section (full width) ── */}
+      <div
+        className="bru-card bru-card--raised"
+        style={{ marginBottom: "var(--bru-space-6)" }}
+      >
+        <h2
+          style={{
+            fontSize: "var(--bru-text-h5)",
+            fontWeight: 700,
+            marginBottom: "var(--bru-space-6)",
+          }}
+        >
+          AI Providers
+        </h2>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--bru-space-3)",
+          }}
+        >
+          {/* ── Claude Card ── */}
+          {(() => {
+            const isExpanded = expandedProvider === "claude";
+            return (
+              <div
+                style={{
+                  border: isClaude
+                    ? "2px solid var(--bru-purple)"
+                    : "var(--bru-border)",
+                  background: isClaude
+                    ? "rgba(174, 122, 255, 0.05)"
+                    : "var(--bru-white)",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() =>
+                    setExpandedProvider(isExpanded ? null : "claude")
+                  }
                   style={{
+                    width: "100%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    marginBottom:
-                      index < (profile?.audience.length ?? 0) - 1
-                        ? "var(--bru-space-2)"
-                        : 0,
+                    padding: "var(--bru-space-3)",
+                    textAlign: "left",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontFamily: "var(--bru-font-primary)",
                   }}
                 >
-                  <span style={{ fontSize: "var(--bru-text-md)", fontWeight: 500 }}>
-                    {audience}
-                  </span>
-                  <button className="bru-btn bru-btn--sm">Edit</button>
-                </div>
-              ))}
-              <button
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "var(--bru-space-3)",
+                    }}
+                  >
+                    {isExpanded ? (
+                      <ChevronDown size={14} />
+                    ) : (
+                      <ChevronRight size={14} />
+                    )}
+                    <span
+                      style={{
+                        fontSize: "var(--bru-text-md)",
+                        fontWeight: 700,
+                      }}
+                    >
+                      Claude
+                    </span>
+                    <ValidationBadge status={claudeValidation} />
+                    {isClaude && (
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "var(--bru-purple)",
+                          background: "rgba(174, 122, 255, 0.1)",
+                          padding: "2px 6px",
+                        }}
+                      >
+                        Active
+                      </span>
+                    )}
+                  </div>
+                </button>
+                {isExpanded && (
+                  <div
+                    style={{
+                      padding: "0 var(--bru-space-4) var(--bru-space-4)",
+                      borderTop: "1px solid rgba(0,0,0,0.1)",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "var(--bru-space-3)",
+                    }}
+                  >
+                    {!isClaude && (
+                      <button
+                        className="bru-btn bru-btn--sm bru-btn--primary"
+                        style={{
+                          marginTop: "var(--bru-space-3)",
+                          alignSelf: "flex-start",
+                        }}
+                        onClick={() => setActiveProvider("claude")}
+                      >
+                        Set as Active
+                      </button>
+                    )}
+                    <div style={{ marginTop: "var(--bru-space-3)" }}>
+                      <label
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "var(--bru-grey)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                          marginBottom: "var(--bru-space-2)",
+                        }}
+                      >
+                        <Key size={12} /> API Key
+                      </label>
+                      <div style={{ position: "relative" }}>
+                        <input
+                          type={showClaudeKey ? "text" : "password"}
+                          value={claudeApiKey}
+                          onChange={(e) => {
+                            setClaudeApiKey(e.target.value);
+                            setClaudeValidation({ state: "idle" });
+                          }}
+                          placeholder="sk-ant-..."
+                          className="bru-input"
+                          style={{ width: "100%", paddingRight: 40 }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowClaudeKey((v) => !v)}
+                          style={{
+                            position: "absolute",
+                            right: 10,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            color: "var(--bru-grey)",
+                            padding: 0,
+                          }}
+                        >
+                          {showClaudeKey ? (
+                            <EyeOff size={16} />
+                          ) : (
+                            <Eye size={16} />
+                          )}
+                        </button>
+                      </div>
+                      {claudeValidation.state === "error" && (
+                        <p
+                          style={{
+                            fontSize: 10,
+                            color: "#dc2626",
+                            marginTop: 4,
+                          }}
+                        >
+                          {claudeValidation.message}
+                        </p>
+                      )}
+                    </div>
+                    <button
+                      className="bru-btn bru-btn--sm bru-btn--primary"
+                      onClick={() => void handleValidateClaude()}
+                      disabled={claudeValidation.state === "validating"}
+                      style={{ alignSelf: "flex-start" }}
+                    >
+                      {claudeValidation.state === "validating" ? (
+                        <>
+                          <Loader size={12} className="animate-spin" />
+                          Validating...
+                        </>
+                      ) : (
+                        "Validate Key"
+                      )}
+                    </button>
+                    <p style={{ fontSize: 10, color: "var(--bru-grey)" }}>
+                      Claude uses direct browser API — model selection is
+                      automatic (Claude Sonnet 4.5).
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* ── Straico Card ── */}
+          {(() => {
+            const isExpanded = expandedProvider === "straico";
+            return (
+              <div
                 style={{
-                  marginTop: "var(--bru-space-2)",
-                  fontSize: "var(--bru-text-md)",
-                  fontWeight: 700,
-                  color: "var(--bru-purple)",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                  fontFamily: "var(--bru-font-primary)",
+                  border: isStraico
+                    ? "2px solid var(--bru-purple)"
+                    : "var(--bru-border)",
+                  background: isStraico
+                    ? "rgba(174, 122, 255, 0.05)"
+                    : "var(--bru-white)",
                 }}
               >
-                + Add Audience
-              </button>
-            </div>
-          </div>
-
-          <button
-            className="bru-btn bru-btn--primary"
-            onClick={() => void handleSaveAll()}
-            disabled={saving}
-          >
-            {saving ? "Saving..." : "Save Profile"}
-          </button>
-        </div>
-
-        {/* ── AI Providers Card ── */}
-        <div className="bru-card bru-card--raised">
-          <h2
-            style={{
-              fontSize: "var(--bru-text-h5)",
-              fontWeight: 700,
-              marginBottom: "var(--bru-space-6)",
-            }}
-          >
-            AI Providers
-          </h2>
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "var(--bru-space-3)",
-            }}
-          >
-            {/* ── Claude Card ── */}
-            {(() => {
-              const isExpanded = expandedProvider === "claude";
-              return (
-                <div
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = isExpanded
+                      ? null
+                      : ("straico" as AiProviderType);
+                    setExpandedProvider(next);
+                    // Models loaded on validation or auto-validate
+                  }}
                   style={{
-                    border: isClaude
-                      ? "2px solid var(--bru-purple)"
-                      : "var(--bru-border)",
-                    background: isClaude
-                      ? "rgba(174, 122, 255, 0.05)"
-                      : "var(--bru-white)",
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "var(--bru-space-3)",
+                    textAlign: "left",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontFamily: "var(--bru-font-primary)",
                   }}
                 >
-                  <button
-                    type="button"
-                    onClick={() => setExpandedProvider(isExpanded ? null : "claude")}
+                  <div
                     style={{
-                      width: "100%",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "var(--bru-space-3)",
-                      textAlign: "left",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "var(--bru-font-primary)",
+                      gap: "var(--bru-space-3)",
                     }}
                   >
-                    <div
+                    {isExpanded ? (
+                      <ChevronDown size={14} />
+                    ) : (
+                      <ChevronRight size={14} />
+                    )}
+                    <span
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "var(--bru-space-3)",
+                        fontSize: "var(--bru-text-md)",
+                        fontWeight: 700,
                       }}
                     >
-                      {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                      <span style={{ fontSize: "var(--bru-text-md)", fontWeight: 700 }}>
-                        Claude
+                      Straico
+                    </span>
+                    <ValidationBadge status={straicoValidation} />
+                    {isStraico && (
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "var(--bru-purple)",
+                          background: "rgba(174, 122, 255, 0.1)",
+                          padding: "2px 6px",
+                        }}
+                      >
+                        Active
                       </span>
-                      <ValidationBadge status={claudeValidation} />
-                      {isClaude && (
-                        <span
+                    )}
+                  </div>
+                </button>
+                {isExpanded && (
+                  <div
+                    style={{
+                      padding: "0 var(--bru-space-4) var(--bru-space-4)",
+                      borderTop: "1px solid rgba(0,0,0,0.1)",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "var(--bru-space-3)",
+                    }}
+                  >
+                    {!isStraico && (
+                      <button
+                        className="bru-btn bru-btn--sm bru-btn--primary"
+                        style={{
+                          marginTop: "var(--bru-space-3)",
+                          alignSelf: "flex-start",
+                        }}
+                        onClick={() => setActiveProvider("straico")}
+                      >
+                        Set as Active
+                      </button>
+                    )}
+                    <div style={{ marginTop: "var(--bru-space-3)" }}>
+                      <label
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "var(--bru-grey)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                          marginBottom: "var(--bru-space-2)",
+                        }}
+                      >
+                        <Key size={12} /> API Key
+                      </label>
+                      <div style={{ position: "relative" }}>
+                        <input
+                          type={showStraicoKey ? "text" : "password"}
+                          value={straicoApiKey}
+                          onChange={(e) => {
+                            setStraicoApiKey(e.target.value);
+                            setStraicoValidation({ state: "idle" });
+                          }}
+                          placeholder="Your Straico API key"
+                          className="bru-input"
+                          style={{ width: "100%", paddingRight: 40 }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowStraicoKey((v) => !v)}
+                          style={{
+                            position: "absolute",
+                            right: 10,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            color: "var(--bru-grey)",
+                            padding: 0,
+                          }}
+                        >
+                          {showStraicoKey ? (
+                            <EyeOff size={16} />
+                          ) : (
+                            <Eye size={16} />
+                          )}
+                        </button>
+                      </div>
+                      {straicoValidation.state === "error" && (
+                        <p
                           style={{
                             fontSize: 10,
-                            fontWeight: 700,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                            color: "var(--bru-purple)",
-                            background: "rgba(174, 122, 255, 0.1)",
-                            padding: "2px 6px",
+                            color: "#dc2626",
+                            marginTop: 4,
                           }}
                         >
-                          Active
-                        </span>
+                          {straicoValidation.message}
+                        </p>
                       )}
                     </div>
-                  </button>
-                  {isExpanded && (
-                    <div
-                      style={{
-                        padding: "0 var(--bru-space-4) var(--bru-space-4)",
-                        borderTop: "1px solid rgba(0,0,0,0.1)",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "var(--bru-space-3)",
-                      }}
+                    <button
+                      className="bru-btn bru-btn--sm bru-btn--primary"
+                      onClick={() => void handleValidateStraico()}
+                      disabled={straicoValidation.state === "validating"}
+                      style={{ alignSelf: "flex-start" }}
                     >
-                      {!isClaude && (
-                        <button
-                          className="bru-btn bru-btn--sm bru-btn--primary"
-                          style={{ marginTop: "var(--bru-space-3)", alignSelf: "flex-start" }}
-                          onClick={() => setActiveProvider("claude")}
-                        >
-                          Set as Active
-                        </button>
+                      {straicoValidation.state === "validating" ? (
+                        <>
+                          <Loader size={12} className="animate-spin" />
+                          Validating...
+                        </>
+                      ) : (
+                        "Validate Key & Load Models"
                       )}
-                      <div style={{ marginTop: "var(--bru-space-3)" }}>
-                        <label
-                          style={{
-                            fontSize: 11,
-                            fontWeight: 700,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                            color: "var(--bru-grey)",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 6,
-                            marginBottom: "var(--bru-space-2)",
-                          }}
-                        >
-                          <Key size={12} /> API Key
-                        </label>
-                        <div style={{ position: "relative" }}>
-                          <input
-                            type={showClaudeKey ? "text" : "password"}
-                            value={claudeApiKey}
-                            onChange={(e) => {
-                              setClaudeApiKey(e.target.value);
-                              setClaudeValidation({ state: "idle" });
-                            }}
-                            placeholder="sk-ant-..."
-                            className="bru-input"
-                            style={{ width: "100%", paddingRight: 40 }}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowClaudeKey((v) => !v)}
-                            style={{
-                              position: "absolute",
-                              right: 10,
-                              top: "50%",
-                              transform: "translateY(-50%)",
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              color: "var(--bru-grey)",
-                              padding: 0,
-                            }}
-                          >
-                            {showClaudeKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                          </button>
-                        </div>
-                        {claudeValidation.state === "error" && (
-                          <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
-                            {claudeValidation.message}
-                          </p>
-                        )}
-                      </div>
-                      <p style={{ fontSize: 10, color: "var(--bru-grey)" }}>
-                        Claude uses direct browser API — model selection is automatic (Claude
-                        Sonnet 4.5).
-                      </p>
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
+                    </button>
+                    <StraicoModelPicker
+                      models={straicoModels}
+                      selectedModelId={straicoModel}
+                      onSelectModel={(id) => setStraicoModel(id)}
+                      loading={modelsLoading["straico"]}
+                      userInfo={straicoUserInfo}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
-            {/* ── Straico Card ── */}
-            {(() => {
-              const isExpanded = expandedProvider === "straico";
-              return (
-                <div
+          {/* ── 1ForAll Card ── */}
+          {(() => {
+            const isExpanded = expandedProvider === "1forall";
+            return (
+              <div
+                style={{
+                  border: isOneforall
+                    ? "2px solid var(--bru-purple)"
+                    : "var(--bru-border)",
+                  background: isOneforall
+                    ? "rgba(174, 122, 255, 0.05)"
+                    : "var(--bru-white)",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = isExpanded
+                      ? null
+                      : ("1forall" as AiProviderType);
+                    setExpandedProvider(next);
+                    // Models loaded on validation or auto-validate
+                  }}
                   style={{
-                    border: isStraico
-                      ? "2px solid var(--bru-purple)"
-                      : "var(--bru-border)",
-                    background: isStraico
-                      ? "rgba(174, 122, 255, 0.05)"
-                      : "var(--bru-white)",
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "var(--bru-space-3)",
+                    textAlign: "left",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontFamily: "var(--bru-font-primary)",
                   }}
                 >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const next = isExpanded ? null : ("straico" as AiProviderType);
-                      setExpandedProvider(next);
-                      if (next === "straico") void loadModels("straico");
-                    }}
+                  <div
                     style={{
-                      width: "100%",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "var(--bru-space-3)",
-                      textAlign: "left",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "var(--bru-font-primary)",
+                      gap: "var(--bru-space-3)",
                     }}
                   >
-                    <div
+                    {isExpanded ? (
+                      <ChevronDown size={14} />
+                    ) : (
+                      <ChevronRight size={14} />
+                    )}
+                    <span
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "var(--bru-space-3)",
+                        fontSize: "var(--bru-text-md)",
+                        fontWeight: 700,
                       }}
                     >
-                      {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                      <span style={{ fontSize: "var(--bru-text-md)", fontWeight: 700 }}>
-                        Straico
+                      1ForAll
+                    </span>
+                    <ValidationBadge status={oneforallValidation} />
+                    {isOneforall && (
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "var(--bru-purple)",
+                          background: "rgba(174, 122, 255, 0.1)",
+                          padding: "2px 6px",
+                        }}
+                      >
+                        Active
                       </span>
-                      <ValidationBadge status={straicoValidation} />
-                      {isStraico && (
-                        <span
+                    )}
+                  </div>
+                </button>
+                {isExpanded && (
+                  <div
+                    style={{
+                      padding: "0 var(--bru-space-4) var(--bru-space-4)",
+                      borderTop: "1px solid rgba(0,0,0,0.1)",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "var(--bru-space-3)",
+                    }}
+                  >
+                    {!isOneforall && (
+                      <button
+                        className="bru-btn bru-btn--sm bru-btn--primary"
+                        style={{
+                          marginTop: "var(--bru-space-3)",
+                          alignSelf: "flex-start",
+                        }}
+                        onClick={() => setActiveProvider("1forall")}
+                      >
+                        Set as Active
+                      </button>
+                    )}
+                    <div style={{ marginTop: "var(--bru-space-3)" }}>
+                      <label
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "var(--bru-grey)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                          marginBottom: "var(--bru-space-2)",
+                        }}
+                      >
+                        <Key size={12} /> API Key
+                      </label>
+                      <div style={{ position: "relative" }}>
+                        <input
+                          type={showOneforallKey ? "text" : "password"}
+                          value={oneforallApiKey}
+                          onChange={(e) => {
+                            setOneforallApiKey(e.target.value);
+                            setOneforallValidation({ state: "idle" });
+                          }}
+                          placeholder="Your 1ForAll API key"
+                          className="bru-input"
+                          style={{ width: "100%", paddingRight: 40 }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowOneforallKey((v) => !v)}
+                          style={{
+                            position: "absolute",
+                            right: 10,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            color: "var(--bru-grey)",
+                            padding: 0,
+                          }}
+                        >
+                          {showOneforallKey ? (
+                            <EyeOff size={16} />
+                          ) : (
+                            <Eye size={16} />
+                          )}
+                        </button>
+                      </div>
+                      {oneforallValidation.state === "error" && (
+                        <p
                           style={{
                             fontSize: 10,
-                            fontWeight: 700,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                            color: "var(--bru-purple)",
-                            background: "rgba(174, 122, 255, 0.1)",
-                            padding: "2px 6px",
+                            color: "#dc2626",
+                            marginTop: 4,
                           }}
                         >
-                          Active
-                        </span>
+                          {oneforallValidation.message}
+                        </p>
                       )}
                     </div>
-                  </button>
-                  {isExpanded && (
-                    <div
-                      style={{
-                        padding: "0 var(--bru-space-4) var(--bru-space-4)",
-                        borderTop: "1px solid rgba(0,0,0,0.1)",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "var(--bru-space-3)",
-                      }}
+                    <button
+                      className="bru-btn bru-btn--sm bru-btn--primary"
+                      onClick={() => void handleValidateOneforall()}
+                      disabled={oneforallValidation.state === "validating"}
+                      style={{ alignSelf: "flex-start" }}
                     >
-                      {!isStraico && (
-                        <button
-                          className="bru-btn bru-btn--sm bru-btn--primary"
-                          style={{ marginTop: "var(--bru-space-3)", alignSelf: "flex-start" }}
-                          onClick={() => setActiveProvider("straico")}
-                        >
-                          Set as Active
-                        </button>
+                      {oneforallValidation.state === "validating" ? (
+                        <>
+                          <Loader size={12} className="animate-spin" />
+                          Validating...
+                        </>
+                      ) : (
+                        "Validate Key"
                       )}
-                      <div style={{ marginTop: "var(--bru-space-3)" }}>
-                        <label
-                          style={{
-                            fontSize: 11,
-                            fontWeight: 700,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                            color: "var(--bru-grey)",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 6,
-                            marginBottom: "var(--bru-space-2)",
-                          }}
-                        >
-                          <Key size={12} /> API Key
-                        </label>
-                        <div style={{ position: "relative" }}>
-                          <input
-                            type={showStraicoKey ? "text" : "password"}
-                            value={straicoApiKey}
-                            onChange={(e) => {
-                              setStraicoApiKey(e.target.value);
-                              setStraicoValidation({ state: "idle" });
-                            }}
-                            placeholder="Your Straico API key"
-                            className="bru-input"
-                            style={{ width: "100%", paddingRight: 40 }}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowStraicoKey((v) => !v)}
-                            style={{
-                              position: "absolute",
-                              right: 10,
-                              top: "50%",
-                              transform: "translateY(-50%)",
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              color: "var(--bru-grey)",
-                              padding: 0,
-                            }}
-                          >
-                            {showStraicoKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                          </button>
-                        </div>
-                        {straicoValidation.state === "error" && (
-                          <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
-                            {straicoValidation.message}
-                          </p>
-                        )}
-                      </div>
+                    </button>
+                    <div>
+                      <label
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "var(--bru-grey)",
+                          marginBottom: "var(--bru-space-2)",
+                          display: "block",
+                        }}
+                      >
+                        Model
+                      </label>
                       <StraicoModelPicker
-                        models={straicoModels}
-                        selectedModelId={straicoModel}
-                        onSelectModel={(id) => setStraicoModel(id)}
-                        loading={modelsLoading["straico"]}
-                        userInfo={straicoUserInfo}
+                        models={oneforallModels}
+                        selectedModelId={oneforallModel}
+                        onSelectModel={setOneforallModel}
+                        loading={modelsLoading["1forall"]}
                       />
                     </div>
-                  )}
-                </div>
-              );
-            })()}
-
-            {/* ── 1ForAll Card ── */}
-            {(() => {
-              const isExpanded = expandedProvider === "1forall";
-              return (
-                <div
-                  style={{
-                    border: isOneforall
-                      ? "2px solid var(--bru-purple)"
-                      : "var(--bru-border)",
-                    background: isOneforall
-                      ? "rgba(174, 122, 255, 0.05)"
-                      : "var(--bru-white)",
-                  }}
-                >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const next = isExpanded ? null : ("1forall" as AiProviderType);
-                      setExpandedProvider(next);
-                      if (next === "1forall") void loadModels("1forall");
-                    }}
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "var(--bru-space-3)",
-                      textAlign: "left",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "var(--bru-font-primary)",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "var(--bru-space-3)",
-                      }}
-                    >
-                      {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                      <span style={{ fontSize: "var(--bru-text-md)", fontWeight: 700 }}>
-                        1ForAll
-                      </span>
-                      <ValidationBadge status={oneforallValidation} />
-                      {isOneforall && (
-                        <span
-                          style={{
-                            fontSize: 10,
-                            fontWeight: 700,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                            color: "var(--bru-purple)",
-                            background: "rgba(174, 122, 255, 0.1)",
-                            padding: "2px 6px",
-                          }}
-                        >
-                          Active
-                        </span>
-                      )}
-                    </div>
-                  </button>
-                  {isExpanded && (
-                    <div
-                      style={{
-                        padding: "0 var(--bru-space-4) var(--bru-space-4)",
-                        borderTop: "1px solid rgba(0,0,0,0.1)",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "var(--bru-space-3)",
-                      }}
-                    >
-                      {!isOneforall && (
-                        <button
-                          className="bru-btn bru-btn--sm bru-btn--primary"
-                          style={{ marginTop: "var(--bru-space-3)", alignSelf: "flex-start" }}
-                          onClick={() => setActiveProvider("1forall")}
-                        >
-                          Set as Active
-                        </button>
-                      )}
-                      <div style={{ marginTop: "var(--bru-space-3)" }}>
-                        <label
-                          style={{
-                            fontSize: 11,
-                            fontWeight: 700,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                            color: "var(--bru-grey)",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 6,
-                            marginBottom: "var(--bru-space-2)",
-                          }}
-                        >
-                          <Key size={12} /> API Key
-                        </label>
-                        <div style={{ position: "relative" }}>
-                          <input
-                            type={showOneforallKey ? "text" : "password"}
-                            value={oneforallApiKey}
-                            onChange={(e) => {
-                              setOneforallApiKey(e.target.value);
-                              setOneforallValidation({ state: "idle" });
-                            }}
-                            placeholder="Your 1ForAll API key"
-                            className="bru-input"
-                            style={{ width: "100%", paddingRight: 40 }}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowOneforallKey((v) => !v)}
-                            style={{
-                              position: "absolute",
-                              right: 10,
-                              top: "50%",
-                              transform: "translateY(-50%)",
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              color: "var(--bru-grey)",
-                              padding: 0,
-                            }}
-                          >
-                            {showOneforallKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                          </button>
-                        </div>
-                        {oneforallValidation.state === "error" && (
-                          <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
-                            {oneforallValidation.message}
-                          </p>
-                        )}
-                      </div>
-                      <div>
-                        <label
-                          style={{
-                            fontSize: 11,
-                            fontWeight: 700,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                            color: "var(--bru-grey)",
-                            marginBottom: "var(--bru-space-2)",
-                            display: "block",
-                          }}
-                        >
-                          Model
-                        </label>
-                        <div style={{ position: "relative" }}>
-                          <select
-                            value={oneforallModel}
-                            onChange={(e) => setOneforallModel(e.target.value)}
-                            className="bru-select"
-                            style={{ width: "100%" }}
-                            disabled={modelsLoading["1forall"]}
-                          >
-                            {oneforallModels.map((model) => (
-                              <option key={model.id} value={model.id}>
-                                {model.label}
-                              </option>
-                            ))}
-                          </select>
-                          {modelsLoading["1forall"] && (
-                            <Loader
-                              size={14}
-                              className="animate-spin"
-                              style={{
-                                position: "absolute",
-                                right: 32,
-                                top: "50%",
-                                transform: "translateY(-50%)",
-                                color: "var(--bru-purple)",
-                              }}
-                            />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
-          </div>
-
-          {/* Save All button */}
-          <button
-            className="bru-btn bru-btn--primary bru-btn--block"
-            style={{ marginTop: "var(--bru-space-6)" }}
-            onClick={() => void handleSaveAll()}
-            disabled={saving}
-          >
-            {saving ? (
-              <>
-                <Loader size={16} className="animate-spin" />
-                Saving & Validating...
-              </>
-            ) : (
-              "Save & Validate All"
-            )}
-          </button>
-
-          {/* LinkedIn Integration */}
-          <div className="bru-field" style={{ marginTop: "var(--bru-space-8)" }}>
-            <label className="bru-field__label">LinkedIn Integration</label>
-            <div
-              style={{
-                border: "var(--bru-border)",
-                padding: "var(--bru-space-3)",
-                background: "var(--bru-cream)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "var(--bru-space-2)",
-              }}
-            >
-              <p style={{ fontSize: "var(--bru-text-md)", fontWeight: 500 }}>
-                Status: Not Connected
-              </p>
-              <button className="bru-btn bru-btn--primary bru-btn--block">
-                Connect LinkedIn
-              </button>
-            </div>
-          </div>
-
-          {/* Notifications */}
-          <h3
-            style={{
-              fontSize: "var(--bru-text-h6)",
-              fontWeight: 700,
-              marginTop: "var(--bru-space-8)",
-              marginBottom: "var(--bru-space-4)",
-            }}
-          >
-            Notifications
-          </h3>
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "var(--bru-space-3)",
-            }}
-          >
-            <label className="bru-checkbox">
-              <input type="checkbox" id="emailNotif" />
-              Email Notifications
-            </label>
-            <label className="bru-checkbox">
-              <input type="checkbox" id="slackNotif" />
-              Slack Notifications
-            </label>
-          </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
+
+        {/* Save All button */}
+        <button
+          className="bru-btn bru-btn--primary bru-btn--block"
+          style={{ marginTop: "var(--bru-space-6)" }}
+          onClick={() => void handleSaveAll()}
+          disabled={saving}
+        >
+          {saving ? (
+            <>
+              <Loader size={16} className="animate-spin" />
+              Saving & Validating...
+            </>
+          ) : (
+            "Save & Validate All"
+          )}
+        </button>
       </div>
 
       {/* ── Brand Guidelines Card (full width) ── */}
-      <div className="bru-card bru-card--raised" style={{ marginTop: "var(--bru-space-6)" }}>
+      <div
+        className="bru-card bru-card--raised"
+        style={{ marginTop: "var(--bru-space-6)" }}
+      >
         <h2
           style={{
             fontSize: "var(--bru-text-h5)",
@@ -1106,7 +1235,10 @@ export default function SettingsPage() {
           Brand Guidelines
         </h2>
 
-        <div className="bru-form-row" style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div
+          className="bru-form-row"
+          style={{ marginBottom: "var(--bru-space-4)" }}
+        >
           <div className="bru-field">
             <label htmlFor="copyGuideline" className="bru-field__label">
               Copy Guideline
@@ -1133,7 +1265,10 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="bru-field" style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div
+          className="bru-field"
+          style={{ marginBottom: "var(--bru-space-4)" }}
+        >
           <label htmlFor="definition" className="bru-field__label">
             Brand Definition
           </label>

@@ -5,9 +5,12 @@ export type AiProviderType = "claude" | "1forall" | "straico";
 export interface AiModel {
   id: string;
   label: string;
+  description?: string;
   maxTokens?: { min: number; max: number };
   wordLimit?: number;
   pricing?: { coins: number; words: number };
+  creditsPerInputToken?: number;
+  creditsPerOutputToken?: number;
   provider?: string;
   modelType?: string;
   editorsChoiceLevel?: number;
@@ -17,6 +20,7 @@ export interface AiModel {
   cons?: string[];
   icon?: string;
   modelDate?: string;
+  enabled?: boolean;
 }
 
 export interface AiProgress {

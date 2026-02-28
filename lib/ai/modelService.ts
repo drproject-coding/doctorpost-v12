@@ -1,6 +1,5 @@
 import type { AiModel, AiProviderType } from "./types";
 import { ONEFORALL_MODELS, STRAICO_MODELS } from "./constants";
-import { fetchStraicoModels } from "./straicoService";
 
 export async function fetchModels(
   provider: AiProviderType,
@@ -10,22 +9,37 @@ export async function fetchModels(
     return { models: [], source: "fallback" };
   }
 
-  if (provider === "1forall") {
-    // 1ForAll has no model listing endpoint — use static list
-    return { models: [...ONEFORALL_MODELS], source: "fallback" };
-  }
-
-  // Straico: fetch enriched models from API
+  // Both Straico and 1ForAll use the server-side /api/models endpoint
+  // which hits the real upstream APIs (Straico v2, 1ForAll models API)
   try {
     if (!apiKey) {
-      return { models: [...STRAICO_MODELS], source: "fallback" };
+      const fallback = provider === "1forall" ? ONEFORALL_MODELS : STRAICO_MODELS;
+      return { models: [...fallback], source: "fallback" };
     }
-    const models = await fetchStraicoModels(apiKey);
+
+    const headerKey =
+      provider === "1forall" ? "x-oneforall-key" : "x-straico-key";
+
+    const response = await fetch(`/api/models?provider=${provider}`, {
+      method: "GET",
+      headers: { [headerKey]: apiKey },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Models fetch failed (${response.status})`);
+    }
+
+    const data = await response.json();
+    const models: AiModel[] = data.models || [];
+
     if (models.length > 0) {
-      return { models, source: "api" };
+      return { models, source: data.source || "api" };
     }
-    return { models: [...STRAICO_MODELS], source: "fallback" };
+
+    const fallback = provider === "1forall" ? ONEFORALL_MODELS : STRAICO_MODELS;
+    return { models: [...fallback], source: "fallback" };
   } catch {
-    return { models: [...STRAICO_MODELS], source: "fallback" };
+    const fallback = provider === "1forall" ? ONEFORALL_MODELS : STRAICO_MODELS;
+    return { models: [...fallback], source: "fallback" };
   }
 }

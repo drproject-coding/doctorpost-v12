@@ -34,7 +34,12 @@ function QualityBadge({ level }: { level: number }) {
   const stars = Math.min(level, 3);
   return (
     <span
-      style={{ display: "inline-flex", alignItems: "center", gap: 2, color: "#d97706" }}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 2,
+        color: "#d97706",
+      }}
       title={`Editor's choice: ${level}/3`}
     >
       {Array.from({ length: stars }, (_, i) => (
@@ -105,14 +110,17 @@ export function StraicoModelPicker({
       result = result.filter((m) => m.provider === providerFilter);
     }
 
+    const getPrice = (m: AiModel) =>
+      m.pricing?.coins ?? m.creditsPerInputToken ?? 0;
+
     result.sort((a, b) => {
       switch (sort) {
         case "quality":
           return (b.editorsChoiceLevel ?? -1) - (a.editorsChoiceLevel ?? -1);
         case "price-asc":
-          return (a.pricing?.coins ?? 0) - (b.pricing?.coins ?? 0);
+          return getPrice(a) - getPrice(b);
         case "price-desc":
-          return (b.pricing?.coins ?? 0) - (a.pricing?.coins ?? 0);
+          return getPrice(b) - getPrice(a);
         case "newest":
           return (b.modelDate ?? "").localeCompare(a.modelDate ?? "");
         default:
@@ -131,7 +139,9 @@ export function StraicoModelPicker({
     fontWeight: 700,
     textTransform: "uppercase",
     letterSpacing: "0.05em",
-    border: "var(--bru-border)",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "rgba(0,0,0,0.15)",
     cursor: "pointer",
     background: "var(--bru-white)",
     color: "var(--bru-black)",
@@ -145,7 +155,13 @@ export function StraicoModelPicker({
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--bru-space-3)" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--bru-space-3)",
+      }}
+    >
       {/* Account Bar */}
       {userInfo && (
         <div
@@ -179,7 +195,13 @@ export function StraicoModelPicker({
       )}
 
       {/* Search + Filters */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--bru-space-2)" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--bru-space-2)",
+        }}
+      >
         <div style={{ position: "relative" }}>
           <Search
             size={14}
@@ -215,7 +237,9 @@ export function StraicoModelPicker({
               <button
                 type="button"
                 key={p}
-                onClick={() => setProviderFilter(providerFilter === p ? null : p)}
+                onClick={() =>
+                  setProviderFilter(providerFilter === p ? null : p)
+                }
                 style={providerFilter === p ? chipActive : chipBase}
               >
                 {p}
@@ -290,7 +314,9 @@ export function StraicoModelPicker({
                   fontFamily: "var(--bru-font-primary)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                <div
+                  style={{ display: "flex", alignItems: "flex-start", gap: 10 }}
+                >
                   {model.icon && (
                     <img
                       src={model.icon}
@@ -352,8 +378,29 @@ export function StraicoModelPicker({
                     >
                       {model.pricing && (
                         <span title="Cost per 100 words">
-                          <Coins size={10} style={{ display: "inline", marginRight: 2, verticalAlign: "-1px" }} />
+                          <Coins
+                            size={10}
+                            style={{
+                              display: "inline",
+                              marginRight: 2,
+                              verticalAlign: "-1px",
+                            }}
+                          />
                           {model.pricing.coins}/{model.pricing.words}w
+                        </span>
+                      )}
+                      {!model.pricing && model.creditsPerInputToken != null && (
+                        <span title="Credits per token (in/out)">
+                          <Coins
+                            size={10}
+                            style={{
+                              display: "inline",
+                              marginRight: 2,
+                              verticalAlign: "-1px",
+                            }}
+                          />
+                          {model.creditsPerInputToken}↑ /{" "}
+                          {model.creditsPerOutputToken ?? 0}↓
                         </span>
                       )}
                       {model.maxTokens && (
@@ -367,8 +414,31 @@ export function StraicoModelPicker({
                         </span>
                       )}
                     </div>
+                    {model.description && !model.applications?.length && (
+                      <p
+                        style={{
+                          fontSize: 10,
+                          color: "var(--bru-grey)",
+                          marginTop: 4,
+                          lineHeight: 1.4,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                        title={model.description}
+                      >
+                        {model.description}
+                      </p>
+                    )}
 
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 6 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: 4,
+                        marginTop: 6,
+                      }}
+                    >
                       {model.applications?.slice(0, 4).map((app) => (
                         <span
                           key={app}
@@ -443,19 +513,52 @@ export function StraicoModelPicker({
                     gap: 8,
                   }}
                 >
+                  {model.description && (
+                    <p
+                      style={{
+                        fontSize: 11,
+                        color: "var(--bru-grey)",
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {model.description}
+                    </p>
+                  )}
                   {model.pricing && (
                     <p style={{ fontSize: 11, color: "var(--bru-grey)" }}>
                       <Coins
                         size={11}
-                        style={{ display: "inline", marginRight: 4, verticalAlign: "-1px", color: "#d97706" }}
+                        style={{
+                          display: "inline",
+                          marginRight: 4,
+                          verticalAlign: "-1px",
+                          color: "#d97706",
+                        }}
                       />
-                      ~{model.pricing.coins} coins per {model.pricing.words} words
+                      ~{model.pricing.coins} coins per {model.pricing.words}{" "}
+                      words
+                    </p>
+                  )}
+                  {!model.pricing && model.creditsPerInputToken != null && (
+                    <p style={{ fontSize: 11, color: "var(--bru-grey)" }}>
+                      <Coins
+                        size={11}
+                        style={{
+                          display: "inline",
+                          marginRight: 4,
+                          verticalAlign: "-1px",
+                          color: "#d97706",
+                        }}
+                      />
+                      {model.creditsPerInputToken} credits/input token &middot;{" "}
+                      {model.creditsPerOutputToken ?? 0} credits/output token
                     </p>
                   )}
                   {model.maxTokens && (
                     <p style={{ fontSize: 11, color: "var(--bru-grey)" }}>
                       This model supports up to{" "}
-                      <strong>{model.maxTokens.max.toLocaleString()}</strong> output tokens
+                      <strong>{model.maxTokens.max.toLocaleString()}</strong>{" "}
+                      output tokens
                     </p>
                   )}
 
@@ -474,13 +577,35 @@ export function StraicoModelPicker({
                       >
                         <ThumbsUp size={10} /> Strengths
                       </p>
-                      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 2 }}>
+                      <ul
+                        style={{
+                          listStyle: "none",
+                          padding: 0,
+                          margin: 0,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 2,
+                        }}
+                      >
                         {model.pros.map((pro, i) => (
                           <li
                             key={i}
-                            style={{ fontSize: 11, color: "var(--bru-grey)", paddingLeft: 12, position: "relative" }}
+                            style={{
+                              fontSize: 11,
+                              color: "var(--bru-grey)",
+                              paddingLeft: 12,
+                              position: "relative",
+                            }}
                           >
-                            <span style={{ position: "absolute", left: 0, color: "#22c55e" }}>&bull;</span>
+                            <span
+                              style={{
+                                position: "absolute",
+                                left: 0,
+                                color: "#22c55e",
+                              }}
+                            >
+                              &bull;
+                            </span>
                             {pro}
                           </li>
                         ))}
@@ -503,13 +628,35 @@ export function StraicoModelPicker({
                       >
                         <ThumbsDown size={10} /> Weaknesses
                       </p>
-                      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 2 }}>
+                      <ul
+                        style={{
+                          listStyle: "none",
+                          padding: 0,
+                          margin: 0,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 2,
+                        }}
+                      >
                         {model.cons.map((con, i) => (
                           <li
                             key={i}
-                            style={{ fontSize: 11, color: "var(--bru-grey)", paddingLeft: 12, position: "relative" }}
+                            style={{
+                              fontSize: 11,
+                              color: "var(--bru-grey)",
+                              paddingLeft: 12,
+                              position: "relative",
+                            }}
                           >
-                            <span style={{ position: "absolute", left: 0, color: "#f87171" }}>&bull;</span>
+                            <span
+                              style={{
+                                position: "absolute",
+                                left: 0,
+                                color: "#f87171",
+                              }}
+                            >
+                              &bull;
+                            </span>
                             {con}
                           </li>
                         ))}
@@ -551,9 +698,17 @@ export function StraicoModelPicker({
             </span>
             {selectedModel.pricing && (
               <span style={{ marginLeft: 8 }}>
-                ({selectedModel.pricing.coins} coins / {selectedModel.pricing.words}w)
+                ({selectedModel.pricing.coins} coins /{" "}
+                {selectedModel.pricing.words}w)
               </span>
             )}
+            {!selectedModel.pricing &&
+              selectedModel.creditsPerInputToken != null && (
+                <span style={{ marginLeft: 8 }}>
+                  ({selectedModel.creditsPerInputToken}↑ /{" "}
+                  {selectedModel.creditsPerOutputToken ?? 0}↓ credits/tok)
+                </span>
+              )}
           </p>
         </div>
       )}

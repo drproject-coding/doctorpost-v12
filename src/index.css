@@ -1,0 +1,376 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles to ensure a visible background and foreground */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #F2F2F2; /* Light background */
+  color: #282828; /* Dark text */
+}
+
+/* Neo-brutalism CSS variables */
+:root {
+  /* Base colors */
+  --charcoal-black: #282828;
+  --purple-electric: #631DED;
+  --blazing-orange: #FF6C01;
+  --ivory-white: #F2F2F2;
+
+  /* Neo-brutalism design system */
+  --neo-background: var(--ivory-white);
+  --neo-foreground: var(--charcoal-black);
+  --neo-accent: var(--purple-electric);
+  --neo-secondary: var(--blazing-orange);
+  --neo-border: rgba(0, 0, 0, 0.9); /* Strong stroke for brutalist look */
+  --neo-border-width: 3px;
+  --neo-border-radius: 4px;
+  
+  /* Strong "cut" outlines shifted for neo-brutalist offset */
+  --neo-shadow: 6px 6px 0 var(--neo-border);
+  --neo-shadow-hover: 8px 8px 0 rgba(0, 0, 0, 0.95);
+}
+
+/* Optional grid/graph background */
+.neo-grid-bg {
+  background-image:
+    linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(0, 0, 0, 0.03) 100%),
+    linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), rgba(0, 0, 0, 0.03) 100%);
+  background-size: 48px 48px, 48px 48px;
+  background-color: var(--neo-background);
+}
+
+/* Custom components using @layer */
+@layer components {
+  /* Button styles */
+  .neo-button {
+    @apply bg-purple-electric text-ivory-white rounded-neo border-neo border-neo-border py-2 px-4 font-bold transition-all duration-200;
+    box-shadow: var(--neo-shadow);
+  }
+
+  .neo-button:hover {
+    @apply transform -translate-y-1 -translate-x-1;
+    box-shadow: var(--neo-shadow-hover);
+  }
+
+  .neo-button:disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
+
+  .neo-button.secondary {
+    @apply bg-ivory-white text-charcoal-black;
+  }
+
+  /* Input styling */
+  .neo-input {
+    @apply bg-ivory-white text-charcoal-black border-neo border-neo-border rounded-neo p-3 w-full transition-all duration-200;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.8);
+  }
+
+  .neo-input:focus {
+    @apply border-purple-electric outline-none;
+    box-shadow: 5px 5px 0 rgba(99, 29, 237, 0.5);
+  }
+
+  /* Label */
+  .neo-label {
+    @apply text-xs font-bold uppercase tracking-wider mb-2 block;
+  }
+
+  /* Card styling */
+  .neo-card {
+    @apply bg-ivory-white rounded-neo border-neo border-neo-border p-6;
+    box-shadow: var(--neo-shadow);
+  }
+
+  /* Breadcrumb styling - more subtle than cards */
+  .neo-breadcrumb {
+    @apply inline-flex items-center py-2 px-4 bg-gray-100 border-2 border-gray-300 rounded-md;
+  }
+  
+  .neo-breadcrumb-divider {
+    @apply mx-2 text-gray-500 font-normal;
+  }
+  
+  .neo-breadcrumb-item {
+    @apply font-medium text-gray-700;
+  }
+  
+  .neo-breadcrumb-item.active {
+    @apply font-bold text-purple-electric;
+  }
+
+  /* Select styling */
+  select.neo-input {
+    @apply appearance-none pr-8;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+  }
+
+  /* Pill badge */
+  .neo-pill {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-neo border-2 border-neo-border text-xs font-bold;
+  }
+
+  .neo-pill.published {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .neo-pill.scheduled {
+    @apply bg-blue-100 text-blue-800;
+  }
+
+  .neo-pill.draft {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+
+  /* Stats card */
+  .neo-stat-card {
+    @apply neo-card flex flex-col;
+  }
+
+  /* Sidebar styling */
+  .neo-sidebar {
+    @apply bg-ivory-white border-r-neo border-neo-border;
+  }
+
+  .neo-sidebar-link {
+    @apply flex items-center p-3 rounded-neo transition-colors mb-2 font-medium;
+  }
+
+  .neo-sidebar-link.active {
+    @apply bg-purple-electric text-ivory-white;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.8);
+  }
+
+  .neo-sidebar-link:not(.active) {
+    @apply text-charcoal-black hover:bg-gray-100;
+  }
+
+  /* Tone Slider */
+  .neo-tone-slider {
+    @apply bg-ivory-white rounded-neo border-neo border-neo-border p-4 relative;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.8);
+  }
+
+  .neo-tone-slider-content {
+    @apply flex items-center justify-between;
+  }
+
+  .neo-tone-slider-window {
+    @apply flex-1 overflow-hidden mx-4;
+  }
+
+  .neo-tone-slider-track {
+    @apply flex transition-transform duration-300 ease-in-out;
+  }
+
+  .neo-tone-slider-item {
+    @apply flex-shrink-0 w-full px-2;
+  }
+
+  .neo-tone-slider-btn {
+    @apply p-2 rounded-neo border-2 border-neo-border bg-gray-100 hover:bg-gray-200 transition-colors;
+  }
+
+  .neo-tone-title {
+    @apply font-bold text-lg mb-1;
+  }
+
+  .neo-tone-description {
+    @apply text-sm text-gray-600;
+  }
+
+  /* Subtopic suggestions */
+  .neo-subtopic-list {
+    @apply space-y-2 mt-4;
+  }
+
+  .neo-subtopic-item {
+    @apply flex items-center justify-between p-2 bg-gray-50 border-2 border-gray-300 rounded-md hover:bg-gray-100 transition-colors cursor-pointer;
+  }
+
+  .neo-subtopic-item:hover {
+    @apply border-purple-electric;
+  }
+
+  .neo-subtopic-item.selected {
+    @apply bg-purple-100 border-purple-electric;
+  }
+
+  .neo-subtopic-text {
+    @apply text-sm font-medium;
+  }
+
+  .neo-subtopic-meta {
+    @apply text-xs text-gray-500;
+  }
+
+  .neo-subtopic-badge {
+    @apply text-xs font-bold py-0.5 px-1.5 rounded bg-gray-200 border border-gray-300;
+  }
+
+  .neo-subtopic-badge.google_trends {
+    @apply bg-blue-100 border-blue-300 text-blue-800;
+  }
+
+  .neo-subtopic-badge.google_questions {
+    @apply bg-green-100 border-green-300 text-green-800;
+  }
+
+  .neo-subtopic-badge.related_topics {
+    @apply bg-purple-100 border-purple-300 text-purple-800;
+  }
+
+  /* Smart choice badge */
+  .smart-choice-badge {
+    @apply inline-flex items-center gap-1 py-1 px-2 font-bold text-xs rounded-md border-2 border-blazing-orange bg-amber-50 text-blazing-orange;
+  }
+
+  /* Form field with smart recommendation */
+  .form-field-recommendation {
+    @apply relative;
+  }
+
+  .recommendation-tag {
+    @apply absolute -top-1 right-2 z-10;
+  }
+
+  /* Recommendation overlay */
+  .recommendation-loading {
+    @apply absolute inset-0 flex items-center justify-center bg-white/80 z-10 rounded-neo;
+  }
+
+  /* Enhanced Dropdown Styles */
+  .enhanced-dropdown-container {
+    @apply relative;
+  }
+
+  .enhanced-dropdown-trigger {
+    @apply neo-input flex items-center justify-between cursor-pointer;
+  }
+
+  .enhanced-dropdown-content {
+    @apply absolute z-30 mt-1 w-full bg-white border-neo border-neo-border rounded-neo shadow-lg max-h-[300px] overflow-y-auto;
+  }
+
+  .enhanced-dropdown-search {
+    @apply p-2 border-b border-gray-200;
+  }
+
+  .enhanced-dropdown-search input {
+    @apply neo-input !p-2 !shadow-none !border-gray-300; /* Override neo-input padding */
+  }
+
+  .enhanced-dropdown-filters {
+    @apply flex flex-wrap gap-2 p-2 border-b border-gray-200;
+  }
+
+  .enhanced-dropdown-filter-tag {
+    @apply px-2 py-1 text-xs font-bold rounded-md border border-gray-300 bg-gray-100 cursor-pointer hover:bg-gray-200;
+  }
+
+  .enhanced-dropdown-filter-tag.active {
+    @apply bg-purple-electric text-white border-purple-electric;
+  }
+
+  .enhanced-dropdown-category-header {
+    @apply text-xs font-bold uppercase tracking-wider text-gray-500 py-2 px-3 bg-gray-50 border-b border-t border-gray-200;
+  }
+
+  .enhanced-dropdown-option {
+    @apply flex items-center justify-between h-[44px] px-3 py-2 text-sm text-charcoal-black cursor-pointer hover:bg-gray-100 transition-colors duration-200 relative;
+  }
+
+  .enhanced-dropdown-option.selected {
+    @apply bg-purple-100 text-purple-electric font-bold;
+  }
+
+  .enhanced-dropdown-option-content {
+    @apply flex items-center flex-1;
+  }
+
+  .enhanced-dropdown-option-badges {
+    @apply flex items-center space-x-1 ml-2;
+  }
+
+  .badge-high { @apply bg-green-100 text-green-800 border-green-300; }
+  .badge-medium { @apply bg-yellow-100 text-yellow-800 border-yellow-300; }
+  .badge-experimental { @apply bg-red-100 text-red-800 border-red-300; }
+  .badge-trending { @apply bg-amber-100 text-amber-800 border-amber-300; }
+
+  .badge-compatibility-recommended { @apply bg-green-50 text-green-700 border-green-200; }
+  .badge-compatibility-caution { @apply bg-yellow-50 text-yellow-700 border-yellow-200; }
+  .badge-compatibility-not-recommended { @apply bg-red-50 text-red-700 border-red-200; }
+
+  .enhanced-dropdown-tooltip {
+    @apply absolute z-40 w-72 p-3 text-xs text-gray-800 bg-white border-2 border-gray-300 rounded-md shadow-lg left-full ml-2 top-1/2 -translate-y-1/2;
+  }
+
+  .enhanced-dropdown-tooltip h4 {
+    @apply text-sm font-bold mb-1;
+  }
+
+  .enhanced-dropdown-tooltip ul {
+    @apply list-disc list-inside ml-4;
+  }
+
+  .enhanced-dropdown-tooltip li {
+    @apply text-xs;
+  }
+
+  .enhanced-dropdown-suggested-combinations {
+    @apply mt-4 p-4 bg-blue-50 border-2 border-blue-200 rounded-neo;
+  }
+
+  .enhanced-dropdown-suggested-combinations ul {
+    @apply list-disc list-inside ml-4;
+  }
+
+  /* Mobile styles for dropdown */
+  @media (max-width: 768px) {
+    .enhanced-dropdown-content {
+      @apply fixed inset-0 max-h-full rounded-none border-0;
+    }
+    .enhanced-dropdown-search {
+      @apply sticky top-0 bg-white z-40;
+    }
+    .enhanced-dropdown-filters {
+      @apply sticky top-12 bg-white z-40;
+    }
+  }
+}
+
+/* Utility for brutal outlines */
+.brutal-outline {
+  outline: 3px solid var(--neo-border);
+  outline-offset: 4px;
+}
+
+/* Custom styles for date picker input */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5) sepia(1) saturate(5) hue-rotate(200deg); /* Adjust color to match theme */
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="date"]::-webkit-clear-button {
+  display: none;
+}
+
+/* Tailwind color for selected date highlight */
+.bg-blazing-orange-100 {
+  background-color: #FFF3E0; /* A lighter shade of blazing orange */
+}
+.border-blazing-orange {
+  border-color: var(--blazing-orange);
+}

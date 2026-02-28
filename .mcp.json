@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "nocodebackend": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "@nocodebackend/mcp"
+      ],
+      "env": {
+        "NCB_TOKEN": "ncb_a81a476636c4b199908bc500b27e982f18583905d97f362f"
+      }
+    }
+  }
+}

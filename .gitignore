@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+server/.env
+
+# Build output
+dist/
+
+# Prisma
+.prisma/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Serena
+.serena/
+
+# Claude
+.claude/

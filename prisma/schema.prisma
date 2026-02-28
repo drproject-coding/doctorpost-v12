@@ -1,0 +1,51 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  googleId           String?   @unique // New: Google ID for authentication
+  email              String?   @unique // New: User's email from Google or direct registration
+  passwordHash       String?   // New: Hashed password for email-based login
+  name               String?   // New: User's full name from Google or default from email
+  picture            String?   // New: User's profile picture from Google
+
+  firstName          String?
+  lastName           String?
+  companyName        String?
+  role               String?
+  openAIKey          String?
+  industry           String?
+  audience           String[]  @default([])
+  tones              String[]  @default([])
+  offers             String[]  @default([])
+  taboos             String[]  @default([])
+  styleGuideEmoji    Boolean   @default(true)
+  styleGuideHashtags Int       @default(3)
+  styleGuideLinks    String    @default("end")
+  copyGuideline      String?
+  contentStrategy    String?
+  definition         String?
+
+  posts              Post[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  title       String
+  content     String
+  scheduledAt DateTime
+  pillar      String
+  status      String
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

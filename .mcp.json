@@ -3,11 +3,9 @@
     "nocodebackend": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "@nocodebackend/mcp"
-      ],
+      "args": ["@nocodebackend/mcp"],
       "env": {
-        "NCB_TOKEN": "ncb_a81a476636c4b199908bc500b27e982f18583905d97f362f"
+        "NCB_TOKEN": "ncb_6ca267d92d7bbacc332fb89601a103498a3cadbac600b48c"
       }
     }
   }

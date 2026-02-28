@@ -1,0 +1,126 @@
+/* ============================================================
+   BRUDDLE DESIGN SYSTEM — MODALS & OVERLAYS
+   ============================================================ */
+
+
+/* ──────────────────────────────────────────────
+   MODAL / OVERLAY
+   ────────────────────────────────────────────── */
+
+.bru-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: var(--bru-z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--bru-space-4);
+}
+
+.bru-overlay[hidden] {
+  display: none;
+}
+
+.bru-modal {
+  background: var(--bru-surface);
+  border: var(--bru-border);
+  box-shadow: var(--bru-shadow-xl);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: var(--bru-z-modal);
+}
+
+.bru-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--bru-space-4) var(--bru-space-6);
+  background: var(--bru-purple);
+  color: #FFFFFF;
+}
+
+.bru-modal__title {
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-lg);
+  font-weight: var(--bru-weight-bold);
+  margin: 0;
+}
+
+.bru-modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-modal__close:hover { opacity: 1; }
+
+.bru-modal__body {
+  padding: var(--bru-space-6);
+}
+
+.bru-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--bru-space-3);
+  padding: var(--bru-space-4) var(--bru-space-6);
+  border-top: var(--bru-border-dotted);
+}
+
+
+/* ──────────────────────────────────────────────
+   RESPONSIVE — MODALS
+   ────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .bru-modal {
+    max-width: calc(100vw - 32px);
+    max-height: 85vh;
+  }
+
+  .bru-modal__header {
+    padding: var(--bru-space-3) var(--bru-space-4);
+  }
+
+  .bru-modal__body {
+    padding: var(--bru-space-4);
+  }
+
+  .bru-modal__footer {
+    padding: var(--bru-space-3) var(--bru-space-4);
+  }
+}
+
+@media (max-width: 390px) {
+  .bru-overlay {
+    padding: var(--bru-space-2);
+  }
+
+  .bru-modal {
+    max-width: 100%;
+    max-height: 90vh;
+  }
+
+  .bru-modal__title {
+    font-size: var(--bru-text-md);
+  }
+
+  .bru-modal__footer {
+    flex-direction: column;
+  }
+
+  .bru-modal__footer .bru-btn {
+    width: 100%;
+  }
+}

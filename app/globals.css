@@ -1,0 +1,218 @@
+/* Bruddle Design System */
+@import '../styles/bruddle/tokens.css';
+@import '../styles/bruddle/typography.css';
+@import '../styles/bruddle/buttons.css';
+@import '../styles/bruddle/forms.css';
+@import '../styles/bruddle/tags.css';
+@import '../styles/bruddle/cards.css';
+@import '../styles/bruddle/tables.css';
+@import '../styles/bruddle/modals.css';
+@import '../styles/bruddle/pagination.css';
+@import '../styles/bruddle/charts.css';
+@import '../styles/bruddle/layout.css';
+@import '../styles/bruddle/utilities.css';
+@import '../styles/bruddle/responsive.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* App-specific overrides */
+@layer components {
+  /* Enhanced Dropdown (Bruddle doesn't have this component) */
+  .enhanced-dropdown-container {
+    @apply relative;
+  }
+
+  .enhanced-dropdown-trigger {
+    @apply flex items-center justify-between cursor-pointer;
+  }
+
+  .enhanced-dropdown-content {
+    @apply absolute z-30 mt-1 w-full max-h-[300px] overflow-y-auto;
+    background: var(--bru-surface);
+    border: var(--bru-border);
+    box-shadow: var(--bru-shadow-md);
+  }
+
+  .enhanced-dropdown-option {
+    @apply flex items-center justify-between h-[44px] px-3 py-2 text-sm cursor-pointer transition-colors duration-200 relative;
+    color: var(--bru-black);
+  }
+
+  .enhanced-dropdown-option:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .enhanced-dropdown-option.selected {
+    background: rgba(174, 122, 255, 0.12);
+    color: var(--bru-purple);
+    font-weight: 700;
+  }
+
+  .enhanced-dropdown-option-content {
+    @apply flex items-center flex-1;
+  }
+
+  .enhanced-dropdown-option-badges {
+    @apply flex items-center space-x-1 ml-2;
+  }
+
+  .enhanced-dropdown-search {
+    @apply p-2;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .enhanced-dropdown-search input {
+    padding: 8px 12px;
+    font-family: var(--bru-font-primary);
+    font-size: var(--bru-text-md);
+    color: var(--bru-black);
+    background: var(--bru-white);
+    border: var(--bru-border-thin);
+    border-radius: var(--bru-radius-sm);
+    outline: none;
+    width: 100%;
+  }
+
+  .enhanced-dropdown-search input:focus {
+    border-color: var(--bru-purple);
+  }
+
+  .enhanced-dropdown-filters {
+    @apply flex flex-wrap gap-2 p-2;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .enhanced-dropdown-filter-tag {
+    @apply px-2 py-1 text-xs font-bold cursor-pointer;
+    border: 1px solid var(--bru-black);
+    border-radius: var(--bru-radius-sm);
+    background: transparent;
+  }
+
+  .enhanced-dropdown-filter-tag.active {
+    background: var(--bru-purple);
+    color: white;
+    border-color: var(--bru-purple);
+  }
+
+  .enhanced-dropdown-category-header {
+    @apply text-xs font-bold uppercase tracking-wider py-2 px-3;
+    color: var(--bru-grey);
+    background: var(--bru-cream);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .enhanced-dropdown-tooltip {
+    @apply absolute z-40 w-72 p-3 text-xs;
+    background: var(--bru-surface);
+    border: var(--bru-border);
+    box-shadow: var(--bru-shadow-md);
+    color: var(--bru-black);
+    left: 100%;
+    margin-left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .enhanced-dropdown-tooltip h4 {
+    @apply text-sm font-bold mb-1;
+  }
+
+  .enhanced-dropdown-tooltip ul {
+    @apply list-disc list-inside ml-4;
+  }
+
+  .enhanced-dropdown-tooltip li {
+    @apply text-xs;
+  }
+
+  .enhanced-dropdown-suggested-combinations {
+    @apply mt-4 p-4;
+    background: rgba(174, 122, 255, 0.08);
+    border: var(--bru-border-thin);
+    border-color: var(--bru-purple);
+  }
+
+  .enhanced-dropdown-suggested-combinations ul {
+    @apply list-disc list-inside ml-4;
+  }
+
+  /* Badge variants for dropdown */
+  .badge-high {
+    background: rgba(152, 233, 171, 0.2);
+    color: #166534;
+    border: 1px solid var(--bru-mint);
+  }
+  .badge-medium {
+    background: rgba(250, 232, 164, 0.3);
+    color: #92400E;
+    border: 1px solid var(--bru-yellow);
+  }
+  .badge-experimental {
+    background: rgba(233, 152, 152, 0.2);
+    color: #991B1B;
+    border: 1px solid var(--bru-pink);
+  }
+  .badge-trending {
+    background: rgba(250, 232, 164, 0.3);
+    color: #92400E;
+    border: 1px solid var(--bru-yellow);
+  }
+  .badge-compatibility-recommended {
+    background: rgba(152, 233, 171, 0.15);
+    color: #166534;
+    border: 1px solid rgba(152, 233, 171, 0.5);
+  }
+  .badge-compatibility-caution {
+    background: rgba(250, 232, 164, 0.2);
+    color: #92400E;
+    border: 1px solid rgba(250, 232, 164, 0.5);
+  }
+  .badge-compatibility-not-recommended {
+    background: rgba(233, 152, 152, 0.15);
+    color: #991B1B;
+    border: 1px solid rgba(233, 152, 152, 0.5);
+  }
+
+  /* Smart Choice Badge */
+  .smart-choice-badge {
+    @apply inline-flex items-center gap-1 py-1 px-2 font-bold text-xs;
+    border: 2px solid var(--bru-yellow);
+    background: rgba(250, 232, 164, 0.3);
+    color: #92400E;
+    border-radius: var(--bru-radius-sm);
+  }
+
+  /* Mobile full-screen dropdown */
+  @media (max-width: 768px) {
+    .enhanced-dropdown-content {
+      @apply fixed inset-0 max-h-full rounded-none border-0;
+    }
+    .enhanced-dropdown-search {
+      @apply sticky top-0 z-40;
+      background: var(--bru-surface);
+    }
+    .enhanced-dropdown-filters {
+      @apply sticky top-12 z-40;
+      background: var(--bru-surface);
+    }
+  }
+}
+
+/* Custom styles for date picker input */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5) sepia(1) saturate(5) hue-rotate(240deg);
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="date"]::-webkit-clear-button {
+  display: none;
+}

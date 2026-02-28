@@ -1,0 +1,487 @@
+/* ============================================================
+   BRUDDLE DESIGN SYSTEM — FORMS
+   Inputs, selects, textareas, checkboxes, radios, switches.
+   Matches Bruddle "Padded Inputs" + "General Controls" specs.
+
+   INPUTS:
+     .bru-field             Wrapper (label + input)
+     .bru-field__label      Field label (above input)
+     .bru-input             Text input / textarea
+     .bru-input--error      Error state (pink border)
+     .bru-input--success    Success state (mint border)
+     .bru-select            Select dropdown
+
+   CONTROLS:
+     .bru-checkbox          Checkbox
+     .bru-radio             Radio button
+     .bru-switch            Toggle switch
+
+   COUNTER:
+     .bru-counter           Number input with +/- buttons
+   ============================================================ */
+
+
+/* ──────────────────────────────────────────────
+   FIELD WRAPPER
+   Vertical stack: label → input
+   ────────────────────────────────────────────── */
+
+.bru-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bru-space-1);
+}
+
+.bru-field__label {
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-sm);
+  font-weight: var(--bru-weight-semibold);
+  color: var(--bru-grey);
+  text-transform: uppercase;
+  letter-spacing: var(--bru-tracking-wide);
+}
+
+
+/* ──────────────────────────────────────────────
+   TEXT INPUT
+   ────────────────────────────────────────────── */
+
+.bru-input {
+  padding: 10px 14px;
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-md);
+  font-weight: var(--bru-weight-regular);
+  color: var(--bru-black);
+  background: var(--bru-white);
+  border: var(--bru-border);
+  border-radius: var(--bru-radius-md);
+  box-shadow: var(--bru-shadow-sm);
+  outline: none;
+  transition:
+    border-color var(--bru-duration-fast) var(--bru-ease),
+    box-shadow var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-input::placeholder {
+  color: var(--bru-grey-85);
+  font-weight: var(--bru-weight-regular);
+}
+
+.bru-input:focus {
+  border-color: var(--bru-purple);
+  box-shadow: 3px 3px 0 0 var(--bru-purple);
+}
+
+.bru-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--bru-cream);
+}
+
+/* Error state */
+.bru-input--error {
+  border-color: var(--bru-pink);
+}
+
+.bru-input--error:focus {
+  box-shadow: 3px 3px 0 0 var(--bru-pink);
+}
+
+/* Success state */
+.bru-input--success {
+  border-color: var(--bru-mint);
+}
+
+.bru-input--success:focus {
+  box-shadow: 3px 3px 0 0 var(--bru-mint);
+}
+
+/* Validation icons (position inside input) */
+.bru-field--has-icon {
+  position: relative;
+}
+
+.bru-field--has-icon .bru-input {
+  padding-right: 40px;
+}
+
+.bru-field__icon {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+
+/* ──────────────────────────────────────────────
+   TEXTAREA
+   ────────────────────────────────────────────── */
+
+textarea.bru-input {
+  min-height: 100px;
+  resize: vertical;
+  line-height: var(--bru-leading-normal);
+}
+
+
+/* ──────────────────────────────────────────────
+   SELECT
+   ────────────────────────────────────────────── */
+
+.bru-select {
+  padding: 10px 38px 10px 14px;
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-md);
+  font-weight: var(--bru-weight-regular);
+  color: var(--bru-black);
+  background: var(--bru-white);
+  border: var(--bru-border);
+  border-radius: var(--bru-radius-md);
+  box-shadow: var(--bru-shadow-sm);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  transition:
+    border-color var(--bru-duration-fast) var(--bru-ease),
+    box-shadow var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-select:focus {
+  border-color: var(--bru-purple);
+  box-shadow: 3px 3px 0 0 var(--bru-purple);
+}
+
+.bru-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* ──────────────────────────────────────────────
+   CHECKBOX
+   Custom checkbox matching Bruddle spec.
+   Green check, square, bordered.
+   ────────────────────────────────────────────── */
+
+.bru-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bru-space-2);
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-md);
+  font-weight: var(--bru-weight-bold);
+  color: var(--bru-black);
+}
+
+.bru-checkbox input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: var(--bru-border);
+  border-radius: 2px;
+  background: var(--bru-white);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-checkbox input[type="checkbox"]:checked {
+  background: var(--bru-mint);
+  border-color: var(--bru-black);
+}
+
+.bru-checkbox input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid #FFFFFF;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+}
+
+.bru-checkbox input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--bru-purple);
+  outline-offset: 2px;
+}
+
+/* Dark variant */
+.bru-checkbox--dark input[type="checkbox"] {
+  background: #000000;
+  border-color: #000000;
+}
+
+.bru-checkbox--dark input[type="checkbox"]:checked {
+  background: var(--bru-mint);
+}
+
+
+/* ──────────────────────────────────────────────
+   RADIO
+   Circular, colored center dot.
+   ────────────────────────────────────────────── */
+
+.bru-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bru-space-2);
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-md);
+  font-weight: var(--bru-weight-bold);
+  color: var(--bru-black);
+}
+
+.bru-radio input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: var(--bru-border);
+  border-radius: var(--bru-radius-full);
+  background: var(--bru-white);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-radio input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--bru-radius-full);
+  background: var(--bru-mint);
+  transform: translate(-50%, -50%);
+}
+
+/* Color variants */
+.bru-radio--pink input[type="radio"]:checked::after { background: var(--bru-pink); }
+.bru-radio--purple input[type="radio"]:checked::after { background: var(--bru-purple); }
+
+/* Dark variant */
+.bru-radio--dark {
+  background: #000000;
+  color: #FFFFFF;
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+
+.bru-radio--dark input[type="radio"] {
+  border-color: #FFFFFF;
+  background: transparent;
+}
+
+.bru-radio input[type="radio"]:focus-visible {
+  outline: 2px solid var(--bru-purple);
+  outline-offset: 2px;
+}
+
+
+/* ──────────────────────────────────────────────
+   SWITCH (TOGGLE)
+   Purple track, black knob.
+   ────────────────────────────────────────────── */
+
+.bru-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bru-space-2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.bru-switch__track {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border: var(--bru-border);
+  border-radius: 2px;
+  background: var(--bru-purple-20);
+  transition: background var(--bru-duration-normal) var(--bru-ease);
+}
+
+.bru-switch__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: var(--bru-purple);
+  border: 1px solid var(--bru-black);
+  border-radius: 1px;
+  transition: transform var(--bru-duration-normal) var(--bru-ease);
+}
+
+.bru-switch input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.bru-switch input[type="checkbox"]:checked + .bru-switch__track {
+  background: var(--bru-purple-20);
+}
+
+.bru-switch input[type="checkbox"]:checked + .bru-switch__track .bru-switch__knob {
+  transform: translateX(18px);
+  background: #000000;
+}
+
+.bru-switch input[type="checkbox"]:focus-visible + .bru-switch__track {
+  outline: 2px solid var(--bru-purple);
+  outline-offset: 2px;
+}
+
+
+/* ──────────────────────────────────────────────
+   COUNTER INPUT
+   Number with +/- controls.
+   ────────────────────────────────────────────── */
+
+.bru-counter {
+  display: inline-flex;
+  align-items: center;
+  border: var(--bru-border);
+  border-radius: var(--bru-radius-md);
+  box-shadow: var(--bru-shadow-sm);
+  overflow: hidden;
+  background: var(--bru-white);
+}
+
+.bru-counter__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  font-weight: var(--bru-weight-bold);
+  cursor: pointer;
+  color: var(--bru-black);
+  transition: background var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-counter__btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.bru-counter__value {
+  width: 40px;
+  text-align: center;
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-md);
+  font-weight: var(--bru-weight-bold);
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--bru-black);
+  -moz-appearance: textfield;
+}
+
+.bru-counter__value::-webkit-inner-spin-button,
+.bru-counter__value::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+/* ──────────────────────────────────────────────
+   FORM LAYOUT HELPERS
+   ────────────────────────────────────────────── */
+
+.bru-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--bru-space-4);
+}
+
+.bru-form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bru-space-4);
+}
+
+.bru-form-actions {
+  display: flex;
+  gap: var(--bru-space-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+
+/* ──────────────────────────────────────────────
+   DARK MODE
+   ────────────────────────────────────────────── */
+
+body.dark-mode .bru-input,
+body.dark-mode .bru-select {
+  background: #1A1A1A;
+  color: #F2F2F2;
+}
+
+body.dark-mode .bru-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+body.dark-mode .bru-select {
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23FFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+body.dark-mode .bru-field__label {
+  color: var(--bru-grey);
+}
+
+body.dark-mode .bru-counter {
+  background: #1A1A1A;
+}
+
+body.dark-mode .bru-label--inv {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+
+/* ──────────────────────────────────────────────
+   RESPONSIVE — FORMS
+   ────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .bru-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .bru-form-group label {
+    font-size: var(--bru-text-sm);
+  }
+}
+
+@media (max-width: 390px) {
+  .bru-input,
+  .bru-select {
+    font-size: 16px; /* Prevent iOS zoom on focus */
+  }
+
+  .bru-form-group {
+    margin-bottom: var(--bru-space-3);
+  }
+}

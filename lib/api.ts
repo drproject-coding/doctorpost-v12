@@ -1,0 +1,469 @@
+import {
+  BrandProfile,
+  ScheduledPost,
+  AnalyticsData,
+  SubtopicSuggestion,
+  PostRecommendation,
+  User,
+  AiSettings,
+} from "./types";
+import { generateWithAi } from "./ai/aiService";
+
+// --- NCB snake_case <-> camelCase mapping helpers ---
+
+interface NcbProfileRow {
+  id: string;
+  user_id: string;
+  first_name?: string | null;
+  last_name?: string | null;
+  company_name?: string | null;
+  role?: string | null;
+  industry?: string | null;
+  audience?: string | null;
+  tones?: string | null;
+  offers?: string | null;
+  taboos?: string | null;
+  style_guide_emoji?: boolean | null;
+  style_guide_hashtags?: number | null;
+  style_guide_links?: string | null;
+  copy_guideline?: string | null;
+  content_strategy?: string | null;
+  definition?: string | null;
+  openai_key?: string | null;
+  ai_provider?: string | null;
+  claude_api_key?: string | null;
+  straico_api_key?: string | null;
+  straico_model?: string | null;
+  oneforall_api_key?: string | null;
+  oneforall_model?: string | null;
+}
+
+interface NcbPostRow {
+  id: string;
+  user_id: string;
+  title: string;
+  content: string;
+  scheduled_at?: string | null;
+  pillar?: string | null;
+  status?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+/**
+ * NCB read endpoints may return a raw array or an object wrapping it
+ * (e.g. { data: [...] } or { rows: [...] }). This normalizes to an array.
+ */
+function extractRows<T>(json: unknown): T[] {
+  if (Array.isArray(json)) return json as T[];
+  if (json && typeof json === "object") {
+    const obj = json as Record<string, unknown>;
+    if (Array.isArray(obj.data)) return obj.data as T[];
+    if (Array.isArray(obj.rows)) return obj.rows as T[];
+    // Single object (e.g. update response) - not an array read
+  }
+  return [];
+}
+
+function parseJsonArray(val: string | null | undefined): string[] {
+  if (!val) return [];
+  try {
+    const parsed: unknown = JSON.parse(val);
+    return Array.isArray(parsed) ? (parsed as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function mapProfileFromNcb(row: NcbProfileRow): BrandProfile {
+  const firstName = row.first_name ?? "";
+  const lastName = row.last_name ?? "";
+  const aiProvider = row.ai_provider as BrandProfile["aiProvider"] | undefined;
+  return {
+    id: row.id,
+    name:
+      firstName && lastName
+        ? `${firstName} ${lastName}`
+        : (row.company_name ?? "N/A"),
+    firstName,
+    lastName,
+    companyName: row.company_name ?? "",
+    role: row.role ?? "",
+    aiProvider: aiProvider ?? "claude",
+    claudeApiKey: row.claude_api_key ?? "",
+    straicoApiKey: row.straico_api_key ?? "",
+    straicoModel: row.straico_model ?? "openai/gpt-4o-mini",
+    oneforallApiKey: row.oneforall_api_key ?? "",
+    oneforallModel: row.oneforall_model ?? "anthropic/claude-4-sonnet",
+    industry: row.industry ?? "",
+    audience: parseJsonArray(row.audience),
+    tones: parseJsonArray(row.tones),
+    offers: parseJsonArray(row.offers),
+    taboos: parseJsonArray(row.taboos),
+    styleGuide: {
+      emoji: row.style_guide_emoji ?? true,
+      hashtags: row.style_guide_hashtags ?? 3,
+      links: row.style_guide_links ?? "end",
+    },
+    copyGuideline: row.copy_guideline ?? "",
+    contentStrategy: row.content_strategy ?? "",
+    definition: row.definition ?? "",
+  };
+}
+
+function mapPostFromNcb(row: NcbPostRow): ScheduledPost {
+  return {
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    scheduledAt: row.scheduled_at ?? "",
+    pillar: row.pillar ?? "",
+    status: (row.status ?? "draft") as ScheduledPost["status"],
+    userId: row.user_id,
+  };
+}
+
+// --- Auth ---
+
+export const getCurrentUser = async (): Promise<User | null> => {
+  const res = await fetch("/api/auth/get-session", {
+    credentials: "include",
+  });
+  if (!res.ok) return null;
+  const data = (await res.json()) as { user?: User };
+  return data.user ?? null;
+};
+
+// --- Brand Profile ---
+
+export const getBrandProfile = async (
+  _userId: string,
+): Promise<BrandProfile> => {
+  const res = await fetch("/api/data/read/profiles", {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch brand profile: ${res.statusText}`);
+  }
+  const rows = extractRows<NcbProfileRow>(await res.json());
+  if (rows.length === 0) {
+    // Return empty profile - user hasn't created one yet
+    return {
+      id: "",
+      name: "N/A",
+      firstName: "",
+      lastName: "",
+      companyName: "",
+      role: "",
+      aiProvider: "claude",
+      claudeApiKey: "",
+      straicoApiKey: "",
+      straicoModel: "openai/gpt-4o-mini",
+      oneforallApiKey: "",
+      oneforallModel: "anthropic/claude-4-sonnet",
+      industry: "",
+      audience: [],
+      tones: [],
+      offers: [],
+      taboos: [],
+      styleGuide: { emoji: true, hashtags: 3, links: "end" },
+      copyGuideline: "",
+      contentStrategy: "",
+      definition: "",
+    };
+  }
+  return mapProfileFromNcb(rows[0]);
+};
+
+export const updateBrandProfile = async (
+  profile: BrandProfile,
+): Promise<BrandProfile> => {
+  const payload = {
+    first_name: profile.firstName,
+    last_name: profile.lastName,
+    company_name: profile.companyName,
+    role: profile.role,
+    industry: profile.industry,
+    audience: JSON.stringify(profile.audience),
+    tones: JSON.stringify(profile.tones),
+    offers: JSON.stringify(profile.offers),
+    taboos: JSON.stringify(profile.taboos),
+    style_guide_emoji: profile.styleGuide.emoji,
+    style_guide_hashtags: profile.styleGuide.hashtags,
+    style_guide_links: profile.styleGuide.links,
+    copy_guideline: profile.copyGuideline,
+    content_strategy: profile.contentStrategy,
+    definition: profile.definition,
+    ai_provider: profile.aiProvider,
+    claude_api_key: profile.claudeApiKey,
+    straico_api_key: profile.straicoApiKey,
+    straico_model: profile.straicoModel,
+    oneforall_api_key: profile.oneforallApiKey,
+    oneforall_model: profile.oneforallModel,
+  };
+
+  if (profile.id) {
+    // Update existing
+    const res = await fetch(`/api/data/update/profiles/${profile.id}`, {
+      method: "PUT",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to update brand profile: ${res.statusText}`);
+    }
+    const data = (await res.json()) as NcbProfileRow;
+    return mapProfileFromNcb(data);
+  } else {
+    // Create new
+    const res = await fetch("/api/data/create/profiles", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to create brand profile: ${res.statusText}`);
+    }
+    const data = (await res.json()) as NcbProfileRow;
+    return mapProfileFromNcb(data);
+  }
+};
+
+// --- Posts ---
+
+export const getScheduledPosts = async (): Promise<ScheduledPost[]> => {
+  const res = await fetch("/api/data/read/posts", {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch posts: ${res.statusText}`);
+  }
+  const rows = extractRows<NcbPostRow>(await res.json());
+  return rows.map(mapPostFromNcb);
+};
+
+export const updatePost = async (
+  updatedPost: ScheduledPost,
+): Promise<ScheduledPost> => {
+  const res = await fetch(`/api/data/update/posts/${updatedPost.id}`, {
+    method: "PUT",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: updatedPost.title,
+      content: updatedPost.content,
+      scheduled_at: updatedPost.scheduledAt,
+      pillar: updatedPost.pillar,
+      status: updatedPost.status,
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to update post: ${res.statusText}`);
+  }
+  const data = (await res.json()) as NcbPostRow;
+  return mapPostFromNcb(data);
+};
+
+export const savePostDraft = async (post: ScheduledPost): Promise<void> => {
+  const res = await fetch("/api/data/create/posts", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: post.title,
+      content: post.content,
+      scheduled_at: post.scheduledAt,
+      pillar: post.pillar,
+      status: "draft",
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to save draft: ${res.statusText}`);
+  }
+};
+
+export const schedulePost = async (post: ScheduledPost): Promise<void> => {
+  const res = await fetch("/api/data/create/posts", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: post.title,
+      content: post.content,
+      scheduled_at: post.scheduledAt,
+      pillar: post.pillar,
+      status: post.status,
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to schedule post: ${res.statusText}`);
+  }
+};
+
+export const deletePost = async (postId: string): Promise<void> => {
+  const res = await fetch(`/api/data/delete/posts/${postId}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to delete post: ${res.statusText}`);
+  }
+};
+
+// --- Analytics (mock - no real backend yet) ---
+
+export const getAnalytics = async (_userId: string): Promise<AnalyticsData> => {
+  return {
+    totalImpressions: 0,
+    totalReactions: 0,
+    totalComments: 0,
+    ctr: 0,
+    topPerformingPillar: { name: "N/A", value: 0 },
+    topPerformingHook: { name: "N/A", value: 0 },
+    performanceByPillar: [],
+    trendingTopics: [],
+    creatorEngagement: {
+      averageCommentsPerPost: 0,
+      averageReactionsPerPost: 0,
+      followerGrowthRate: 0,
+    },
+  };
+};
+
+// --- Legacy AI wrapper (used by prompts.ts) ---
+export const generateAIContent = async (
+  prompt: string,
+  settings?: AiSettings,
+): Promise<string> => {
+  const { AI_SETTINGS_DEFAULTS } = await import("./ai/constants");
+  const effectiveSettings = settings ?? AI_SETTINGS_DEFAULTS;
+  const response = await generateWithAi(
+    {
+      systemPrompt: "You are a professional LinkedIn content writer.",
+      userMessage: prompt,
+    },
+    effectiveSettings,
+  );
+  return response.content;
+};
+
+// --- AI Services (client-side, multi-provider) ---
+
+export const findSubtopics = async (
+  topic: string,
+  count: number = 5,
+  settings?: AiSettings,
+): Promise<SubtopicSuggestion[]> => {
+  if (!settings) {
+    throw new Error(
+      "AI settings are required. Please configure an AI provider in Settings.",
+    );
+  }
+
+  const systemPrompt = `You are a LinkedIn content strategist. Given a topic, suggest ${count} specific subtopics that would make engaging LinkedIn posts. Return a JSON array of objects with fields: id (string, unique), text (string, the subtopic), source (string, one of "google_trends", "google_questions", "related_topics"), relevanceScore (number 0-1), searchVolume (number). Only return the JSON array, no other text.`;
+
+  const response = await generateWithAi(
+    { systemPrompt, userMessage: `Topic: ${topic}` },
+    settings,
+  );
+
+  try {
+    const cleaned = response.content
+      .replace(/```json?\n?/g, "")
+      .replace(/```/g, "")
+      .trim();
+    return JSON.parse(cleaned) as SubtopicSuggestion[];
+  } catch {
+    throw new Error("Failed to parse subtopic suggestions from AI response");
+  }
+};
+
+export const getPostRecommendations = async (
+  topic: string,
+  subtopic: string,
+  settings?: AiSettings,
+): Promise<PostRecommendation> => {
+  if (!settings) {
+    throw new Error(
+      "AI settings are required. Please configure an AI provider in Settings.",
+    );
+  }
+
+  const systemPrompt = `You are a LinkedIn content strategist. Given a topic and subtopic, recommend the best post configuration. Return a single JSON object with these fields:
+- postType (string): one of "educational", "storytelling", "opinion", "how-to", "case-study", "listicle"
+- hookPattern (string): one of "question", "statistic", "bold-claim", "story-opener", "contrarian", "curiosity-gap"
+- contentPillar (string): one of "thought-leadership", "industry-insights", "personal-branding", "how-to-guides", "case-studies", "trends"
+- toneId (string): one of "casual-witty", "professional-authority", "approachable-expert"
+- confidence (number 0-1)
+- reasoning (object with fields: postType, hookPattern, contentPillar, tone - each a string explaining the choice)
+- compatiblePostTypes (string array)
+- compatibleHookPatterns (string array)
+- compatibleContentPillars (string array)
+- compatibleTones (string array)
+Only return the JSON object, no other text.`;
+
+  const response = await generateWithAi(
+    { systemPrompt, userMessage: `Topic: ${topic}\nSubtopic: ${subtopic}` },
+    settings,
+  );
+
+  try {
+    const cleaned = response.content
+      .replace(/```json?\n?/g, "")
+      .replace(/```/g, "")
+      .trim();
+    return JSON.parse(cleaned) as PostRecommendation;
+  } catch {
+    throw new Error("Failed to parse recommendations from AI response");
+  }
+};
+
+// --- OpenAI Key Validation ---
+export const validateOpenAIKey = async (
+  apiKey: string,
+): Promise<{ success: boolean; message: string }> => {
+  if (!apiKey || !apiKey.startsWith("sk-")) {
+    return {
+      success: false,
+      message: "Invalid API key format. OpenAI keys start with 'sk-'.",
+    };
+  }
+
+  try {
+    const res = await fetch("https://api.openai.com/v1/models", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+
+    if (res.ok) {
+      return { success: true, message: "API key is valid!" };
+    }
+
+    if (res.status === 401) {
+      return {
+        success: false,
+        message: "Invalid API key. Please check and try again.",
+      };
+    }
+
+    return {
+      success: false,
+      message: `Validation failed (HTTP ${res.status}). Try again later.`,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "Could not reach OpenAI. Check your internet connection.",
+    };
+  }
+};
+
+// --- Dropdown Data (client-side) ---
+export {
+  enhancedPostTypes,
+  enhancedHookPatterns,
+  enhancedContentPillars,
+  enhancedToneOptions,
+} from "./dropdownData";

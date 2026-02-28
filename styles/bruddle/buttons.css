@@ -1,0 +1,302 @@
+/* ============================================================
+   BRUDDLE DESIGN SYSTEM — BUTTONS
+   All button variants matching Bruddle specification.
+
+   VARIANTS:
+     .bru-btn              Base (white bg, black border)
+     .bru-btn--primary     Purple filled
+     .bru-btn--outline     White/transparent with border
+     .bru-btn--ghost       No border, no bg (text only)
+     .bru-btn--danger      Red filled
+     .bru-btn--dark        Black filled, white text
+
+   SIZES:
+     (default)             Standard (padding 8px 20px)
+     .bru-btn--sm          Small (padding 6px 14px, 12px font)
+     .bru-btn--lg          Large (padding 12px 28px, 16px font)
+
+   MODIFIERS:
+     .bru-btn--icon        Icon-only button (square)
+     .bru-btn--icon-sm     Small icon-only
+     .bru-btn--block       Full width
+     disabled              Dimmed, no pointer
+   ============================================================ */
+
+
+/* ──────────────────────────────────────────────
+   BASE
+   ────────────────────────────────────────────── */
+
+.bru-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bru-space-2);
+  padding: 8px 20px;
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-sm);
+  font-weight: var(--bru-weight-bold);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: var(--bru-tracking-wide);
+  color: var(--bru-black);
+  background: var(--bru-white);
+  border: var(--bru-border);
+  border-radius: var(--bru-radius-md);
+  box-shadow: var(--bru-shadow-sm);
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform var(--bru-duration-fast) var(--bru-ease),
+    box-shadow var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-btn:hover {
+  transform: translate(1px, 1px);
+  box-shadow: var(--bru-shadow-xs);
+}
+
+.bru-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+.bru-btn:disabled,
+.bru-btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.bru-btn:focus-visible {
+  outline: 2px solid var(--bru-purple);
+  outline-offset: 2px;
+}
+
+
+/* ──────────────────────────────────────────────
+   VARIANT: PRIMARY (purple filled)
+   ────────────────────────────────────────────── */
+
+.bru-btn--primary {
+  background: var(--bru-purple);
+  color: #FFFFFF;
+}
+
+.bru-btn--primary:hover {
+  background: var(--bru-purple-hover);
+}
+
+
+/* ──────────────────────────────────────────────
+   VARIANT: OUTLINE (transparent bg)
+   ────────────────────────────────────────────── */
+
+.bru-btn--outline {
+  background: transparent;
+  color: var(--bru-black);
+}
+
+
+/* ──────────────────────────────────────────────
+   VARIANT: GHOST (no border, no shadow)
+   ────────────────────────────────────────────── */
+
+.bru-btn--ghost {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--bru-black);
+}
+
+.bru-btn--ghost:hover {
+  transform: none;
+  box-shadow: none;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.bru-btn--ghost:active {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.bru-btn--ghost.bru-btn--purple {
+  color: var(--bru-purple);
+}
+
+.bru-btn--ghost.bru-btn--purple:hover {
+  background: var(--bru-purple-20);
+}
+
+
+/* ──────────────────────────────────────────────
+   VARIANT: DANGER (red)
+   ────────────────────────────────────────────── */
+
+.bru-btn--danger {
+  background: var(--bru-pink);
+  color: var(--bru-error-dark);
+}
+
+.bru-btn--danger:hover {
+  background: var(--bru-pink-80);
+}
+
+
+/* ──────────────────────────────────────────────
+   VARIANT: DARK (black filled)
+   ────────────────────────────────────────────── */
+
+.bru-btn--dark {
+  background: #000000;
+  color: #FFFFFF;
+  border-color: #000000;
+}
+
+body.dark-mode .bru-btn--dark {
+  background: #FFFFFF;
+  color: #000000;
+  border-color: #FFFFFF;
+}
+
+
+/* ──────────────────────────────────────────────
+   SIZES
+   ────────────────────────────────────────────── */
+
+.bru-btn--sm {
+  padding: 6px 14px;
+  font-size: var(--bru-text-sm);
+  border-radius: var(--bru-radius-sm);
+  box-shadow: var(--bru-shadow-xs);
+}
+
+.bru-btn--sm:hover { box-shadow: 1px 1px 0 0 rgba(0,0,0,1); }
+
+.bru-btn--lg {
+  padding: 14px 32px;
+  font-size: var(--bru-text-lg);
+  border-radius: var(--bru-radius-lg);
+  box-shadow: var(--bru-shadow-md);
+}
+
+.bru-btn--lg:hover { box-shadow: var(--bru-shadow-sm); }
+
+
+/* ──────────────────────────────────────────────
+   ICON BUTTONS
+   Square aspect, centered icon.
+   ────────────────────────────────────────────── */
+
+.bru-btn--icon {
+  padding: 8px;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.bru-btn--icon.bru-btn--sm {
+  padding: 6px;
+  min-width: 28px;
+  min-height: 28px;
+}
+
+.bru-btn--icon.bru-btn--lg {
+  padding: 12px;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+
+/* ──────────────────────────────────────────────
+   FULL WIDTH
+   ────────────────────────────────────────────── */
+
+.bru-btn--block {
+  display: flex;
+  width: 100%;
+}
+
+
+/* ──────────────────────────────────────────────
+   BUTTON GROUP
+   ────────────────────────────────────────────── */
+
+.bru-btn-group {
+  display: inline-flex;
+  gap: 0;
+}
+
+.bru-btn-group .bru-btn {
+  border-radius: 0;
+}
+
+.bru-btn-group .bru-btn:first-child {
+  border-radius: var(--bru-radius-md) 0 0 var(--bru-radius-md);
+}
+
+.bru-btn-group .bru-btn:last-child {
+  border-radius: 0 var(--bru-radius-md) var(--bru-radius-md) 0;
+}
+
+.bru-btn-group .bru-btn + .bru-btn {
+  margin-left: -2px;
+}
+
+
+/* ──────────────────────────────────────────────
+   DARK MODE
+   ────────────────────────────────────────────── */
+
+body.dark-mode .bru-btn {
+  background: var(--bru-surface);
+  color: var(--bru-black);
+}
+
+body.dark-mode .bru-btn--primary {
+  background: var(--bru-purple);
+  color: #FFFFFF;
+}
+
+body.dark-mode .bru-btn--outline {
+  background: transparent;
+}
+
+body.dark-mode .bru-btn--ghost {
+  color: var(--bru-black);
+}
+
+body.dark-mode .bru-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+
+/* ──────────────────────────────────────────────
+   RESPONSIVE — BUTTONS
+   ────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .bru-btn-group {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 390px) {
+  .bru-btn {
+    padding: 10px 16px;
+    font-size: var(--bru-text-sm);
+  }
+
+  .bru-btn--lg {
+    padding: 12px 20px;
+    font-size: var(--bru-text-md);
+  }
+
+  .bru-btn-group {
+    width: 100%;
+  }
+
+  .bru-btn-group .bru-btn {
+    flex: 1;
+  }
+}

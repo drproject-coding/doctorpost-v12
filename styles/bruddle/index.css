@@ -1,0 +1,25 @@
+/* ============================================================
+   BRUDDLE DESIGN SYSTEM
+   Import this single file to get the complete design system.
+
+   Usage:
+     <link rel="stylesheet" href="bruddle-design-system/css/index.css">
+
+   Or selectively:
+     @import 'bruddle-design-system/css/tokens.css';
+     @import 'bruddle-design-system/css/buttons.css';
+   ============================================================ */
+
+@import url('tokens.css');
+@import url('typography.css');
+@import url('buttons.css');
+@import url('forms.css');
+@import url('tags.css');
+@import url('cards.css');
+@import url('tables.css');
+@import url('modals.css');
+@import url('pagination.css');
+@import url('charts.css');
+@import url('layout.css');
+@import url('utilities.css');
+@import url('responsive.css');

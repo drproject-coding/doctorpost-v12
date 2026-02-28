@@ -1,0 +1,174 @@
+/* ============================================================
+   BRUDDLE DESIGN SYSTEM — TYPOGRAPHY
+   @font-face declarations + heading/text utility classes.
+   ============================================================ */
+
+
+/* ──────────────────────────────────────────────
+   FONT FACES
+   Visby (primary brand font) + Roboto Flex (fallback)
+   Defined ONCE here — do not redeclare elsewhere.
+   ────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'Roboto Flex';
+  src: url('/fonts/RobotoFlex-VariableFont.ttf') format('truetype');
+  font-weight: 100 1000;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Visby';
+  src: url('/fonts/VisbyRegular.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Visby';
+  src: url('/fonts/VisbyMedium.otf') format('opentype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Visby';
+  src: url('/fonts/VisbySemibold.otf') format('opentype');
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Visby';
+  src: url('/fonts/VisbyBold.otf') format('opentype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+
+/* ──────────────────────────────────────────────
+   HEADINGS
+   Roboto Flex, bold weight, black.
+   Inverted variant: white text on black highlight.
+   ────────────────────────────────────────────── */
+
+.bru-h1,
+.bru-h2,
+.bru-h3,
+.bru-h4,
+.bru-h5,
+.bru-h6 {
+  font-family: var(--bru-font-primary);
+  font-weight: var(--bru-weight-bold);
+  line-height: var(--bru-leading-tight);
+  letter-spacing: var(--bru-tracking-tight);
+  color: var(--bru-black);
+  margin: 0;
+}
+
+.bru-h1 { font-size: var(--bru-text-h1); }
+.bru-h2 { font-size: var(--bru-text-h2); }
+.bru-h3 { font-size: var(--bru-text-h3); }
+.bru-h4 { font-size: var(--bru-text-h4); }
+.bru-h5 { font-size: var(--bru-text-h5); }
+.bru-h6 { font-size: var(--bru-text-h6); }
+
+/* Inverted headings (white on black highlight) */
+.bru-h1--inv,
+.bru-h2--inv,
+.bru-h3--inv,
+.bru-h4--inv,
+.bru-h5--inv,
+.bru-h6--inv {
+  font-family: var(--bru-font-primary);
+  font-weight: var(--bru-weight-bold);
+  line-height: var(--bru-leading-tight);
+  letter-spacing: var(--bru-tracking-tight);
+  color: #FFFFFF;
+  background: #000000;
+  display: inline;
+  padding: 0 4px;
+  margin: 0;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.bru-h1--inv { font-size: var(--bru-text-h1); }
+.bru-h2--inv { font-size: var(--bru-text-h2); }
+.bru-h3--inv { font-size: var(--bru-text-h3); }
+.bru-h4--inv { font-size: var(--bru-text-h4); }
+.bru-h5--inv { font-size: var(--bru-text-h5); }
+.bru-h6--inv { font-size: var(--bru-text-h6); }
+
+
+/* ──────────────────────────────────────────────
+   TEXT LABELS
+   For buttons, form fields, captions.
+   Three sizes: sm (12px), md (14px), lg (16px)
+   Three weights per size.
+   ────────────────────────────────────────────── */
+
+.bru-text {
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-md);
+  font-weight: var(--bru-weight-regular);
+  line-height: var(--bru-leading-normal);
+  color: var(--bru-black);
+}
+
+.bru-text--sm  { font-size: var(--bru-text-sm); }
+.bru-text--lg  { font-size: var(--bru-text-lg); }
+
+.bru-text--medium   { font-weight: var(--bru-weight-medium); }
+.bru-text--semibold  { font-weight: var(--bru-weight-semibold); }
+.bru-text--bold      { font-weight: var(--bru-weight-bold); }
+
+/* Text colors */
+.bru-text--muted     { color: var(--bru-grey); }
+.bru-text--purple    { color: var(--bru-purple); }
+.bru-text--mint      { color: var(--bru-mint); }
+.bru-text--pink      { color: var(--bru-pink); }
+.bru-text--yellow    { color: var(--bru-yellow); }
+.bru-text--error     { color: var(--bru-error-dark); }
+.bru-text--success   { color: var(--bru-success-dark); }
+
+/* Inverted text (white on black) */
+.bru-text--inv {
+  color: #FFFFFF;
+  background: #000000;
+  display: inline;
+  padding: 0 3px;
+}
+
+/* Inverted text 50% opacity */
+.bru-text--inv-50 {
+  color: #FFFFFF;
+  background: rgba(0, 0, 0, 0.50);
+  display: inline;
+  padding: 0 3px;
+}
+
+
+/* ──────────────────────────────────────────────
+   LABEL
+   For form field labels, section titles.
+   Uppercase, wide tracking.
+   ────────────────────────────────────────────── */
+
+.bru-label {
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-xs);
+  font-weight: var(--bru-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--bru-tracking-caps);
+  color: var(--bru-grey);
+  margin: 0;
+}
+
+.bru-label--purple { color: var(--bru-purple); }
+.bru-label--inv {
+  color: #FFFFFF;
+  background: #000000;
+  display: inline;
+  padding: 1px 4px;
+}

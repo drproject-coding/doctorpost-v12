@@ -1,0 +1,417 @@
+/* ============================================================
+   BRUDDLE DESIGN SYSTEM — TAGS, BADGES, TABS, PROGRESS BARS
+   Matching Bruddle "Tabs, Tags, and Badges" specification.
+
+   TABS:
+     .bru-tabs              Tab container
+     .bru-tab               Individual tab
+     .bru-tab--active       Active state (filled black)
+
+   TAGS:
+     .bru-tag               Base tag (outlined)
+     .bru-tag--filled       Solid background variant
+     .bru-tag--purple       Purple color
+     .bru-tag--mint         Mint/green color
+     .bru-tag--pink         Pink/red color
+     .bru-tag--yellow       Yellow color
+     .bru-tag--grey         Grey color
+     .bru-tag--closeable    With close/X button
+     .bru-tag--dot          With leading dot indicator
+
+   BADGES:
+     .bru-badge             Small count badge
+
+   PROGRESS:
+     .bru-progress          Progress bar container
+     .bru-progress__bar     Filled bar
+   ============================================================ */
+
+
+/* ──────────────────────────────────────────────
+   TABS
+   ────────────────────────────────────────────── */
+
+.bru-tabs {
+  display: inline-flex;
+  gap: 0;
+  border: var(--bru-border);
+  border-radius: var(--bru-radius-md);
+  overflow: hidden;
+  background: var(--bru-white);
+}
+
+.bru-tab {
+  padding: 8px 18px;
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-sm);
+  font-weight: var(--bru-weight-bold);
+  color: var(--bru-black);
+  background: transparent;
+  border: none;
+  border-right: var(--bru-border);
+  cursor: pointer;
+  transition: background var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-tab:last-child {
+  border-right: none;
+}
+
+.bru-tab:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.bru-tab--active,
+.bru-tab.active {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+body.dark-mode .bru-tab--active,
+body.dark-mode .bru-tab.active {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+/* Underline tab variant (for page-level navigation) */
+.bru-tabs--underline {
+  border: none;
+  border-radius: 0;
+  gap: var(--bru-space-4);
+  border-bottom: var(--bru-border);
+  background: transparent;
+}
+
+.bru-tabs--underline .bru-tab {
+  border-right: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  padding: 8px 4px;
+}
+
+.bru-tabs--underline .bru-tab--active,
+.bru-tabs--underline .bru-tab.active {
+  background: transparent;
+  color: var(--bru-black);
+  border-bottom-color: var(--bru-purple);
+}
+
+
+/* ──────────────────────────────────────────────
+   TAGS — BASE
+   ────────────────────────────────────────────── */
+
+.bru-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bru-space-1);
+  padding: 4px 12px;
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-sm);
+  font-weight: var(--bru-weight-bold);
+  color: var(--bru-black);
+  background: transparent;
+  border: 1px solid var(--bru-black);
+  border-radius: var(--bru-radius-sm);
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+
+/* ──────────────────────────────────────────────
+   TAGS — COLOR VARIANTS (outlined)
+   ────────────────────────────────────────────── */
+
+.bru-tag--purple {
+  border-color: var(--bru-purple);
+  color: var(--bru-purple);
+}
+
+.bru-tag--mint {
+  border-color: var(--bru-mint);
+  color: var(--bru-success-dark);
+}
+
+.bru-tag--pink {
+  border-color: var(--bru-pink);
+  color: var(--bru-error-dark);
+}
+
+.bru-tag--yellow {
+  border-color: var(--bru-yellow);
+  color: var(--bru-warning-dark);
+}
+
+.bru-tag--grey {
+  border-color: var(--bru-grey-85);
+  color: var(--bru-grey);
+}
+
+
+/* ──────────────────────────────────────────────
+   TAGS — FILLED VARIANTS
+   ────────────────────────────────────────────── */
+
+.bru-tag--filled {
+  background: var(--bru-black);
+  color: #FFFFFF;
+  border-color: var(--bru-black);
+}
+
+body.dark-mode .bru-tag--filled {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+.bru-tag--filled.bru-tag--purple {
+  background: var(--bru-purple);
+  color: #FFFFFF;
+  border-color: var(--bru-purple);
+}
+
+.bru-tag--filled.bru-tag--mint {
+  background: var(--bru-mint);
+  color: var(--bru-success-dark);
+  border-color: var(--bru-mint);
+}
+
+.bru-tag--filled.bru-tag--pink {
+  background: var(--bru-pink);
+  color: var(--bru-error-dark);
+  border-color: var(--bru-pink);
+}
+
+.bru-tag--filled.bru-tag--yellow {
+  background: var(--bru-yellow);
+  color: var(--bru-warning-dark);
+  border-color: var(--bru-yellow);
+}
+
+
+/* ──────────────────────────────────────────────
+   TAGS — DARK VARIANT (black bg)
+   ────────────────────────────────────────────── */
+
+.bru-tag--dark {
+  background: #000000;
+  color: #FFFFFF;
+  border-color: #000000;
+}
+
+.bru-tag--dark.bru-tag--purple {
+  background: #000000;
+  color: var(--bru-purple);
+  border-color: var(--bru-purple);
+}
+
+.bru-tag--dark.bru-tag--mint {
+  background: #000000;
+  color: var(--bru-mint);
+  border-color: var(--bru-mint);
+}
+
+.bru-tag--dark.bru-tag--pink {
+  background: #000000;
+  color: var(--bru-pink);
+  border-color: var(--bru-pink);
+}
+
+
+/* ──────────────────────────────────────────────
+   TAG — CLOSEABLE (with X button)
+   ────────────────────────────────────────────── */
+
+.bru-tag--closeable {
+  padding-right: 6px;
+}
+
+.bru-tag__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-tag__close:hover {
+  opacity: 1;
+}
+
+
+/* ──────────────────────────────────────────────
+   TAG — DOT INDICATOR
+   ────────────────────────────────────────────── */
+
+.bru-tag--dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: var(--bru-radius-full);
+  background: var(--bru-purple);
+  flex-shrink: 0;
+}
+
+.bru-tag--dot.bru-tag--mint::before { background: var(--bru-mint); }
+.bru-tag--dot.bru-tag--pink::before { background: var(--bru-pink); }
+.bru-tag--dot.bru-tag--yellow::before { background: var(--bru-yellow); }
+
+
+/* ──────────────────────────────────────────────
+   BADGES
+   Small count indicators.
+   ────────────────────────────────────────────── */
+
+.bru-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-sm);
+  font-weight: var(--bru-weight-bold);
+  color: var(--bru-black);
+  background: var(--bru-purple-20);
+  border: 1px solid var(--bru-purple);
+  border-radius: 2px;
+  line-height: 1;
+}
+
+.bru-badge--filled {
+  background: var(--bru-purple);
+  color: #FFFFFF;
+}
+
+.bru-badge--mint {
+  background: rgba(152, 233, 171, 0.2);
+  border-color: var(--bru-mint);
+  color: var(--bru-success-dark);
+}
+
+.bru-badge--pink {
+  background: rgba(233, 152, 152, 0.2);
+  border-color: var(--bru-pink);
+  color: var(--bru-error-dark);
+}
+
+
+/* ──────────────────────────────────────────────
+   PROGRESS BARS
+   Thin colored bars with Bruddle styling.
+   ────────────────────────────────────────────── */
+
+.bru-progress {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.bru-progress__bar {
+  height: 100%;
+  background: var(--bru-purple);
+  border-radius: 1px;
+  transition: width var(--bru-duration-slow) var(--bru-ease);
+}
+
+/* Color variants */
+.bru-progress--mint .bru-progress__bar    { background: var(--bru-mint); }
+.bru-progress--pink .bru-progress__bar    { background: var(--bru-pink); }
+.bru-progress--yellow .bru-progress__bar  { background: var(--bru-yellow); }
+.bru-progress--grey .bru-progress__bar    { background: var(--bru-grey); }
+
+/* Size variants */
+.bru-progress--sm { height: 4px; }
+.bru-progress--lg { height: 10px; }
+
+/* With label */
+.bru-progress-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bru-space-1);
+}
+
+.bru-progress-group__label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-xs);
+  font-weight: var(--bru-weight-semibold);
+  color: var(--bru-grey);
+}
+
+body.dark-mode .bru-progress {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+
+/* ──────────────────────────────────────────────
+   STATUS INDICATOR DOT
+   Small colored dot for inline status.
+   ────────────────────────────────────────────── */
+
+.bru-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--bru-radius-full);
+  background: var(--bru-grey);
+  flex-shrink: 0;
+}
+
+.bru-dot--purple  { background: var(--bru-purple); }
+.bru-dot--mint    { background: var(--bru-mint); }
+.bru-dot--pink    { background: var(--bru-pink); }
+.bru-dot--yellow  { background: var(--bru-yellow); }
+.bru-dot--pulse   { animation: bru-pulse 2s ease-in-out infinite; }
+
+@keyframes bru-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+
+/* ──────────────────────────────────────────────
+   RESPONSIVE — TABS & TAGS
+   ────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .bru-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .bru-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .bru-tab {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 390px) {
+  .bru-tab {
+    padding: 8px 12px;
+    font-size: var(--bru-text-xs);
+  }
+
+  .bru-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+}

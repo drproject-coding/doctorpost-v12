@@ -1,0 +1,210 @@
+/* ============================================================
+   BRUDDLE DESIGN SYSTEM — TOKENS
+   Single source of truth for all design tokens.
+   All other CSS files should reference these variables.
+   ============================================================ */
+
+:root {
+  /* ──────────────────────────────────────────────
+     COLOR PALETTE
+     From Bruddle design system specification.
+     ────────────────────────────────────────────── */
+
+  /* Primary */
+  --bru-purple:          #AE7AFF;
+  --bru-purple-20:       rgba(174, 122, 255, 0.20);
+  --bru-purple-hover:    #9B5FF5;
+  --bru-purple-active:   #8A4AE8;
+
+  /* Dark */
+  --bru-black:           #000000;
+  --bru-black-75:        rgba(0, 0, 0, 0.75);
+
+  /* Secondary */
+  --bru-yellow:          #FAE8A4;
+  --bru-yellow-80:       rgba(250, 232, 164, 0.80);
+  --bru-pink:            #E99898;
+  --bru-pink-80:         rgba(233, 152, 152, 0.80);
+  --bru-mint:            #98E9AB;
+  --bru-mint-80:         rgba(152, 233, 171, 0.80);
+
+  /* Grey */
+  --bru-grey:            #5F646D;
+  --bru-grey-85:         rgba(95, 100, 109, 0.85);
+
+  /* Backgrounds */
+  --bru-cream:           #FAF4F0;
+  --bru-white:           #FFFFFF;
+  --bru-surface:         #FEFCFA;
+
+  /* Outline colors */
+  --bru-outline-mint:    #98E9AB;
+  --bru-outline-purple:  #AE7AFF;
+  --bru-outline-pink:    #E99898;
+
+  /* Semantic — Status */
+  --bru-success:         #98E9AB;
+  --bru-success-dark:    #166534;
+  --bru-error:           #E99898;
+  --bru-error-dark:      #991B1B;
+  --bru-warning:         #FAE8A4;
+  --bru-warning-dark:    #92400E;
+  --bru-info:            #AE7AFF;
+  --bru-info-dark:       #5B21B6;
+
+
+  /* ──────────────────────────────────────────────
+     TYPOGRAPHY
+     ────────────────────────────────────────────── */
+
+  --bru-font-primary:    'Visby', 'Roboto Flex', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --bru-font-mono:       'SF Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* Heading sizes (from Bruddle spec) */
+  --bru-text-h1:         48px;
+  --bru-text-h2:         36px;
+  --bru-text-h3:         28px;
+  --bru-text-h4:         24px;
+  --bru-text-h5:         20px;
+  --bru-text-h6:         18px;
+
+  /* Body sizes */
+  --bru-text-lg:         16px;
+  --bru-text-md:         14px;
+  --bru-text-sm:         12px;
+  --bru-text-xs:         11px;
+
+  /* Weights */
+  --bru-weight-regular:  400;
+  --bru-weight-medium:   500;
+  --bru-weight-semibold: 600;
+  --bru-weight-bold:     700;
+
+  /* Line heights */
+  --bru-leading-tight:   1.2;
+  --bru-leading-normal:  1.5;
+  --bru-leading-loose:   1.75;
+
+  /* Letter spacing */
+  --bru-tracking-tight:  -0.02em;
+  --bru-tracking-normal: 0;
+  --bru-tracking-wide:   0.04em;
+  --bru-tracking-caps:   0.08em;
+
+
+  /* ──────────────────────────────────────────────
+     SPACING
+     4px base grid
+     ────────────────────────────────────────────── */
+
+  --bru-space-1:   4px;
+  --bru-space-2:   8px;
+  --bru-space-3:   12px;
+  --bru-space-4:   16px;
+  --bru-space-5:   20px;
+  --bru-space-6:   24px;
+  --bru-space-8:   32px;
+  --bru-space-10:  40px;
+  --bru-space-12:  48px;
+  --bru-space-16:  64px;
+
+
+  /* ──────────────────────────────────────────────
+     BORDERS
+     ────────────────────────────────────────────── */
+
+  --bru-border:          2px solid var(--bru-black);
+  --bru-border-thin:     1px solid var(--bru-black);
+  --bru-border-dashed:   2px dashed var(--bru-black);
+  --bru-border-dotted:   2px dotted rgba(0, 0, 0, 0.15);
+
+  /* Radii — Bruddle uses subtle rounding on interactive elements */
+  --bru-radius-none:     0;
+  --bru-radius-sm:       4px;
+  --bru-radius-md:       6px;
+  --bru-radius-lg:       8px;
+  --bru-radius-full:     9999px;
+
+
+  /* ──────────────────────────────────────────────
+     SHADOWS
+     Offset black (Bruddle signature)
+     ────────────────────────────────────────────── */
+
+  --bru-shadow-xs:       2px 2px 0 0 rgba(0, 0, 0, 1);
+  --bru-shadow-sm:       3px 3px 0 0 rgba(0, 0, 0, 1);
+  --bru-shadow-md:       4px 4px 0 0 rgba(0, 0, 0, 1);
+  --bru-shadow-lg:       6px 6px 0 0 rgba(0, 0, 0, 1);
+  --bru-shadow-xl:       8px 8px 0 0 rgba(0, 0, 0, 1);
+
+  /* Soft variants (for less emphasis) */
+  --bru-shadow-xs-soft:  2px 2px 0 0 rgba(0, 0, 0, 0.12);
+  --bru-shadow-sm-soft:  3px 3px 0 0 rgba(0, 0, 0, 0.12);
+  --bru-shadow-md-soft:  4px 4px 0 0 rgba(0, 0, 0, 0.12);
+  --bru-shadow-lg-soft:  6px 6px 0 0 rgba(0, 0, 0, 0.12);
+
+
+  /* ──────────────────────────────────────────────
+     MOTION
+     ────────────────────────────────────────────── */
+
+  --bru-ease:            cubic-bezier(0.4, 0.0, 0.2, 1);
+  --bru-ease-in:         cubic-bezier(0.4, 0.0, 1, 1);
+  --bru-ease-out:        cubic-bezier(0.0, 0.0, 0.2, 1);
+  --bru-duration-fast:   100ms;
+  --bru-duration-normal: 200ms;
+  --bru-duration-slow:   350ms;
+
+
+  /* ──────────────────────────────────────────────
+     LAYOUT
+     ────────────────────────────────────────────── */
+
+  --bru-sidebar-width:           280px;
+  --bru-sidebar-collapsed-width: 68px;
+  --bru-topbar-height:           68px;
+  --bru-footer-height:           52px;
+
+
+  /* ──────────────────────────────────────────────
+     Z-INDEX SCALE
+     ────────────────────────────────────────────── */
+
+  --bru-z-base:     1;
+  --bru-z-dropdown: 100;
+  --bru-z-sticky:   200;
+  --bru-z-overlay:  300;
+  --bru-z-modal:    400;
+  --bru-z-toast:    500;
+}
+
+
+/* ──────────────────────────────────────────────
+   DARK MODE OVERRIDES
+   ────────────────────────────────────────────── */
+
+body.dark-mode {
+  --bru-cream:           #1A1A1A;
+  --bru-white:           #1A1A1A;
+  --bru-surface:         #282828;
+  --bru-black:           #FFFFFF;
+  --bru-black-75:        rgba(255, 255, 255, 0.75);
+  --bru-grey:            #999999;
+  --bru-grey-85:         rgba(153, 153, 153, 0.85);
+
+  --bru-border:          2px solid rgba(255, 255, 255, 0.20);
+  --bru-border-thin:     1px solid rgba(255, 255, 255, 0.20);
+  --bru-border-dashed:   2px dashed rgba(255, 255, 255, 0.20);
+  --bru-border-dotted:   2px dotted rgba(255, 255, 255, 0.10);
+
+  --bru-shadow-xs:       2px 2px 0 0 rgba(255, 255, 255, 0.08);
+  --bru-shadow-sm:       3px 3px 0 0 rgba(255, 255, 255, 0.08);
+  --bru-shadow-md:       4px 4px 0 0 rgba(255, 255, 255, 0.08);
+  --bru-shadow-lg:       6px 6px 0 0 rgba(255, 255, 255, 0.08);
+  --bru-shadow-xl:       8px 8px 0 0 rgba(255, 255, 255, 0.08);
+
+  --bru-shadow-xs-soft:  2px 2px 0 0 rgba(255, 255, 255, 0.04);
+  --bru-shadow-sm-soft:  3px 3px 0 0 rgba(255, 255, 255, 0.04);
+  --bru-shadow-md-soft:  4px 4px 0 0 rgba(255, 255, 255, 0.04);
+  --bru-shadow-lg-soft:  6px 6px 0 0 rgba(255, 255, 255, 0.04);
+}

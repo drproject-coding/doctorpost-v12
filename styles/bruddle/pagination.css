@@ -1,0 +1,146 @@
+/* ============================================================
+   BRUDDLE DESIGN SYSTEM — PAGINATION
+   ============================================================ */
+
+
+/* ──────────────────────────────────────────────
+   PAGINATION — CENTERED NUMBERS
+   ────────────────────────────────────────────── */
+
+.bru-pagination {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: var(--bru-border);
+  border-radius: var(--bru-radius-md);
+  overflow: hidden;
+  background: var(--bru-white);
+}
+
+.bru-pagination__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  border-right: var(--bru-border);
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--bru-black);
+  transition: background var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-pagination__btn:last-child {
+  border-right: none;
+  border-left: var(--bru-border);
+}
+
+.bru-pagination__btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.bru-pagination__btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.bru-pagination__page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 4px;
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-sm);
+  font-weight: var(--bru-weight-bold);
+  color: var(--bru-black);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-pagination__page:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.bru-pagination__page--active,
+.bru-pagination__page.active {
+  background: var(--bru-purple);
+  color: #FFFFFF;
+}
+
+.bru-pagination__info {
+  padding: 0 var(--bru-space-3);
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-sm);
+  font-weight: var(--bru-weight-bold);
+  color: var(--bru-black);
+  white-space: nowrap;
+}
+
+/* Dark variant */
+.bru-pagination--dark {
+  background: #000000;
+  border-color: #FFFFFF;
+}
+
+.bru-pagination--dark .bru-pagination__btn {
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.bru-pagination--dark .bru-pagination__page {
+  color: #FFFFFF;
+}
+
+.bru-pagination--dark .bru-pagination__page--active {
+  background: var(--bru-purple);
+}
+
+.bru-pagination--dark .bru-pagination__info {
+  color: #FFFFFF;
+}
+
+/* Transparent variant (no outer border) */
+.bru-pagination--transparent {
+  border: none;
+  background: transparent;
+  gap: var(--bru-space-1);
+}
+
+.bru-pagination--transparent .bru-pagination__btn {
+  border: var(--bru-border);
+  border-radius: var(--bru-radius-sm);
+}
+
+.bru-pagination--transparent .bru-pagination__page {
+  border-radius: var(--bru-radius-sm);
+}
+
+
+/* ──────────────────────────────────────────────
+   RESPONSIVE — PAGINATION
+   ────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .bru-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 390px) {
+  .bru-pagination__btn {
+    width: 32px;
+    height: 32px;
+    font-size: var(--bru-text-xs);
+  }
+
+  .bru-pagination__btn--nav {
+    padding: 0 8px;
+  }
+}

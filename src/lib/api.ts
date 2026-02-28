@@ -8,12 +8,9 @@ import {
   PostStatus,
   User,
 } from "./types";
-// Removed: import { JwtPayload } from 'jwt-decode'; // JwtPayload is not directly used here
-// Removed: import fetch from 'node-fetch'; // For OpenAI validation and Google token verification
-// import jwt from 'jsonwebtoken'; // Removed: Not used client-side
-
 // Base URL for the new backend API
-const API_BASE_URL = "http://localhost:3001/api"; // Ensure this matches your Express server port
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
 
 // Helper to get auth token
 const getAuthToken = () => localStorage.getItem("app_token");

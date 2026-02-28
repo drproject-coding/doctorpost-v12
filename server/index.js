@@ -32,7 +32,10 @@ redis.on('connect', () => console.log('Connected to Redis!'));
 redis.on('error', (err) => console.error('Redis Client Error', err));
 
 // Middleware
-app.use(cors()); // Allow all CORS for development
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  credentials: true,
+}));
 app.use(express.json());
 
 // --- JWT Authentication Middleware ---

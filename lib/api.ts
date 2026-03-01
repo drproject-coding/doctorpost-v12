@@ -37,6 +37,9 @@ interface NcbProfileRow {
   straico_model?: string | null;
   oneforall_api_key?: string | null;
   oneforall_model?: string | null;
+  perplexity_api_key?: string | null;
+  reddit_client_id?: string | null;
+  reddit_client_secret?: string | null;
 }
 
 interface NcbPostRow {
@@ -47,6 +50,7 @@ interface NcbPostRow {
   scheduled_at?: string | null;
   pillar?: string | null;
   status?: string | null;
+  factory_score?: number | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -94,6 +98,9 @@ function mapProfileFromNcb(row: NcbProfileRow): BrandProfile {
     copyGuideline: row.copy_guideline ?? "",
     contentStrategy: row.content_strategy ?? "",
     definition: row.definition ?? "",
+    perplexityApiKey: row.perplexity_api_key ?? undefined,
+    redditClientId: row.reddit_client_id ?? undefined,
+    redditClientSecret: row.reddit_client_secret ?? undefined,
   };
 }
 
@@ -106,6 +113,7 @@ function mapPostFromNcb(row: NcbPostRow): ScheduledPost {
     pillar: row.pillar ?? "",
     status: (row.status ?? "draft") as ScheduledPost["status"],
     userId: row.user_id,
+    factoryScore: row.factory_score ?? undefined,
   };
 }
 
@@ -186,6 +194,9 @@ export const updateBrandProfile = async (
     straico_model: profile.straicoModel,
     oneforall_api_key: profile.oneforallApiKey,
     oneforall_model: profile.oneforallModel,
+    perplexity_api_key: profile.perplexityApiKey || null,
+    reddit_client_id: profile.redditClientId || null,
+    reddit_client_secret: profile.redditClientSecret || null,
   };
 
   if (profile.id) {

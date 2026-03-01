@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { ScheduledPost } from "@/lib/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getStatusColorClasses } from "@/lib/calendarUtils"; // Import from new utility file
+import ScoreBadge from "./ScoreBadge";
 
 interface CalendarViewProps {
   posts: ScheduledPost[];
@@ -123,6 +124,9 @@ export default function CalendarView({
                   title={post.title}
                   onClick={() => onPostClick(post)}
                 >
+                  {post.factoryScore != null && (
+                    <ScoreBadge score={post.factoryScore} />
+                  )}
                   {post.title}
                 </button>
               ))}

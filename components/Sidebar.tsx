@@ -11,6 +11,10 @@ import {
   BarChart2,
   Settings,
   ChevronLeft,
+  Factory,
+  Megaphone,
+  BookOpen,
+  Brain,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
@@ -22,7 +26,11 @@ interface SidebarProps {
 const navItems = [
   { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { name: "Create", path: "/create", icon: PenSquare },
+  { name: "Factory", path: "/factory", icon: Factory },
+  { name: "Campaigns", path: "/campaigns", icon: Megaphone },
   { name: "Calendar", path: "/calendar", icon: Calendar },
+  { name: "Knowledge", path: "/knowledge", icon: BookOpen },
+  { name: "Learning", path: "/learning", icon: Brain },
   { name: "Library", path: "/library", icon: Book },
   { name: "Analytics", path: "/analytics", icon: BarChart2 },
   { name: "Settings", path: "/settings", icon: Settings },
@@ -66,7 +74,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       </nav>
 
       {/* Toggle */}
-      <button className="sidebar-toggle" onClick={onToggle} aria-label="Toggle sidebar">
+      <button
+        className="sidebar-toggle"
+        onClick={onToggle}
+        aria-label="Toggle sidebar"
+      >
         <ChevronLeft size={14} />
       </button>
 

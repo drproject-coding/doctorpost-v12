@@ -19,7 +19,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { getSessionUser } from "@/lib/ncb-utils";
+import { getSessionUser, fetchUserProfile } from "@/lib/ncb-utils";
 import { fetchKnowledgeForUser } from "@/lib/knowledge/fetch";
 import {
   createPipelineState,
@@ -83,6 +83,33 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Resolve __server_resolved__ sentinel keys from user profile
+  const resolvedKeys = { ...body.keys };
+  if (resolvedKeys.claude === "__server_resolved__") {
+    const profile = await fetchUserProfile(cookie);
+    if (profile) {
+      resolvedKeys.claude = profile.claude_api_key || "";
+      if (!resolvedKeys.perplexity && profile.perplexity_api_key) {
+        resolvedKeys.perplexity = profile.perplexity_api_key;
+      }
+      if (!resolvedKeys.reddit && profile.reddit_client_id) {
+        resolvedKeys.reddit = {
+          clientId: profile.reddit_client_id,
+          clientSecret: profile.reddit_client_secret || "",
+        };
+      }
+    }
+    if (!resolvedKeys.claude) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "No Claude API key configured. Please add your key in Settings.",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+  }
+
   // Fetch knowledge docs
   const knowledge = await fetchKnowledgeForUser(user.id, cookie);
 
@@ -90,7 +117,7 @@ export async function POST(req: NextRequest) {
   const state = createPipelineState({
     sessionId: body.sessionId,
     knowledge,
-    keys: body.keys,
+    keys: resolvedKeys,
   });
 
   // Restore state from client-provided data

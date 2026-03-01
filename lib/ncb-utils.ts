@@ -63,6 +63,27 @@ export async function getSessionUser(cookieHeader: string): Promise<{
   return null;
 }
 
+/**
+ * Fetch a user's profile row from NCB (server-side only).
+ * Returns the first profile row or null if none found.
+ */
+export async function fetchUserProfile(
+  cookieHeader: string,
+): Promise<Record<string, string> | null> {
+  const authCookies = extractAuthCookies(cookieHeader);
+  const url = `${CONFIG.dataApiUrl}/read/profiles?instance=${CONFIG.instance}`;
+  const res = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      "X-Database-Instance": CONFIG.instance,
+      Cookie: authCookies,
+    },
+  });
+  if (!res.ok) return null;
+  const rows = extractRows<Record<string, string>>(await res.json());
+  return rows[0] || null;
+}
+
 export async function proxyToNCB(
   req: NextRequest,
   path: string,

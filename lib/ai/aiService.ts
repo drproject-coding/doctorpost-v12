@@ -2,6 +2,35 @@ import type { AiRequest, AiResponse, AiSettings, OnProgress } from "./types";
 import { callClaude } from "./claudeService";
 import { callOneForAll } from "./oneforallService";
 
+/**
+ * Server-side AI call. Sends the request to the /api/ai route
+ * which resolves API keys from the user's profile.
+ * Use this from client-side code to avoid exposing keys in the browser.
+ */
+export async function generateViaServer(
+  request: AiRequest,
+  signal?: AbortSignal,
+): Promise<AiResponse> {
+  const res = await fetch("/api/ai", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ request }),
+    signal,
+  });
+  if (!res.ok) {
+    let msg = `AI request failed (${res.status})`;
+    try {
+      const err = await res.json();
+      msg = err.error || msg;
+    } catch {
+      // not JSON
+    }
+    throw new Error(msg);
+  }
+  return res.json() as Promise<AiResponse>;
+}
+
 export async function generateWithAi(
   request: AiRequest,
   settings: AiSettings,

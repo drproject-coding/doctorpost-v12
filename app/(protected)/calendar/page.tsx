@@ -6,6 +6,7 @@ import CalendarView from "@/components/calendar/CalendarView";
 import PostEditorModal from "@/components/PostEditorModal";
 import { List, Calendar, Filter } from "lucide-react";
 import { getStatusColorClasses, statusOptions } from "@/lib/calendarUtils";
+import ScoreBadge from "@/components/calendar/ScoreBadge";
 
 type FilterStatus = PostStatus | "all" | "past";
 
@@ -32,7 +33,12 @@ const ListView = ({
                 className="flex items-center justify-between p-4 border-b border-gray-200 last:border-b-0"
               >
                 <div>
-                  <p className="font-bold">{post.title}</p>
+                  <p className="font-bold">
+                    {post.factoryScore != null && (
+                      <ScoreBadge score={post.factoryScore} size="md" />
+                    )}
+                    {post.title}
+                  </p>
                   <p className="text-sm text-gray-600">
                     Pillar: {post.pillar} | Scheduled:{" "}
                     {new Date(post.scheduledAt).toLocaleString()}

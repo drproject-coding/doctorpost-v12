@@ -85,6 +85,9 @@ export interface BrandProfile {
   copyGuideline: string;
   contentStrategy: string;
   definition: string;
+  perplexityApiKey?: string;
+  redditClientId?: string;
+  redditClientSecret?: string;
 }
 
 // NCB session user shape
@@ -111,6 +114,8 @@ export interface ScheduledPost {
   pillar: string;
   status: PostStatus;
   userId?: string;
+  /** Score from the Content Factory scoring agent (0-100) */
+  factoryScore?: number;
 }
 
 export interface AnalyticsData {

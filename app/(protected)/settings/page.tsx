@@ -146,10 +146,17 @@ export default function SettingsPage() {
     "anthropic/claude-4-sonnet",
   );
 
+  // Research API keys (Content Factory pipeline)
+  const [perplexityApiKey, setPerplexityApiKey] = useState("");
+  const [redditClientId, setRedditClientId] = useState("");
+  const [redditClientSecret, setRedditClientSecret] = useState("");
+
   // Show/hide key toggles
   const [showClaudeKey, setShowClaudeKey] = useState(false);
   const [showStraicoKey, setShowStraicoKey] = useState(false);
   const [showOneforallKey, setShowOneforallKey] = useState(false);
+  const [showPerplexityKey, setShowPerplexityKey] = useState(false);
+  const [showRedditSecret, setShowRedditSecret] = useState(false);
 
   // Expandable provider cards
   const [expandedProvider, setExpandedProvider] =
@@ -192,6 +199,9 @@ export default function SettingsPage() {
           straicoModel,
           oneforallApiKey,
           oneforallModel,
+          perplexityApiKey: perplexityApiKey || undefined,
+          redditClientId: redditClientId || undefined,
+          redditClientSecret: redditClientSecret || undefined,
           ...overrides,
         };
         await updateBrandProfile(updatedProfile);
@@ -208,6 +218,9 @@ export default function SettingsPage() {
       straicoModel,
       oneforallApiKey,
       oneforallModel,
+      perplexityApiKey,
+      redditClientId,
+      redditClientSecret,
     ],
   );
 
@@ -310,6 +323,9 @@ export default function SettingsPage() {
         setStraicoModel(data.straicoModel ?? "openai/gpt-4o-mini");
         setOneforallApiKey(data.oneforallApiKey ?? "");
         setOneforallModel(data.oneforallModel ?? "anthropic/claude-4-sonnet");
+        setPerplexityApiKey(data.perplexityApiKey ?? "");
+        setRedditClientId(data.redditClientId ?? "");
+        setRedditClientSecret(data.redditClientSecret ?? "");
         setProfileLoaded(true);
       } catch (error) {
         console.error("Failed to load profile:", error);
@@ -455,6 +471,93 @@ export default function SettingsPage() {
             connected={oneforallValidation.state === "valid"}
             label={statusLabel(oneforallValidation, !!oneforallApiKey.trim())}
           />
+        </div>
+      </div>
+
+      {/* ── Research APIs Card (Perplexity + Reddit) ── */}
+      <div
+        className="bru-card bru-card--raised"
+        style={{ marginBottom: "var(--bru-space-6)" }}
+      >
+        <h2
+          style={{
+            fontSize: "var(--bru-text-h5)",
+            fontWeight: 700,
+            marginBottom: "var(--bru-space-2)",
+          }}
+        >
+          Research APIs
+        </h2>
+        <p
+          style={{
+            fontSize: "var(--bru-text-xs)",
+            color: "var(--bru-grey)",
+            marginBottom: "var(--bru-space-4)",
+          }}
+        >
+          Optional keys for the Content Factory research pipeline. When
+          configured, the researcher agent can pull real-time data from
+          Perplexity and Reddit.
+        </p>
+
+        <div className="bru-form-stack">
+          {/* Perplexity */}
+          <div className="bru-field">
+            <label className="bru-field__label">Perplexity API Key</label>
+            <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
+              <input
+                className="bru-input"
+                type={showPerplexityKey ? "text" : "password"}
+                value={perplexityApiKey}
+                onChange={(e) => setPerplexityApiKey(e.target.value)}
+                onBlur={() => void saveProfileSilent()}
+                placeholder="pplx-..."
+                style={{ flex: 1 }}
+              />
+              <button
+                type="button"
+                className="bru-btn bru-btn--ghost"
+                onClick={() => setShowPerplexityKey((p) => !p)}
+                style={{ padding: "4px 8px" }}
+              >
+                {showPerplexityKey ? <EyeOff size={14} /> : <Eye size={14} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Reddit */}
+          <div className="bru-field">
+            <label className="bru-field__label">Reddit Client ID</label>
+            <input
+              className="bru-input"
+              value={redditClientId}
+              onChange={(e) => setRedditClientId(e.target.value)}
+              onBlur={() => void saveProfileSilent()}
+              placeholder="Reddit app client ID"
+            />
+          </div>
+          <div className="bru-field">
+            <label className="bru-field__label">Reddit Client Secret</label>
+            <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
+              <input
+                className="bru-input"
+                type={showRedditSecret ? "text" : "password"}
+                value={redditClientSecret}
+                onChange={(e) => setRedditClientSecret(e.target.value)}
+                onBlur={() => void saveProfileSilent()}
+                placeholder="Reddit app client secret"
+                style={{ flex: 1 }}
+              />
+              <button
+                type="button"
+                className="bru-btn bru-btn--ghost"
+                onClick={() => setShowRedditSecret((p) => !p)}
+                style={{ padding: "4px 8px" }}
+              >
+                {showRedditSecret ? <EyeOff size={14} /> : <Eye size={14} />}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

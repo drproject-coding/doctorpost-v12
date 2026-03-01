@@ -7,7 +7,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { getSessionUser, CONFIG } from "@/lib/ncb-utils";
+import { getSessionUser, CONFIG, fetchUserProfile } from "@/lib/ncb-utils";
 import { fetchKnowledgeForUser } from "@/lib/knowledge/fetch";
 import {
   planCampaign,
@@ -114,6 +114,22 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  // Resolve __server_resolved__ sentinel key
+  let claudeKey = body.keys.claude;
+  if (claudeKey === "__server_resolved__") {
+    const profile = await fetchUserProfile(cookie);
+    claudeKey = profile?.claude_api_key || "";
+    if (!claudeKey) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "No Claude API key configured. Please add your key in Settings.",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+  }
+
   const knowledge = await fetchKnowledgeForUser(user.id, cookie);
 
   // SSE stream
@@ -134,7 +150,7 @@ export async function POST(req: NextRequest) {
 
         // Plan topics
         const plan = await planCampaign({
-          apiKey: body.keys.claude,
+          apiKey: claudeKey,
           knowledge,
           campaignId,
           durationWeeks: body.durationWeeks,

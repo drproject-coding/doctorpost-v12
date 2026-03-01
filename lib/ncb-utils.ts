@@ -1,5 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 
+/**
+ * NCB read endpoints may return a raw array or an object wrapping it
+ * (e.g. { data: [...] } or { rows: [...] }). This normalizes to an array.
+ */
+export function extractRows<T>(json: unknown): T[] {
+  if (Array.isArray(json)) return json as T[];
+  if (json && typeof json === "object") {
+    const obj = json as Record<string, unknown>;
+    if (Array.isArray(obj.data)) return obj.data as T[];
+    if (Array.isArray(obj.rows)) return obj.rows as T[];
+  }
+  return [];
+}
+
 export const CONFIG = {
   instance: process.env.NCB_INSTANCE!,
   dataApiUrl: process.env.NCB_DATA_API_URL!,

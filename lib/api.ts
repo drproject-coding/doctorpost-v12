@@ -8,6 +8,7 @@ import {
   AiSettings,
 } from "./types";
 import { generateWithAi } from "./ai/aiService";
+import { extractRows } from "./ncb-utils";
 
 // --- NCB snake_case <-> camelCase mapping helpers ---
 
@@ -48,21 +49,6 @@ interface NcbPostRow {
   status?: string | null;
   created_at?: string;
   updated_at?: string;
-}
-
-/**
- * NCB read endpoints may return a raw array or an object wrapping it
- * (e.g. { data: [...] } or { rows: [...] }). This normalizes to an array.
- */
-function extractRows<T>(json: unknown): T[] {
-  if (Array.isArray(json)) return json as T[];
-  if (json && typeof json === "object") {
-    const obj = json as Record<string, unknown>;
-    if (Array.isArray(obj.data)) return obj.data as T[];
-    if (Array.isArray(obj.rows)) return obj.rows as T[];
-    // Single object (e.g. update response) - not an array read
-  }
-  return [];
 }
 
 function parseJsonArray(val: string | null | undefined): string[] {

@@ -130,8 +130,15 @@ export async function POST(req: NextRequest) {
       const profileId = existing.id;
 
       // Preserve user's existing API keys & provider settings
+      // Strip research API fields that may not exist in NCB schema yet
+      const {
+        perplexity_api_key: _p,
+        reddit_client_id: _r,
+        reddit_client_secret: _rs,
+        ...baseProfile
+      } = doctorProjectProfile;
       const updatePayload = {
-        ...doctorProjectProfile,
+        ...baseProfile,
         claude_api_key: (existing.claude_api_key as string) || "",
         straico_api_key: (existing.straico_api_key as string) || "",
         oneforall_api_key: (existing.oneforall_api_key as string) || "",
@@ -140,9 +147,6 @@ export async function POST(req: NextRequest) {
           (existing.straico_model as string) || "openai/gpt-4o-mini",
         oneforall_model:
           (existing.oneforall_model as string) || "anthropic/claude-4-sonnet",
-        perplexity_api_key: (existing.perplexity_api_key as string) || null,
-        reddit_client_id: (existing.reddit_client_id as string) || null,
-        reddit_client_secret: (existing.reddit_client_secret as string) || null,
       };
 
       const updateRes = await ncbFetch(
@@ -158,11 +162,17 @@ export async function POST(req: NextRequest) {
         profile: updateData,
       });
     } else {
+      const {
+        perplexity_api_key: _p2,
+        reddit_client_id: _r2,
+        reddit_client_secret: _rs2,
+        ...createProfile
+      } = doctorProjectProfile;
       const createRes = await ncbFetch(
         "POST",
         "create/profiles",
         authCookies,
-        JSON.stringify(doctorProjectProfile),
+        JSON.stringify(createProfile),
       );
       const createData = await createRes.json();
       return NextResponse.json({

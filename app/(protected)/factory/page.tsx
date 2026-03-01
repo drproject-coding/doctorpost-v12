@@ -302,19 +302,18 @@ export default function FactoryPage() {
       {/* Error */}
       {state.phase === "error" && (
         <div
-          style={{
-            marginBottom: "var(--bru-space-4)",
-            padding: "var(--bru-space-3)",
-            border: "var(--bru-border)",
-            background: "rgba(233, 152, 152, 0.2)",
-            color: "var(--bru-error-dark)",
-            fontWeight: 500,
-          }}
+          className="bru-alert bru-alert--error"
+          style={{ marginBottom: "var(--bru-space-4)" }}
         >
-          {state.error || "An error occurred"}
+          <span className="bru-alert__icon">!</span>
+          <div className="bru-alert__content">
+            <div className="bru-alert__text">
+              {state.error || "An error occurred"}
+            </div>
+          </div>
           <button
             className="bru-btn"
-            style={{ marginLeft: "var(--bru-space-3)" }}
+            style={{ marginLeft: "var(--bru-space-3)", flexShrink: 0 }}
             onClick={handleNewPost}
           >
             Start Over

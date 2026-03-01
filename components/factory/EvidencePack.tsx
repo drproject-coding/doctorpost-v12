@@ -62,10 +62,10 @@ export function EvidencePack({ evidence }: EvidencePackProps) {
                   padding: "0 4px",
                   background:
                     c.verification === "verified"
-                      ? "rgba(152, 233, 171, 0.3)"
+                      ? "rgba(0, 170, 0, 0.15)"
                       : c.verification === "estimate"
                         ? "rgba(233, 215, 152, 0.3)"
-                        : "rgba(233, 152, 152, 0.2)",
+                        : "rgba(255, 68, 68, 0.12)",
                 }}
               >
                 {c.verification}

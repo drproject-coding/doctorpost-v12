@@ -187,7 +187,7 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
                 border: "var(--bru-border)",
                 fontSize: "var(--bru-text-md)",
                 fontWeight: 500,
-                background: "rgba(233, 152, 152, 0.2)",
+                background: "rgba(255, 68, 68, 0.12)",
                 color: "var(--bru-error-dark)",
               }}
             >
@@ -371,8 +371,8 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
                 fontSize: "var(--bru-text-md)",
                 fontWeight: 500,
                 background: feedback.startsWith("Error")
-                  ? "rgba(233, 152, 152, 0.2)"
-                  : "rgba(152, 233, 171, 0.2)",
+                  ? "rgba(255, 68, 68, 0.12)"
+                  : "rgba(0, 170, 0, 0.12)",
                 color: feedback.startsWith("Error")
                   ? "var(--bru-error-dark)"
                   : "var(--bru-success-dark)",

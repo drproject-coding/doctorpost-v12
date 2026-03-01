@@ -65,8 +65,16 @@ export default function AnalyticsPage() {
       <div className="p-6">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Analytics</h1>
-          <div className="bru-card bru-card--raised flex items-center justify-center p-12 text-red-500 font-bold">
-            <p>Failed to load analytics data.</p>
+          <div className="bru-alert bru-alert--error">
+            <span className="bru-alert__icon">!</span>
+            <div className="bru-alert__content">
+              <div className="bru-alert__title">
+                Failed to load analytics data
+              </div>
+              <div className="bru-alert__text">
+                Please refresh the page to try again.
+              </div>
+            </div>
           </div>
         </div>
       </div>

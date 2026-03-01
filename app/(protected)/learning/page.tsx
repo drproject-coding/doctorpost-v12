@@ -131,16 +131,13 @@ export default function LearningPage() {
       {/* Error */}
       {error && (
         <div
-          style={{
-            padding: "var(--bru-space-3)",
-            background: "rgba(233, 152, 152, 0.2)",
-            border: "var(--bru-border)",
-            color: "var(--bru-error-dark)",
-            fontSize: "var(--bru-text-sm)",
-            marginBottom: "var(--bru-space-4)",
-          }}
+          className="bru-alert bru-alert--error"
+          style={{ marginBottom: "var(--bru-space-4)" }}
         >
-          {error}
+          <span className="bru-alert__icon">!</span>
+          <div className="bru-alert__content">
+            <div className="bru-alert__text">{error}</div>
+          </div>
         </div>
       )}
 

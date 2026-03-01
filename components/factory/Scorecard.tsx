@@ -16,11 +16,11 @@ function scoreColor(score: number, max: number): string {
 function verdictColor(verdict: ScoreResult["verdict"]): string {
   switch (verdict) {
     case "publish":
-      return "rgba(152, 233, 171, 0.3)";
+      return "rgba(0, 170, 0, 0.15)";
     case "minor-tweaks":
       return "rgba(233, 215, 152, 0.3)";
     default:
-      return "rgba(233, 152, 152, 0.2)";
+      return "rgba(255, 68, 68, 0.12)";
   }
 }
 

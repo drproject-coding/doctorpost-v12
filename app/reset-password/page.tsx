@@ -101,7 +101,10 @@ function ResetPasswordContent() {
               onChange={(e) => setNewPassword(e.target.value)}
               required
             />
-            <button type="submit" className="bru-btn bru-btn--primary bru-btn--block">
+            <button
+              type="submit"
+              className="bru-btn bru-btn--primary bru-btn--block"
+            >
               Reset Password
             </button>
           </form>
@@ -119,7 +122,10 @@ function ResetPasswordContent() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <button type="submit" className="bru-btn bru-btn--primary bru-btn--block">
+            <button
+              type="submit"
+              className="bru-btn bru-btn--primary bru-btn--block"
+            >
               Send Reset Link
             </button>
           </form>
@@ -127,28 +133,24 @@ function ResetPasswordContent() {
 
         {message && (
           <div
-            className="mt-4 text-sm"
-            style={{
-              padding: "12px",
-              background: "rgba(152, 233, 171, 0.2)",
-              border: "2px solid var(--bru-mint)",
-              color: "#166534",
-            }}
+            className="bru-alert bru-alert--success"
+            style={{ marginTop: "var(--bru-space-4)" }}
           >
-            {message}
+            <span className="bru-alert__icon">{"\u2713"}</span>
+            <div className="bru-alert__content">
+              <div className="bru-alert__text">{message}</div>
+            </div>
           </div>
         )}
         {error && (
           <div
-            className="mt-4 text-sm"
-            style={{
-              padding: "12px",
-              background: "rgba(233, 152, 152, 0.2)",
-              border: "2px solid var(--bru-pink)",
-              color: "#991B1B",
-            }}
+            className="bru-alert bru-alert--error"
+            style={{ marginTop: "var(--bru-space-4)" }}
           >
-            {error}
+            <span className="bru-alert__icon">!</span>
+            <div className="bru-alert__content">
+              <div className="bru-alert__text">{error}</div>
+            </div>
           </div>
         )}
 

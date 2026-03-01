@@ -116,8 +116,8 @@ export function DraftEditor({
                   fontSize: "var(--bru-text-sm)",
                   padding: "var(--bru-space-1) var(--bru-space-2)",
                   background: r.passed
-                    ? "rgba(152, 233, 171, 0.1)"
-                    : "rgba(233, 152, 152, 0.1)",
+                    ? "rgba(0, 170, 0, 0.08)"
+                    : "rgba(255, 68, 68, 0.08)",
                 }}
               >
                 <span>{r.passed ? "\u2713" : "\u2717"}</span>
@@ -149,7 +149,7 @@ export function DraftEditor({
               style={{
                 marginTop: "var(--bru-space-2)",
                 padding: "var(--bru-space-2)",
-                background: "rgba(233, 152, 152, 0.2)",
+                background: "rgba(255, 68, 68, 0.12)",
                 fontSize: "var(--bru-text-xs)",
                 fontWeight: 500,
                 color: "var(--bru-error-dark)",

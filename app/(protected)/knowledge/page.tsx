@@ -257,17 +257,13 @@ export default function KnowledgePage() {
       {/* Error */}
       {error && (
         <div
-          style={{
-            marginBottom: "var(--bru-space-4)",
-            padding: "var(--bru-space-3)",
-            border: "var(--bru-border)",
-            fontSize: "var(--bru-text-md)",
-            fontWeight: 500,
-            background: "rgba(233, 152, 152, 0.2)",
-            color: "var(--bru-error-dark)",
-          }}
+          className="bru-alert bru-alert--error"
+          style={{ marginBottom: "var(--bru-space-4)" }}
         >
-          {error}
+          <span className="bru-alert__icon">!</span>
+          <div className="bru-alert__content">
+            <div className="bru-alert__text">{error}</div>
+          </div>
         </div>
       )}
 

@@ -366,19 +366,21 @@ export default function CreatePage() {
 
   if (!profile) {
     return (
-      <div
-        className="bru-card bru-card--raised"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: 200,
-          color: "var(--bru-error-dark)",
-        }}
-      >
-        <p style={{ fontWeight: 700 }}>
-          Failed to load brand profile. Please check settings.
-        </p>
+      <div className="bru-alert bru-alert--error">
+        <span className="bru-alert__icon">!</span>
+        <div className="bru-alert__content">
+          <div className="bru-alert__title">No brand profile found</div>
+          <div className="bru-alert__text">
+            Please go to{" "}
+            <a
+              href="/settings"
+              style={{ fontWeight: 700, textDecoration: "underline" }}
+            >
+              Settings
+            </a>{" "}
+            to set up your brand profile before creating content.
+          </div>
+        </div>
       </div>
     );
   }
@@ -528,8 +530,8 @@ export default function CreatePage() {
                               sub.source === "google_trends"
                                 ? "var(--bru-purple-20)"
                                 : sub.source === "google_questions"
-                                  ? "rgba(152, 233, 171, 0.2)"
-                                  : "rgba(250, 232, 164, 0.3)",
+                                  ? "rgba(0, 170, 0, 0.12)"
+                                  : "rgba(255, 170, 0, 0.15)",
                           }}
                         >
                           {getSourceBadgeLabel(sub.source)}
@@ -685,20 +687,14 @@ export default function CreatePage() {
 
               {saveFeedback && (
                 <div
-                  style={{
-                    padding: "var(--bru-space-3)",
-                    border: "var(--bru-border)",
-                    fontSize: "var(--bru-text-md)",
-                    fontWeight: 500,
-                    background: saveFeedback.includes("successfully")
-                      ? "rgba(152, 233, 171, 0.2)"
-                      : "rgba(233, 152, 152, 0.2)",
-                    color: saveFeedback.includes("successfully")
-                      ? "var(--bru-success-dark)"
-                      : "var(--bru-error-dark)",
-                  }}
+                  className={`bru-alert ${saveFeedback.includes("successfully") ? "bru-alert--success" : "bru-alert--error"}`}
                 >
-                  {saveFeedback}
+                  <span className="bru-alert__icon">
+                    {saveFeedback.includes("successfully") ? "\u2713" : "!"}
+                  </span>
+                  <div className="bru-alert__content">
+                    <div className="bru-alert__text">{saveFeedback}</div>
+                  </div>
                 </div>
               )}
             </div>

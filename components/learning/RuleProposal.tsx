@@ -141,7 +141,7 @@ export function RuleProposalCard({
             <pre
               style={{
                 fontSize: "var(--bru-text-xs)",
-                background: "rgba(233, 152, 152, 0.1)",
+                background: "rgba(255, 68, 68, 0.08)",
                 padding: "var(--bru-space-2)",
                 border: "var(--bru-border)",
                 whiteSpace: "pre-wrap",
@@ -166,7 +166,7 @@ export function RuleProposalCard({
             <pre
               style={{
                 fontSize: "var(--bru-text-xs)",
-                background: "rgba(46, 204, 113, 0.1)",
+                background: "rgba(0, 170, 0, 0.08)",
                 padding: "var(--bru-space-2)",
                 border: "var(--bru-border)",
                 whiteSpace: "pre-wrap",
@@ -183,16 +183,21 @@ export function RuleProposalCard({
       {/* Error */}
       {error && (
         <div
+          className="bru-alert bru-alert--error"
           style={{
-            padding: "var(--bru-space-2)",
-            background: "rgba(233, 152, 152, 0.2)",
-            border: "var(--bru-border)",
-            color: "var(--bru-error-dark)",
-            fontSize: "var(--bru-text-xs)",
             marginTop: "var(--bru-space-2)",
+            padding: "var(--bru-space-2) var(--bru-space-3)",
           }}
         >
-          {error}
+          <span className="bru-alert__icon">!</span>
+          <div className="bru-alert__content">
+            <div
+              className="bru-alert__text"
+              style={{ fontSize: "var(--bru-text-xs)" }}
+            >
+              {error}
+            </div>
+          </div>
         </div>
       )}
 

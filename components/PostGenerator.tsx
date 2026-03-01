@@ -158,16 +158,13 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
       <div>
         {error && (
           <div
-            style={{
-              padding: "var(--bru-space-3)",
-              border: "var(--bru-border)",
-              background: "rgba(233, 152, 152, 0.15)",
-              color: "var(--bru-error-dark)",
-              marginBottom: "var(--bru-space-4)",
-              fontSize: "var(--bru-text-md)",
-            }}
+            className="bru-alert bru-alert--error"
+            style={{ marginBottom: "var(--bru-space-4)" }}
           >
-            {error}
+            <span className="bru-alert__icon">!</span>
+            <div className="bru-alert__content">
+              <div className="bru-alert__text">{error}</div>
+            </div>
           </div>
         )}
 
@@ -184,10 +181,21 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
               gap: "var(--bru-space-3)",
             }}
           >
-            <Loader size={32} className="animate-spin" style={{ color: "var(--bru-purple)" }} />
+            <Loader
+              size={32}
+              className="animate-spin"
+              style={{ color: "var(--bru-purple)" }}
+            />
             <p>{aiProgress?.step ?? "Generating your post..."}</p>
             {aiProgress && (
-              <div style={{ width: 192, height: 8, background: "rgba(0,0,0,0.1)", overflow: "hidden" }}>
+              <div
+                style={{
+                  width: 192,
+                  height: 8,
+                  background: "rgba(0,0,0,0.1)",
+                  overflow: "hidden",
+                }}
+              >
                 <div
                   style={{
                     width: `${aiProgress.percent}%`,
@@ -198,11 +206,22 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
                 />
               </div>
             )}
-            <p style={{ fontSize: "var(--bru-text-sm)" }}>Using {aiSettings.activeProvider}</p>
+            <p style={{ fontSize: "var(--bru-text-sm)" }}>
+              Using {aiSettings.activeProvider}
+            </p>
           </div>
         ) : generatedContent ? (
           <div className="bru-card bru-card--raised">
-            <div style={{ display: "flex", alignItems: "center", fontSize: "var(--bru-text-sm)", color: "var(--bru-grey)", marginBottom: "var(--bru-space-2)", gap: "var(--bru-space-1)" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                fontSize: "var(--bru-text-sm)",
+                color: "var(--bru-grey)",
+                marginBottom: "var(--bru-space-2)",
+                gap: "var(--bru-space-1)",
+              }}
+            >
               <Clock size={14} /> {estimatedReadTime} min read
             </div>
             <textarea
@@ -212,8 +231,12 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
                 minHeight: 256,
                 resize: "vertical",
                 padding: "var(--bru-space-4)",
-                border: isContentSelected ? "2px solid var(--bru-purple)" : "var(--bru-border)",
-                boxShadow: isContentSelected ? "3px 3px 0 0 var(--bru-purple)" : "var(--bru-shadow-sm)",
+                border: isContentSelected
+                  ? "2px solid var(--bru-purple)"
+                  : "var(--bru-border)",
+                boxShadow: isContentSelected
+                  ? "3px 3px 0 0 var(--bru-purple)"
+                  : "var(--bru-shadow-sm)",
                 background: "var(--bru-white)",
                 fontFamily: "var(--bru-font-mono)",
                 fontSize: "var(--bru-text-md)",
@@ -227,7 +250,10 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
                 onContentGenerated(e.target.value);
               }}
             />
-            <div className="bru-form-actions" style={{ marginTop: "var(--bru-space-3)" }}>
+            <div
+              className="bru-form-actions"
+              style={{ marginTop: "var(--bru-space-3)" }}
+            >
               <button
                 className="bru-btn bru-btn--sm"
                 onClick={void copyToClipboard}
@@ -235,10 +261,7 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
                 <Copy size={14} />
                 {copied ? "Copied!" : "Copy"}
               </button>
-              <button
-                className="bru-btn bru-btn--sm"
-                onClick={downloadAsText}
-              >
+              <button className="bru-btn bru-btn--sm" onClick={downloadAsText}>
                 <Download size={14} />
                 Download
               </button>
@@ -257,7 +280,10 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
               textAlign: "center",
             }}
           >
-            <p>Fill in the form and click &quot;Generate Post&quot; to create your LinkedIn content</p>
+            <p>
+              Fill in the form and click &quot;Generate Post&quot; to create
+              your LinkedIn content
+            </p>
           </div>
         )}
       </div>

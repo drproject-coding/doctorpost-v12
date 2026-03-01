@@ -569,15 +569,44 @@ export default function SettingsPage() {
         className="bru-card bru-card--raised"
         style={{ marginBottom: "var(--bru-space-6)" }}
       >
-        <h2
+        <div
           style={{
-            fontSize: "var(--bru-text-h5)",
-            fontWeight: 700,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
             marginBottom: "var(--bru-space-6)",
           }}
         >
-          Brand Profile
-        </h2>
+          <h2
+            style={{
+              fontSize: "var(--bru-text-h5)",
+              fontWeight: 700,
+              margin: 0,
+            }}
+          >
+            Brand Profile
+          </h2>
+          {!profile?.companyName && (
+            <button
+              className="bru-btn bru-btn--primary"
+              onClick={async () => {
+                try {
+                  const res = await fetch("/api/seed-profile", {
+                    method: "POST",
+                    credentials: "include",
+                  });
+                  if (res.ok) {
+                    window.location.reload();
+                  }
+                } catch (e) {
+                  console.error("Seed failed:", e);
+                }
+              }}
+            >
+              Load Doctor Project Profile
+            </button>
+          )}
+        </div>
 
         <div
           className="bru-form-row"
@@ -1102,13 +1131,15 @@ export default function SettingsPage() {
                         "Validate Key & Load Models"
                       )}
                     </button>
-                    <StraicoModelPicker
-                      models={straicoModels}
-                      selectedModelId={straicoModel}
-                      onSelectModel={(id) => setStraicoModel(id)}
-                      loading={modelsLoading["straico"]}
-                      userInfo={straicoUserInfo}
-                    />
+                    {straicoApiKey.trim() && (
+                      <StraicoModelPicker
+                        models={straicoModels}
+                        selectedModelId={straicoModel}
+                        onSelectModel={(id) => setStraicoModel(id)}
+                        loading={modelsLoading["straico"]}
+                        userInfo={straicoUserInfo}
+                      />
+                    )}
                   </div>
                 )}
               </div>
@@ -1306,12 +1337,14 @@ export default function SettingsPage() {
                       >
                         Model
                       </label>
-                      <StraicoModelPicker
-                        models={oneforallModels}
-                        selectedModelId={oneforallModel}
-                        onSelectModel={setOneforallModel}
-                        loading={modelsLoading["1forall"]}
-                      />
+                      {oneforallApiKey.trim() && (
+                        <StraicoModelPicker
+                          models={oneforallModels}
+                          selectedModelId={oneforallModel}
+                          onSelectModel={setOneforallModel}
+                          loading={modelsLoading["1forall"]}
+                        />
+                      )}
                     </div>
                   </div>
                 )}

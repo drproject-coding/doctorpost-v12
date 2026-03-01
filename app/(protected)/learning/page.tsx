@@ -42,7 +42,7 @@ export default function LearningPage() {
           ? data
           : data.data || data.rows || [];
         setSignals(rows.map(mapSignalFromNcb));
-      } else {
+      } else if (sigRes.status !== 404) {
         setError(`Failed to load signals (${sigRes.status})`);
       }
 
@@ -52,7 +52,7 @@ export default function LearningPage() {
           ? data
           : data.data || data.rows || [];
         setProposals(rows.map(mapRuleProposalFromNcb));
-      } else {
+      } else if (propRes.status !== 404) {
         setError((prev) =>
           prev
             ? `${prev} Failed to load proposals (${propRes.status})`

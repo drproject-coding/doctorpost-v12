@@ -20,10 +20,10 @@ export default function ScoreBadge({ score, size = "sm" }: ScoreBadgeProps) {
         fontWeight: 700,
         background:
           score >= 75
-            ? "var(--bru-success, #2ecc71)"
+            ? "var(--bru-success, #00AA00)"
             : score >= 50
-              ? "var(--bru-warning, #f39c12)"
-              : "var(--bru-error, #e74c3c)",
+              ? "var(--bru-warning, #FFAA00)"
+              : "var(--bru-error, #FF4444)",
         color: "white",
       }}
     >

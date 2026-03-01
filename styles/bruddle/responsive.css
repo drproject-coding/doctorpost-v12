@@ -42,7 +42,7 @@
 
 .responsive-table-wrapper::-webkit-scrollbar-thumb {
   background: var(--bru-grey-85, rgba(95, 100, 109, 0.85));
-  border-radius: 3px;
+  border-radius: 0;
 }
 
 

@@ -42,7 +42,7 @@
   color: var(--bru-black);
   background: var(--bru-white);
   border: var(--bru-border);
-  border-radius: var(--bru-radius-md);
+  border-radius: 0;
   box-shadow: var(--bru-shadow-sm);
   cursor: pointer;
   user-select: none;
@@ -129,6 +129,21 @@
   background: var(--bru-purple-20);
 }
 
+/* Ghost with visible border (DP-style) */
+.bru-btn--ghost-bordered {
+  background: transparent;
+  color: var(--bru-purple);
+  border-color: var(--bru-purple);
+  box-shadow: none;
+}
+
+.bru-btn--ghost-bordered:hover {
+  background: var(--bru-purple);
+  color: #FFFFFF;
+  transform: translate(-2px, -2px);
+  box-shadow: var(--bru-shadow-md);
+}
+
 
 /* ──────────────────────────────────────────────
    VARIANT: DANGER (red)
@@ -141,6 +156,20 @@
 
 .bru-btn--danger:hover {
   background: var(--bru-pink-80);
+}
+
+
+/* ──────────────────────────────────────────────
+   VARIANT: SECONDARY (orange)
+   ────────────────────────────────────────────── */
+
+.bru-btn--secondary {
+  background: var(--bru-orange);
+  color: #FFFFFF;
+}
+
+.bru-btn--secondary:hover {
+  background: var(--bru-orange-dark);
 }
 
 
@@ -168,7 +197,7 @@ body.dark-mode .bru-btn--dark {
 .bru-btn--sm {
   padding: 6px 14px;
   font-size: var(--bru-text-sm);
-  border-radius: var(--bru-radius-sm);
+  border-radius: 0;
   box-shadow: var(--bru-shadow-xs);
 }
 
@@ -177,7 +206,7 @@ body.dark-mode .bru-btn--dark {
 .bru-btn--lg {
   padding: 14px 32px;
   font-size: var(--bru-text-lg);
-  border-radius: var(--bru-radius-lg);
+  border-radius: 0;
   box-shadow: var(--bru-shadow-md);
 }
 
@@ -232,11 +261,11 @@ body.dark-mode .bru-btn--dark {
 }
 
 .bru-btn-group .bru-btn:first-child {
-  border-radius: var(--bru-radius-md) 0 0 var(--bru-radius-md);
+  border-radius: 0;
 }
 
 .bru-btn-group .bru-btn:last-child {
-  border-radius: 0 var(--bru-radius-md) var(--bru-radius-md) 0;
+  border-radius: 0;
 }
 
 .bru-btn-group .bru-btn + .bru-btn {

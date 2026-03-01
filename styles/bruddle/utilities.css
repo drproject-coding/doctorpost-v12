@@ -204,6 +204,117 @@
 
 
 /* ──────────────────────────────────────────────
+   ALERTS
+   ────────────────────────────────────────────── */
+
+.bru-alert {
+  padding: var(--bru-space-4) var(--bru-space-5);
+  border: var(--bru-border);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--bru-space-3);
+}
+
+.bru-alert__icon {
+  font-family: var(--bru-font-mono);
+  font-size: var(--bru-text-lg);
+  font-weight: var(--bru-weight-bold);
+}
+
+.bru-alert__content { flex: 1; }
+
+.bru-alert__title {
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-sm);
+  font-weight: var(--bru-weight-semibold);
+  text-transform: uppercase;
+  margin-bottom: var(--bru-space-1);
+}
+
+.bru-alert__text {
+  font-size: var(--bru-text-sm);
+}
+
+.bru-alert--success {
+  background: #F0FFF0;
+  border-color: var(--bru-success);
+}
+
+.bru-alert--warning {
+  background: #FFF8E0;
+  border-color: var(--bru-warning);
+}
+
+.bru-alert--error {
+  background: #FFF0F0;
+  border-color: var(--bru-error);
+}
+
+.bru-alert--info {
+  background: #F0F8FF;
+  border-color: var(--bru-info);
+}
+
+
+/* ──────────────────────────────────────────────
+   SPINNER
+   ────────────────────────────────────────────── */
+
+.bru-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--bru-grey-light);
+  border-top-color: var(--bru-purple);
+  border-radius: 50%;
+  animation: bru-spin 0.8s linear infinite;
+}
+
+@keyframes bru-spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ──────────────────────────────────────────────
+   SKELETON LOADING
+   ────────────────────────────────────────────── */
+
+.bru-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bru-cream) 25%,
+    var(--bru-grey-light) 50%,
+    var(--bru-cream) 75%
+  );
+  background-size: 200% 100%;
+  animation: bru-shimmer 1.5s infinite;
+  border: var(--bru-border);
+}
+
+@keyframes bru-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+
+/* ──────────────────────────────────────────────
+   PROGRESS BAR (standalone)
+   ────────────────────────────────────────────── */
+
+.bru-progress-bar {
+  height: 24px;
+  border: var(--bru-border);
+  background: var(--bru-white);
+  overflow: hidden;
+}
+
+.bru-progress-bar__fill {
+  height: 100%;
+  background: var(--bru-purple);
+  transition: width var(--bru-duration-slow) var(--bru-ease);
+}
+
+
+/* ──────────────────────────────────────────────
    RESPONSIVE — UTILITIES
    ────────────────────────────────────────────── */
 

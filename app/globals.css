@@ -1,17 +1,20 @@
 /* Bruddle Design System */
-@import '../styles/bruddle/tokens.css';
-@import '../styles/bruddle/typography.css';
-@import '../styles/bruddle/buttons.css';
-@import '../styles/bruddle/forms.css';
-@import '../styles/bruddle/tags.css';
-@import '../styles/bruddle/cards.css';
-@import '../styles/bruddle/tables.css';
-@import '../styles/bruddle/modals.css';
-@import '../styles/bruddle/pagination.css';
-@import '../styles/bruddle/charts.css';
-@import '../styles/bruddle/layout.css';
-@import '../styles/bruddle/utilities.css';
-@import '../styles/bruddle/responsive.css';
+@import "../styles/bruddle/tokens.css";
+@import "../styles/bruddle/typography.css";
+@import "../styles/bruddle/buttons.css";
+@import "../styles/bruddle/forms.css";
+@import "../styles/bruddle/tags.css";
+@import "../styles/bruddle/cards.css";
+@import "../styles/bruddle/tables.css";
+@import "../styles/bruddle/modals.css";
+@import "../styles/bruddle/pagination.css";
+@import "../styles/bruddle/charts.css";
+@import "../styles/bruddle/layout.css";
+@import "../styles/bruddle/utilities.css";
+@import "../styles/bruddle/media.css";
+@import "../styles/bruddle/composites.css";
+@import "../styles/bruddle/animations.css";
+@import "../styles/bruddle/responsive.css";
 
 @tailwind base;
 @tailwind components;
@@ -86,7 +89,7 @@
   }
 
   .enhanced-dropdown-option.selected {
-    background: rgba(174, 122, 255, 0.12);
+    background: var(--bru-purple-20);
     color: var(--bru-purple);
     font-weight: 700;
   }
@@ -192,7 +195,7 @@
   .enhanced-dropdown-suggested-combinations {
     margin-top: 16px;
     padding: 16px;
-    background: rgba(174, 122, 255, 0.08);
+    background: var(--bru-purple-20);
     border: var(--bru-border-thin);
     border-color: var(--bru-purple);
   }
@@ -210,17 +213,17 @@
   }
   .badge-medium {
     background: rgba(250, 232, 164, 0.3);
-    color: #92400E;
+    color: #92400e;
     border: 1px solid var(--bru-yellow);
   }
   .badge-experimental {
     background: rgba(233, 152, 152, 0.2);
-    color: #991B1B;
+    color: #991b1b;
     border: 1px solid var(--bru-pink);
   }
   .badge-trending {
     background: rgba(250, 232, 164, 0.3);
-    color: #92400E;
+    color: #92400e;
     border: 1px solid var(--bru-yellow);
   }
   .badge-compatibility-recommended {
@@ -230,12 +233,12 @@
   }
   .badge-compatibility-caution {
     background: rgba(250, 232, 164, 0.2);
-    color: #92400E;
+    color: #92400e;
     border: 1px solid rgba(250, 232, 164, 0.5);
   }
   .badge-compatibility-not-recommended {
     background: rgba(233, 152, 152, 0.15);
-    color: #991B1B;
+    color: #991b1b;
     border: 1px solid rgba(233, 152, 152, 0.5);
   }
 
@@ -249,7 +252,7 @@
     font-size: var(--bru-text-sm);
     border: 2px solid var(--bru-yellow);
     background: rgba(250, 232, 164, 0.3);
-    color: #92400E;
+    color: #92400e;
   }
 
   /* Mobile full-screen dropdown */

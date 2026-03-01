@@ -1,0 +1,71 @@
+/* ============================================================
+   BRUDDLE DESIGN SYSTEM — MEDIA
+   Avatars, carousels, and media display components.
+   ============================================================ */
+
+
+/* ──────────────────────────────────────────────
+   AVATAR
+   ────────────────────────────────────────────── */
+
+.bru-avatar {
+  width: 64px;
+  height: 64px;
+  border: var(--bru-border);
+  object-fit: cover;
+  display: inline-block;
+}
+
+.bru-avatar--sm {
+  width: 40px;
+  height: 40px;
+}
+
+.bru-avatar--lg {
+  width: 96px;
+  height: 96px;
+}
+
+
+/* ──────────────────────────────────────────────
+   CAROUSEL
+   ────────────────────────────────────────────── */
+
+.bru-carousel {
+  position: relative;
+  overflow: hidden;
+  border: var(--bru-border);
+}
+
+.bru-carousel__track {
+  display: flex;
+  transition: transform var(--bru-duration-slow) var(--bru-ease);
+}
+
+.bru-carousel__slide {
+  min-width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.bru-carousel__nav {
+  position: absolute;
+  bottom: var(--bru-space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--bru-space-2);
+}
+
+.bru-carousel__dot {
+  width: 12px;
+  height: 12px;
+  border: var(--bru-border);
+  background: var(--bru-white);
+  cursor: pointer;
+  padding: 0;
+}
+
+.bru-carousel__dot.active {
+  background: var(--bru-purple);
+}

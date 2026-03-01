@@ -78,7 +78,7 @@ export function PipelineStepper({
                   width: isComplete ? "100%" : isCurrent ? `${percent}%` : "0%",
                   height: "100%",
                   background: isError
-                    ? "var(--bru-error, #e74c3c)"
+                    ? "var(--bru-error, #FF4444)"
                     : "var(--bru-purple)",
                   transition: "width 0.3s ease",
                 }}

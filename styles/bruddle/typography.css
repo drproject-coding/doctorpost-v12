@@ -3,7 +3,6 @@
    @font-face declarations + heading/text utility classes.
    ============================================================ */
 
-
 /* ──────────────────────────────────────────────
    FONT FACES
    Visby (primary brand font) + Roboto Flex (fallback)
@@ -11,40 +10,46 @@
    ────────────────────────────────────────────── */
 
 @font-face {
-  font-family: 'Roboto Flex';
-  src: url('/fonts/RobotoFlex-VariableFont.ttf') format('truetype');
+  font-family: "Roboto Flex";
+  src: url("/fonts/RobotoFlex-VariableFont.ttf") format("truetype");
   font-weight: 100 1000;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Visby';
-  src: url('/fonts/VisbyRegular.otf') format('opentype');
+  font-family: "Visby";
+  src: url("/fonts/VisbyRegular.otf") format("opentype");
   font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Visby';
-  src: url('/fonts/VisbyMedium.otf') format('opentype');
+  font-family: "Visby";
+  src: url("/fonts/VisbyMedium.otf") format("opentype");
   font-weight: 500;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Visby';
-  src: url('/fonts/VisbySemibold.otf') format('opentype');
+  font-family: "Visby";
+  src: url("/fonts/VisbySemibold.otf") format("opentype");
   font-weight: 600;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Visby';
-  src: url('/fonts/VisbyBold.otf') format('opentype');
+  font-family: "Visby";
+  src: url("/fonts/VisbyBold.otf") format("opentype");
   font-weight: 700;
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Visby";
+  src: url("/fonts/VisbyHeavy.otf") format("opentype");
+  font-weight: 800;
+  font-display: swap;
+}
 
 /* ──────────────────────────────────────────────
    HEADINGS
@@ -66,12 +71,24 @@
   margin: 0;
 }
 
-.bru-h1 { font-size: var(--bru-text-h1); }
-.bru-h2 { font-size: var(--bru-text-h2); }
-.bru-h3 { font-size: var(--bru-text-h3); }
-.bru-h4 { font-size: var(--bru-text-h4); }
-.bru-h5 { font-size: var(--bru-text-h5); }
-.bru-h6 { font-size: var(--bru-text-h6); }
+.bru-h1 {
+  font-size: var(--bru-text-h1);
+}
+.bru-h2 {
+  font-size: var(--bru-text-h2);
+}
+.bru-h3 {
+  font-size: var(--bru-text-h3);
+}
+.bru-h4 {
+  font-size: var(--bru-text-h4);
+}
+.bru-h5 {
+  font-size: var(--bru-text-h5);
+}
+.bru-h6 {
+  font-size: var(--bru-text-h6);
+}
 
 /* Inverted headings (white on black highlight) */
 .bru-h1--inv,
@@ -84,7 +101,7 @@
   font-weight: var(--bru-weight-bold);
   line-height: var(--bru-leading-tight);
   letter-spacing: var(--bru-tracking-tight);
-  color: #FFFFFF;
+  color: #ffffff;
   background: #000000;
   display: inline;
   padding: 0 4px;
@@ -93,13 +110,60 @@
   -webkit-box-decoration-break: clone;
 }
 
-.bru-h1--inv { font-size: var(--bru-text-h1); }
-.bru-h2--inv { font-size: var(--bru-text-h2); }
-.bru-h3--inv { font-size: var(--bru-text-h3); }
-.bru-h4--inv { font-size: var(--bru-text-h4); }
-.bru-h5--inv { font-size: var(--bru-text-h5); }
-.bru-h6--inv { font-size: var(--bru-text-h6); }
+.bru-h1--inv {
+  font-size: var(--bru-text-h1);
+}
+.bru-h2--inv {
+  font-size: var(--bru-text-h2);
+}
+.bru-h3--inv {
+  font-size: var(--bru-text-h3);
+}
+.bru-h4--inv {
+  font-size: var(--bru-text-h4);
+}
+.bru-h5--inv {
+  font-size: var(--bru-text-h5);
+}
+.bru-h6--inv {
+  font-size: var(--bru-text-h6);
+}
 
+/* ──────────────────────────────────────────────
+   DISPLAY HEADINGS
+   Extra large for hero/splash usage.
+   ────────────────────────────────────────────── */
+
+.bru-display-xl {
+  font-family: var(--bru-font-primary);
+  font-size: 4.5rem;
+  font-weight: var(--bru-weight-heavy);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--bru-black);
+  margin: 0;
+}
+
+.bru-display-lg {
+  font-family: var(--bru-font-primary);
+  font-size: 3.5rem;
+  font-weight: var(--bru-weight-heavy);
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--bru-black);
+  margin: 0;
+}
+
+.bru-display-md {
+  font-family: var(--bru-font-primary);
+  font-size: 2.5rem;
+  font-weight: var(--bru-weight-heavy);
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--bru-black);
+  margin: 0;
+}
 
 /* ──────────────────────────────────────────────
    TEXT LABELS
@@ -116,25 +180,49 @@
   color: var(--bru-black);
 }
 
-.bru-text--sm  { font-size: var(--bru-text-sm); }
-.bru-text--lg  { font-size: var(--bru-text-lg); }
+.bru-text--sm {
+  font-size: var(--bru-text-sm);
+}
+.bru-text--lg {
+  font-size: var(--bru-text-lg);
+}
 
-.bru-text--medium   { font-weight: var(--bru-weight-medium); }
-.bru-text--semibold  { font-weight: var(--bru-weight-semibold); }
-.bru-text--bold      { font-weight: var(--bru-weight-bold); }
+.bru-text--medium {
+  font-weight: var(--bru-weight-medium);
+}
+.bru-text--semibold {
+  font-weight: var(--bru-weight-semibold);
+}
+.bru-text--bold {
+  font-weight: var(--bru-weight-bold);
+}
 
 /* Text colors */
-.bru-text--muted     { color: var(--bru-grey); }
-.bru-text--purple    { color: var(--bru-purple); }
-.bru-text--mint      { color: var(--bru-mint); }
-.bru-text--pink      { color: var(--bru-pink); }
-.bru-text--yellow    { color: var(--bru-yellow); }
-.bru-text--error     { color: var(--bru-error-dark); }
-.bru-text--success   { color: var(--bru-success-dark); }
+.bru-text--muted {
+  color: var(--bru-grey);
+}
+.bru-text--purple {
+  color: var(--bru-purple);
+}
+.bru-text--mint {
+  color: var(--bru-mint);
+}
+.bru-text--pink {
+  color: var(--bru-pink);
+}
+.bru-text--yellow {
+  color: var(--bru-yellow);
+}
+.bru-text--error {
+  color: var(--bru-error-dark);
+}
+.bru-text--success {
+  color: var(--bru-success-dark);
+}
 
 /* Inverted text (white on black) */
 .bru-text--inv {
-  color: #FFFFFF;
+  color: #ffffff;
   background: #000000;
   display: inline;
   padding: 0 3px;
@@ -142,12 +230,11 @@
 
 /* Inverted text 50% opacity */
 .bru-text--inv-50 {
-  color: #FFFFFF;
-  background: rgba(0, 0, 0, 0.50);
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.5);
   display: inline;
   padding: 0 3px;
 }
-
 
 /* ──────────────────────────────────────────────
    LABEL
@@ -165,10 +252,50 @@
   margin: 0;
 }
 
-.bru-label--purple { color: var(--bru-purple); }
+.bru-label--purple {
+  color: var(--bru-purple);
+}
 .bru-label--inv {
-  color: #FFFFFF;
+  color: #ffffff;
   background: #000000;
   display: inline;
   padding: 1px 4px;
+}
+
+/* ──────────────────────────────────────────────
+   BODY TEXT SIZES
+   ────────────────────────────────────────────── */
+
+.bru-body-lg {
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-lg);
+  line-height: var(--bru-leading-loose);
+  color: var(--bru-black);
+}
+
+.bru-body-md {
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-md);
+  line-height: var(--bru-leading-normal);
+  color: var(--bru-black);
+}
+
+.bru-body-sm {
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-sm);
+  line-height: var(--bru-leading-normal);
+  color: var(--bru-black);
+}
+
+/* ──────────────────────────────────────────────
+   CAPTION
+   Monospace, small, uppercase — for metadata.
+   ────────────────────────────────────────────── */
+
+.bru-caption {
+  font-family: var(--bru-font-mono);
+  font-size: var(--bru-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--bru-tracking-widest);
+  color: var(--bru-text-muted);
 }

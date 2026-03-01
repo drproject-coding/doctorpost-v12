@@ -59,9 +59,9 @@ export function RuleProposalCard({
               padding: "0 4px",
               background:
                 proposal.status === "approved"
-                  ? "var(--bru-success, #2ecc71)"
+                  ? "var(--bru-success, #00AA00)"
                   : proposal.status === "rejected"
-                    ? "var(--bru-error, #e74c3c)"
+                    ? "var(--bru-error, #FF4444)"
                     : "var(--bru-purple)",
               color: "white",
             }}
@@ -133,7 +133,7 @@ export function RuleProposalCard({
                 fontSize: "var(--bru-text-xs)",
                 fontWeight: 700,
                 marginBottom: 4,
-                color: "var(--bru-error, #e74c3c)",
+                color: "var(--bru-error, #FF4444)",
               }}
             >
               Current
@@ -158,7 +158,7 @@ export function RuleProposalCard({
                 fontSize: "var(--bru-text-xs)",
                 fontWeight: 700,
                 marginBottom: 4,
-                color: "var(--bru-success, #2ecc71)",
+                color: "var(--bru-success, #00AA00)",
               }}
             >
               Proposed

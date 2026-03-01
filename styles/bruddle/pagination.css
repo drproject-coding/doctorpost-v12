@@ -12,7 +12,7 @@
   align-items: center;
   gap: 0;
   border: var(--bru-border);
-  border-radius: var(--bru-radius-md);
+  border-radius: 0;
   overflow: hidden;
   background: var(--bru-white);
 }
@@ -114,11 +114,11 @@
 
 .bru-pagination--transparent .bru-pagination__btn {
   border: var(--bru-border);
-  border-radius: var(--bru-radius-sm);
+  border-radius: 0;
 }
 
 .bru-pagination--transparent .bru-pagination__page {
-  border-radius: var(--bru-radius-sm);
+  border-radius: 0;
 }
 
 

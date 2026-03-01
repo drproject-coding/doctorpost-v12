@@ -80,6 +80,51 @@
 
 
 /* ──────────────────────────────────────────────
+   TOOLTIP
+   Hover-reveal text popup.
+   ────────────────────────────────────────────── */
+
+.bru-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.bru-tooltip-text {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--bru-space-2) var(--bru-space-3);
+  background: var(--bru-black);
+  color: var(--bru-white);
+  font-family: var(--bru-font-mono);
+  font-size: var(--bru-text-xs);
+  white-space: nowrap;
+  border: var(--bru-border);
+  margin-bottom: var(--bru-space-2);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--bru-duration-fast) var(--bru-ease);
+  z-index: var(--bru-z-tooltip);
+}
+
+.bru-tooltip-text::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--bru-black);
+}
+
+.bru-tooltip:hover .bru-tooltip-text {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/* ──────────────────────────────────────────────
    RESPONSIVE — MODALS
    ────────────────────────────────────────────── */
 

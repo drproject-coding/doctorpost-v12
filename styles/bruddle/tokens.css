@@ -7,20 +7,25 @@
 :root {
   /* ──────────────────────────────────────────────
      COLOR PALETTE
-     From Bruddle design system specification.
+     Doctor Project brand identity.
      ────────────────────────────────────────────── */
 
-  /* Primary */
-  --bru-purple:          #AE7AFF;
-  --bru-purple-20:       rgba(174, 122, 255, 0.20);
-  --bru-purple-hover:    #9B5FF5;
-  --bru-purple-active:   #8A4AE8;
+  /* Primary — Doctor Project Purple */
+  --bru-purple:          #631DED;
+  --bru-purple-20:       rgba(99, 29, 237, 0.20);
+  --bru-purple-hover:    #4A14B8;
+  --bru-purple-active:   #8B4FF5;
 
   /* Dark */
-  --bru-black:           #000000;
-  --bru-black-75:        rgba(0, 0, 0, 0.75);
+  --bru-black:           #121212;
+  --bru-black-75:        rgba(18, 18, 18, 0.75);
 
-  /* Secondary */
+  /* Secondary — Doctor Project Orange */
+  --bru-orange:          #FF6C01;
+  --bru-orange-dark:     #CC5500;
+  --bru-orange-light:    #FF9A4D;
+
+  /* Accent Colors */
   --bru-yellow:          #FAE8A4;
   --bru-yellow-80:       rgba(250, 232, 164, 0.80);
   --bru-pink:            #E99898;
@@ -29,28 +34,36 @@
   --bru-mint-80:         rgba(152, 233, 171, 0.80);
 
   /* Grey */
-  --bru-grey:            #5F646D;
-  --bru-grey-85:         rgba(95, 100, 109, 0.85);
+  --bru-grey:            #666666;
+  --bru-grey-85:         rgba(102, 102, 102, 0.85);
+  --bru-grey-light:      #E0E0E0;
+  --bru-charcoal:        #282828;
 
   /* Backgrounds */
-  --bru-cream:           #FAF4F0;
+  --bru-cream:           #F2F2F2;
   --bru-white:           #FFFFFF;
-  --bru-surface:         #FEFCFA;
+  --bru-surface:         #F2F2F2;
 
   /* Outline colors */
   --bru-outline-mint:    #98E9AB;
-  --bru-outline-purple:  #AE7AFF;
+  --bru-outline-purple:  #631DED;
   --bru-outline-pink:    #E99898;
 
   /* Semantic — Status */
-  --bru-success:         #98E9AB;
+  --bru-success:         #00AA00;
   --bru-success-dark:    #166534;
-  --bru-error:           #E99898;
+  --bru-error:           #FF4444;
   --bru-error-dark:      #991B1B;
-  --bru-warning:         #FAE8A4;
+  --bru-warning:         #FFAA00;
   --bru-warning-dark:    #92400E;
-  --bru-info:            #AE7AFF;
+  --bru-info:            #0066FF;
   --bru-info-dark:       #5B21B6;
+
+  /* Text Colors */
+  --bru-text-primary:    #121212;
+  --bru-text-secondary:  #444444;
+  --bru-text-muted:      #888888;
+  --bru-text-inverse:    #FFFFFF;
 
 
   /* ──────────────────────────────────────────────
@@ -58,9 +71,9 @@
      ────────────────────────────────────────────── */
 
   --bru-font-primary:    'Visby', 'Roboto Flex', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --bru-font-mono:       'SF Mono', 'Fira Code', 'Consolas', monospace;
+  --bru-font-mono:       'Space Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
 
-  /* Heading sizes (from Bruddle spec) */
+  /* Heading sizes */
   --bru-text-h1:         48px;
   --bru-text-h2:         36px;
   --bru-text-h3:         28px;
@@ -79,17 +92,22 @@
   --bru-weight-medium:   500;
   --bru-weight-semibold: 600;
   --bru-weight-bold:     700;
+  --bru-weight-heavy:    800;
 
   /* Line heights */
   --bru-leading-tight:   1.2;
+  --bru-leading-snug:    1.25;
   --bru-leading-normal:  1.5;
   --bru-leading-loose:   1.75;
 
   /* Letter spacing */
+  --bru-tracking-tighter: -0.05em;
   --bru-tracking-tight:  -0.02em;
   --bru-tracking-normal: 0;
   --bru-tracking-wide:   0.04em;
+  --bru-tracking-wider:  0.05em;
   --bru-tracking-caps:   0.08em;
+  --bru-tracking-widest: 0.1em;
 
 
   /* ──────────────────────────────────────────────
@@ -107,6 +125,9 @@
   --bru-space-10:  40px;
   --bru-space-12:  48px;
   --bru-space-16:  64px;
+  --bru-space-20:  80px;
+  --bru-space-24:  96px;
+  --bru-space-32:  128px;
 
 
   /* ──────────────────────────────────────────────
@@ -115,15 +136,17 @@
 
   --bru-border:          2px solid var(--bru-black);
   --bru-border-thin:     1px solid var(--bru-black);
+  --bru-border-chunk:    3px solid var(--bru-black);
+  --bru-border-thick:    4px solid var(--bru-black);
   --bru-border-dashed:   2px dashed var(--bru-black);
   --bru-border-dotted:   2px dotted rgba(0, 0, 0, 0.15);
 
-  /* Radii — Bruddle uses subtle rounding on interactive elements */
+  /* Radii — STRICTLY 0 FOR BRUTALIST */
   --bru-radius-none:     0;
-  --bru-radius-sm:       4px;
-  --bru-radius-md:       6px;
-  --bru-radius-lg:       8px;
-  --bru-radius-full:     9999px;
+  --bru-radius-sm:       0;
+  --bru-radius-md:       0;
+  --bru-radius-lg:       0;
+  --bru-radius-full:     0;
 
 
   /* ──────────────────────────────────────────────
@@ -136,6 +159,8 @@
   --bru-shadow-md:       4px 4px 0 0 rgba(0, 0, 0, 1);
   --bru-shadow-lg:       6px 6px 0 0 rgba(0, 0, 0, 1);
   --bru-shadow-xl:       8px 8px 0 0 rgba(0, 0, 0, 1);
+  --bru-shadow-hover:    6px 6px 0 0 var(--bru-purple);
+  --bru-shadow-pressed:  0 0 0 0 rgba(0, 0, 0, 1);
 
   /* Soft variants (for less emphasis) */
   --bru-shadow-xs-soft:  2px 2px 0 0 rgba(0, 0, 0, 0.12);
@@ -176,6 +201,16 @@
   --bru-z-overlay:  300;
   --bru-z-modal:    400;
   --bru-z-toast:    500;
+  --bru-z-tooltip:  600;
+
+
+  /* ──────────────────────────────────────────────
+     OPACITY
+     ────────────────────────────────────────────── */
+
+  --bru-opacity-disabled: 0.4;
+  --bru-opacity-hover:    0.8;
+  --bru-opacity-overlay:  0.5;
 }
 
 
@@ -184,16 +219,27 @@
    ────────────────────────────────────────────── */
 
 body.dark-mode {
-  --bru-cream:           #1A1A1A;
-  --bru-white:           #1A1A1A;
-  --bru-surface:         #282828;
+  --bru-cream:           #121212;
+  --bru-white:           #1E1E1E;
+  --bru-surface:         #2A2A2A;
   --bru-black:           #FFFFFF;
   --bru-black-75:        rgba(255, 255, 255, 0.75);
-  --bru-grey:            #999999;
-  --bru-grey-85:         rgba(153, 153, 153, 0.85);
+  --bru-grey:            #B0B0B0;
+  --bru-grey-85:         rgba(176, 176, 176, 0.85);
+  --bru-grey-light:      #404040;
+  --bru-charcoal:        #E0E0E0;
+
+  --bru-text-primary:    #FFFFFF;
+  --bru-text-secondary:  #B0B0B0;
+  --bru-text-muted:      #707070;
+  --bru-text-inverse:    #121212;
+
+  --bru-purple-active:   #8B4FF5;
 
   --bru-border:          2px solid rgba(255, 255, 255, 0.20);
   --bru-border-thin:     1px solid rgba(255, 255, 255, 0.20);
+  --bru-border-chunk:    3px solid rgba(255, 255, 255, 0.20);
+  --bru-border-thick:    4px solid rgba(255, 255, 255, 0.20);
   --bru-border-dashed:   2px dashed rgba(255, 255, 255, 0.20);
   --bru-border-dotted:   2px dotted rgba(255, 255, 255, 0.10);
 
@@ -202,6 +248,8 @@ body.dark-mode {
   --bru-shadow-md:       4px 4px 0 0 rgba(255, 255, 255, 0.08);
   --bru-shadow-lg:       6px 6px 0 0 rgba(255, 255, 255, 0.08);
   --bru-shadow-xl:       8px 8px 0 0 rgba(255, 255, 255, 0.08);
+  --bru-shadow-hover:    6px 6px 0 0 var(--bru-purple-active);
+  --bru-shadow-pressed:  0 0 0 0 rgba(255, 255, 255, 0.08);
 
   --bru-shadow-xs-soft:  2px 2px 0 0 rgba(255, 255, 255, 0.04);
   --bru-shadow-sm-soft:  3px 3px 0 0 rgba(255, 255, 255, 0.04);

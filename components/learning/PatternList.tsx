@@ -93,7 +93,7 @@ export function PatternList({ signals }: PatternListProps) {
                     textTransform: "uppercase",
                     padding: "0 4px",
                     background: p.promotionReady
-                      ? "var(--bru-success, #2ecc71)"
+                      ? "var(--bru-success, #00AA00)"
                       : "var(--bru-purple)",
                     color: "white",
                   }}

@@ -62,7 +62,7 @@ function FeatureBadge({ label }: { label: string }) {
         alignItems: "center",
         gap: 4,
         padding: "2px 6px",
-        background: "rgba(174, 122, 255, 0.1)",
+        background: "var(--bru-purple-20)",
         color: "var(--bru-purple)",
         fontSize: 10,
         fontWeight: 700,
@@ -308,7 +308,7 @@ export function StraicoModelPicker({
                     ? "2px solid var(--bru-purple)"
                     : "var(--bru-border)",
                   background: isSelected
-                    ? "rgba(174, 122, 255, 0.05)"
+                    ? "rgba(99, 29, 237, 0.05)"
                     : "var(--bru-white)",
                   cursor: "pointer",
                   fontFamily: "var(--bru-font-primary)",
@@ -483,7 +483,7 @@ export function StraicoModelPicker({
                     borderLeft: "2px solid var(--bru-purple)",
                     borderRight: "2px solid var(--bru-purple)",
                     borderBottom: "2px solid var(--bru-purple)",
-                    background: "rgba(174, 122, 255, 0.05)",
+                    background: "rgba(99, 29, 237, 0.05)",
                     cursor: "pointer",
                     fontFamily: "var(--bru-font-primary)",
                   }}
@@ -506,7 +506,7 @@ export function StraicoModelPicker({
                     borderLeft: "2px solid var(--bru-purple)",
                     borderRight: "2px solid var(--bru-purple)",
                     borderBottom: "2px solid var(--bru-purple)",
-                    background: "rgba(174, 122, 255, 0.05)",
+                    background: "rgba(99, 29, 237, 0.05)",
                     padding: "0 12px 12px",
                     display: "flex",
                     flexDirection: "column",

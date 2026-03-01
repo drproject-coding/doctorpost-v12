@@ -87,7 +87,7 @@ body {
   width: 8px;
   height: 8px;
   background: var(--bru-purple);
-  border-radius: 2px;
+  border-radius: 0;
   transform: rotate(45deg);
   margin-left: 2px;
   vertical-align: super;
@@ -114,7 +114,7 @@ body {
 
 .sidebar-nav::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .sidebar-nav-section {
@@ -242,7 +242,7 @@ body {
 .sidebar-avatar {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 0;
   background: #333;
   flex-shrink: 0;
   display: flex;
@@ -335,7 +335,7 @@ body {
 .sidebar-freshness-dot {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: 0;
   flex-shrink: 0;
   background: #6c757d;
 }
@@ -353,7 +353,7 @@ body {
   gap: 6px;
   margin-top: 8px;
   padding: 6px 8px;
-  border-radius: 6px;
+  border-radius: 0;
   font-size: 11px;
   font-weight: 500;
   color: var(--sidebar-text);
@@ -386,7 +386,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: 0;
   font-size: 10px;
   font-weight: 700;
   flex-shrink: 0;
@@ -427,7 +427,7 @@ body {
   padding: 5px 10px;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
+  border-radius: 0;
   color: var(--sidebar-text-muted);
   font-family: var(--bru-font-primary);
   font-size: 11px;
@@ -652,7 +652,7 @@ body {
   width: 8px;
   height: 8px;
   background: #22C55E;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--bru-cream);
 }
 
@@ -1026,7 +1026,7 @@ body {
   width: 36px;
   height: 4px;
   background: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .mobile-nav-sheet-content {
@@ -1154,7 +1154,7 @@ body {
   height: 28px;
   background: var(--sidebar-bg);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;

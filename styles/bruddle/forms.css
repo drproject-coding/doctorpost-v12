@@ -54,7 +54,7 @@
   color: var(--bru-black);
   background: var(--bru-white);
   border: var(--bru-border);
-  border-radius: var(--bru-radius-md);
+  border-radius: 0;
   box-shadow: var(--bru-shadow-sm);
   outline: none;
   transition:
@@ -70,6 +70,7 @@
 .bru-input:focus {
   border-color: var(--bru-purple);
   box-shadow: 3px 3px 0 0 var(--bru-purple);
+  background: #F5F0FF;
 }
 
 .bru-input:disabled {
@@ -81,6 +82,7 @@
 /* Error state */
 .bru-input--error {
   border-color: var(--bru-pink);
+  background: #FFF0F0;
 }
 
 .bru-input--error:focus {
@@ -90,6 +92,7 @@
 /* Success state */
 .bru-input--success {
   border-color: var(--bru-mint);
+  background: #F0FFF0;
 }
 
 .bru-input--success:focus {
@@ -138,13 +141,13 @@ textarea.bru-input {
   color: var(--bru-black);
   background: var(--bru-white);
   border: var(--bru-border);
-  border-radius: var(--bru-radius-md);
+  border-radius: 0;
   box-shadow: var(--bru-shadow-sm);
   outline: none;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23631DED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   transition:
@@ -187,7 +190,7 @@ textarea.bru-input {
   width: 20px;
   height: 20px;
   border: var(--bru-border);
-  border-radius: 2px;
+  border-radius: 0;
   background: var(--bru-white);
   cursor: pointer;
   position: relative;
@@ -251,7 +254,7 @@ textarea.bru-input {
   width: 20px;
   height: 20px;
   border: var(--bru-border);
-  border-radius: var(--bru-radius-full);
+  border-radius: 0;
   background: var(--bru-white);
   cursor: pointer;
   position: relative;
@@ -266,7 +269,7 @@ textarea.bru-input {
   left: 50%;
   width: 10px;
   height: 10px;
-  border-radius: var(--bru-radius-full);
+  border-radius: 0;
   background: var(--bru-mint);
   transform: translate(-50%, -50%);
 }
@@ -280,7 +283,7 @@ textarea.bru-input {
   background: #000000;
   color: #FFFFFF;
   padding: 4px 10px;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .bru-radio--dark input[type="radio"] {
@@ -312,7 +315,7 @@ textarea.bru-input {
   width: 40px;
   height: 22px;
   border: var(--bru-border);
-  border-radius: 2px;
+  border-radius: 0;
   background: var(--bru-purple-20);
   transition: background var(--bru-duration-normal) var(--bru-ease);
 }
@@ -325,7 +328,7 @@ textarea.bru-input {
   height: 14px;
   background: var(--bru-purple);
   border: 1px solid var(--bru-black);
-  border-radius: 1px;
+  border-radius: 0;
   transition: transform var(--bru-duration-normal) var(--bru-ease);
 }
 
@@ -360,7 +363,7 @@ textarea.bru-input {
   display: inline-flex;
   align-items: center;
   border: var(--bru-border);
-  border-radius: var(--bru-radius-md);
+  border-radius: 0;
   box-shadow: var(--bru-shadow-sm);
   overflow: hidden;
   background: var(--bru-white);

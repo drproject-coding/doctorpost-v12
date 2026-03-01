@@ -143,7 +143,7 @@
 }
 
 .bru-chart-legend__dot--round {
-  border-radius: 50%;
+  border-radius: 0;
 }
 
 

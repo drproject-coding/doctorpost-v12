@@ -22,4 +22,7 @@
 @import url('charts.css');
 @import url('layout.css');
 @import url('utilities.css');
+@import url('media.css');
+@import url('composites.css');
+@import url('animations.css');
 @import url('responsive.css');

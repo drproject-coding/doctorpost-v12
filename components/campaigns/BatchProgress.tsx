@@ -47,9 +47,9 @@ export function BatchProgress({
             height: "100%",
             background:
               phase === "error"
-                ? "var(--bru-error, #e74c3c)"
+                ? "var(--bru-error, #FF4444)"
                 : phase === "complete"
-                  ? "var(--bru-success, #2ecc71)"
+                  ? "var(--bru-success, #00AA00)"
                   : "var(--bru-purple)",
             transition: "width 0.3s ease",
           }}
@@ -66,11 +66,11 @@ export function BatchProgress({
         }}
       >
         {phase === "complete" ? (
-          <Check size={16} style={{ color: "var(--bru-success, #2ecc71)" }} />
+          <Check size={16} style={{ color: "var(--bru-success, #00AA00)" }} />
         ) : phase === "error" ? (
           <AlertCircle
             size={16}
-            style={{ color: "var(--bru-error, #e74c3c)" }}
+            style={{ color: "var(--bru-error, #FF4444)" }}
           />
         ) : phase !== "idle" ? (
           <Loader size={16} className="animate-spin" />

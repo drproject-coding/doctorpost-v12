@@ -35,7 +35,7 @@
   display: inline-flex;
   gap: 0;
   border: var(--bru-border);
-  border-radius: var(--bru-radius-md);
+  border-radius: 0;
   overflow: hidden;
   background: var(--bru-white);
 }
@@ -112,7 +112,7 @@ body.dark-mode .bru-tab.active {
   color: var(--bru-black);
   background: transparent;
   border: 1px solid var(--bru-black);
-  border-radius: var(--bru-radius-sm);
+  border-radius: 0;
   white-space: nowrap;
   line-height: 1.3;
 }
@@ -256,7 +256,7 @@ body.dark-mode .bru-tag--filled {
   content: '';
   width: 6px;
   height: 6px;
-  border-radius: var(--bru-radius-full);
+  border-radius: 0;
   background: var(--bru-purple);
   flex-shrink: 0;
 }
@@ -284,7 +284,7 @@ body.dark-mode .bru-tag--filled {
   color: var(--bru-black);
   background: var(--bru-purple-20);
   border: 1px solid var(--bru-purple);
-  border-radius: 2px;
+  border-radius: 0;
   line-height: 1;
 }
 
@@ -307,6 +307,29 @@ body.dark-mode .bru-tag--filled {
 
 
 /* ──────────────────────────────────────────────
+   BADGE VARIANTS (DP-style)
+   ────────────────────────────────────────────── */
+
+.bru-badge--primary {
+  background: var(--bru-purple);
+  color: #FFFFFF;
+  border-color: var(--bru-purple);
+}
+
+.bru-badge--secondary {
+  background: var(--bru-orange);
+  color: #FFFFFF;
+  border-color: var(--bru-orange);
+}
+
+.bru-badge--outline {
+  background: transparent;
+  color: var(--bru-black);
+  border-color: var(--bru-black);
+}
+
+
+/* ──────────────────────────────────────────────
    PROGRESS BARS
    Thin colored bars with Bruddle styling.
    ────────────────────────────────────────────── */
@@ -315,14 +338,14 @@ body.dark-mode .bru-tag--filled {
   width: 100%;
   height: 6px;
   background: rgba(0, 0, 0, 0.08);
-  border-radius: 1px;
+  border-radius: 0;
   overflow: hidden;
 }
 
 .bru-progress__bar {
   height: 100%;
   background: var(--bru-purple);
-  border-radius: 1px;
+  border-radius: 0;
   transition: width var(--bru-duration-slow) var(--bru-ease);
 }
 
@@ -366,7 +389,7 @@ body.dark-mode .bru-progress {
   display: inline-block;
   width: 8px;
   height: 8px;
-  border-radius: var(--bru-radius-full);
+  border-radius: 0;
   background: var(--bru-grey);
   flex-shrink: 0;
 }

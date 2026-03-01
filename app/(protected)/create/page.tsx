@@ -29,7 +29,7 @@ import SchedulePostModal from "@/components/SchedulePostModal";
 import { useAuth } from "@/lib/auth-context";
 
 export default function CreatePage() {
-  const { user } = useAuth();
+  const { user, loadingAuth } = useAuth();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<BrandProfile | null>(null);
   const [activeSubNav, setActiveSubNav] = useState("generate-post");
@@ -65,6 +65,7 @@ export default function CreatePage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    if (loadingAuth) return;
     const fetchProfile = async () => {
       if (!user?.id) {
         setLoading(false);
@@ -84,7 +85,7 @@ export default function CreatePage() {
       }
     };
     void fetchProfile();
-  }, [user?.id]);
+  }, [user?.id, loadingAuth]);
 
   const aiSettings: AiSettings | null = useMemo(() => {
     if (!profile) return null;
@@ -349,7 +350,15 @@ export default function CreatePage() {
 
   if (loading) {
     return (
-      <div className="bru-card bru-card--raised" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 200 }}>
+      <div
+        className="bru-card bru-card--raised"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: 200,
+        }}
+      >
         <p>Loading brand profile...</p>
       </div>
     );
@@ -357,20 +366,43 @@ export default function CreatePage() {
 
   if (!profile) {
     return (
-      <div className="bru-card bru-card--raised" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 200, color: "var(--bru-error-dark)" }}>
-        <p style={{ fontWeight: 700 }}>Failed to load brand profile. Please check settings.</p>
+      <div
+        className="bru-card bru-card--raised"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: 200,
+          color: "var(--bru-error-dark)",
+        }}
+      >
+        <p style={{ fontWeight: 700 }}>
+          Failed to load brand profile. Please check settings.
+        </p>
       </div>
     );
   }
 
   return (
     <>
-      <h1 style={{ fontSize: "var(--bru-text-h3)", fontWeight: 700, marginBottom: "var(--bru-space-6)" }}>
+      <h1
+        style={{
+          fontSize: "var(--bru-text-h3)",
+          fontWeight: 700,
+          marginBottom: "var(--bru-space-6)",
+        }}
+      >
         Create New Post
       </h1>
 
       {/* Sub-navigation tabs */}
-      <div style={{ display: "flex", gap: "var(--bru-space-2)", marginBottom: "var(--bru-space-6)" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "var(--bru-space-2)",
+          marginBottom: "var(--bru-space-6)",
+        }}
+      >
         <button
           onClick={() => setActiveSubNav("generate-post")}
           className={`bru-btn ${activeSubNav === "generate-post" ? "bru-btn--primary" : ""}`}
@@ -396,7 +428,13 @@ export default function CreatePage() {
         >
           {/* Left Column: Input Form */}
           <div className="bru-card bru-card--raised">
-            <h2 style={{ fontSize: "var(--bru-text-h5)", fontWeight: 700, marginBottom: "var(--bru-space-4)" }}>
+            <h2
+              style={{
+                fontSize: "var(--bru-text-h5)",
+                fontWeight: 700,
+                marginBottom: "var(--bru-space-4)",
+              }}
+            >
               Post Details
             </h2>
 
@@ -432,7 +470,11 @@ export default function CreatePage() {
                     }}
                   >
                     {loadingSubtopics ? (
-                      <Loader size={20} className="animate-spin" style={{ color: "var(--bru-purple)" }} />
+                      <Loader
+                        size={20}
+                        className="animate-spin"
+                        style={{ color: "var(--bru-purple)" }}
+                      />
                     ) : (
                       <Search size={20} style={{ color: "var(--bru-grey)" }} />
                     )}
@@ -440,8 +482,17 @@ export default function CreatePage() {
                 </div>
 
                 {subtopics.length > 0 && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--bru-space-2)", marginTop: "var(--bru-space-3)" }}>
-                    <span className="bru-field__label">Subtopic Suggestions</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "var(--bru-space-2)",
+                      marginTop: "var(--bru-space-3)",
+                    }}
+                  >
+                    <span className="bru-field__label">
+                      Subtopic Suggestions
+                    </span>
                     {subtopics.map((sub) => (
                       <button
                         key={sub.id}
@@ -452,8 +503,14 @@ export default function CreatePage() {
                           alignItems: "center",
                           justifyContent: "space-between",
                           padding: "var(--bru-space-2) var(--bru-space-3)",
-                          border: selectedSubtopic?.id === sub.id ? "2px solid var(--bru-purple)" : "var(--bru-border)",
-                          background: selectedSubtopic?.id === sub.id ? "rgba(174, 122, 255, 0.1)" : "var(--bru-cream)",
+                          border:
+                            selectedSubtopic?.id === sub.id
+                              ? "2px solid var(--bru-purple)"
+                              : "var(--bru-border)",
+                          background:
+                            selectedSubtopic?.id === sub.id
+                              ? "var(--bru-purple-20)"
+                              : "var(--bru-cream)",
                           cursor: "pointer",
                           textAlign: "left",
                           width: "100%",
@@ -527,7 +584,10 @@ export default function CreatePage() {
                     loading={loadingRecommendation}
                   />
                   {recommendation && postType === recommendation.postType && (
-                    <span className="smart-choice-badge" style={{ marginTop: "var(--bru-space-1)" }}>
+                    <span
+                      className="smart-choice-badge"
+                      style={{ marginTop: "var(--bru-space-1)" }}
+                    >
                       <TrendingUp size={12} /> Smart Choice
                     </span>
                   )}
@@ -543,11 +603,15 @@ export default function CreatePage() {
                     compatibilityMap={compatibilityMap}
                     loading={loadingRecommendation}
                   />
-                  {recommendation && hookPattern === recommendation.hookPattern && (
-                    <span className="smart-choice-badge" style={{ marginTop: "var(--bru-space-1)" }}>
-                      <TrendingUp size={12} /> Smart Choice
-                    </span>
-                  )}
+                  {recommendation &&
+                    hookPattern === recommendation.hookPattern && (
+                      <span
+                        className="smart-choice-badge"
+                        style={{ marginTop: "var(--bru-space-1)" }}
+                      >
+                        <TrendingUp size={12} /> Smart Choice
+                      </span>
+                    )}
                 </div>
 
                 <div style={{ position: "relative" }}>
@@ -560,11 +624,15 @@ export default function CreatePage() {
                     compatibilityMap={compatibilityMap}
                     loading={loadingRecommendation}
                   />
-                  {recommendation && contentPillar === recommendation.contentPillar && (
-                    <span className="smart-choice-badge" style={{ marginTop: "var(--bru-space-1)" }}>
-                      <TrendingUp size={12} /> Smart Choice
-                    </span>
-                  )}
+                  {recommendation &&
+                    contentPillar === recommendation.contentPillar && (
+                      <span
+                        className="smart-choice-badge"
+                        style={{ marginTop: "var(--bru-space-1)" }}
+                      >
+                        <TrendingUp size={12} /> Smart Choice
+                      </span>
+                    )}
                 </div>
 
                 <div style={{ position: "relative" }}>
@@ -577,11 +645,15 @@ export default function CreatePage() {
                     compatibilityMap={compatibilityMap}
                     loading={loadingRecommendation}
                   />
-                  {recommendation && selectedToneId === recommendation.toneId && (
-                    <span className="smart-choice-badge" style={{ marginTop: "var(--bru-space-1)" }}>
-                      <TrendingUp size={12} /> Smart Choice
-                    </span>
-                  )}
+                  {recommendation &&
+                    selectedToneId === recommendation.toneId && (
+                      <span
+                        className="smart-choice-badge"
+                        style={{ marginTop: "var(--bru-space-1)" }}
+                      >
+                        <TrendingUp size={12} /> Smart Choice
+                      </span>
+                    )}
                 </div>
               </div>
 
@@ -633,7 +705,13 @@ export default function CreatePage() {
           </div>
 
           {/* Right Column: Generated Post */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--bru-space-4)" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--bru-space-4)",
+            }}
+          >
             <PostGenerator
               ref={postGeneratorRef}
               parameters={postGenerationParams}
@@ -669,37 +747,64 @@ export default function CreatePage() {
 
       {activeSubNav === "content-strategy" && (
         <div className="bru-card bru-card--raised">
-          <h2 style={{ fontSize: "var(--bru-text-h5)", fontWeight: 700, marginBottom: "var(--bru-space-4)" }}>
+          <h2
+            style={{
+              fontSize: "var(--bru-text-h5)",
+              fontWeight: 700,
+              marginBottom: "var(--bru-space-4)",
+            }}
+          >
             Your Content Strategy
           </h2>
           <div className="bru-form-stack">
             <div className="bru-field">
               <h3 className="bru-field__label">Content Strategy Overview</h3>
-              <p>{profile.contentStrategy ?? "No content strategy defined yet. Go to Settings to add one."}</p>
+              <p>
+                {profile.contentStrategy ??
+                  "No content strategy defined yet. Go to Settings to add one."}
+              </p>
             </div>
             <div className="bru-field">
               <h3 className="bru-field__label">Brand Definition</h3>
-              <p>{profile.definition ?? "No brand definition provided. Go to Settings to add one."}</p>
+              <p>
+                {profile.definition ??
+                  "No brand definition provided. Go to Settings to add one."}
+              </p>
             </div>
             <div className="bru-field">
               <h3 className="bru-field__label">Copy Guidelines</h3>
-              <p>{profile.copyGuideline ?? "No copy guidelines set. Go to Settings to add them."}</p>
+              <p>
+                {profile.copyGuideline ??
+                  "No copy guidelines set. Go to Settings to add them."}
+              </p>
             </div>
             <div className="bru-field">
               <h3 className="bru-field__label">Audience</h3>
-              <p>{profile.audience.join(", ") || "No audience defined. Go to Settings to add one."}</p>
+              <p>
+                {profile.audience.join(", ") ||
+                  "No audience defined. Go to Settings to add one."}
+              </p>
             </div>
             <div className="bru-field">
               <h3 className="bru-field__label">Tones</h3>
-              <p>{profile.tones.join(", ") || "No tones defined. Go to Settings to add them."}</p>
+              <p>
+                {profile.tones.join(", ") ||
+                  "No tones defined. Go to Settings to add them."}
+              </p>
             </div>
             <div className="bru-field">
               <h3 className="bru-field__label">Offers</h3>
-              <p>{profile.offers.join(", ") || "No offers defined. Go to Settings to add them."}</p>
+              <p>
+                {profile.offers.join(", ") ||
+                  "No offers defined. Go to Settings to add them."}
+              </p>
             </div>
             <div className="bru-field">
               <h3 className="bru-field__label">Taboos</h3>
-              <p>{profile.taboos.join(", ") || "No taboo topics defined. Go to Settings to add them."}</p>
+              <p>
+                {profile.taboos.join(", ") ||
+                  "No taboo topics defined. Go to Settings to add them."}
+              </p>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <Link href="/settings" className="bru-btn">

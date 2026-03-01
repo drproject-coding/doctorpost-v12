@@ -369,6 +369,9 @@ export default function SettingsPage() {
   const isClaude = activeProvider === "claude";
   const isOneforall = activeProvider === "1forall";
   const isStraico = activeProvider === "straico";
+  const claudeReady = isClaude && !!claudeApiKey;
+  const straicoReady = isStraico && !!straicoApiKey;
+  const oneforallReady = isOneforall && !!oneforallApiKey;
 
   function statusLabel(
     validation: ValidationState,
@@ -749,7 +752,7 @@ export default function SettingsPage() {
                     ? "2px solid var(--bru-purple)"
                     : "var(--bru-border)",
                   background: isClaude
-                    ? "rgba(174, 122, 255, 0.05)"
+                    ? "rgba(99, 29, 237, 0.05)"
                     : "var(--bru-white)",
                 }}
               >
@@ -799,12 +802,16 @@ export default function SettingsPage() {
                           fontWeight: 700,
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
-                          color: "var(--bru-purple)",
-                          background: "rgba(174, 122, 255, 0.1)",
+                          color: claudeReady
+                            ? "var(--bru-purple)"
+                            : "var(--bru-error, #FF4444)",
+                          background: claudeReady
+                            ? "var(--bru-purple-20)"
+                            : "rgba(231, 76, 60, 0.1)",
                           padding: "2px 6px",
                         }}
                       >
-                        Active
+                        {claudeReady ? "Active" : "No Key"}
                       </span>
                     )}
                   </div>
@@ -928,7 +935,7 @@ export default function SettingsPage() {
                     ? "2px solid var(--bru-purple)"
                     : "var(--bru-border)",
                   background: isStraico
-                    ? "rgba(174, 122, 255, 0.05)"
+                    ? "rgba(99, 29, 237, 0.05)"
                     : "var(--bru-white)",
                 }}
               >
@@ -982,12 +989,16 @@ export default function SettingsPage() {
                           fontWeight: 700,
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
-                          color: "var(--bru-purple)",
-                          background: "rgba(174, 122, 255, 0.1)",
+                          color: straicoReady
+                            ? "var(--bru-purple)"
+                            : "var(--bru-error, #FF4444)",
+                          background: straicoReady
+                            ? "var(--bru-purple-20)"
+                            : "rgba(231, 76, 60, 0.1)",
                           padding: "2px 6px",
                         }}
                       >
-                        Active
+                        {straicoReady ? "Active" : "No Key"}
                       </span>
                     )}
                   </div>
@@ -1114,7 +1125,7 @@ export default function SettingsPage() {
                     ? "2px solid var(--bru-purple)"
                     : "var(--bru-border)",
                   background: isOneforall
-                    ? "rgba(174, 122, 255, 0.05)"
+                    ? "rgba(99, 29, 237, 0.05)"
                     : "var(--bru-white)",
                 }}
               >
@@ -1168,12 +1179,16 @@ export default function SettingsPage() {
                           fontWeight: 700,
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
-                          color: "var(--bru-purple)",
-                          background: "rgba(174, 122, 255, 0.1)",
+                          color: oneforallReady
+                            ? "var(--bru-purple)"
+                            : "var(--bru-error, #FF4444)",
+                          background: oneforallReady
+                            ? "var(--bru-purple-20)"
+                            : "rgba(231, 76, 60, 0.1)",
                           padding: "2px 6px",
                         }}
                       >
-                        Active
+                        {oneforallReady ? "Active" : "No Key"}
                       </span>
                     )}
                   </div>

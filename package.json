@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@bruddle/react": "github:drproject-coding/bruddle-react",
     "lucide-react": "^0.263.1",
     "next": "^16.1.6",
     "react": "^18.2.0",

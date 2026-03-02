@@ -87,7 +87,7 @@ export const AGENT_CONFIGS: Record<AgentRole, AgentConfig> = {
 // ── Model ID Mapping ──
 
 export const MODEL_IDS: Record<AgentConfig["model"], string> = {
-  opus: "claude-opus-4-5-20250115",
+  opus: "claude-opus-4-5-20251101",
   sonnet: "claude-sonnet-4-5-20250929",
   haiku: "claude-haiku-4-5-20251001",
 };

@@ -15,6 +15,8 @@ export async function searchPerplexity(
   apiKey: string,
   options?: { focus?: "internet" | "scholar" | "reddit" },
 ): Promise<PerplexityResult> {
+  // Use sonar-pro for scholar-like deep research, sonar for general
+  const model = options?.focus === "scholar" ? "sonar-pro" : "sonar";
   const response = await fetch(PERPLEXITY_API_URL, {
     method: "POST",
     headers: {
@@ -22,7 +24,7 @@ export async function searchPerplexity(
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "sonar",
+      model,
       messages: [
         {
           role: "system",
@@ -31,7 +33,6 @@ export async function searchPerplexity(
         },
         { role: "user", content: query },
       ],
-      search_focus: options?.focus || "internet",
     }),
   });
 

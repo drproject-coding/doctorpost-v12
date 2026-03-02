@@ -133,8 +133,13 @@ export async function runDirection(
     return state;
   } catch (err) {
     state.phase = "error";
-    state.error = String(err);
-    emit({ step: "direction", status: "error", percent: 0 });
+    state.error = err instanceof Error ? err.message : String(err);
+    emit({
+      step: "direction",
+      status: "error",
+      percent: 0,
+      data: { error: state.error },
+    });
     return state;
   }
 }
@@ -194,8 +199,13 @@ export async function runDiscovery(
     return state;
   } catch (err) {
     state.phase = "error";
-    state.error = String(err);
-    emit({ step: "discovery", status: "error", percent: 0 });
+    state.error = err instanceof Error ? err.message : String(err);
+    emit({
+      step: "discovery",
+      status: "error",
+      percent: 0,
+      data: { error: state.error },
+    });
     return state;
   }
 }
@@ -234,8 +244,13 @@ export async function runEvidence(
     return state;
   } catch (err) {
     state.phase = "error";
-    state.error = String(err);
-    emit({ step: "evidence", status: "error", percent: 0 });
+    state.error = err instanceof Error ? err.message : String(err);
+    emit({
+      step: "evidence",
+      status: "error",
+      percent: 0,
+      data: { error: state.error },
+    });
     return state;
   }
 }
@@ -252,7 +267,10 @@ export async function runWriteAndScore(
   const topic = state.refinedTopic || state.selectedTopic;
   if (!topic) throw new Error("No topic for writing");
   if (!state.evidencePack) throw new Error("No evidence pack for writing");
-  if (!state.selectedTemplate) throw new Error("No template selected");
+  // Default template if user didn't pick one
+  if (!state.selectedTemplate) {
+    state.selectedTemplate = topic.templateRecommendation || "strong-opinion";
+  }
 
   state.phase = "writing";
   state.rewriteCount = 0;
@@ -353,8 +371,13 @@ export async function runWriteAndScore(
     return state;
   } catch (err) {
     state.phase = "error";
-    state.error = String(err);
-    emit({ step: "writing", status: "error", percent: 0 });
+    state.error = err instanceof Error ? err.message : String(err);
+    emit({
+      step: "writing",
+      status: "error",
+      percent: 0,
+      data: { error: state.error },
+    });
     return state;
   }
 }
@@ -396,8 +419,13 @@ export async function runFormat(
     return state;
   } catch (err) {
     state.phase = "error";
-    state.error = String(err);
-    emit({ step: "formatting", status: "error", percent: 0 });
+    state.error = err instanceof Error ? err.message : String(err);
+    emit({
+      step: "formatting",
+      status: "error",
+      percent: 0,
+      data: { error: state.error },
+    });
     return state;
   }
 }
@@ -445,8 +473,13 @@ export async function runLearn(
     return state;
   } catch (err) {
     state.phase = "error";
-    state.error = String(err);
-    emit({ step: "learning", status: "error", percent: 0 });
+    state.error = err instanceof Error ? err.message : String(err);
+    emit({
+      step: "learning",
+      status: "error",
+      percent: 0,
+      data: { error: state.error },
+    });
     return state;
   }
 }

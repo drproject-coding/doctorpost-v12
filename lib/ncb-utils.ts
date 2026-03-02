@@ -89,28 +89,36 @@ export async function proxyToNCB(
   path: string,
   body?: string,
 ) {
-  const searchParams = new URLSearchParams();
-  searchParams.set("instance", CONFIG.instance);
-  req.nextUrl.searchParams.forEach((val, key) => {
-    if (key !== "instance") searchParams.append(key, val);
-  });
-  const url = `${CONFIG.dataApiUrl}/${path}?${searchParams.toString()}`;
-  const origin = req.headers.get("origin") || req.nextUrl.origin;
-  const cookieHeader = req.headers.get("cookie") || "";
-  const authCookies = extractAuthCookies(cookieHeader);
-  const res = await fetch(url, {
-    method: req.method,
-    headers: {
-      "Content-Type": "application/json",
-      "X-Database-Instance": CONFIG.instance,
-      Cookie: authCookies,
-      Origin: origin,
-    },
-    body: body || undefined,
-  });
-  const data = await res.text();
-  return new NextResponse(data, {
-    status: res.status,
-    headers: { "Content-Type": "application/json" },
-  });
+  try {
+    const searchParams = new URLSearchParams();
+    searchParams.set("instance", CONFIG.instance);
+    req.nextUrl.searchParams.forEach((val, key) => {
+      if (key !== "instance") searchParams.append(key, val);
+    });
+    const url = `${CONFIG.dataApiUrl}/${path}?${searchParams.toString()}`;
+    const origin = req.headers.get("origin") || req.nextUrl.origin;
+    const cookieHeader = req.headers.get("cookie") || "";
+    const authCookies = extractAuthCookies(cookieHeader);
+    const res = await fetch(url, {
+      method: req.method,
+      headers: {
+        "Content-Type": "application/json",
+        "X-Database-Instance": CONFIG.instance,
+        Cookie: authCookies,
+        Origin: origin,
+      },
+      body: body || undefined,
+    });
+    const data = await res.text();
+    return new NextResponse(data, {
+      status: res.status,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    console.error(`[proxyToNCB] ${req.method} ${path} failed:`, err);
+    return new NextResponse(
+      JSON.stringify({ error: "Backend service unavailable" }),
+      { status: 502, headers: { "Content-Type": "application/json" } },
+    );
+  }
 }

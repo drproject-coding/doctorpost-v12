@@ -2,6 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Alert, Button, Card } from "@bruddle/react";
 import { Loader } from "lucide-react";
 
 function ResetPasswordContent() {
@@ -75,8 +76,9 @@ function ResetPasswordContent() {
       className="flex items-center justify-center min-h-screen"
       style={{ background: "var(--bru-cream)" }}
     >
-      <div
-        className="bru-card bru-card--raised text-center"
+      <Card
+        variant="raised"
+        className="text-center"
         style={{ padding: "32px", maxWidth: "420px", width: "100%" }}
       >
         <h1 className="text-2xl font-bold mb-6">
@@ -101,12 +103,9 @@ function ResetPasswordContent() {
               onChange={(e) => setNewPassword(e.target.value)}
               required
             />
-            <button
-              type="submit"
-              className="bru-btn bru-btn--primary bru-btn--block"
-            >
+            <Button type="submit" variant="primary" block>
               Reset Password
-            </button>
+            </Button>
           </form>
         ) : (
           <form
@@ -122,35 +121,20 @@ function ResetPasswordContent() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <button
-              type="submit"
-              className="bru-btn bru-btn--primary bru-btn--block"
-            >
+            <Button type="submit" variant="primary" block>
               Send Reset Link
-            </button>
+            </Button>
           </form>
         )}
 
         {message && (
-          <div
-            className="bru-alert bru-alert--success"
-            style={{ marginTop: "var(--bru-space-4)" }}
-          >
-            <span className="bru-alert__icon">{"\u2713"}</span>
-            <div className="bru-alert__content">
-              <div className="bru-alert__text">{message}</div>
-            </div>
+          <div style={{ marginTop: "var(--bru-space-4)" }}>
+            <Alert variant="success">{message}</Alert>
           </div>
         )}
         {error && (
-          <div
-            className="bru-alert bru-alert--error"
-            style={{ marginTop: "var(--bru-space-4)" }}
-          >
-            <span className="bru-alert__icon">!</span>
-            <div className="bru-alert__content">
-              <div className="bru-alert__text">{error}</div>
-            </div>
+          <div style={{ marginTop: "var(--bru-space-4)" }}>
+            <Alert variant="error">{error}</Alert>
           </div>
         )}
 
@@ -160,7 +144,7 @@ function ResetPasswordContent() {
         >
           Back to login
         </button>
-      </div>
+      </Card>
     </div>
   );
 }

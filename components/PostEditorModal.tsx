@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { ScheduledPost, PostStatus, DropdownOption } from '@/lib/types';
-import { X, Save, Loader } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Button } from "@bruddle/react";
+import { ScheduledPost, PostStatus, DropdownOption } from "@/lib/types";
+import { X, Save, Loader } from "lucide-react";
 
 interface PostEditorModalProps {
   isOpen: boolean;
@@ -11,18 +12,71 @@ interface PostEditorModalProps {
 }
 
 const statusOptions: DropdownOption[] = [
-  { id: 'draft', value: 'draft', label: 'Draft', category: 'Status', description: 'Post is a work in progress.', exampleSnippet: '', useCases: [] },
-  { id: 'to-review', value: 'to-review', label: 'To Review', category: 'Status', description: 'Post is ready for review.', exampleSnippet: '', useCases: [] },
-  { id: 'to-plan', value: 'to-plan', label: 'To Plan', category: 'Status', description: 'Post is ready for planning.', exampleSnippet: '', useCases: [] },
-  { id: 'to-publish', value: 'to-publish', label: 'To Publish', category: 'Status', description: 'Post is ready to be published.', exampleSnippet: '', useCases: [] },
-  { id: 'scheduled', value: 'scheduled', label: 'Scheduled', category: 'Status', description: 'Post is scheduled for a future date.', exampleSnippet: '', useCases: [] },
-  { id: 'published', value: 'published', label: 'Published', category: 'Status', description: 'Post has been published.', exampleSnippet: '', useCases: [] },
+  {
+    id: "draft",
+    value: "draft",
+    label: "Draft",
+    category: "Status",
+    description: "Post is a work in progress.",
+    exampleSnippet: "",
+    useCases: [],
+  },
+  {
+    id: "to-review",
+    value: "to-review",
+    label: "To Review",
+    category: "Status",
+    description: "Post is ready for review.",
+    exampleSnippet: "",
+    useCases: [],
+  },
+  {
+    id: "to-plan",
+    value: "to-plan",
+    label: "To Plan",
+    category: "Status",
+    description: "Post is ready for planning.",
+    exampleSnippet: "",
+    useCases: [],
+  },
+  {
+    id: "to-publish",
+    value: "to-publish",
+    label: "To Publish",
+    category: "Status",
+    description: "Post is ready to be published.",
+    exampleSnippet: "",
+    useCases: [],
+  },
+  {
+    id: "scheduled",
+    value: "scheduled",
+    label: "Scheduled",
+    category: "Status",
+    description: "Post is scheduled for a future date.",
+    exampleSnippet: "",
+    useCases: [],
+  },
+  {
+    id: "published",
+    value: "published",
+    label: "Published",
+    category: "Status",
+    description: "Post has been published.",
+    exampleSnippet: "",
+    useCases: [],
+  },
 ];
 
-const PostEditorModal: React.FC<PostEditorModalProps> = ({ isOpen, onClose, post, onSave }) => {
-  const [editedTitle, setEditedTitle] = useState('');
-  const [editedContent, setEditedContent] = useState('');
-  const [editedStatus, setEditedStatus] = useState<PostStatus>('draft');
+const PostEditorModal: React.FC<PostEditorModalProps> = ({
+  isOpen,
+  onClose,
+  post,
+  onSave,
+}) => {
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedContent, setEditedContent] = useState("");
+  const [editedStatus, setEditedStatus] = useState<PostStatus>("draft");
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
@@ -55,14 +109,14 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({ isOpen, onClose, post
 
     try {
       await onSave(updatedPost);
-      setSaveSuccess('Post saved successfully!');
+      setSaveSuccess("Post saved successfully!");
       setTimeout(() => {
         setSaveSuccess(null);
         onClose(); // Close modal on successful save
       }, 1500);
     } catch (error) {
-      console.error('Failed to save post:', error);
-      setSaveError('Failed to save post. Please try again.');
+      console.error("Failed to save post:", error);
+      setSaveError("Failed to save post. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -138,10 +192,14 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({ isOpen, onClose, post
         </div>
 
         <div className="bru-modal__footer">
-          <button onClick={onClose} className="bru-btn bru-btn--secondary" disabled={isSaving}>
+          <Button onClick={onClose} variant="secondary" disabled={isSaving}>
             Cancel
-          </button>
-          <button onClick={void handleSave} className="bru-btn bru-btn--primary" disabled={isSaving}>
+          </Button>
+          <Button
+            onClick={void handleSave}
+            variant="primary"
+            disabled={isSaving}
+          >
             {isSaving ? (
               <span className="flex items-center">
                 <Loader size={16} className="animate-spin mr-2" /> Saving...
@@ -151,7 +209,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({ isOpen, onClose, post
                 <Save size={16} className="mr-2" /> Save Changes
               </span>
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

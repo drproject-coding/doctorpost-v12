@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Card } from "@bruddle/react";
 import type { GuardrailResult } from "@/lib/knowledge/types";
 import type { WriterOutput } from "@/lib/agents/writer";
 
@@ -17,7 +18,7 @@ export function DraftEditor({
   const failedRules = guardrailResults?.filter((r) => !r.passed) || [];
 
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <div
         style={{
           display: "flex",
@@ -161,6 +162,6 @@ export function DraftEditor({
           )}
         </div>
       )}
-    </div>
+    </Card>
   );
 }

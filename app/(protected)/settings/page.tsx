@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
+import { Button, Card } from "@bruddle/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import {
   BrandProfile,
@@ -386,8 +387,8 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div
-        className="bru-card bru-card--raised"
+      <Card
+        variant="raised"
         style={{
           display: "flex",
           alignItems: "center",
@@ -396,7 +397,7 @@ export default function SettingsPage() {
         }}
       >
         <p>Loading settings...</p>
-      </div>
+      </Card>
     );
   }
 
@@ -478,10 +479,7 @@ export default function SettingsPage() {
       </div>
 
       {/* ── Research APIs Card (Perplexity + Reddit) ── */}
-      <div
-        className="bru-card bru-card--raised"
-        style={{ marginBottom: "var(--bru-space-6)" }}
-      >
+      <Card variant="raised" style={{ marginBottom: "var(--bru-space-6)" }}>
         <h2
           style={{
             fontSize: "var(--bru-text-h5)",
@@ -517,14 +515,14 @@ export default function SettingsPage() {
                 placeholder="pplx-..."
                 style={{ flex: 1 }}
               />
-              <button
+              <Button
                 type="button"
-                className="bru-btn bru-btn--ghost"
+                variant="ghost"
                 onClick={() => setShowPerplexityKey((p) => !p)}
                 style={{ padding: "4px 8px" }}
               >
                 {showPerplexityKey ? <EyeOff size={14} /> : <Eye size={14} />}
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -551,24 +549,21 @@ export default function SettingsPage() {
                 placeholder="Reddit app client secret"
                 style={{ flex: 1 }}
               />
-              <button
+              <Button
                 type="button"
-                className="bru-btn bru-btn--ghost"
+                variant="ghost"
                 onClick={() => setShowRedditSecret((p) => !p)}
                 style={{ padding: "4px 8px" }}
               >
                 {showRedditSecret ? <EyeOff size={14} /> : <Eye size={14} />}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* ── Brand Profile Card (full width) ── */}
-      <div
-        className="bru-card bru-card--raised"
-        style={{ marginBottom: "var(--bru-space-6)" }}
-      >
+      <Card variant="raised" style={{ marginBottom: "var(--bru-space-6)" }}>
         <div
           style={{
             display: "flex",
@@ -587,8 +582,8 @@ export default function SettingsPage() {
             Brand Profile
           </h2>
           {!profile?.companyName && (
-            <button
-              className="bru-btn bru-btn--primary"
+            <Button
+              variant="primary"
               onClick={async () => {
                 try {
                   const res = await fetch("/api/seed-profile", {
@@ -604,7 +599,7 @@ export default function SettingsPage() {
               }}
             >
               Load Doctor Project Profile
-            </button>
+            </Button>
           )}
         </div>
 
@@ -719,7 +714,7 @@ export default function SettingsPage() {
                 >
                   {audience}
                 </span>
-                <button className="bru-btn bru-btn--sm">Edit</button>
+                <Button size="sm">Edit</Button>
               </div>
             ))}
             <button
@@ -740,20 +735,17 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <button
-          className="bru-btn bru-btn--primary"
+        <Button
+          variant="primary"
           onClick={() => void handleSaveAll()}
           disabled={saving}
         >
           {saving ? "Saving..." : "Save Profile"}
-        </button>
-      </div>
+        </Button>
+      </Card>
 
       {/* ── AI Providers Section (full width) ── */}
-      <div
-        className="bru-card bru-card--raised"
-        style={{ marginBottom: "var(--bru-space-6)" }}
-      >
+      <Card variant="raised" style={{ marginBottom: "var(--bru-space-6)" }}>
         <h2
           style={{
             fontSize: "var(--bru-text-h5)",
@@ -856,8 +848,9 @@ export default function SettingsPage() {
                     }}
                   >
                     {!isClaude && (
-                      <button
-                        className="bru-btn bru-btn--sm bru-btn--primary"
+                      <Button
+                        size="sm"
+                        variant="primary"
                         style={{
                           marginTop: "var(--bru-space-3)",
                           alignSelf: "flex-start",
@@ -865,7 +858,7 @@ export default function SettingsPage() {
                         onClick={() => setActiveProvider("claude")}
                       >
                         Set as Active
-                      </button>
+                      </Button>
                     )}
                     <div style={{ marginTop: "var(--bru-space-3)" }}>
                       <label
@@ -929,8 +922,9 @@ export default function SettingsPage() {
                         </p>
                       )}
                     </div>
-                    <button
-                      className="bru-btn bru-btn--sm bru-btn--primary"
+                    <Button
+                      size="sm"
+                      variant="primary"
                       onClick={() => void handleValidateClaude()}
                       disabled={claudeValidation.state === "validating"}
                       style={{ alignSelf: "flex-start" }}
@@ -943,7 +937,7 @@ export default function SettingsPage() {
                       ) : (
                         "Validate Key"
                       )}
-                    </button>
+                    </Button>
                     <p style={{ fontSize: 10, color: "var(--bru-grey)" }}>
                       Claude uses direct browser API — model selection is
                       automatic (Claude Sonnet 4.5).
@@ -1043,8 +1037,9 @@ export default function SettingsPage() {
                     }}
                   >
                     {!isStraico && (
-                      <button
-                        className="bru-btn bru-btn--sm bru-btn--primary"
+                      <Button
+                        size="sm"
+                        variant="primary"
                         style={{
                           marginTop: "var(--bru-space-3)",
                           alignSelf: "flex-start",
@@ -1052,7 +1047,7 @@ export default function SettingsPage() {
                         onClick={() => setActiveProvider("straico")}
                       >
                         Set as Active
-                      </button>
+                      </Button>
                     )}
                     <div style={{ marginTop: "var(--bru-space-3)" }}>
                       <label
@@ -1116,8 +1111,9 @@ export default function SettingsPage() {
                         </p>
                       )}
                     </div>
-                    <button
-                      className="bru-btn bru-btn--sm bru-btn--primary"
+                    <Button
+                      size="sm"
+                      variant="primary"
                       onClick={() => void handleValidateStraico()}
                       disabled={straicoValidation.state === "validating"}
                       style={{ alignSelf: "flex-start" }}
@@ -1130,7 +1126,7 @@ export default function SettingsPage() {
                       ) : (
                         "Validate Key & Load Models"
                       )}
-                    </button>
+                    </Button>
                     {straicoApiKey.trim() && (
                       <StraicoModelPicker
                         models={straicoModels}
@@ -1235,8 +1231,9 @@ export default function SettingsPage() {
                     }}
                   >
                     {!isOneforall && (
-                      <button
-                        className="bru-btn bru-btn--sm bru-btn--primary"
+                      <Button
+                        size="sm"
+                        variant="primary"
                         style={{
                           marginTop: "var(--bru-space-3)",
                           alignSelf: "flex-start",
@@ -1244,7 +1241,7 @@ export default function SettingsPage() {
                         onClick={() => setActiveProvider("1forall")}
                       >
                         Set as Active
-                      </button>
+                      </Button>
                     )}
                     <div style={{ marginTop: "var(--bru-space-3)" }}>
                       <label
@@ -1308,8 +1305,9 @@ export default function SettingsPage() {
                         </p>
                       )}
                     </div>
-                    <button
-                      className="bru-btn bru-btn--sm bru-btn--primary"
+                    <Button
+                      size="sm"
+                      variant="primary"
                       onClick={() => void handleValidateOneforall()}
                       disabled={oneforallValidation.state === "validating"}
                       style={{ alignSelf: "flex-start" }}
@@ -1322,7 +1320,7 @@ export default function SettingsPage() {
                       ) : (
                         "Validate Key"
                       )}
-                    </button>
+                    </Button>
                     <div>
                       <label
                         style={{
@@ -1354,8 +1352,9 @@ export default function SettingsPage() {
         </div>
 
         {/* Save All button */}
-        <button
-          className="bru-btn bru-btn--primary bru-btn--block"
+        <Button
+          variant="primary"
+          block
           style={{ marginTop: "var(--bru-space-6)" }}
           onClick={() => void handleSaveAll()}
           disabled={saving}
@@ -1368,14 +1367,11 @@ export default function SettingsPage() {
           ) : (
             "Save & Validate All"
           )}
-        </button>
-      </div>
+        </Button>
+      </Card>
 
       {/* ── Brand Guidelines Card (full width) ── */}
-      <div
-        className="bru-card bru-card--raised"
-        style={{ marginTop: "var(--bru-space-6)" }}
-      >
+      <Card variant="raised" style={{ marginTop: "var(--bru-space-6)" }}>
         <h2
           style={{
             fontSize: "var(--bru-text-h5)",
@@ -1433,15 +1429,15 @@ export default function SettingsPage() {
         </div>
 
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <button
-            className="bru-btn bru-btn--primary"
+          <Button
+            variant="primary"
             onClick={() => void handleSaveAll()}
             disabled={saving}
           >
             {saving ? "Saving..." : "Save Guidelines"}
-          </button>
+          </Button>
         </div>
-      </div>
+      </Card>
     </>
   );
 }

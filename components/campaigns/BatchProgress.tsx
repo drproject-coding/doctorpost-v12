@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Alert, Card } from "@bruddle/react";
 import { Loader, Check, AlertCircle } from "lucide-react";
 
 interface BatchProgressProps {
@@ -21,7 +22,7 @@ export function BatchProgress({
     totalSlots > 0 ? Math.round((slotsPlanned / totalSlots) * 100) : 0;
 
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <h3
         style={{
           fontSize: "var(--bru-text-h5)",
@@ -93,14 +94,8 @@ export function BatchProgress({
 
       {/* Error */}
       {error && (
-        <div
-          className="bru-alert bru-alert--error"
-          style={{ marginBottom: "var(--bru-space-3)" }}
-        >
-          <span className="bru-alert__icon">!</span>
-          <div className="bru-alert__content">
-            <div className="bru-alert__text">{error}</div>
-          </div>
+        <div style={{ marginBottom: "var(--bru-space-3)" }}>
+          <Alert variant="error">{error}</Alert>
         </div>
       )}
 
@@ -138,6 +133,6 @@ export function BatchProgress({
           </div>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

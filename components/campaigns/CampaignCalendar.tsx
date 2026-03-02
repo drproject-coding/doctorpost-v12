@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Card } from "@bruddle/react";
 import type { CampaignSlot } from "@/lib/agents/campaignPlanner";
 
 interface CampaignCalendarProps {
@@ -20,7 +21,7 @@ export function CampaignCalendar({
   }
 
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <h3
         style={{
           fontSize: "var(--bru-text-h5)",
@@ -52,9 +53,9 @@ export function CampaignCalendar({
             >
               {weekSlots.length > 0
                 ? weekSlots.map((slot, si) => (
-                    <div
+                    <Card
                       key={`slot-${wi}-${si}`}
-                      className="bru-card bru-card--flat"
+                      variant="flat"
                       style={{ padding: "var(--bru-space-2)" }}
                     >
                       <div
@@ -114,7 +115,7 @@ export function CampaignCalendar({
                           </span>
                         )}
                       </div>
-                    </div>
+                    </Card>
                   ))
                 : Array.from({ length: postsPerWeek }).map((_, i) => (
                     <div
@@ -134,6 +135,6 @@ export function CampaignCalendar({
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }

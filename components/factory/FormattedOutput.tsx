@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Button, Card } from "@bruddle/react";
 import { Copy, Check } from "lucide-react";
 import type { FormattedPost } from "@/lib/knowledge/types";
 
@@ -21,7 +22,7 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
   };
 
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <div
         style={{
           display: "flex",
@@ -39,14 +40,10 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
         >
           Formatted Post
         </h3>
-        <button
-          className="bru-btn"
-          onClick={handleCopy}
-          style={{ fontSize: "var(--bru-text-sm)" }}
-        >
+        <Button onClick={handleCopy} style={{ fontSize: "var(--bru-text-sm)" }}>
           {copied ? <Check size={14} /> : <Copy size={14} />}
           {copied ? "Copied!" : "Copy"}
-        </button>
+        </Button>
       </div>
 
       {/* LinkedIn-style preview */}
@@ -122,7 +119,7 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
           </p>
         </div>
       )}
-    </div>
+    </Card>
   );
 }
 

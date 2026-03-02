@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
+import { Button } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
 import {
   CampaignSetup,
@@ -152,8 +153,7 @@ export default function CampaignsPage() {
           Campaigns
         </h1>
         {phase !== "idle" && (
-          <button
-            className="bru-btn"
+          <Button
             onClick={() => {
               setPhase("idle");
               setSlots([]);
@@ -162,7 +162,7 @@ export default function CampaignsPage() {
             }}
           >
             New Campaign
-          </button>
+          </Button>
         )}
       </div>
 

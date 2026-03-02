@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
+import { Alert, Button } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
 import { SignalCounts } from "@/components/learning/SignalCounts";
 import { PatternList } from "@/components/learning/PatternList";
@@ -123,21 +124,15 @@ export default function LearningPage() {
         >
           Learning
         </h1>
-        <button className="bru-btn" onClick={fetchData} disabled={loading}>
+        <Button onClick={fetchData} disabled={loading}>
           {loading ? "Loading..." : "Refresh"}
-        </button>
+        </Button>
       </div>
 
       {/* Error */}
       {error && (
-        <div
-          className="bru-alert bru-alert--error"
-          style={{ marginBottom: "var(--bru-space-4)" }}
-        >
-          <span className="bru-alert__icon">!</span>
-          <div className="bru-alert__content">
-            <div className="bru-alert__text">{error}</div>
-          </div>
+        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+          <Alert variant="error">{error}</Alert>
         </div>
       )}
 
@@ -152,9 +147,9 @@ export default function LearningPage() {
         }}
       >
         {tabs.map((t) => (
-          <button
+          <Button
             key={t.key}
-            className={`bru-btn ${tab === t.key ? "bru-btn--primary" : "bru-btn--ghost"}`}
+            variant={tab === t.key ? "primary" : "ghost"}
             onClick={() => setTab(t.key)}
             style={{ fontSize: "var(--bru-text-sm)" }}
           >
@@ -173,7 +168,7 @@ export default function LearningPage() {
                 {t.count}
               </span>
             )}
-          </button>
+          </Button>
         ))}
       </div>
 

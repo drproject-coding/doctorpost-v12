@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { Card } from "@bruddle/react";
 import { getScheduledPosts, updatePost } from "@/lib/api";
 import { ScheduledPost, PostStatus } from "@/lib/types";
 import CalendarView from "@/components/calendar/CalendarView";
@@ -18,7 +19,7 @@ const ListView = ({
   onPostClick: (post: ScheduledPost) => void;
 }) => {
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <div className="space-y-4">
         {posts.length > 0 ? (
           posts
@@ -65,7 +66,7 @@ const ListView = ({
           </p>
         )}
       </div>
-    </div>
+    </Card>
   );
 };
 
@@ -126,9 +127,12 @@ export default function CalendarPage() {
       <div className="p-6">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Content Calendar</h1>
-          <div className="bru-card bru-card--raised flex items-center justify-center p-12">
+          <Card
+            variant="raised"
+            className="flex items-center justify-center p-12"
+          >
             <p>Loading calendar...</p>
-          </div>
+          </Card>
         </div>
       </div>
     );
@@ -193,7 +197,7 @@ export default function CalendarPage() {
         </div>
 
         {/* Color Guide Legend */}
-        <div className="bru-card bru-card--raised p-4 mb-6">
+        <Card variant="raised" className="p-4 mb-6">
           <h3 className="text-md font-bold mb-2">Status Color Guide:</h3>
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             {statusOptions.map((option) => (
@@ -223,7 +227,7 @@ export default function CalendarPage() {
               Selected Date
             </div>
           </div>
-        </div>
+        </Card>
 
         {view === "calendar" ? (
           <CalendarView

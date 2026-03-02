@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Card } from "@bruddle/react";
 import type { Signal, SignalType } from "@/lib/knowledge/types";
 
 interface SignalCountsProps {
@@ -34,7 +35,7 @@ export function SignalCounts({ signals }: SignalCountsProps) {
   );
 
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <h3
         style={{
           fontSize: "var(--bru-text-h5)",
@@ -78,9 +79,9 @@ export function SignalCounts({ signals }: SignalCountsProps) {
             }}
           >
             {Object.entries(SIGNAL_LABELS).map(([type, label]) => (
-              <div
+              <Card
                 key={type}
-                className="bru-card bru-card--flat"
+                variant="flat"
                 style={{ padding: "var(--bru-space-2)", textAlign: "center" }}
               >
                 <div
@@ -100,7 +101,7 @@ export function SignalCounts({ signals }: SignalCountsProps) {
                 >
                   {label}
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
 
@@ -138,6 +139,6 @@ export function SignalCounts({ signals }: SignalCountsProps) {
           </div>
         </>
       )}
-    </div>
+    </Card>
   );
 }

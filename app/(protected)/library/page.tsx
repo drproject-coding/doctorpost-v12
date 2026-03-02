@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { Card } from "@bruddle/react";
 import { getScheduledPosts } from "@/lib/api";
 import { ScheduledPost } from "@/lib/types";
 import { FileText, Save, Edit } from "lucide-react";
@@ -45,9 +46,12 @@ export default function LibraryPage() {
       <div className="p-6">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Content Library</h1>
-          <div className="bru-card bru-card--raised flex items-center justify-center p-12">
+          <Card
+            variant="raised"
+            className="flex items-center justify-center p-12"
+          >
             <p>Loading content library...</p>
-          </div>
+          </Card>
         </div>
       </div>
     );
@@ -86,7 +90,7 @@ export default function LibraryPage() {
           </button>
         </div>
 
-        <div className="bru-card bru-card--raised">
+        <Card variant="raised">
           {filteredPosts.length === 0 ? (
             <p className="text-center py-12 text-gray-600 font-medium">
               No posts found for this filter.
@@ -118,7 +122,7 @@ export default function LibraryPage() {
               ))}
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { Alert, Card } from "@bruddle/react";
 import { getAnalytics } from "@/lib/api";
 import { AnalyticsData } from "@/lib/types";
 import { BarChart2, MessageSquare, ThumbsUp, TrendingUp } from "lucide-react";
@@ -14,7 +15,7 @@ const StatCard = ({
   value: string | number;
   icon: React.ReactNode;
 }) => (
-  <div className="bru-card bru-card--raised flex flex-col items-start">
+  <Card variant="raised" className="flex flex-col items-start">
     <div className="flex items-center mb-2">
       <div className="p-2 bg-bru-purple rounded-bru-md border-2 border-black mr-2">
         {React.cloneElement(icon as React.ReactElement, {
@@ -25,7 +26,7 @@ const StatCard = ({
       <h3 className="text-sm font-bold uppercase tracking-wider">{title}</h3>
     </div>
     <p className="mt-1 text-3xl font-bold">{value}</p>
-  </div>
+  </Card>
 );
 
 export default function AnalyticsPage() {
@@ -52,9 +53,12 @@ export default function AnalyticsPage() {
       <div className="p-6">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Analytics</h1>
-          <div className="bru-card bru-card--raised flex items-center justify-center p-12">
+          <Card
+            variant="raised"
+            className="flex items-center justify-center p-12"
+          >
             <p>Loading analytics dashboard...</p>
-          </div>
+          </Card>
         </div>
       </div>
     );
@@ -65,17 +69,9 @@ export default function AnalyticsPage() {
       <div className="p-6">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Analytics</h1>
-          <div className="bru-alert bru-alert--error">
-            <span className="bru-alert__icon">!</span>
-            <div className="bru-alert__content">
-              <div className="bru-alert__title">
-                Failed to load analytics data
-              </div>
-              <div className="bru-alert__text">
-                Please refresh the page to try again.
-              </div>
-            </div>
-          </div>
+          <Alert variant="error" title="Failed to load analytics data">
+            Please refresh the page to try again.
+          </Alert>
         </div>
       </div>
     );
@@ -115,7 +111,7 @@ export default function AnalyticsPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bru-card bru-card--raised">
+          <Card variant="raised">
             <h2 className="text-xl font-bold mb-4">
               Top Performers &amp; Insights
             </h2>
@@ -139,9 +135,9 @@ export default function AnalyticsPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </Card>
 
-          <div className="bru-card bru-card--raised">
+          <Card variant="raised">
             <h2 className="text-xl font-bold mb-4">Impressions by Pillar</h2>
             <div className="space-y-4">
               {data.performanceByPillar.map((pillar) => (
@@ -165,7 +161,7 @@ export default function AnalyticsPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </div>

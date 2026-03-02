@@ -1,6 +1,7 @@
 "use client";
 import type React from "react";
 import { useState, useMemo } from "react";
+import { Select } from "@bruddle/react";
 import {
   Search,
   Star,
@@ -250,17 +251,16 @@ export function StraicoModelPicker({
         )}
 
         {/* Sort */}
-        <select
+        <Select
           value={sort}
           onChange={(e) => setSort(e.target.value as SortOption)}
-          className="bru-select"
           style={{ width: "100%", fontSize: 12 }}
         >
           <option value="quality">Sort: Quality Rating</option>
           <option value="price-asc">Sort: Price (low to high)</option>
           <option value="price-desc">Sort: Price (high to low)</option>
           <option value="newest">Sort: Newest First</option>
-        </select>
+        </Select>
       </div>
 
       {/* Loading */}

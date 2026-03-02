@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
+import { Alert, Button, Card } from "@bruddle/react";
 import {
   BrandProfile,
   SubtopicSuggestion,
@@ -350,8 +351,8 @@ export default function CreatePage() {
 
   if (loading) {
     return (
-      <div
-        className="bru-card bru-card--raised"
+      <Card
+        variant="raised"
         style={{
           display: "flex",
           alignItems: "center",
@@ -360,28 +361,22 @@ export default function CreatePage() {
         }}
       >
         <p>Loading brand profile...</p>
-      </div>
+      </Card>
     );
   }
 
   if (!profile) {
     return (
-      <div className="bru-alert bru-alert--error">
-        <span className="bru-alert__icon">!</span>
-        <div className="bru-alert__content">
-          <div className="bru-alert__title">No brand profile found</div>
-          <div className="bru-alert__text">
-            Please go to{" "}
-            <a
-              href="/settings"
-              style={{ fontWeight: 700, textDecoration: "underline" }}
-            >
-              Settings
-            </a>{" "}
-            to set up your brand profile before creating content.
-          </div>
-        </div>
-      </div>
+      <Alert variant="error" title="No brand profile found">
+        Please go to{" "}
+        <a
+          href="/settings"
+          style={{ fontWeight: 700, textDecoration: "underline" }}
+        >
+          Settings
+        </a>{" "}
+        to set up your brand profile before creating content.
+      </Alert>
     );
   }
 
@@ -405,18 +400,18 @@ export default function CreatePage() {
           marginBottom: "var(--bru-space-6)",
         }}
       >
-        <button
+        <Button
           onClick={() => setActiveSubNav("generate-post")}
-          className={`bru-btn ${activeSubNav === "generate-post" ? "bru-btn--primary" : ""}`}
+          variant={activeSubNav === "generate-post" ? "primary" : undefined}
         >
           Generate Post
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => setActiveSubNav("content-strategy")}
-          className={`bru-btn ${activeSubNav === "content-strategy" ? "bru-btn--primary" : ""}`}
+          variant={activeSubNav === "content-strategy" ? "primary" : undefined}
         >
           Content Strategy
-        </button>
+        </Button>
       </div>
 
       {activeSubNav === "generate-post" && (
@@ -429,7 +424,7 @@ export default function CreatePage() {
           className="create-grid"
         >
           {/* Left Column: Input Form */}
-          <div className="bru-card bru-card--raised">
+          <Card variant="raised">
             <h2
               style={{
                 fontSize: "var(--bru-text-h5)",
@@ -660,9 +655,10 @@ export default function CreatePage() {
               </div>
 
               {/* Generate button */}
-              <button
+              <Button
                 onClick={handleGeneratePostClick}
-                className="bru-btn bru-btn--primary bru-btn--block"
+                variant="primary"
+                block
                 disabled={
                   loadingRecommendation ||
                   !topic ||
@@ -683,22 +679,19 @@ export default function CreatePage() {
                     Generate Post
                   </>
                 )}
-              </button>
+              </Button>
 
               {saveFeedback && (
-                <div
-                  className={`bru-alert ${saveFeedback.includes("successfully") ? "bru-alert--success" : "bru-alert--error"}`}
+                <Alert
+                  variant={
+                    saveFeedback.includes("successfully") ? "success" : "error"
+                  }
                 >
-                  <span className="bru-alert__icon">
-                    {saveFeedback.includes("successfully") ? "\u2713" : "!"}
-                  </span>
-                  <div className="bru-alert__content">
-                    <div className="bru-alert__text">{saveFeedback}</div>
-                  </div>
-                </div>
+                  {saveFeedback}
+                </Alert>
               )}
             </div>
-          </div>
+          </Card>
 
           {/* Right Column: Generated Post */}
           <div
@@ -718,23 +711,22 @@ export default function CreatePage() {
             />
             {generatedContent && (
               <div className="bru-form-actions">
-                <button
+                <Button
                   onClick={() => void handleSaveDraft()}
-                  className="bru-btn"
                   style={{ flex: 1 }}
                   disabled={saving}
                 >
                   {saving && <Loader size={16} className="animate-spin" />}
                   Save as Draft
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={handleOpenScheduleModal}
-                  className="bru-btn bru-btn--primary"
+                  variant="primary"
                   style={{ flex: 1 }}
                   disabled={saving}
                 >
                   Schedule Post
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -742,7 +734,7 @@ export default function CreatePage() {
       )}
 
       {activeSubNav === "content-strategy" && (
-        <div className="bru-card bru-card--raised">
+        <Card variant="raised">
           <h2
             style={{
               fontSize: "var(--bru-text-h5)",
@@ -808,7 +800,7 @@ export default function CreatePage() {
               </Link>
             </div>
           </div>
-        </div>
+        </Card>
       )}
 
       <SchedulePostModal

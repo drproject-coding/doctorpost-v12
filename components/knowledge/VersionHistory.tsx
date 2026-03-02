@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { Button, Card } from "@bruddle/react";
 import { RotateCcw, X, ChevronDown, ChevronRight } from "lucide-react";
 import type {
   DocumentVersion,
@@ -54,7 +55,7 @@ export function VersionHistory({
   }, [documentId]);
 
   return (
-    <div className="bru-card bru-card--raised" style={{ height: "100%" }}>
+    <Card variant="raised" style={{ height: "100%" }}>
       <div
         style={{
           display: "flex",
@@ -72,9 +73,9 @@ export function VersionHistory({
         >
           Version History
         </h3>
-        <button className="bru-btn bru-btn--ghost" onClick={onClose}>
+        <Button variant="ghost" onClick={onClose}>
           <X size={16} />
-        </button>
+        </Button>
       </div>
 
       {loading ? (
@@ -181,14 +182,13 @@ export function VersionHistory({
                     {v.content}
                   </pre>
                   {v.version < currentVersion && (
-                    <button
-                      className="bru-btn"
+                    <Button
                       style={{ marginTop: "var(--bru-space-2)" }}
                       onClick={() => onRestore(v)}
                     >
                       <RotateCcw size={14} />
                       Restore v{v.version}
-                    </button>
+                    </Button>
                   )}
                 </div>
               )}
@@ -196,6 +196,6 @@ export function VersionHistory({
           ))}
         </div>
       )}
-    </div>
+    </Card>
   );
 }

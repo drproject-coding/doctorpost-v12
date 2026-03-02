@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Button, Card } from "@bruddle/react";
 import { ThumbsUp, ThumbsDown, Edit3, MessageSquare } from "lucide-react";
 
 interface PostReviewProps {
@@ -31,7 +32,7 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
   };
 
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <h3
         style={{
           fontSize: "var(--bru-text-h5)",
@@ -51,12 +52,11 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
           flexWrap: "wrap",
         }}
       >
-        <button className="bru-btn bru-btn--primary" onClick={handleApprove}>
+        <Button variant="primary" onClick={handleApprove}>
           <ThumbsUp size={14} />
           Approve
-        </button>
-        <button
-          className="bru-btn"
+        </Button>
+        <Button
           onClick={() => setAction(action === "editing" ? "idle" : "editing")}
           style={{
             border:
@@ -65,9 +65,8 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
         >
           <Edit3 size={14} />
           Edit Before Approve
-        </button>
-        <button
-          className="bru-btn"
+        </Button>
+        <Button
           onClick={() => setAction(action === "feedback" ? "idle" : "feedback")}
           style={{
             border:
@@ -76,15 +75,11 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
         >
           <MessageSquare size={14} />
           Add Feedback
-        </button>
-        <button
-          className="bru-btn"
-          onClick={handleReject}
-          style={{ marginLeft: "auto" }}
-        >
+        </Button>
+        <Button onClick={handleReject} style={{ marginLeft: "auto" }}>
           <ThumbsDown size={14} />
           Reject
-        </button>
+        </Button>
       </div>
 
       {/* Edit mode */}
@@ -141,9 +136,7 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
               }}
               style={{ flex: 1 }}
             />
-            <button className="bru-btn" onClick={addFeedback}>
-              Add
-            </button>
+            <Button onClick={addFeedback}>Add</Button>
           </div>
         </div>
       )}
@@ -194,6 +187,6 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
           </div>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

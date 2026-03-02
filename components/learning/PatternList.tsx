@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Card } from "@bruddle/react";
 import type { Signal } from "@/lib/knowledge/types";
 
 interface PatternListProps {
@@ -49,7 +50,7 @@ export function PatternList({ signals }: PatternListProps) {
   const patterns = detectPatterns(signals);
 
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <h3
         style={{
           fontSize: "var(--bru-text-h5)",
@@ -73,9 +74,9 @@ export function PatternList({ signals }: PatternListProps) {
       ) : (
         <div style={{ display: "grid", gap: "var(--bru-space-3)" }}>
           {patterns.map((p, idx) => (
-            <div
+            <Card
               key={`${p.category}::${p.signalType}`}
-              className="bru-card bru-card--flat"
+              variant="flat"
               style={{ padding: "var(--bru-space-3)" }}
             >
               <div
@@ -160,10 +161,10 @@ export function PatternList({ signals }: PatternListProps) {
                   </div>
                 </div>
               )}
-            </div>
+            </Card>
           ))}
         </div>
       )}
-    </div>
+    </Card>
   );
 }

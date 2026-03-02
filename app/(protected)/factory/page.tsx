@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useCallback, useRef } from "react";
+import { Button, Card } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
 import { Loader, Play, ArrowRight } from "lucide-react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
@@ -285,9 +286,7 @@ export default function FactoryPage() {
           Content Factory
         </h1>
         {state.phase !== "idle" && (
-          <button className="bru-btn" onClick={handleNewPost}>
-            New Post
-          </button>
+          <Button onClick={handleNewPost}>New Post</Button>
         )}
       </div>
 
@@ -312,13 +311,12 @@ export default function FactoryPage() {
               {state.error || "An error occurred"}
             </div>
           </div>
-          <button
-            className="bru-btn"
+          <Button
             style={{ marginLeft: "var(--bru-space-3)", flexShrink: 0 }}
             onClick={handleNewPost}
           >
             Start Over
-          </button>
+          </Button>
         </div>
       )}
 
@@ -341,8 +339,8 @@ export default function FactoryPage() {
 
       {/* IDLE — Start */}
       {state.phase === "idle" && !running && (
-        <div
-          className="bru-card bru-card--raised"
+        <Card
+          variant="raised"
           style={{ textAlign: "center", padding: "var(--bru-space-8)" }}
         >
           <h2
@@ -367,15 +365,11 @@ export default function FactoryPage() {
             topic proposals, research, evidence, writing, scoring, formatting,
             review, and learning.
           </p>
-          <button
-            className="bru-btn bru-btn--primary"
-            onClick={handleStart}
-            disabled={running}
-          >
+          <Button variant="primary" onClick={handleStart} disabled={running}>
             <Play size={14} />
             Start Pipeline
-          </button>
-        </div>
+          </Button>
+        </Card>
       )}
 
       {/* DIRECTION — Topic Proposals */}
@@ -396,13 +390,10 @@ export default function FactoryPage() {
                   justifyContent: "flex-end",
                 }}
               >
-                <button
-                  className="bru-btn bru-btn--primary"
-                  onClick={handleDiscover}
-                >
+                <Button variant="primary" onClick={handleDiscover}>
                   <ArrowRight size={14} />
                   Research This Topic
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -424,13 +415,10 @@ export default function FactoryPage() {
                   justifyContent: "flex-end",
                 }}
               >
-                <button
-                  className="bru-btn bru-btn--primary"
-                  onClick={handleEvidence}
-                >
+                <Button variant="primary" onClick={handleEvidence}>
                   <ArrowRight size={14} />
                   Gather Evidence
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -464,13 +452,10 @@ export default function FactoryPage() {
                   }}
                   style={{ width: 200 }}
                 />
-                <button
-                  className="bru-btn bru-btn--primary"
-                  onClick={handleWrite}
-                >
+                <Button variant="primary" onClick={handleWrite}>
                   <ArrowRight size={14} />
                   Write Draft
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -506,10 +491,10 @@ export default function FactoryPage() {
               justifyContent: "flex-end",
             }}
           >
-            <button className="bru-btn bru-btn--primary" onClick={handleFormat}>
+            <Button variant="primary" onClick={handleFormat}>
               <ArrowRight size={14} />
               Format for LinkedIn
-            </button>
+            </Button>
           </div>
         )}
 
@@ -536,8 +521,8 @@ export default function FactoryPage() {
 
       {/* COMPLETE */}
       {state.phase === "complete" && (
-        <div
-          className="bru-card bru-card--raised"
+        <Card
+          variant="raised"
           style={{
             textAlign: "center",
             padding: "var(--bru-space-8)",
@@ -562,10 +547,10 @@ export default function FactoryPage() {
           >
             Your post has been approved and learning signals captured.
           </p>
-          <button className="bru-btn bru-btn--primary" onClick={handleNewPost}>
+          <Button variant="primary" onClick={handleNewPost}>
             Create Another Post
-          </button>
-        </div>
+          </Button>
+        </Card>
       )}
     </div>
   );

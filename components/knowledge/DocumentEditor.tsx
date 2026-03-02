@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useCallback } from "react";
+import { Button, Card } from "@bruddle/react";
 import { Save, X, History } from "lucide-react";
 
 interface DocumentEditorProps {
@@ -46,7 +47,7 @@ export function DocumentEditor({
   }, [content, reason, hasChanges, onSave]);
 
   return (
-    <div className="bru-card bru-card--raised" style={{ height: "100%" }}>
+    <Card variant="raised" style={{ height: "100%" }}>
       {/* Header */}
       <div
         style={{
@@ -76,16 +77,16 @@ export function DocumentEditor({
           </span>
         </div>
         <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
-          <button
-            className="bru-btn bru-btn--ghost"
+          <Button
+            variant="ghost"
             onClick={onShowHistory}
             title="Version history"
           >
             <History size={16} />
-          </button>
-          <button className="bru-btn bru-btn--ghost" onClick={onClose}>
+          </Button>
+          <Button variant="ghost" onClick={onClose}>
             <X size={16} />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -119,14 +120,14 @@ export function DocumentEditor({
           onChange={(e) => setReason(e.target.value)}
           style={{ flex: 1 }}
         />
-        <button
-          className="bru-btn bru-btn--primary"
+        <Button
+          variant="primary"
           onClick={handleSave}
           disabled={!hasChanges || saving}
         >
           <Save size={14} />
           {saving ? "Saving..." : "Save"}
-        </button>
+        </Button>
       </div>
 
       {/* Feedback */}
@@ -149,6 +150,6 @@ export function DocumentEditor({
           {feedback}
         </div>
       )}
-    </div>
+    </Card>
   );
 }

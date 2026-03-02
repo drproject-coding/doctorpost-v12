@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Card } from "@bruddle/react";
 import type { ScoreResult } from "@/lib/knowledge/types";
 
 interface ScorecardProps {
@@ -28,7 +29,7 @@ export function Scorecard({ score }: ScorecardProps) {
   const criteria = score.criteriaScores;
 
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <div
         style={{
           display: "flex",
@@ -186,7 +187,7 @@ export function Scorecard({ score }: ScorecardProps) {
           </p>
         </div>
       )}
-    </div>
+    </Card>
   );
 }
 

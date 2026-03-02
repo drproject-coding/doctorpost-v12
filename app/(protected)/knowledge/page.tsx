@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
+import { Alert, Button, Card } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
 import { FileText, Plus, Upload, Scissors, Search, Loader } from "lucide-react";
 import type {
@@ -199,20 +200,20 @@ export default function KnowledgePage() {
           Knowledge Base
         </h1>
         <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
-          <button className="bru-btn" onClick={() => setView("import")}>
+          <Button onClick={() => setView("import")}>
             <Upload size={14} />
             Import
-          </button>
-          <button className="bru-btn" onClick={() => setView("extract")}>
+          </Button>
+          <Button onClick={() => setView("extract")}>
             <Scissors size={14} />
             Extract Template
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Filters */}
-      <div
-        className="bru-card bru-card--flat"
+      <Card
+        variant="flat"
         style={{
           display: "flex",
           gap: "var(--bru-space-3)",
@@ -222,14 +223,14 @@ export default function KnowledgePage() {
         }}
       >
         {CATEGORIES.map((cat) => (
-          <button
+          <Button
             key={cat.value}
-            className={`bru-btn ${filterCategory === cat.value ? "bru-btn--primary" : ""}`}
+            variant={filterCategory === cat.value ? "primary" : undefined}
             style={{ padding: "4px 12px", fontSize: "var(--bru-text-sm)" }}
             onClick={() => setFilterCategory(cat.value)}
           >
             {cat.label}
-          </button>
+          </Button>
         ))}
         <div style={{ flex: 1, minWidth: 200 }}>
           <div style={{ position: "relative" }}>
@@ -252,18 +253,12 @@ export default function KnowledgePage() {
             />
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Error */}
       {error && (
-        <div
-          className="bru-alert bru-alert--error"
-          style={{ marginBottom: "var(--bru-space-4)" }}
-        >
-          <span className="bru-alert__icon">!</span>
-          <div className="bru-alert__content">
-            <div className="bru-alert__text">{error}</div>
-          </div>
+        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+          <Alert variant="error">{error}</Alert>
         </div>
       )}
 
@@ -279,8 +274,8 @@ export default function KnowledgePage() {
           <Loader size={24} className="animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
-        <div
-          className="bru-card bru-card--raised"
+        <Card
+          variant="raised"
           style={{
             textAlign: "center",
             padding: "var(--bru-space-8)",
@@ -288,7 +283,7 @@ export default function KnowledgePage() {
           }}
         >
           No documents found. Import brand files to get started.
-        </div>
+        </Card>
       ) : (
         <div
           style={{
@@ -298,9 +293,9 @@ export default function KnowledgePage() {
           }}
         >
           {filtered.map((doc) => (
-            <div
+            <Card
               key={doc.id}
-              className="bru-card bru-card--raised bru-card--interactive"
+              variant="interactive"
               style={{ cursor: "pointer" }}
               onClick={() => handleEdit(doc)}
             >
@@ -385,7 +380,7 @@ export default function KnowledgePage() {
                 <span>v{doc.version}</span>
                 <span>{doc.source}</span>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       )}

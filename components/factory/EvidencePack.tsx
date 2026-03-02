@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Card } from "@bruddle/react";
 import { ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
 import type { EvidencePack as EvidencePackType } from "@/lib/knowledge/types";
 
@@ -16,7 +17,7 @@ export function EvidencePack({ evidence }: EvidencePackProps) {
     setExpandedSection(expandedSection === section ? null : section);
 
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <h3
         style={{
           fontSize: "var(--bru-text-h5)",
@@ -175,7 +176,7 @@ export function EvidencePack({ evidence }: EvidencePackProps) {
           </ul>
         </Section>
       )}
-    </div>
+    </Card>
   );
 }
 

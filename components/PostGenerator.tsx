@@ -7,6 +7,7 @@ import React, {
   useRef,
   useCallback,
 } from "react";
+import { Alert, Button, Card } from "@bruddle/react";
 import {
   PostGenerationParameters,
   BrandProfile,
@@ -157,14 +158,8 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
     return (
       <div>
         {error && (
-          <div
-            className="bru-alert bru-alert--error"
-            style={{ marginBottom: "var(--bru-space-4)" }}
-          >
-            <span className="bru-alert__icon">!</span>
-            <div className="bru-alert__content">
-              <div className="bru-alert__text">{error}</div>
-            </div>
+          <div style={{ marginBottom: "var(--bru-space-4)" }}>
+            <Alert variant="error">{error}</Alert>
           </div>
         )}
 
@@ -211,7 +206,7 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
             </p>
           </div>
         ) : generatedContent ? (
-          <div className="bru-card bru-card--raised">
+          <Card variant="raised">
             <div
               style={{
                 display: "flex",
@@ -254,19 +249,16 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
               className="bru-form-actions"
               style={{ marginTop: "var(--bru-space-3)" }}
             >
-              <button
-                className="bru-btn bru-btn--sm"
-                onClick={void copyToClipboard}
-              >
+              <Button size="sm" onClick={void copyToClipboard}>
                 <Copy size={14} />
                 {copied ? "Copied!" : "Copy"}
-              </button>
-              <button className="bru-btn bru-btn--sm" onClick={downloadAsText}>
+              </Button>
+              <Button size="sm" onClick={downloadAsText}>
                 <Download size={14} />
                 Download
-              </button>
+              </Button>
             </div>
-          </div>
+          </Card>
         ) : (
           <div
             style={{

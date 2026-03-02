@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
+import { Button, Card } from "@bruddle/react";
 import { ScheduledPost } from "@/lib/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getStatusColorClasses } from "@/lib/calendarUtils"; // Import from new utility file
@@ -155,26 +156,28 @@ export default function CalendarView({
   ];
 
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold">
           {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
         </h2>
         <div className="flex space-x-2">
-          <button
+          <Button
             onClick={previousMonth}
-            className="bru-btn bru-btn--primary p-2 flex items-center justify-center"
+            variant="primary"
+            className="p-2 flex items-center justify-center"
             aria-label="Previous month"
           >
             <ChevronLeft size={16} />
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={nextMonth}
-            className="bru-btn bru-btn--primary p-2 flex items-center justify-center"
+            variant="primary"
+            className="p-2 flex items-center justify-center"
             aria-label="Next month"
           >
             <ChevronRight size={16} />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -187,6 +190,6 @@ export default function CalendarView({
       </div>
 
       <div className="grid grid-cols-7 gap-1">{renderCalendar()}</div>
-    </div>
+    </Card>
   );
 }

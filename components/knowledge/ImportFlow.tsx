@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Button, Card, Select } from "@bruddle/react";
 import { Upload, FileText, Check, ArrowLeft, Loader } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import type { DocumentCategory } from "@/lib/knowledge/types";
@@ -106,9 +107,9 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
           marginBottom: "var(--bru-space-6)",
         }}
       >
-        <button className="bru-btn bru-btn--ghost" onClick={onCancel}>
+        <Button variant="ghost" onClick={onCancel}>
           <ArrowLeft size={16} />
-        </button>
+        </Button>
         <h2
           style={{
             fontSize: "var(--bru-text-h4)",
@@ -121,7 +122,7 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
       </div>
 
       {step === "input" && (
-        <div className="bru-card bru-card--raised">
+        <Card variant="raised">
           <h3
             style={{
               fontSize: "var(--bru-text-h5)",
@@ -174,22 +175,20 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
             className="bru-form-actions"
             style={{ marginTop: "var(--bru-space-4)" }}
           >
-            <button className="bru-btn" onClick={onCancel}>
-              Cancel
-            </button>
-            <button
-              className="bru-btn bru-btn--primary"
+            <Button onClick={onCancel}>Cancel</Button>
+            <Button
+              variant="primary"
               onClick={handleClassify}
               disabled={!text.trim()}
             >
               Next: Classify
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
       )}
 
       {step === "classify" && (
-        <div className="bru-card bru-card--raised">
+        <Card variant="raised">
           <h3
             style={{
               fontSize: "var(--bru-text-h5)",
@@ -212,22 +211,19 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
             </div>
 
             <div className="bru-form-row">
-              <div className="bru-field">
-                <label className="bru-field__label">Category</label>
-                <select
-                  className="bru-select"
-                  value={category}
-                  onChange={(e) =>
-                    setCategory(e.target.value as DocumentCategory)
-                  }
-                >
-                  {CATEGORY_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Select
+                label="Category"
+                value={category}
+                onChange={(e) =>
+                  setCategory(e.target.value as DocumentCategory)
+                }
+              >
+                {CATEGORY_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </Select>
               <div className="bru-field">
                 <label className="bru-field__label">Subcategory</label>
                 <input
@@ -263,11 +259,9 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
             className="bru-form-actions"
             style={{ marginTop: "var(--bru-space-4)" }}
           >
-            <button className="bru-btn" onClick={() => setStep("input")}>
-              Back
-            </button>
-            <button
-              className="bru-btn bru-btn--primary"
+            <Button onClick={() => setStep("input")}>Back</Button>
+            <Button
+              variant="primary"
               onClick={handleSave}
               disabled={!name.trim() || saving}
             >
@@ -280,7 +274,7 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
                   <Check size={14} /> Import Document
                 </>
               )}
-            </button>
+            </Button>
           </div>
 
           {feedback && (
@@ -302,7 +296,7 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
               {feedback}
             </div>
           )}
-        </div>
+        </Card>
       )}
     </div>
   );

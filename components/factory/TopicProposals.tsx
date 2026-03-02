@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Card } from "@bruddle/react";
 import { Check } from "lucide-react";
 import type { TopicProposal } from "@/lib/knowledge/types";
 import type { StrategistOutput } from "@/lib/agents/strategist";
@@ -16,7 +17,7 @@ export function TopicProposals({
   selectedTopic,
 }: TopicProposalsProps) {
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <h3
         style={{
           fontSize: "var(--bru-text-h5)",
@@ -49,9 +50,9 @@ export function TopicProposals({
             selectedTopic === topic ||
             selectedTopic?.headline === topic.headline;
           return (
-            <div
+            <Card
               key={`${idx}-${topic.headline}`}
-              className={`bru-card ${isSelected ? "bru-card--raised" : "bru-card--flat"} bru-card--interactive`}
+              variant={isSelected ? "raised" : "flat"}
               style={{
                 cursor: "pointer",
                 border: isSelected
@@ -137,10 +138,10 @@ export function TopicProposals({
                   />
                 )}
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 }

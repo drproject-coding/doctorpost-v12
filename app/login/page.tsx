@@ -1,11 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Button, Card } from "@bruddle/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Loader, Eye, EyeOff } from "lucide-react";
 
-interface Providers { email?: boolean; google?: boolean; emailOTP?: boolean }
+interface Providers {
+  email?: boolean;
+  google?: boolean;
+  emailOTP?: boolean;
+}
 
 export default function LoginPage() {
   const { isLoggedIn, loadingAuth, checkSession } = useAuth();
@@ -66,7 +71,8 @@ export default function LoginPage() {
       if (!res.ok) {
         const data = (await res.json()) as { message?: string };
         throw new Error(
-          data.message || (isRegistering ? "Registration failed." : "Login failed."),
+          data.message ||
+            (isRegistering ? "Registration failed." : "Login failed."),
         );
       }
 
@@ -87,36 +93,40 @@ export default function LoginPage() {
 
   if (loadingAuth || !providers) {
     return (
-      <div className="flex items-center justify-center" style={{ minHeight: "100vh", background: "var(--bru-cream)" }}>
+      <div
+        className="flex items-center justify-center"
+        style={{ minHeight: "100vh", background: "var(--bru-cream)" }}
+      >
         <Loader size={32} className="animate-spin text-bru-purple" />
       </div>
     );
   }
 
   return (
-    <div className="flex items-center justify-center" style={{ minHeight: "100vh", background: "var(--bru-cream)" }}>
-      <div className="bru-card bru-card--raised text-center" style={{ padding: "32px", maxWidth: "420px", width: "100%" }}>
-        <h1 className="text-3xl font-bold mb-6">
-          Welcome to DoctorPost
-        </h1>
+    <div
+      className="flex items-center justify-center"
+      style={{ minHeight: "100vh", background: "var(--bru-cream)" }}
+    >
+      <Card
+        variant="raised"
+        className="text-center"
+        style={{ padding: "32px", maxWidth: "420px", width: "100%" }}
+      >
+        <h1 className="text-3xl font-bold mb-6">Welcome to DoctorPost</h1>
 
         {loading ? (
           <div className="flex items-center justify-center py-4">
-            <Loader
-              size={24}
-              className="animate-spin mr-2 text-bru-purple"
-            />
-            <span className="font-medium">
-              Signing in...
-            </span>
+            <Loader size={24} className="animate-spin mr-2 text-bru-purple" />
+            <span className="font-medium">Signing in...</span>
           </div>
         ) : (
           <>
             {providers.google && (
               <>
-                <button
+                <Button
                   onClick={handleGoogleLogin}
-                  className="bru-btn bru-btn--block mb-4 flex items-center justify-center gap-2"
+                  block
+                  className="mb-4 flex items-center justify-center gap-2"
                 >
                   <svg width="18" height="18" viewBox="0 0 18 18">
                     <path
@@ -137,13 +147,16 @@ export default function LoginPage() {
                     />
                   </svg>
                   Continue with Google
-                </button>
+                </Button>
                 <div className="relative my-6">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-300"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-2 text-gray-500" style={{ background: "var(--bru-cream)" }}>
+                    <span
+                      className="px-2 text-gray-500"
+                      style={{ background: "var(--bru-cream)" }}
+                    >
                       or
                     </span>
                   </div>
@@ -193,16 +206,12 @@ export default function LoginPage() {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                     >
-                      {showPassword ? (
-                        <EyeOff size={18} />
-                      ) : (
-                        <Eye size={18} />
-                      )}
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
-                  <button type="submit" className="bru-btn bru-btn--primary bru-btn--block">
+                  <Button type="submit" variant="primary" block>
                     {isRegistering ? "Create Account" : "Sign In"}
-                  </button>
+                  </Button>
                 </form>
 
                 <button
@@ -231,7 +240,17 @@ export default function LoginPage() {
         )}
 
         {error && (
-          <div style={{ marginTop: "24px", padding: "12px", background: "rgba(233,152,152,0.2)", border: "2px solid var(--bru-pink)", color: "#991B1B", fontSize: "14px", fontWeight: 500 }}>
+          <div
+            style={{
+              marginTop: "24px",
+              padding: "12px",
+              background: "rgba(233,152,152,0.2)",
+              border: "2px solid var(--bru-pink)",
+              color: "#991B1B",
+              fontSize: "14px",
+              fontWeight: 500,
+            }}
+          >
             {error}
           </div>
         )}
@@ -239,7 +258,7 @@ export default function LoginPage() {
         <p className="text-xs text-gray-500 mt-8">
           By signing in, you agree to our Terms of Service and Privacy Policy.
         </p>
-      </div>
+      </Card>
     </div>
   );
 }

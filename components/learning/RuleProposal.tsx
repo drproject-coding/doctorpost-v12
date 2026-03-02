@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Alert, Button, Card } from "@bruddle/react";
 import { Check, X } from "lucide-react";
 import type { RuleProposal, ProposalStatus } from "@/lib/knowledge/types";
 
@@ -31,10 +32,7 @@ export function RuleProposalCard({
   const isPending = proposal.status === "pending";
 
   return (
-    <div
-      className="bru-card bru-card--flat"
-      style={{ padding: "var(--bru-space-3)" }}
-    >
+    <Card variant="flat" style={{ padding: "var(--bru-space-3)" }}>
       {/* Header */}
       <div
         style={{
@@ -113,9 +111,9 @@ export function RuleProposalCard({
       </div>
 
       {/* Diff toggle */}
-      <button
+      <Button
         type="button"
-        className="bru-btn bru-btn--ghost"
+        variant="ghost"
         onClick={() => setShowDiff(!showDiff)}
         style={{
           fontSize: "var(--bru-text-xs)",
@@ -123,7 +121,7 @@ export function RuleProposalCard({
         }}
       >
         {showDiff ? "Hide diff" : "Show diff"}
-      </button>
+      </Button>
 
       {showDiff && (
         <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
@@ -182,22 +180,8 @@ export function RuleProposalCard({
 
       {/* Error */}
       {error && (
-        <div
-          className="bru-alert bru-alert--error"
-          style={{
-            marginTop: "var(--bru-space-2)",
-            padding: "var(--bru-space-2) var(--bru-space-3)",
-          }}
-        >
-          <span className="bru-alert__icon">!</span>
-          <div className="bru-alert__content">
-            <div
-              className="bru-alert__text"
-              style={{ fontSize: "var(--bru-text-xs)" }}
-            >
-              {error}
-            </div>
-          </div>
+        <div style={{ marginTop: "var(--bru-space-2)" }}>
+          <Alert variant="error">{error}</Alert>
         </div>
       )}
 
@@ -210,9 +194,9 @@ export function RuleProposalCard({
             marginTop: "var(--bru-space-3)",
           }}
         >
-          <button
+          <Button
             type="button"
-            className="bru-btn bru-btn--primary"
+            variant="primary"
             disabled={updating}
             onClick={() => handleAction("approved")}
             style={{
@@ -223,10 +207,9 @@ export function RuleProposalCard({
             }}
           >
             <Check size={14} /> Approve
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className="bru-btn"
             disabled={updating}
             onClick={() => handleAction("rejected")}
             style={{
@@ -237,9 +220,9 @@ export function RuleProposalCard({
             }}
           >
             <X size={14} /> Reject
-          </button>
+          </Button>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

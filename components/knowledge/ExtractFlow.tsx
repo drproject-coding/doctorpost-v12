@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Button, Card } from "@bruddle/react";
 import { ArrowLeft, Loader, Check, Scissors } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import type { DocumentCategory } from "@/lib/knowledge/types";
@@ -121,9 +122,9 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           marginBottom: "var(--bru-space-6)",
         }}
       >
-        <button className="bru-btn bru-btn--ghost" onClick={onCancel}>
+        <Button variant="ghost" onClick={onCancel}>
           <ArrowLeft size={16} />
-        </button>
+        </Button>
         <h2
           style={{
             fontSize: "var(--bru-text-h4)",
@@ -136,7 +137,7 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
       </div>
 
       {step === "paste" && (
-        <div className="bru-card bru-card--raised">
+        <Card variant="raised">
           <h3
             style={{
               fontSize: "var(--bru-text-h5)",
@@ -167,17 +168,15 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
             className="bru-form-actions"
             style={{ marginTop: "var(--bru-space-4)" }}
           >
-            <button className="bru-btn" onClick={onCancel}>
-              Cancel
-            </button>
-            <button
-              className="bru-btn bru-btn--primary"
+            <Button onClick={onCancel}>Cancel</Button>
+            <Button
+              variant="primary"
               onClick={handleExtract}
               disabled={!postContent.trim()}
             >
               <Scissors size={14} />
               Extract Template
-            </button>
+            </Button>
           </div>
           {feedback && (
             <div
@@ -194,12 +193,12 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
               {feedback}
             </div>
           )}
-        </div>
+        </Card>
       )}
 
       {step === "extracting" && (
-        <div
-          className="bru-card bru-card--raised"
+        <Card
+          variant="raised"
           style={{
             textAlign: "center",
             padding: "var(--bru-space-8)",
@@ -218,11 +217,11 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           >
             AI is deconstructing the post into a reusable template
           </p>
-        </div>
+        </Card>
       )}
 
       {step === "preview" && template && (
-        <div className="bru-card bru-card--raised">
+        <Card variant="raised">
           <h3
             style={{
               fontSize: "var(--bru-text-h5)",
@@ -349,17 +348,15 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
             className="bru-form-actions"
             style={{ marginTop: "var(--bru-space-4)" }}
           >
-            <button className="bru-btn" onClick={() => setStep("paste")}>
-              Back
-            </button>
-            <button
-              className="bru-btn bru-btn--primary"
+            <Button onClick={() => setStep("paste")}>Back</Button>
+            <Button
+              variant="primary"
               onClick={handleSave}
               disabled={!templateName.trim()}
             >
               <Check size={14} />
               Save Template
-            </button>
+            </Button>
           </div>
 
           {feedback && (
@@ -381,12 +378,12 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
               {feedback}
             </div>
           )}
-        </div>
+        </Card>
       )}
 
       {step === "saving" && (
-        <div
-          className="bru-card bru-card--raised"
+        <Card
+          variant="raised"
           style={{
             textAlign: "center",
             padding: "var(--bru-space-8)",
@@ -400,7 +397,7 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           <h3 style={{ fontSize: "var(--bru-text-h5)", fontWeight: 700 }}>
             Saving template...
           </h3>
-        </div>
+        </Card>
       )}
     </div>
   );

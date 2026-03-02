@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Card } from "@bruddle/react";
 import type { Signal } from "@/lib/knowledge/types";
 
 interface FeedbackHistoryProps {
@@ -21,7 +22,7 @@ export function FeedbackHistory({ signals }: FeedbackHistoryProps) {
       : sorted.filter((s) => s.signalType === filterType);
 
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <div
         style={{
           display: "flex",
@@ -133,6 +134,6 @@ export function FeedbackHistory({ signals }: FeedbackHistoryProps) {
           ))}
         </div>
       )}
-    </div>
+    </Card>
   );
 }

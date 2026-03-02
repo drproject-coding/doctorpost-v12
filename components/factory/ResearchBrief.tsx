@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Card } from "@bruddle/react";
 import type { DiscoveryBrief, TopicProposal } from "@/lib/knowledge/types";
 
 interface ResearchBriefProps {
@@ -9,7 +10,7 @@ interface ResearchBriefProps {
 
 export function ResearchBrief({ brief, refinedTopic }: ResearchBriefProps) {
   return (
-    <div className="bru-card bru-card--raised">
+    <Card variant="raised">
       <h3
         style={{
           fontSize: "var(--bru-text-h5)",
@@ -185,6 +186,6 @@ export function ResearchBrief({ brief, refinedTopic }: ResearchBriefProps) {
           </ul>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

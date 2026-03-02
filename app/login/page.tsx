@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Loader, Eye, EyeOff } from "lucide-react";
 
-type Providers = { email?: boolean; google?: boolean; emailOTP?: boolean };
+interface Providers { email?: boolean; google?: boolean; emailOTP?: boolean }
 
 export default function LoginPage() {
   const { isLoggedIn, loadingAuth, checkSession } = useAuth();

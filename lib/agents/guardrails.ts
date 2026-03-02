@@ -85,7 +85,8 @@ function checkHardRules(
   const nonAsciiRatio =
     draft.length === 0
       ? 0
-      : (draft.replace(/[\x00-\x7F]/g, "").length / draft.length) * 100;
+      : // eslint-disable-next-line no-control-regex
+        (draft.replace(/[\x00-\x7F]/g, "").length / draft.length) * 100;
   results.push({
     rule: "English only",
     source,
@@ -186,7 +187,8 @@ export function quickKillCheck(
   const nonAsciiRatio =
     draft.length === 0
       ? 0
-      : (draft.replace(/[\x00-\x7F]/g, "").length / draft.length) * 100;
+      : // eslint-disable-next-line no-control-regex
+        (draft.replace(/[\x00-\x7F]/g, "").length / draft.length) * 100;
   if (nonAsciiRatio >= 5) {
     failures.push("Non-English content detected");
   }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type React from "react";
 import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
 

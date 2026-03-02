@@ -1136,7 +1136,7 @@ export default function SettingsPage() {
                         models={straicoModels}
                         selectedModelId={straicoModel}
                         onSelectModel={(id) => setStraicoModel(id)}
-                        loading={modelsLoading["straico"]}
+                        loading={modelsLoading.straico}
                         userInfo={straicoUserInfo}
                       />
                     )}

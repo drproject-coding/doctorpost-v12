@@ -333,7 +333,7 @@ export const getAnalytics = async (_userId: string): Promise<AnalyticsData> => {
 
 export const findSubtopics = async (
   topic: string,
-  count: number = 5,
+  count = 5,
   settings?: AiSettings,
 ): Promise<SubtopicSuggestion[]> => {
   if (!settings) {

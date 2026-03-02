@@ -125,7 +125,7 @@ export async function callStraico(
       | Record<string, unknown>
       | undefined;
     const choices = completion?.choices as
-      | Array<{ message?: { content?: string } }>
+      | { message?: { content?: string } }[]
       | undefined;
     content = choices?.[0]?.message?.content;
   }

@@ -125,7 +125,7 @@ async function fetchOneForAllModels(
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data = (await response.json()) as any;
+  const data = (await response.json());
   // 1ForAll returns a flat JSON array
   const raw = Array.isArray(data) ? data : data.models || data.data || [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -193,7 +193,7 @@ async function fetchStraicoModels(apiKey: string): Promise<NormalizedModel[]> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data = (await response.json()) as any;
+  const data = (await response.json());
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const raw: any[] = Array.isArray(data.data)
     ? data.data

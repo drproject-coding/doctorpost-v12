@@ -29,7 +29,7 @@ export function extractJson<T>(raw: string): T {
   }
 
   // Try finding the first JSON object or array
-  const jsonStart = raw.search(/[\[{]/);
+  const jsonStart = raw.search(/[[{]/);
   if (jsonStart !== -1) {
     const candidate = raw.slice(jsonStart);
     // Find matching closing bracket

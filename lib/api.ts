@@ -194,10 +194,9 @@ export const updateBrandProfile = async (
     straico_model: profile.straicoModel,
     oneforall_api_key: profile.oneforallApiKey,
     oneforall_model: profile.oneforallModel,
-    // TODO: uncomment once columns are provisioned in NCB profiles table
-    // perplexity_api_key: profile.perplexityApiKey || null,
-    // reddit_client_id: profile.redditClientId || null,
-    // reddit_client_secret: profile.redditClientSecret || null,
+    perplexity_api_key: profile.perplexityApiKey || "",
+    reddit_client_id: profile.redditClientId || "",
+    reddit_client_secret: profile.redditClientSecret || "",
   };
 
   if (profile.id) {

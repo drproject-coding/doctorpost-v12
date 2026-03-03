@@ -43,6 +43,8 @@ interface PipelineClientState {
   scoreResult?: ScoreResult;
   formattedPost?: FormattedPost;
   guardrailResults?: GuardrailResult[];
+  guardrailRetryCount: number;
+  guardrailFixing: boolean;
   rewriteCount: number;
   finalVersion?: string;
   userFeedback?: string[];
@@ -58,6 +60,8 @@ export default function FactoryPage() {
     sessionId: generateSessionId(),
     phase: "idle",
     percent: 0,
+    guardrailRetryCount: 0,
+    guardrailFixing: false,
     rewriteCount: 0,
   });
   const [running, setRunning] = useState(false);
@@ -209,6 +213,7 @@ export default function FactoryPage() {
       }
       if (event.step === "guardrails" && event.guardrailResults) {
         next.guardrailResults = event.guardrailResults;
+        next.guardrailFixing = false;
       }
       if (event.step === "scoring" && event.data) {
         next.scoreResult = event.data as ScoreResult;
@@ -253,11 +258,45 @@ export default function FactoryPage() {
     }));
   };
 
+  const handleGuardrailManualEdit = (editedContent: string) => {
+    setState((prev) => ({
+      ...prev,
+      writerOutput: prev.writerOutput
+        ? { ...prev.writerOutput, content: editedContent }
+        : undefined,
+    }));
+    // Re-run write phase with edited content to re-check guardrails
+    callPipeline("write", {
+      writerOutput: {
+        ...stateRef.current.writerOutput,
+        content: editedContent,
+      },
+    });
+  };
+
+  const handleGuardrailAiFix = (failedRules: GuardrailResult[]) => {
+    setState((prev) => ({
+      ...prev,
+      guardrailFixing: true,
+      guardrailRetryCount: prev.guardrailRetryCount + 1,
+    }));
+    const fixInstruction = failedRules
+      .map((r) => `Fix: ${r.rule}${r.detail ? ` (${r.detail})` : ""}`)
+      .join(". ");
+    callPipeline("write", {
+      userFeedback: [
+        `Rewrite to fix guardrail failures: ${fixInstruction}. Maintain voice and angle.`,
+      ],
+    });
+  };
+
   const handleNewPost = () => {
     setState({
       sessionId: generateSessionId(),
       phase: "idle",
       percent: 0,
+      guardrailRetryCount: 0,
+      guardrailFixing: false,
       rewriteCount: 0,
     });
   };
@@ -484,6 +523,10 @@ export default function FactoryPage() {
             writerOutput={state.writerOutput}
             guardrailResults={state.guardrailResults}
             rewriteCount={state.rewriteCount}
+            onManualEdit={handleGuardrailManualEdit}
+            onAiFix={handleGuardrailAiFix}
+            isFixing={state.guardrailFixing}
+            guardrailRetryCount={state.guardrailRetryCount}
           />
           {state.scoreResult && <Scorecard score={state.scoreResult} />}
         </div>

@@ -15,6 +15,7 @@ import type {
 } from "@/lib/knowledge/types";
 import type { StrategistOutput } from "@/lib/agents/strategist";
 import type { WriterOutput } from "@/lib/agents/writer";
+import type { LearnerOutput } from "@/lib/agents/learner";
 
 import { PipelineStepper } from "@/components/factory/PipelineStepper";
 import { TopicProposals } from "@/components/factory/TopicProposals";
@@ -24,6 +25,7 @@ import { DraftEditor } from "@/components/factory/DraftEditor";
 import { Scorecard } from "@/components/factory/Scorecard";
 import { FormattedOutput } from "@/components/factory/FormattedOutput";
 import { PostReview } from "@/components/factory/PostReview";
+import { LearningPhaseResult } from "@/components/factory/LearningPhaseResult";
 
 interface PipelineClientState {
   sessionId: string;
@@ -47,6 +49,7 @@ interface PipelineClientState {
   guardrailFixing: boolean;
   rewriteCount: number;
   selectedClaimIndices?: number[];
+  learnerOutput?: LearnerOutput;
   finalVersion?: string;
   userFeedback?: string[];
 }
@@ -221,6 +224,10 @@ export default function FactoryPage() {
       }
       if (event.step === "formatting" && event.data) {
         next.formattedPost = event.data as FormattedPost;
+      }
+      if (event.step === "learning" && event.data && event.status === "done") {
+        next.learnerOutput = event.data as LearnerOutput;
+        next.phase = "complete";
       }
 
       return next;
@@ -607,38 +614,43 @@ export default function FactoryPage() {
           </div>
         )}
 
-      {/* COMPLETE */}
+      {/* LEARNING RESULTS + COMPLETE */}
       {state.phase === "complete" && (
-        <Card
-          variant="raised"
-          style={{
-            textAlign: "center",
-            padding: "var(--bru-space-8)",
-            marginTop: "var(--bru-space-4)",
-          }}
-        >
-          <h2
+        <div style={{ marginTop: "var(--bru-space-4)" }}>
+          {state.learnerOutput && (
+            <LearningPhaseResult output={state.learnerOutput} />
+          )}
+          <Card
+            variant="raised"
             style={{
-              fontSize: "var(--bru-text-h4)",
-              fontWeight: 700,
-              marginBottom: "var(--bru-space-3)",
+              textAlign: "center",
+              padding: "var(--bru-space-8)",
+              marginTop: "var(--bru-space-4)",
             }}
           >
-            Post Complete
-          </h2>
-          <p
-            style={{
-              fontSize: "var(--bru-text-md)",
-              color: "var(--bru-grey)",
-              marginBottom: "var(--bru-space-4)",
-            }}
-          >
-            Your post has been approved and learning signals captured.
-          </p>
-          <Button variant="primary" onClick={handleNewPost}>
-            Create Another Post
-          </Button>
-        </Card>
+            <h2
+              style={{
+                fontSize: "var(--bru-text-h4)",
+                fontWeight: 700,
+                marginBottom: "var(--bru-space-3)",
+              }}
+            >
+              Post Complete
+            </h2>
+            <p
+              style={{
+                fontSize: "var(--bru-text-md)",
+                color: "var(--bru-grey)",
+                marginBottom: "var(--bru-space-4)",
+              }}
+            >
+              Your post has been approved and learning signals captured.
+            </p>
+            <Button variant="primary" onClick={handleNewPost}>
+              Create Another Post
+            </Button>
+          </Card>
+        </div>
       )}
     </div>
   );

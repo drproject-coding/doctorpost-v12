@@ -40,7 +40,7 @@ export async function runStrategist(
   const systemPrompt = buildSystemPrompt("strategist", docs, extraContext);
 
   const userMessage = input.discoveryBrief
-    ? "Refine the selected topic using the discovery brief data. Return a single sharpened TopicProposal with more specific angle, validated decision mistake, and refined headline options."
+    ? "Refine the selected topic using the discovery brief data. Return a JSON object with: proposals (array with one sharpened TopicProposal), pillarAssessment (string), angleAssessment (string), currentPhase (string)."
     : "Analyze the current strategic context and propose 3-5 topic ideas. Return a JSON object with: proposals (TopicProposal[]), pillarAssessment (string), angleAssessment (string), currentPhase (string).";
 
   const { text } = await callAgentClaude({

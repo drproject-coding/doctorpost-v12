@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Button, Card } from "@bruddle/react";
 import { Clock, Trash2, Play } from "lucide-react";
 import {
-  listSessions,
-  deleteSession,
+  listSessions as listLocalSessions,
+  deleteSession as deleteLocalSession,
   type SavedSession,
 } from "@/lib/sessionStorage";
 
@@ -29,16 +29,61 @@ const PHASE_LABELS: Record<string, string> = {
 export function SessionHistory({ onResume }: SessionHistoryProps) {
   const [sessions, setSessions] = useState<SavedSession[]>([]);
   const [expanded, setExpanded] = useState(false);
+  const [source, setSource] = useState<"local" | "ncb">("local");
 
   useEffect(() => {
-    setSessions(listSessions());
+    // Try NCB API first, fall back to localStorage
+    fetch("/api/pipeline/sessions", { credentials: "include" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          // Map NCB records to SavedSession shape
+          const mapped: SavedSession[] = data.map(
+            (r: {
+              sessionId: string;
+              title: string;
+              currentPhase: string;
+              stateJson: string;
+              createdAt: string;
+              updatedAt: string;
+            }) => ({
+              id: r.sessionId,
+              title: r.title,
+              phase: r.currentPhase as SavedSession["phase"],
+              stateJson: r.stateJson,
+              createdAt: r.createdAt,
+              updatedAt: r.updatedAt,
+            }),
+          );
+          setSessions(mapped);
+          setSource("ncb");
+        } else {
+          setSessions(listLocalSessions());
+          setSource("local");
+        }
+      })
+      .catch(() => {
+        setSessions(listLocalSessions());
+        setSource("local");
+      });
   }, []);
 
   if (sessions.length === 0) return null;
 
   const handleDelete = (id: string) => {
-    deleteSession(id);
-    setSessions(listSessions());
+    if (source === "ncb") {
+      fetch("/api/pipeline/sessions", {
+        method: "DELETE",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: id }),
+      }).then(() => {
+        setSessions((prev) => prev.filter((s) => s.id !== id));
+      });
+    } else {
+      deleteLocalSession(id);
+      setSessions(listLocalSessions());
+    }
   };
 
   const formatDate = (iso: string) => {

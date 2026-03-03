@@ -20,6 +20,7 @@
 
 import { NextRequest } from "next/server";
 import { getSessionUser, fetchUserProfile } from "@/lib/ncb-utils";
+import { savePipelineSession } from "@/lib/pipeline/savePipelineData";
 import { fetchKnowledgeForUser } from "@/lib/knowledge/fetch";
 import {
   createPipelineState,
@@ -164,6 +165,36 @@ export async function POST(req: NextRequest) {
             await runLearn(state, emit, signal);
             break;
         }
+
+        // Persist session to NCB (fire-and-forget, don't block SSE)
+        const title =
+          state.selectedTopic?.headline ||
+          state.selectedTopic?.angle ||
+          "Untitled";
+        const dbStatus =
+          state.phase === "error"
+            ? "error"
+            : state.phase === "complete"
+              ? "complete"
+              : "active";
+        savePipelineSession(
+          cookie,
+          body.sessionId,
+          title,
+          state.phase,
+          dbStatus,
+          JSON.stringify({
+            selectedTopic: state.selectedTopic,
+            refinedTopic: state.refinedTopic,
+            selectedTemplate: state.selectedTemplate,
+            evidencePack: state.evidencePack,
+            writerOutput: state.writerOutput,
+            scoreResult: state.scoreResult,
+            formattedPost: state.formattedPost,
+          }),
+        ).catch((err) => {
+          console.error("[savePipelineSession] Failed:", err);
+        });
 
         // Send final state summary
         emit({

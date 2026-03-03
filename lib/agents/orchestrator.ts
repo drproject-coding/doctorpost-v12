@@ -84,8 +84,8 @@ export interface PipelineState {
 
 export type EventCallback = (event: PipelineEvent) => void;
 
-const MAX_REWRITES = 3;
-const REWRITE_THRESHOLD = 75;
+export const MAX_REWRITES = 3;
+export const REWRITE_THRESHOLD = 75;
 
 // ── Pipeline Runner ──
 
@@ -482,4 +482,174 @@ export async function runLearn(
     });
     return state;
   }
+}
+
+// ── Pipeline Checkpoint ──
+
+/**
+ * User-supplied inputs at each human-in-the-loop checkpoint.
+ * Pass only the fields that have been provided at the time of the call.
+ */
+export interface PipelineCheckpoint {
+  /** Required after Phase 1 (Direction): which topic the user selected */
+  selectedTopic?: TopicProposal;
+  /** Optional after Phase 2 (Discovery): user may override the refined topic */
+  refinedTopic?: TopicProposal;
+  /** Optional before Phase 4 (Writing): user may choose a specific template */
+  selectedTemplate?: string;
+  /** Required after Phase 7 (Review): the user's final (possibly edited) post */
+  finalVersion?: string;
+  /** Optional after Phase 7 (Review): free-form feedback strings */
+  userFeedback?: string[];
+}
+
+// ── Phase 7: Review ──
+
+/**
+ * Run Phase 7: Review — user approves or edits the formatted post.
+ * Waits for finalVersion to be provided via the checkpoint, then stores it
+ * on the state so Phase 8 (Learning) can compare original vs final.
+ */
+export async function runReview(
+  state: PipelineState,
+  emit: EventCallback,
+  checkpoint: PipelineCheckpoint,
+): Promise<PipelineState> {
+  if (!state.formattedPost) throw new Error("No formatted post for review");
+
+  state.phase = "review";
+  emit({
+    step: "review",
+    status: "waiting-for-user",
+    percent: 0,
+    data: { formattedPost: state.formattedPost },
+  });
+
+  // Apply the user's submission from the checkpoint
+  const finalVersion = checkpoint.finalVersion;
+  if (!finalVersion) {
+    state.phase = "error";
+    state.error = "Review checkpoint missing finalVersion";
+    emit({
+      step: "review",
+      status: "error",
+      percent: 0,
+      data: { error: state.error },
+    });
+    return state;
+  }
+
+  state.finalVersion = finalVersion;
+  if (checkpoint.userFeedback) {
+    state.userFeedback = checkpoint.userFeedback;
+  }
+
+  emit({
+    step: "review",
+    status: "done",
+    percent: 100,
+    data: { formattedPost: state.formattedPost, finalVersion: state.finalVersion },
+  });
+
+  return state;
+}
+
+// ── Master Pipeline Coordinator ──
+
+/**
+ * runPipeline — coordinates all 8 phases in sequence.
+ *
+ * The caller provides:
+ *   - `state`       — initial PipelineState (from createPipelineState)
+ *   - `emit`        — SSE event callback
+ *   - `checkpoints` — user-supplied inputs at each human gate
+ *   - `signal`      — optional AbortSignal for cancellation
+ *
+ * Phases:
+ *   1. Direction      → awaits checkpoints.selectedTopic
+ *   2. Discovery      → awaits checkpoints.refinedTopic (optional override)
+ *   3. Evidence
+ *   4+5. Writing + Scoring (rewrite loop)
+ *   6. Formatting
+ *   7. Review         → awaits checkpoints.finalVersion
+ *   8. Learning
+ *
+ * Returns the final PipelineState (phase === "complete" on success, "error" on failure).
+ */
+export async function runPipeline(
+  state: PipelineState,
+  emit: EventCallback,
+  checkpoints: PipelineCheckpoint,
+  signal?: AbortSignal,
+): Promise<PipelineState> {
+  // ── Phase 1: Direction ──
+  state = await runDirection(state, emit, signal);
+  if (state.phase === "error") return state;
+  if (signal?.aborted) return aborted(state, emit);
+
+  // Apply user's topic selection
+  if (!checkpoints.selectedTopic) {
+    return pipelineError(state, emit, "direction", "Checkpoint missing selectedTopic");
+  }
+  state.selectedTopic = checkpoints.selectedTopic;
+
+  // ── Phase 2: Discovery ──
+  state = await runDiscovery(state, emit, signal);
+  if (state.phase === "error") return state;
+  if (signal?.aborted) return aborted(state, emit);
+
+  // User may optionally override the refined topic
+  if (checkpoints.refinedTopic) {
+    state.refinedTopic = checkpoints.refinedTopic;
+  }
+
+  // ── Phase 3: Evidence ──
+  state = await runEvidence(state, emit, signal);
+  if (state.phase === "error") return state;
+  if (signal?.aborted) return aborted(state, emit);
+
+  // User may optionally choose a template before writing
+  if (checkpoints.selectedTemplate) {
+    state.selectedTemplate = checkpoints.selectedTemplate;
+  }
+
+  // ── Phase 4 + 5: Writing + Scoring ──
+  state = await runWriteAndScore(state, emit, signal);
+  if (state.phase === "error") return state;
+  if (signal?.aborted) return aborted(state, emit);
+
+  // ── Phase 6: Formatting ──
+  state = await runFormat(state, emit, signal);
+  if (state.phase === "error") return state;
+  if (signal?.aborted) return aborted(state, emit);
+
+  // ── Phase 7: Review ──
+  state = await runReview(state, emit, checkpoints);
+  if (state.phase === "error") return state;
+  if (signal?.aborted) return aborted(state, emit);
+
+  // ── Phase 8: Learning ──
+  state = await runLearn(state, emit, signal);
+  return state;
+}
+
+// ── Internal helpers ──
+
+function aborted(state: PipelineState, emit: EventCallback): PipelineState {
+  state.phase = "error";
+  state.error = "Pipeline aborted by caller";
+  emit({ step: "pipeline", status: "error", percent: 0, data: { error: state.error } });
+  return state;
+}
+
+function pipelineError(
+  state: PipelineState,
+  emit: EventCallback,
+  step: string,
+  message: string,
+): PipelineState {
+  state.phase = "error";
+  state.error = message;
+  emit({ step, status: "error", percent: 0, data: { error: message } });
+  return state;
 }

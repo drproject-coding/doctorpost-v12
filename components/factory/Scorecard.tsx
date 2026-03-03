@@ -2,9 +2,13 @@
 import React from "react";
 import { Card } from "@bruddle/react";
 import type { ScoreResult } from "@/lib/knowledge/types";
+import { RewriteInstructions } from "./RewriteInstructions";
 
 interface ScorecardProps {
   score: ScoreResult;
+  onApplyFix?: (instructions: string) => void;
+  isApplying?: boolean;
+  rewriteCount?: number;
 }
 
 function scoreColor(score: number, max: number): string {
@@ -25,7 +29,12 @@ function verdictColor(verdict: ScoreResult["verdict"]): string {
   }
 }
 
-export function Scorecard({ score }: ScorecardProps) {
+export function Scorecard({
+  score,
+  onApplyFix,
+  isApplying,
+  rewriteCount,
+}: ScorecardProps) {
   const criteria = score.criteriaScores;
 
   return (
@@ -172,20 +181,14 @@ export function Scorecard({ score }: ScorecardProps) {
 
       {/* Rewrite instructions */}
       {score.rewriteInstructions && (
-        <div
-          style={{
-            marginTop: "var(--bru-space-3)",
-            padding: "var(--bru-space-3)",
-            background: "rgba(233, 215, 152, 0.3)",
-            border: "var(--bru-border)",
-            fontSize: "var(--bru-text-sm)",
-          }}
-        >
-          <strong>Rewrite Instructions:</strong>
-          <p style={{ margin: "var(--bru-space-1) 0 0" }}>
-            {score.rewriteInstructions}
-          </p>
-        </div>
+        <RewriteInstructions
+          instructions={score.rewriteInstructions}
+          totalScore={score.totalScore}
+          verdict={score.verdict}
+          onApplyFix={onApplyFix ?? (() => {})}
+          isApplying={isApplying}
+          rewriteCount={rewriteCount}
+        />
       )}
     </Card>
   );

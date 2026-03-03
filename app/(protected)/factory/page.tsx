@@ -528,7 +528,20 @@ export default function FactoryPage() {
             isFixing={state.guardrailFixing}
             guardrailRetryCount={state.guardrailRetryCount}
           />
-          {state.scoreResult && <Scorecard score={state.scoreResult} />}
+          {state.scoreResult && (
+            <Scorecard
+              score={state.scoreResult}
+              onApplyFix={(instructions) => {
+                callPipeline("write", {
+                  userFeedback: [
+                    `Rewrite based on scorer instructions: ${instructions}. Maintain voice and angle.`,
+                  ],
+                });
+              }}
+              isApplying={running}
+              rewriteCount={state.rewriteCount}
+            />
+          )}
         </div>
       )}
 

@@ -46,6 +46,7 @@ interface PipelineClientState {
   guardrailRetryCount: number;
   guardrailFixing: boolean;
   rewriteCount: number;
+  selectedClaimIndices?: number[];
   finalVersion?: string;
   userFeedback?: string[];
 }
@@ -230,7 +231,23 @@ export default function FactoryPage() {
   const handleStart = () => callPipeline("start");
   const handleDiscover = () => callPipeline("discover");
   const handleEvidence = () => callPipeline("evidence");
-  const handleWrite = () => callPipeline("write");
+  const handleWrite = () => {
+    const snap = stateRef.current;
+    // If user has selected specific claims, filter the evidence pack
+    if (snap.selectedClaimIndices && snap.evidencePack) {
+      const selectedClaims = snap.selectedClaimIndices
+        .map((i) => snap.evidencePack!.claims[i])
+        .filter(Boolean);
+      callPipeline("write", {
+        evidencePack: {
+          ...snap.evidencePack,
+          claims: selectedClaims,
+        },
+      });
+    } else {
+      callPipeline("write");
+    }
+  };
   const handleFormat = () => callPipeline("format");
   const handleLearn = (finalVersion: string, feedback: string[]) => {
     setState((prev) => ({
@@ -477,7 +494,12 @@ export default function FactoryPage() {
       {state.evidencePack &&
         (state.phase === "evidence" || state.phase === "writing") && (
           <div>
-            <EvidencePack evidence={state.evidencePack} />
+            <EvidencePack
+              evidence={state.evidencePack}
+              onSelectionChange={(indices) =>
+                setState((prev) => ({ ...prev, selectedClaimIndices: indices }))
+              }
+            />
             {!running && state.phase === "evidence" && (
               <div
                 style={{

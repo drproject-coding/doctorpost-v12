@@ -216,14 +216,17 @@ function CriteriaRow({
       <div
         style={{
           flex: 1,
+          minWidth: 0,
           height: 6,
           background: "var(--bru-border-color, #e0e0e0)",
           position: "relative",
+          overflow: "hidden",
         }}
       >
         <div
           style={{
-            width: `${(score / max) * 100}%`,
+            width: `${Math.min((score / max) * 100, 100)}%`,
+            maxWidth: "100%",
             height: "100%",
             background: scoreColor(score, max),
           }}

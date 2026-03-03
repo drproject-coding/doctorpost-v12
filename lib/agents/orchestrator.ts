@@ -32,6 +32,152 @@ import { runFormatter } from "./formatter";
 import { runLearner, type LearnerOutput } from "./learner";
 import { runGuardrails, quickKillCheck } from "./guardrails";
 
+// ── Response Validation ──
+/**
+ * Runtime validation for agent outputs to catch response shape mismatches.
+ * This prevents bugs like the strategist refine output shape mismatch.
+ */
+
+function validateStrategistResponse(output: unknown): {
+  valid: boolean;
+  error?: string;
+} {
+  if (!output || typeof output !== "object") {
+    return { valid: false, error: "Strategist output is not an object" };
+  }
+  const obj = output as Record<string, unknown>;
+
+  if (!Array.isArray(obj.proposals)) {
+    return {
+      valid: false,
+      error: "Strategist output missing 'proposals' array",
+    };
+  }
+
+  if (obj.proposals.length === 0) {
+    return {
+      valid: false,
+      error: "Strategist output has empty 'proposals' array",
+    };
+  }
+
+  const requiredFields = [
+    "pillarAssessment",
+    "angleAssessment",
+    "currentPhase",
+  ];
+  for (const field of requiredFields) {
+    if (typeof obj[field] !== "string") {
+      return {
+        valid: false,
+        error: `Strategist output missing or invalid '${field}' field`,
+      };
+    }
+  }
+
+  return { valid: true };
+}
+
+function validateWriterResponse(output: unknown): {
+  valid: boolean;
+  error?: string;
+} {
+  if (!output || typeof output !== "object") {
+    return { valid: false, error: "Writer output is not an object" };
+  }
+  const obj = output as Record<string, unknown>;
+
+  if (typeof obj.content !== "string" || obj.content.length === 0) {
+    return {
+      valid: false,
+      error: "Writer output missing or empty 'content' field",
+    };
+  }
+
+  if (typeof obj.wordCount !== "number" || obj.wordCount < 10) {
+    return {
+      valid: false,
+      error: "Writer output invalid 'wordCount' field",
+    };
+  }
+
+  if (typeof obj.template !== "string") {
+    return {
+      valid: false,
+      error: "Writer output missing 'template' field",
+    };
+  }
+
+  return { valid: true };
+}
+
+function validateScorerResponse(output: unknown): {
+  valid: boolean;
+  error?: string;
+} {
+  if (!output || typeof output !== "object") {
+    return { valid: false, error: "Scorer output is not an object" };
+  }
+  const obj = output as Record<string, unknown>;
+
+  if (typeof obj.totalScore !== "number") {
+    return {
+      valid: false,
+      error: "Scorer output missing or invalid 'totalScore' field",
+    };
+  }
+
+  if (!["publish", "rewrite", "scrap"].includes(obj.verdict as string)) {
+    return {
+      valid: false,
+      error: `Scorer output invalid 'verdict': ${obj.verdict}`,
+    };
+  }
+
+  if (!Array.isArray(obj.checklist)) {
+    return {
+      valid: false,
+      error: "Scorer output missing or invalid 'checklist' array",
+    };
+  }
+
+  return { valid: true };
+}
+
+function validateFormatterResponse(output: unknown): {
+  valid: boolean;
+  error?: string;
+} {
+  if (!output || typeof output !== "object") {
+    return { valid: false, error: "Formatter output is not an object" };
+  }
+  const obj = output as Record<string, unknown>;
+
+  const hook = obj.hookBeforeFold as Record<string, unknown>;
+  if (!hook || typeof hook !== "object") {
+    return {
+      valid: false,
+      error: "Formatter output missing 'hookBeforeFold' object",
+    };
+  }
+
+  if (typeof hook.mobile !== "string" || typeof hook.desktop !== "string") {
+    return {
+      valid: false,
+      error: "Formatter output hookBeforeFold missing mobile/desktop",
+    };
+  }
+
+  if (!obj.metadata || typeof obj.metadata !== "object") {
+    return {
+      valid: false,
+      error: "Formatter output missing 'metadata' object",
+    };
+  }
+
+  return { valid: true };
+}
+
 // ── Pipeline State ──
 
 export type PipelinePhase =
@@ -185,6 +331,13 @@ export async function runDiscovery(
       discoveryBrief: JSON.stringify(state.discoveryBrief),
       signal,
     });
+
+    // Validate strategist response shape
+    const validation = validateStrategistResponse(refined);
+    if (!validation.valid) {
+      throw new Error(`Invalid strategist response: ${validation.error}`);
+    }
+
     // Refined output should have a single proposal
     state.refinedTopic = refined.proposals[0] || state.selectedTopic;
     emit({
@@ -307,6 +460,12 @@ export async function runWriteAndScore(
         signal,
       });
 
+      // Validate writer response shape
+      const writerValidation = validateWriterResponse(writerOutput);
+      if (!writerValidation.valid) {
+        throw new Error(`Invalid writer response: ${writerValidation.error}`);
+      }
+
       state.writerOutput = writerOutput;
       emit({
         step: "writing",
@@ -338,6 +497,12 @@ export async function runWriteAndScore(
         previousScore: attempt > 1 ? scoreResult : undefined,
         signal,
       });
+
+      // Validate scorer response shape
+      const scorerValidation = validateScorerResponse(scoreResult);
+      if (!scorerValidation.valid) {
+        throw new Error(`Invalid scorer response: ${scorerValidation.error}`);
+      }
 
       state.scoreResult = scoreResult;
       emit({
@@ -409,6 +574,15 @@ export async function runFormat(
       template: state.selectedTemplate || state.writerOutput.template,
       signal,
     });
+
+    // Validate formatter response shape
+    const formatterValidation = validateFormatterResponse(formatted);
+    if (!formatterValidation.valid) {
+      throw new Error(
+        `Invalid formatter response: ${formatterValidation.error}`,
+      );
+    }
+
     state.formattedPost = formatted;
     emit({
       step: "formatting",
@@ -548,7 +722,10 @@ export async function runReview(
     step: "review",
     status: "done",
     percent: 100,
-    data: { formattedPost: state.formattedPost, finalVersion: state.finalVersion },
+    data: {
+      formattedPost: state.formattedPost,
+      finalVersion: state.finalVersion,
+    },
   });
 
   return state;
@@ -589,7 +766,12 @@ export async function runPipeline(
 
   // Apply user's topic selection
   if (!checkpoints.selectedTopic) {
-    return pipelineError(state, emit, "direction", "Checkpoint missing selectedTopic");
+    return pipelineError(
+      state,
+      emit,
+      "direction",
+      "Checkpoint missing selectedTopic",
+    );
   }
   state.selectedTopic = checkpoints.selectedTopic;
 
@@ -638,7 +820,12 @@ export async function runPipeline(
 function aborted(state: PipelineState, emit: EventCallback): PipelineState {
   state.phase = "error";
   state.error = "Pipeline aborted by caller";
-  emit({ step: "pipeline", status: "error", percent: 0, data: { error: state.error } });
+  emit({
+    step: "pipeline",
+    status: "error",
+    percent: 0,
+    data: { error: state.error },
+  });
   return state;
 }
 

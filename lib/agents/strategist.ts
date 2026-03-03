@@ -14,6 +14,17 @@ export interface StrategistInput {
   recentPosts?: { pillar: string; date: string }[];
   /** Optional: when refining after discovery, pass the discovery brief */
   discoveryBrief?: string;
+  /** Optional: brand preferences to guide topic selection */
+  brandContext?: {
+    industry: string;
+    audience: string[];
+    tones: string[];
+    contentStrategy: string;
+    definition: string;
+    copyGuideline: string;
+  };
+  /** Optional: session-level tone override */
+  toneOverride?: string;
   signal?: AbortSignal;
 }
 
@@ -30,6 +41,11 @@ export async function runStrategist(
   const docs = resolveKnowledge(config.requiredKnowledge, input.knowledge);
 
   let extraContext = "";
+  if (input.brandContext) {
+    const bc = input.brandContext;
+    const tone = input.toneOverride || bc.tones.join(", ");
+    extraContext += `\n## Brand Preferences\n- Industry: ${bc.industry}\n- Target audience: ${bc.audience.join(", ")}\n- Tone/voice: ${tone}\n- Content strategy: ${bc.contentStrategy}\n- Brand definition: ${bc.definition}\n- Copy guidelines: ${bc.copyGuideline}\n\nUse these preferences to guide topic selection and angle framing.`;
+  }
   if (input.recentPosts && input.recentPosts.length > 0) {
     extraContext += `\n## Recent Posts for Pillar Balance\n${JSON.stringify(input.recentPosts)}`;
   }

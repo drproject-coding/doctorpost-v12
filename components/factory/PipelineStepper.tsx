@@ -26,6 +26,14 @@ export interface PipelineMetadata {
   hookPattern?: string;
   contentPillar?: string;
   tone?: string;
+  /** Brand context from user profile */
+  brandContext?: {
+    industry: string;
+    audience: string[];
+    tones: string[];
+    contentStrategy: string;
+    lastUpdated?: string;
+  };
 }
 
 interface PipelineStepperProps {
@@ -61,7 +69,8 @@ export function PipelineStepper({
     (metadata.postType ||
       metadata.hookPattern ||
       metadata.contentPillar ||
-      metadata.tone);
+      metadata.tone ||
+      metadata.brandContext);
 
   // Navigation helpers
   const canGoPrev = isViewingPast ? viewIdx > 0 : effectiveIdx > 0;
@@ -268,6 +277,36 @@ export function PipelineStepper({
             <MetadataTag label="Pillar" value={metadata.contentPillar} />
           )}
           {metadata.tone && <MetadataTag label="Tone" value={metadata.tone} />}
+          {metadata.brandContext && (
+            <>
+              {metadata.brandContext.industry && (
+                <MetadataTag
+                  label="Industry"
+                  value={metadata.brandContext.industry}
+                />
+              )}
+              {metadata.brandContext.audience.length > 0 && (
+                <MetadataTag
+                  label="Audience"
+                  value={metadata.brandContext.audience.join(", ")}
+                />
+              )}
+              {metadata.brandContext.tones.length > 0 && (
+                <MetadataTag
+                  label="Brand Tone"
+                  value={metadata.brandContext.tones.join(", ")}
+                />
+              )}
+              {metadata.brandContext.lastUpdated && (
+                <MetadataTag
+                  label="Updated"
+                  value={new Date(
+                    metadata.brandContext.lastUpdated,
+                  ).toLocaleDateString()}
+                />
+              )}
+            </>
+          )}
         </div>
       )}
     </div>

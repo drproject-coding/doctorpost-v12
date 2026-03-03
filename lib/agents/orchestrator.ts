@@ -193,6 +193,18 @@ export type PipelinePhase =
   | "complete"
   | "error";
 
+/** Brand preferences loaded from user profile at pipeline start */
+export interface BrandContext {
+  industry: string;
+  audience: string[];
+  tones: string[];
+  contentStrategy: string;
+  definition: string;
+  copyGuideline: string;
+  /** ISO timestamp of when the profile was last updated */
+  lastUpdated?: string;
+}
+
 export interface PipelineState {
   phase: PipelinePhase;
   sessionId: string;
@@ -206,6 +218,10 @@ export interface PipelineState {
   };
   /** Recent posts for pillar balance */
   recentPosts?: { pillar: string; date: string }[];
+  /** Brand context from user profile */
+  brandContext?: BrandContext;
+  /** Session-level tone override (overrides brand tones for this run) */
+  toneOverride?: string;
 
   // Phase outputs (populated as pipeline progresses)
   strategistOutput?: StrategistOutput;
@@ -240,6 +256,7 @@ export function createPipelineState(params: {
   knowledge: KnowledgeDocument[];
   keys: PipelineState["keys"];
   recentPosts?: PipelineState["recentPosts"];
+  brandContext?: BrandContext;
 }): PipelineState {
   return {
     phase: "idle",
@@ -247,6 +264,7 @@ export function createPipelineState(params: {
     knowledge: params.knowledge,
     keys: params.keys,
     recentPosts: params.recentPosts,
+    brandContext: params.brandContext,
     rewriteCount: 0,
   };
 }
@@ -267,6 +285,8 @@ export async function runDirection(
       apiKey: state.keys.claude,
       knowledge: state.knowledge,
       recentPosts: state.recentPosts,
+      brandContext: state.brandContext,
+      toneOverride: state.toneOverride,
       signal,
     });
     state.strategistOutput = output;
@@ -329,6 +349,8 @@ export async function runDiscovery(
       apiKey: state.keys.claude,
       knowledge: state.knowledge,
       discoveryBrief: JSON.stringify(state.discoveryBrief),
+      brandContext: state.brandContext,
+      toneOverride: state.toneOverride,
       signal,
     });
 

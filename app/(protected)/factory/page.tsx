@@ -54,6 +54,13 @@ interface PipelineClientState {
   learnerOutput?: LearnerOutput;
   finalVersion?: string;
   userFeedback?: string[];
+  brandContext?: {
+    industry: string;
+    audience: string[];
+    tones: string[];
+    contentStrategy: string;
+    lastUpdated?: string;
+  };
 }
 
 function generateSessionId(): string {
@@ -191,6 +198,19 @@ export default function FactoryPage() {
         next.phase = "error";
         next.error =
           (event.data as { error?: string })?.error || "Pipeline error";
+      }
+
+      // Capture brand context
+      if (
+        event.step === "pipeline" &&
+        event.status === "brand-context" &&
+        event.data
+      ) {
+        next.brandContext = (
+          event.data as {
+            brandContext: PipelineClientState["brandContext"];
+          }
+        ).brandContext;
       }
 
       // Capture phase outputs
@@ -395,8 +415,11 @@ export default function FactoryPage() {
                   hookPattern: state.selectedTopic.hookCategoryRecommendation,
                   contentPillar: state.selectedTopic.pillar,
                   tone: state.selectedTopic.angle,
+                  brandContext: state.brandContext,
                 }
-              : undefined
+              : state.brandContext
+                ? { brandContext: state.brandContext }
+                : undefined
           }
           viewPhase={viewPhase}
           onPhaseClick={(phase) => {

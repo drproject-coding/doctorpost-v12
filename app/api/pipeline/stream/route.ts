@@ -20,6 +20,16 @@
 
 import { NextRequest } from "next/server";
 import { getSessionUser, fetchUserProfile } from "@/lib/ncb-utils";
+
+function safeParseArray(val: string | undefined | null): string[] {
+  if (!val) return [];
+  try {
+    const parsed: unknown = JSON.parse(val);
+    return Array.isArray(parsed) ? (parsed as string[]) : [];
+  } catch {
+    return val ? [val] : [];
+  }
+}
 import { savePipelineSession } from "@/lib/pipeline/savePipelineData";
 import { fetchKnowledgeForUser } from "@/lib/knowledge/fetch";
 import {
@@ -53,6 +63,8 @@ interface StreamRequestBody {
   formattedPost?: PipelineState["formattedPost"];
   finalVersion?: string;
   userFeedback?: string[];
+  /** Session-level tone override */
+  toneOverride?: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -114,11 +126,26 @@ export async function POST(req: NextRequest) {
   // Fetch knowledge docs
   const knowledge = await fetchKnowledgeForUser(user.id, cookie);
 
+  // Build brand context from profile
+  const profile = await fetchUserProfile(cookie);
+  const brandContext = profile
+    ? {
+        industry: profile.industry || "",
+        audience: safeParseArray(profile.audience),
+        tones: safeParseArray(profile.tones),
+        contentStrategy: profile.content_strategy || "",
+        definition: profile.definition || "",
+        copyGuideline: profile.copy_guideline || "",
+        lastUpdated: profile.updated_at || undefined,
+      }
+    : undefined;
+
   // Build pipeline state from request
   const state = createPipelineState({
     sessionId: body.sessionId,
     knowledge,
     keys: resolvedKeys,
+    brandContext,
   });
 
   // Restore state from client-provided data
@@ -131,6 +158,7 @@ export async function POST(req: NextRequest) {
   if (body.formattedPost) state.formattedPost = body.formattedPost;
   if (body.finalVersion) state.finalVersion = body.finalVersion;
   if (body.userFeedback) state.userFeedback = body.userFeedback;
+  if (body.toneOverride) state.toneOverride = body.toneOverride;
 
   // SSE response
   const encoder = new TextEncoder();
@@ -143,6 +171,16 @@ export async function POST(req: NextRequest) {
 
       // Use AbortSignal from request (client disconnect)
       const signal = req.signal;
+
+      // Emit brand context so client can display it
+      if (brandContext) {
+        emit({
+          step: "pipeline",
+          status: "brand-context",
+          percent: 0,
+          data: { brandContext },
+        });
+      }
 
       try {
         switch (body.action) {

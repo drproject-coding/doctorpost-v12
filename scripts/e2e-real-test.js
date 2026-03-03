@@ -161,10 +161,35 @@ async function testPipeline(cookies) {
 
       // Process events
       for (const event of events) {
-        const data = JSON.parse(event);
+        let data;
+        try {
+          data = JSON.parse(event);
+        } catch (e) {
+          console.warn(
+            `     ⚠️ Skipping unparseable SSE event: ${event.substring(0, 100)}`,
+          );
+          continue;
+        }
         console.log(
           `     - ${data.step || "pipeline"}: ${data.status} (${data.percent}%)`,
         );
+
+        // Validate response shape for known phases
+        if (data.step && data.data) {
+          const shapeIssues = validateResponseShape(data.data, data.step);
+          if (shapeIssues.length > 0) {
+            console.warn(
+              `     ⚠️ Shape issues for ${data.step}: ${shapeIssues.join(", ")}`,
+            );
+            results.warnings = results.warnings || [];
+            results.warnings.push(
+              ...shapeIssues.map((issue) => ({
+                phase: data.step,
+                issue,
+              })),
+            );
+          }
+        }
 
         // Extract state from events
         if (data.step === "strategist" && data.data?.proposals) {
@@ -550,6 +575,7 @@ async function main() {
     console.log(`  Duration: ${elapsed}s`);
     console.log(`  Pipeline phases: ${Object.keys(results.phases).length}/6`);
     console.log(`  Pipeline errors: ${results.errors.length}`);
+    console.log(`  Shape warnings: ${(results.warnings || []).length}`);
     console.log(
       `  Feature checks: ${featurePassed}/${featureResults.length} passed`,
     );

@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ImportFlow } from "../../components/knowledge/ImportFlow";
-import { jest } from "@jest/globals";
 
 // Mock the auth context
 jest.mock("@/lib/auth-context", () => ({

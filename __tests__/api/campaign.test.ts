@@ -136,11 +136,13 @@ const MOCK_SLOT = {
   slotOrder: 1,
   slotDate: "2026-04-01",
   topicCard: {
-    title: "Why Education Matters",
-    hook: "Here is a hook",
     pillar: "education",
     angle: "informative",
-    cta: "Learn more",
+    decisionMistake: "Avoiding education content",
+    headline: "Why Education Matters",
+    reasoning: "Education builds authority",
+    templateRecommendation: "Insight Post",
+    hookCategoryRecommendation: "question",
   },
 };
 
@@ -469,7 +471,7 @@ describe("POST /api/campaign", () => {
         slotDate: "2026-04-03",
         topicCard: {
           ...MOCK_SLOT.topicCard,
-          title: "Inspiration Post",
+          headline: "Inspiration Post",
           pillar: "inspiration",
         },
       };

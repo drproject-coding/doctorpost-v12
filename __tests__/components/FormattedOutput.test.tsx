@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { FormattedOutput } from "../../components/factory/FormattedOutput";
-import { jest } from "@jest/globals";
 
 // Mock clipboard API
 Object.assign(navigator, {

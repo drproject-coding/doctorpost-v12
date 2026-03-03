@@ -891,7 +891,7 @@ describe("Checkpoint Application", () => {
     await consumeStream(res);
 
     // selectedTopic was not in body; state should not have it set
-    expect(state.selectedTopic).toBeUndefined();
+    expect((state as Record<string, unknown>).selectedTopic).toBeUndefined();
   });
 });
 

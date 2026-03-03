@@ -116,7 +116,10 @@ function makeRequest(
     init.body = JSON.stringify(options.body);
   }
   init.headers = headers;
-  return new NextRequest(url, init);
+  return new NextRequest(
+    url,
+    init as ConstructorParameters<typeof NextRequest>[1],
+  );
 }
 
 // ---------------------------------------------------------------------------

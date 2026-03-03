@@ -75,7 +75,10 @@ function makeRequest(
     },
     ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
   };
-  return new NextRequest(url, init);
+  return new NextRequest(
+    url,
+    init as ConstructorParameters<typeof NextRequest>[1],
+  );
 }
 
 function makeNCBResponse(data: unknown, status = 200) {

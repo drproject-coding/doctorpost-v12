@@ -2,19 +2,33 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { CampaignCalendar } from "../../components/campaigns/CampaignCalendar";
 import type { CampaignSlot } from "../../lib/agents/campaignPlanner";
+import type { TopicProposal } from "../../lib/knowledge/types";
 
 describe("CampaignCalendar", () => {
-  const mockSlot = (overrides: Partial<CampaignSlot> = {}): CampaignSlot => ({
-    weekNumber: 1,
-    slotOrder: 1,
-    slotDate: "2026-03-10",
-    topicCard: {
-      headline: "Test Topic",
-      pillar: "Authority",
-      templateRecommendation: "Insight Post",
-    },
-    ...overrides,
-  });
+  const defaultTopicCard: TopicProposal = {
+    headline: "Test Topic",
+    pillar: "Authority",
+    templateRecommendation: "Insight Post",
+    angle: "informative",
+    decisionMistake: "Avoiding this topic",
+    reasoning: "Strong engagement potential",
+    hookCategoryRecommendation: "question",
+  };
+
+  const mockSlot = (
+    overrides: Omit<Partial<CampaignSlot>, "topicCard"> & {
+      topicCard?: Partial<TopicProposal>;
+    } = {},
+  ): CampaignSlot =>
+    ({
+      weekNumber: 1,
+      slotOrder: 1,
+      slotDate: "2026-03-10",
+      topicCard: { ...defaultTopicCard, ...overrides.topicCard },
+      ...Object.fromEntries(
+        Object.entries(overrides).filter(([k]) => k !== "topicCard"),
+      ),
+    }) as CampaignSlot;
 
   it("renders the campaign calendar heading", () => {
     const slots: CampaignSlot[] = [];

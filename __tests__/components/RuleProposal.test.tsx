@@ -1,6 +1,5 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { jest } from "@jest/globals";
 import { RuleProposalCard } from "@/components/learning/RuleProposal";
 import type { RuleProposal, ProposalStatus } from "@/lib/knowledge/types";
 

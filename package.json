@@ -49,6 +49,7 @@
     "postcss": "^8.4.27",
     "supertest": "^6.3.3",
     "tailwindcss": "^3.3.3",
+    "ts-jest": "^29.4.6",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }

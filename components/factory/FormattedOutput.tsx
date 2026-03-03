@@ -1,15 +1,22 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button, Card } from "@bruddle/react";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Smartphone, Monitor } from "lucide-react";
 import type { FormattedPost } from "@/lib/knowledge/types";
+
+type PreviewMode = "mobile" | "desktop";
+
+// LinkedIn truncates at ~210 chars on mobile, ~280 on desktop
+const FOLD_CHARS = { mobile: 210, desktop: 280 };
 
 interface FormattedOutputProps {
   post: FormattedPost;
 }
 
 export function FormattedOutput({ post }: FormattedOutputProps) {
-  const [copied, setCopied] = React.useState(false);
+  const [copied, setCopied] = useState(false);
+  const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile");
+  const [showMore, setShowMore] = useState(false);
 
   const handleCopy = async () => {
     try {
@@ -17,9 +24,16 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Clipboard API unavailable (non-HTTPS or permission denied)
+      // Clipboard API unavailable
     }
   };
+
+  const foldAt = FOLD_CHARS[previewMode];
+  const isTruncated = post.content.length > foldAt;
+  const displayContent =
+    isTruncated && !showMore ? post.content.slice(0, foldAt) : post.content;
+
+  const containerWidth = previewMode === "mobile" ? 375 : 550;
 
   return (
     <Card variant="raised">
@@ -40,36 +54,227 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
         >
           Formatted Post
         </h3>
-        <Button onClick={handleCopy} style={{ fontSize: "var(--bru-text-sm)" }}>
-          {copied ? <Check size={14} /> : <Copy size={14} />}
-          {copied ? "Copied!" : "Copy"}
-        </Button>
+        <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
+          {/* Preview mode toggle */}
+          <div
+            style={{
+              display: "flex",
+              border: "1px solid var(--bru-border-color, #e0e0e0)",
+              overflow: "hidden",
+            }}
+          >
+            <button
+              onClick={() => {
+                setPreviewMode("mobile");
+                setShowMore(false);
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                padding: "4px 8px",
+                fontSize: "var(--bru-text-xs)",
+                background:
+                  previewMode === "mobile"
+                    ? "var(--bru-purple)"
+                    : "transparent",
+                color: previewMode === "mobile" ? "white" : "var(--bru-grey)",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              <Smartphone size={12} />
+              Mobile
+            </button>
+            <button
+              onClick={() => {
+                setPreviewMode("desktop");
+                setShowMore(false);
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                padding: "4px 8px",
+                fontSize: "var(--bru-text-xs)",
+                background:
+                  previewMode === "desktop"
+                    ? "var(--bru-purple)"
+                    : "transparent",
+                color: previewMode === "desktop" ? "white" : "var(--bru-grey)",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              <Monitor size={12} />
+              Desktop
+            </button>
+          </div>
+          <Button
+            onClick={handleCopy}
+            style={{ fontSize: "var(--bru-text-sm)" }}
+          >
+            {copied ? <Check size={14} /> : <Copy size={14} />}
+            {copied ? "Copied!" : "Copy"}
+          </Button>
+        </div>
       </div>
 
-      {/* LinkedIn-style preview */}
+      {/* LinkedIn-style preview card */}
       <div
         style={{
-          background: "white",
-          border: "1px solid #e0e0e0",
-          padding: "var(--bru-space-4)",
-          maxWidth: 550,
+          maxWidth: containerWidth,
           margin: "0 auto",
+          background: "white",
+          borderRadius: 8,
+          boxShadow: "0 0 0 1px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.1)",
+          overflow: "hidden",
         }}
       >
-        <pre
+        {/* Post header (simulated) */}
+        <div
           style={{
-            fontSize: 14,
-            lineHeight: 1.5,
-            whiteSpace: "pre-wrap",
-            wordWrap: "break-word",
-            fontFamily:
-              '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            margin: 0,
-            color: "#191919",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "12px 16px",
           }}
         >
-          {post.content}
-        </pre>
+          <div
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: "50%",
+              background: "var(--bru-purple)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "white",
+              fontWeight: 700,
+              fontSize: 18,
+              flexShrink: 0,
+            }}
+          >
+            Y
+          </div>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: 14, color: "#191919" }}>
+              Your Name
+            </div>
+            <div style={{ fontSize: 12, color: "#666666", lineHeight: 1.3 }}>
+              Your headline here
+            </div>
+            <div style={{ fontSize: 12, color: "#666666" }}>Just now</div>
+          </div>
+        </div>
+
+        {/* Post content */}
+        <div style={{ padding: "0 16px 12px" }}>
+          <pre
+            style={{
+              fontSize: previewMode === "mobile" ? 14 : 14,
+              lineHeight: 1.5,
+              whiteSpace: "pre-wrap",
+              wordWrap: "break-word",
+              fontFamily:
+                '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              margin: 0,
+              color: "#191919",
+            }}
+          >
+            {displayContent}
+            {isTruncated && !showMore && "..."}
+          </pre>
+          {isTruncated && !showMore && (
+            <button
+              onClick={() => setShowMore(true)}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#666666",
+                cursor: "pointer",
+                fontSize: 14,
+                fontWeight: 600,
+                padding: "4px 0",
+                display: "block",
+              }}
+            >
+              ...see more
+            </button>
+          )}
+          {showMore && isTruncated && (
+            <button
+              onClick={() => setShowMore(false)}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#666666",
+                cursor: "pointer",
+                fontSize: 14,
+                fontWeight: 600,
+                padding: "4px 0",
+                display: "block",
+              }}
+            >
+              show less
+            </button>
+          )}
+        </div>
+
+        {/* Engagement bar (simulated) */}
+        <div
+          style={{
+            padding: "8px 16px",
+            borderTop: "1px solid #e0e0e0",
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: 12,
+            color: "#666666",
+          }}
+        >
+          <span>0 reactions</span>
+          <span>0 comments</span>
+        </div>
+
+        {/* Action bar (simulated) */}
+        <div
+          style={{
+            padding: "4px 16px 8px",
+            borderTop: "1px solid #e0e0e0",
+            display: "flex",
+            justifyContent: "space-around",
+            fontSize: 13,
+            fontWeight: 600,
+            color: "#666666",
+          }}
+        >
+          <span>Like</span>
+          <span>Comment</span>
+          <span>Repost</span>
+          <span>Send</span>
+        </div>
+      </div>
+
+      {/* Hook position indicator */}
+      <div
+        style={{
+          marginTop: "var(--bru-space-3)",
+          textAlign: "center",
+          fontSize: "var(--bru-text-xs)",
+          color: "var(--bru-grey)",
+        }}
+      >
+        Hook is{" "}
+        <strong
+          style={{
+            color: post.hookBeforeFold[previewMode]
+              ? "var(--bru-success-dark, #2d7a3a)"
+              : "var(--bru-error-dark, #c0392b)",
+          }}
+        >
+          {post.hookBeforeFold[previewMode] ? "above" : "below"}
+        </strong>{" "}
+        the fold on {previewMode}
       </div>
 
       {/* Metadata */}

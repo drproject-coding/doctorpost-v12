@@ -296,6 +296,16 @@ export default function FactoryPage() {
           currentPhase={state.phase}
           percent={state.percent}
           errorAtPhase={state.errorAtPhase}
+          metadata={
+            state.selectedTopic
+              ? {
+                  postType: state.selectedTopic.templateRecommendation,
+                  hookPattern: state.selectedTopic.hookCategoryRecommendation,
+                  contentPillar: state.selectedTopic.pillar,
+                  tone: state.selectedTopic.angle,
+                }
+              : undefined
+          }
         />
       )}
 

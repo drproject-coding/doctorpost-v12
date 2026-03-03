@@ -69,6 +69,7 @@ export default function FactoryPage() {
     rewriteCount: 0,
   });
   const [running, setRunning] = useState(false);
+  const [viewPhase, setViewPhase] = useState<PipelinePhase | undefined>();
   const abortRef = useRef<AbortController | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -328,6 +329,11 @@ export default function FactoryPage() {
   // Template selection for write phase
   const [templateInput, setTemplateInput] = useState("");
 
+  // If user is viewing a past phase, show that phase's section read-only
+  const isViewingPast = viewPhase !== undefined && viewPhase !== state.phase;
+  const showPhase = (phase: PipelinePhase) =>
+    isViewingPast ? viewPhase === phase : undefined; // undefined = use normal logic
+
   return (
     <div>
       {/* Header */}
@@ -369,6 +375,15 @@ export default function FactoryPage() {
                 }
               : undefined
           }
+          viewPhase={viewPhase}
+          onPhaseClick={(phase) => {
+            // If clicking current phase, clear viewPhase
+            if (phase === state.phase) {
+              setViewPhase(undefined);
+            } else {
+              setViewPhase(phase);
+            }
+          }}
         />
       )}
 
@@ -447,8 +462,9 @@ export default function FactoryPage() {
 
       {/* DIRECTION — Topic Proposals */}
       {state.strategistOutput &&
-        (state.phase === "direction" ||
-          (!running && !state.discoveryBrief && state.selectedTopic)) && (
+        (showPhase("direction") ??
+          (state.phase === "direction" ||
+            (!running && !state.discoveryBrief && state.selectedTopic))) && (
           <div>
             <TopicProposals
               output={state.strategistOutput}
@@ -474,7 +490,8 @@ export default function FactoryPage() {
 
       {/* DISCOVERY — Research Brief */}
       {state.discoveryBrief &&
-        (state.phase === "discovery" || state.phase === "evidence") && (
+        (showPhase("discovery") ??
+          (state.phase === "discovery" || state.phase === "evidence")) && (
           <div>
             <ResearchBrief
               brief={state.discoveryBrief}
@@ -499,7 +516,8 @@ export default function FactoryPage() {
 
       {/* EVIDENCE — Evidence Pack */}
       {state.evidencePack &&
-        (state.phase === "evidence" || state.phase === "writing") && (
+        (showPhase("evidence") ??
+          (state.phase === "evidence" || state.phase === "writing")) && (
           <div>
             <EvidencePack
               evidence={state.evidencePack}
@@ -540,39 +558,42 @@ export default function FactoryPage() {
         )}
 
       {/* WRITING + SCORING — Draft + Scorecard */}
-      {state.writerOutput && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: state.scoreResult ? "1fr 1fr" : "1fr",
-            gap: "var(--bru-space-4)",
-          }}
-        >
-          <DraftEditor
-            writerOutput={state.writerOutput}
-            guardrailResults={state.guardrailResults}
-            rewriteCount={state.rewriteCount}
-            onManualEdit={handleGuardrailManualEdit}
-            onAiFix={handleGuardrailAiFix}
-            isFixing={state.guardrailFixing}
-            guardrailRetryCount={state.guardrailRetryCount}
-          />
-          {state.scoreResult && (
-            <Scorecard
-              score={state.scoreResult}
-              onApplyFix={(instructions) => {
-                callPipeline("write", {
-                  userFeedback: [
-                    `Rewrite based on scorer instructions: ${instructions}. Maintain voice and angle.`,
-                  ],
-                });
-              }}
-              isApplying={running}
+      {state.writerOutput &&
+        (!isViewingPast ||
+          viewPhase === "writing" ||
+          viewPhase === "scoring") && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: state.scoreResult ? "1fr 1fr" : "1fr",
+              gap: "var(--bru-space-4)",
+            }}
+          >
+            <DraftEditor
+              writerOutput={state.writerOutput}
+              guardrailResults={state.guardrailResults}
               rewriteCount={state.rewriteCount}
+              onManualEdit={handleGuardrailManualEdit}
+              onAiFix={handleGuardrailAiFix}
+              isFixing={state.guardrailFixing}
+              guardrailRetryCount={state.guardrailRetryCount}
             />
-          )}
-        </div>
-      )}
+            {state.scoreResult && (
+              <Scorecard
+                score={state.scoreResult}
+                onApplyFix={(instructions) => {
+                  callPipeline("write", {
+                    userFeedback: [
+                      `Rewrite based on scorer instructions: ${instructions}. Maintain voice and angle.`,
+                    ],
+                  });
+                }}
+                isApplying={running}
+                rewriteCount={state.rewriteCount}
+              />
+            )}
+          </div>
+        )}
 
       {/* After scoring — proceed to format */}
       {state.scoreResult &&
@@ -594,15 +615,17 @@ export default function FactoryPage() {
         )}
 
       {/* FORMATTING — Formatted Output */}
-      {state.formattedPost && (
-        <div style={{ marginTop: "var(--bru-space-4)" }}>
-          <FormattedOutput post={state.formattedPost} />
-        </div>
-      )}
+      {state.formattedPost &&
+        (!isViewingPast || viewPhase === "formatting") && (
+          <div style={{ marginTop: "var(--bru-space-4)" }}>
+            <FormattedOutput post={state.formattedPost} />
+          </div>
+        )}
 
       {/* REVIEW — Post Review */}
       {state.formattedPost &&
         !running &&
+        !isViewingPast &&
         state.phase !== "learning" &&
         state.phase !== "complete" && (
           <div style={{ marginTop: "var(--bru-space-4)" }}>

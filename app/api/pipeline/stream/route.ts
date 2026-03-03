@@ -96,10 +96,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Fetch profile once (used for key resolution + brand context)
+  const profile = await fetchUserProfile(cookie);
+
   // Resolve __server_resolved__ sentinel keys from user profile
   const resolvedKeys = { ...body.keys };
   if (resolvedKeys.claude === "__server_resolved__") {
-    const profile = await fetchUserProfile(cookie);
     if (profile) {
       resolvedKeys.claude = profile.claude_api_key || "";
       if (!resolvedKeys.perplexity && profile.perplexity_api_key) {
@@ -125,9 +127,6 @@ export async function POST(req: NextRequest) {
 
   // Fetch knowledge docs
   const knowledge = await fetchKnowledgeForUser(user.id, cookie);
-
-  // Build brand context from profile
-  const profile = await fetchUserProfile(cookie);
   const brandContext = profile
     ? {
         industry: profile.industry || "",

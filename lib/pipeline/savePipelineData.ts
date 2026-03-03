@@ -66,7 +66,7 @@ export async function savePipelineSession(
   if (existing) {
     // Update
     const url = `${CONFIG.dataApiUrl}/update/pipeline_sessions/${existing.id}?instance=${CONFIG.instance}`;
-    await fetch(url, {
+    const res = await fetch(url, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -81,10 +81,11 @@ export async function savePipelineSession(
         updated_at: now,
       }),
     });
+    if (!res.ok) throw new Error(`NCB update failed: ${res.status}`);
   } else {
     // Create
     const url = `${CONFIG.dataApiUrl}/create/pipeline_sessions?instance=${CONFIG.instance}`;
-    await fetch(url, {
+    const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -101,6 +102,7 @@ export async function savePipelineSession(
         updated_at: now,
       }),
     });
+    if (!res.ok) throw new Error(`NCB create failed: ${res.status}`);
   }
 }
 
@@ -172,11 +174,12 @@ export async function deletePipelineSession(
   if (!row) return;
   const authCookies = extractAuthCookies(cookieHeader);
   const url = `${CONFIG.dataApiUrl}/delete/pipeline_sessions/${row.id}?instance=${CONFIG.instance}`;
-  await fetch(url, {
+  const res = await fetch(url, {
     method: "DELETE",
     headers: {
       "X-Database-Instance": CONFIG.instance,
       Cookie: authCookies,
     },
   });
+  if (!res.ok) throw new Error(`NCB delete failed: ${res.status}`);
 }

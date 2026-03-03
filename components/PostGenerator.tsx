@@ -48,12 +48,18 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
 
     const contentRef = useRef<HTMLTextAreaElement>(null);
     const abortRef = useRef<AbortController | null>(null);
+    const isGeneratingRef = useRef(false);
+    const onContentGeneratedRef = useRef(onContentGenerated);
+    onContentGeneratedRef.current = onContentGenerated;
 
     useImperativeHandle(ref, () => ({
       getGeneratedContent: () => generatedContent,
     }));
 
     const generateContentEffect = useCallback(async () => {
+      if (isGeneratingRef.current) return;
+      isGeneratingRef.current = true;
+
       abortRef.current?.abort();
       const controller = new AbortController();
       abortRef.current = controller;
@@ -92,7 +98,7 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
           controller.signal,
         );
         setGeneratedContent(content);
-        onContentGenerated(content);
+        onContentGeneratedRef.current(content);
 
         const wordCount = content.split(/\s+/).length;
         setEstimatedReadTime(Math.max(1, Math.ceil(wordCount / 225)));
@@ -104,10 +110,11 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
             : "An error occurred while generating the post",
         );
       } finally {
+        isGeneratingRef.current = false;
         setIsGenerating(false);
         setAiProgress(null);
       }
-    }, [parameters, profile, aiSettings, onContentGenerated]);
+    }, [parameters, profile, aiSettings]);
 
     useEffect(() => {
       if (

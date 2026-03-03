@@ -1,0 +1,21 @@
+{
+  "/(protected)/calendar/page": "app/(protected)/calendar/page.js",
+  "/(protected)/campaigns/page": "app/(protected)/campaigns/page.js",
+  "/(protected)/create/page": "app/(protected)/create/page.js",
+  "/(protected)/dashboard/page": "app/(protected)/dashboard/page.js",
+  "/(protected)/factory/page": "app/(protected)/factory/page.js",
+  "/(protected)/knowledge/page": "app/(protected)/knowledge/page.js",
+  "/(protected)/learning/page": "app/(protected)/learning/page.js",
+  "/(protected)/page": "app/(protected)/page.js",
+  "/(protected)/settings/page": "app/(protected)/settings/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/auth-providers/route": "app/api/auth-providers/route.js",
+  "/api/auth/[...path]/route": "app/api/auth/[...path]/route.js",
+  "/api/data/[...path]/route": "app/api/data/[...path]/route.js",
+  "/api/knowledge/[...path]/route": "app/api/knowledge/[...path]/route.js",
+  "/api/models/route": "app/api/models/route.js",
+  "/api/oneforall/route": "app/api/oneforall/route.js",
+  "/api/seed-profile/route": "app/api/seed-profile/route.js",
+  "/api/straico/route": "app/api/straico/route.js",
+  "/login/page": "app/login/page.js"
+}

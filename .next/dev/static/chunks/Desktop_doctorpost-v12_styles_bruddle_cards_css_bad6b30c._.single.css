@@ -1,0 +1,113 @@
+/* [project]/Desktop/doctorpost-v12/styles/bruddle/cards.css [app-client] (css) */
+.bru-card {
+  background: var(--bru-surface);
+  border: var(--bru-border);
+  padding: var(--bru-space-6);
+}
+
+.bru-card--raised {
+  box-shadow: var(--bru-shadow-lg);
+}
+
+.bru-card--sm {
+  box-shadow: var(--bru-shadow-sm);
+}
+
+.bru-card--flat {
+  box-shadow: none;
+  border: none;
+}
+
+.bru-card--interactive {
+  cursor: pointer;
+  transition: transform var(--bru-duration-fast) var(--bru-ease), box-shadow var(--bru-duration-fast) var(--bru-ease);
+}
+
+.bru-card--interactive:hover {
+  box-shadow: var(--bru-shadow-sm);
+  transform: translate(1px, 1px);
+}
+
+.bru-card--interactive:active {
+  box-shadow: none;
+  transform: translate(3px, 3px);
+}
+
+.bru-card__header {
+  margin-bottom: var(--bru-space-4);
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+}
+
+.bru-card__title {
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-lg);
+  font-weight: var(--bru-weight-bold);
+  color: var(--bru-black);
+  margin: 0;
+}
+
+.bru-card__subtitle {
+  font-family: var(--bru-font-primary);
+  font-size: var(--bru-text-sm);
+  color: var(--bru-grey);
+  margin: var(--bru-space-1) 0 0;
+  line-height: var(--bru-leading-normal);
+}
+
+.bru-card--purple {
+  border-left: 4px solid var(--bru-purple);
+}
+
+.bru-card--mint {
+  border-left: 4px solid var(--bru-mint);
+}
+
+.bru-card--pink {
+  border-left: 4px solid var(--bru-pink);
+}
+
+.bru-card--yellow {
+  border-left: 4px solid var(--bru-yellow);
+}
+
+@media (max-width: 768px) {
+  .bru-card {
+    padding: var(--bru-space-4);
+  }
+
+  .bru-card__header {
+    padding: var(--bru-space-3) var(--bru-space-4);
+  }
+
+  .bru-card__body {
+    padding: var(--bru-space-4);
+  }
+
+  .bru-card__footer {
+    padding: var(--bru-space-3) var(--bru-space-4);
+  }
+}
+
+@media (max-width: 390px) {
+  .bru-card {
+    padding: var(--bru-space-3);
+  }
+
+  .bru-card__header {
+    padding: var(--bru-space-2) var(--bru-space-3);
+  }
+
+  .bru-card__body {
+    padding: var(--bru-space-3);
+  }
+
+  .bru-card__footer {
+    padding: var(--bru-space-2) var(--bru-space-3);
+    gap: var(--bru-space-2);
+    flex-direction: column;
+  }
+}
+
+/*# sourceMappingURL=Desktop_doctorpost-v12_styles_bruddle_cards_css_bad6b30c._.single.css.map*/

@@ -1,0 +1,3509 @@
+openapi: 3.0.3
+info:
+  title: 1forall.ai API
+  version: 0.0.0
+  description: 1forall.ai API for starting and retrieving the audio, voice, images
+    and video generation process. Please authorise to use the API.
+paths:
+  /v1/external/audio/check-status/{code_ref}/:
+    get:
+      operationId: audio_check_status_retrieve
+      description: |-
+        The endpoint to check the audio conversion status.
+        Please use the code_ref value to check the status of the conversion.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: path
+        name: code_ref
+        schema:
+          type: string
+        required: true
+      tags:
+      - audio
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseConversionStatusResponse'
+              examples:
+                SuccessResponse:
+                  value:
+                    status: completed
+                    response: ''
+                  summary: Response example - conversion completed
+                  description: The status should be completed and you can upload the
+                    file using the url_file from your conversion request or check
+                    the response field.
+                PendingResponse:
+                  value:
+                    status: pending
+                    response: ''
+                  summary: Response example - conversion pending
+                  description: If the conversion is in pending status please try to
+                    check in a couple seconds.
+          description: ''
+  /v1/external/audio/conversions/{id}/:
+    get:
+      operationId: audio_conversions_retrieve
+      description: The endpoint to retrieve a specific audio conversion
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - audio
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioConversion'
+          description: ''
+  /v1/external/audio/convert-to-audio/:
+    post:
+      operationId: audio_convert_to_audio_create
+      description: |-
+        The endpoint to start the audio conversion process.
+        Please indicate seconds with the step of 0.5
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      tags:
+      - audio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AudioConversionRequest'
+            examples:
+              TextToSoundRequest:
+                value:
+                  title: Fun sound
+                  text: Create a fun sound with bells.
+                  model: elevenlabs-sound
+                  seconds: 1
+                summary: Text to sound request
+                description: "You should pass the title, text, model, and seconds.\n\
+                  \                Please indicate seconds with the step of 0.5\n\
+                  \                            "
+              TextToMusicRequest:
+                value:
+                  title: New Year's Bells
+                  text: A short melody about New Year's bells and happiness.
+                  model: musicgen-stereo-large
+                  seconds: 8
+                summary: Text to music request
+                description: "You should pass the title, text, model, and seconds.\n\
+                  \                Please indicate seconds with the step of 0.5\n\
+                  \                                "
+              MusicToMusicRequest:
+                value:
+                  title: New Year's Bells With Claps
+                  text: Add clapping hands
+                  model: musicgen-stereo-melody-large-a2a
+                  seconds: 8
+                  source_path: https://tts-clariteia.s3.eu-west-1.amazonaws.com/audio/ecgKgt0qHBCD318.mp3
+                summary: Music to Music request
+                description: "You should pass the title, text, model, seconds, and\
+                  \ source_path.\n                Please indicate seconds with the\
+                  \ step of 0.5\n                                    "
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AudioConversionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AudioConversionRequest'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioConversion'
+              examples:
+                TextToSoundResponse:
+                  value:
+                    id: 19
+                    title: Fun sound
+                    code_ref: x0n11H7TDMvdlZe6
+                    output: mp3
+                    text: Create a fun sound with bells.
+                    uploaded_audio_url: null
+                    seconds: 1
+                    status: pending
+                    created_at: '2025-04-15T05:39:10.492958Z'
+                    modified_at: '2025-04-15T05:39:10.493089Z'
+                    model:
+                      code: elevenlabs-sound
+                      name: Sound generation (elevenlabs)
+                      description: Sound generation (elevenlabs)
+                      credits_per_second: '14.000000'
+                      mode: SOUND
+                      enabled: true
+                    url_file: https://tts-clariteia.s3.eu-west-1.amazonaws.com/audio/9nnNB06bo7YdmBA.mp3
+                    thumbs_up: false
+                    thumbs_down: false
+                    source_audio_path: null
+                  summary: Text to sound response
+                  description: "You receive the code_ref value. Please use this value\
+                    \ to check the status of the conversion. \n                  \
+                    \          Please use url_file to upload the speech after the\
+                    \ conversion is completed"
+                TextToMusicResponse:
+                  value:
+                    id: 20
+                    title: New Year's Bells
+                    code_ref: HCaKSzEYPcDyhhUE
+                    output: mp3
+                    text: A short melody about New Year's bells and happiness.
+                    uploaded_audio_url: null
+                    seconds: 8
+                    status: pending
+                    created_at: '2025-04-15T05:43:34.871064Z'
+                    modified_at: '2025-04-15T05:43:34.871113Z'
+                    model:
+                      code: musicgen-stereo-large
+                      name: Musicgen stereo-large
+                      description: Musicgen stereo-large
+                      credits_per_second: '10.000000'
+                      mode: MUSIC
+                      enabled: true
+                    url_file: https://tts-clariteia.s3.eu-west-1.amazonaws.com/audio/ecgKgt0qHBCD318.mp3
+                    thumbs_up: false
+                    thumbs_down: false
+                    source_audio_path: null
+                  summary: Text to music response
+                  description: "You receive the code_ref value. Please use this value\
+                    \ to check the status of the conversion. \n                  \
+                    \              Please use url_file to upload the speech after\
+                    \ the conversion is completed"
+                MusicToMusicResponse:
+                  value:
+                    id: 21
+                    title: New Year's Bells With Claps
+                    code_ref: 2Q8MwUVqhzVRi3Cg
+                    output: mp3
+                    text: Add clapping hands
+                    uploaded_audio_url: null
+                    seconds: 8
+                    status: pending
+                    created_at: '2025-04-15T05:47:39.618874Z'
+                    modified_at: '2025-04-15T05:47:39.619066Z'
+                    model:
+                      code: musicgen-stereo-melody-large-a2a
+                      name: Musicgen Stereo melody large
+                      description: Some Description
+                      credits_per_second: '12.000000'
+                      mode: MUSIC_TO_MUSIC
+                      enabled: true
+                    url_file: https://tts-clariteia.s3.eu-west-1.amazonaws.com/audio/y1tAMEsTgyu2vWd.mp3
+                    thumbs_up: false
+                    thumbs_down: false
+                    source_audio_path: https://tts-clariteia.s3.eu-west-1.amazonaws.com/audio/ecgKgt0qHBCD318.mp3
+                  summary: Music to Music response
+                  description: "You receive the code_ref value. Please use this value\
+                    \ to check the status of the conversion. \n                  \
+                    \                  Please use url_file to upload the speech after\
+                    \ the conversion is completed"
+          description: ''
+  /v1/external/audio/models/:
+    get:
+      operationId: audio_models_list
+      description: The endpoint to retrieve the list of available audio conversion
+        models.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - audio
+      security:
+      - ApiKeyAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AudioConversionModel'
+              examples:
+                ExecutedResponse:
+                  value:
+                  - - code: musicgen-stereo-large
+                      name: MusicGen Large (Stereo)
+                      description: Creates higher-quality music from text. Ideal if
+                        you want the best sound and don’t mind waiting a bit more.
+                      credits_per_second: '10.000000'
+                      mode: MUSIC
+                      enabled: true
+                    - code: elevenlabs-sound
+                      name: Sound generation (elevenlabs)
+                      description: Great for generating short, high-quality sound
+                        effects and audio scenes from text prompts—perfect for games,
+                        videos, and creative sound design.
+                      credits_per_second: '14.000000'
+                      mode: SOUND
+                      enabled: true
+                    - code: musicgen-stereo-melody-large
+                      name: MusicGen Melody (Stereo)
+                      description: Generate full songs from a melody and a short prompt
+                        with rich stereo sound.
+                      credits_per_second: '12.000000'
+                      mode: MUSIC
+                      enabled: true
+                    - code: musicgen-melody-large
+                      name: Musicgen Melody
+                      description: Generate full songs from a melody and a short prompt.
+                        Faster and lighter—ideal for quick drafts or ideas.
+                      credits_per_second: '16.000000'
+                      mode: MUSIC
+                      enabled: true
+                    - code: musicgen-large
+                      name: MusicGen Large
+                      description: Turn short text prompts into music. Great for fast,
+                        simple generations without needing a melody.
+                      credits_per_second: '20.000000'
+                      mode: MUSIC
+                      enabled: true
+                  summary: Success example
+                  description: There are three types of models. SOUND, MUSIC, and
+                    MUSIC_TO_MUSIC.
+          description: ''
+  /v1/external/image/check-status/{code_ref}/:
+    get:
+      operationId: image_check_status_retrieve
+      description: |-
+        The endpoint to check the image conversion status.
+        Please use the code_ref value to check the status of the conversion.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: path
+        name: code_ref
+        schema:
+          type: string
+        required: true
+      tags:
+      - image
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseConversionStatusResponse'
+              examples:
+                SuccessResponse:
+                  value:
+                    status: completed
+                    response: ''
+                  summary: Response example - conversion completed
+                  description: The status should be completed and you can upload the
+                    file using the url_file from your conversion request or check
+                    the response field.
+                PendingResponse:
+                  value:
+                    status: pending
+                    response: ''
+                  summary: Response example - conversion pending
+                  description: If the conversion is in pending status please try to
+                    check in a couple seconds.
+          description: ''
+  /v1/external/image/conversions/{id}/:
+    get:
+      operationId: image_conversions_retrieve
+      description: The endpoint to retrieve a specific image conversion
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - image
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageConversion'
+          description: ''
+  /v1/external/image/image-to-image/:
+    post:
+      operationId: image_image_to_image_create
+      description: The endpoint to start the image to image conversion process. Please
+        select the model and provide the source image url.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      tags:
+      - image
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageToImageConversionRequest'
+            examples:
+              SuccessResponse:
+                value:
+                  title: Programmer with the label
+                  text: Please add the label 'Hello'
+                  model: stable-diffusion-image
+                  file_reference: https://tts-clariteia.s3.eu-west-1.amazonaws.com/images/QIMr2ObfNFsaCgn.png
+                  additional_fields: {}
+                summary: The request example
+                description: "\n                You should pass the model and size\
+                  \ values. \n                The file_reference is the path to the\
+                  \ source image.\n                The model value should be the code\
+                  \ of the model you want to use. \n                The additional_fields\
+                  \ is optional. Each model can have specific additional fields.\n\
+                  \                "
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ImageToImageConversionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ImageToImageConversionRequest'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageConversion'
+              examples:
+                ExecutedResponse:
+                  value:
+                    id: 361
+                    title: Programmer with the label
+                    code_ref: DWA3JQN0Vz2D9xjT
+                    output: png
+                    text: Please add the label 'Hello'
+                    uploaded_image_url: null
+                    small_uploaded_image_url: null
+                    status: pending
+                    created_at: '2025-04-14T07:06:31.236982Z'
+                    modified_at: '2025-04-14T07:06:31.237028Z'
+                    model:
+                      code: stable-diffusion-image
+                      name: Stable Diffusion 3.5 ITI
+                      description: Produces the most detailed and realistic images
+                        to images, though it’s slower, making it ideal for commercial-quality
+                        work. Image To Image
+                      price: '0.150000'
+                    size: null
+                    url_file: https://tts-clariteia.s3.eu-west-1.amazonaws.com/images/mVn47X38h8Io03u.png
+                    thumbs_up: false
+                    thumbs_down: false
+                    source_image_path: https://tts-clariteia.s3.eu-west-1.amazonaws.com/images/QIMr2ObfNFsaCgn.png
+                  summary: Success example
+                  description: "You receive the code_ref value. Please use this value\
+                    \ to check the status of the conversion. \n                  \
+                    \  Please use url_file to upload the speech after the conversion\
+                    \ is completed"
+          description: ''
+  /v1/external/image/models/:
+    get:
+      operationId: image_models_list
+      description: |-
+        The endpoint to retrieve the list of available image conversion models.
+        There are two types of models: text to image and image to image.
+        Please use 'TEXT_TO_IMAGE' models for text to image conversion and 'IMAGE_TO_IMAGE' for image to image conversion.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - image
+      security:
+      - ApiKeyAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ImageConversionModel'
+              examples:
+                ExecutedResponse:
+                  value:
+                  - - code: leonardo-phoenix-fast
+                      name: Leonardo Phoenix Fast
+                      description: Leonardo AI’s flagship image model delivers cinematic,
+                        photorealistic images up to 5 MP. Ideal for users who want
+                        high prompt accuracy, crisp visuals, with optimized performance.
+                      price: '0.060000'
+                      mode: TEXT_TO_IMAGE
+                      enabled: true
+                      sizes:
+                      - code: '1:1'
+                        name: '1:1'
+                        ratio: '1:1'
+                        default: true
+                        enabled: true
+                      - code: '16:9'
+                        name: '16:9'
+                        ratio: '16:9'
+                        default: false
+                        enabled: true
+                      - code: '2:3'
+                        name: '2:3'
+                        ratio: '2:3'
+                        default: false
+                        enabled: true
+                      - code: '3:2'
+                        name: '3:2'
+                        ratio: '3:2'
+                        default: false
+                        enabled: true
+                      - code: '4:5'
+                        name: '4:5'
+                        ratio: '4:5'
+                        default: false
+                        enabled: true
+                      - code: '5:4'
+                        name: '5:4'
+                        ratio: '5:4'
+                        default: false
+                        enabled: true
+                      - code: '9:16'
+                        name: '9:16'
+                        ratio: '9:16'
+                        default: false
+                        enabled: true
+                      - code: '3:4'
+                        name: '3:4'
+                        ratio: '3:4'
+                        default: false
+                        enabled: true
+                      - code: '4:3'
+                        name: '4:3'
+                        ratio: '4:3'
+                        default: false
+                        enabled: true
+                      - code: '2:1'
+                        name: '2:1'
+                        ratio: '2:1'
+                        default: false
+                        enabled: true
+                      - code: '1:2'
+                        name: '1:2'
+                        ratio: '1:2'
+                        default: false
+                        enabled: true
+                      - code: '3:1'
+                        name: '3:1'
+                        ratio: '3:1'
+                        default: false
+                        enabled: true
+                      - code: '1:3'
+                        name: '1:3'
+                        ratio: '1:3'
+                        default: false
+                        enabled: true
+                      additional_fields:
+                      - code: contrast
+                        type: SELECT
+                        name: Contrast
+                        default_value: medium
+                        min: null
+                        max: null
+                        step: null
+                        options: low, medium, high
+                        style_class: null
+                        required: true
+                        enabled: true
+                    - code: recraft
+                      name: Recraft
+                      description: This model naturally integrates detailed, longer
+                        text into images. It supports a variety of styles—from sleek
+                        vector designs to photorealistic visuals—making it easy to
+                        create visuals where text and design work in harmony.
+                      price: '0.080000'
+                      mode: TEXT_TO_IMAGE
+                      enabled: true
+                      sizes:
+                      - code: 1024x1024
+                        name: 1024x1024
+                        ratio: '1:1'
+                        default: true
+                        enabled: true
+                      - code: 1024x1365
+                        name: 1024x1365
+                        ratio: '3:4'
+                        default: false
+                        enabled: true
+                      - code: 1365x1024
+                        name: 1365x1024
+                        ratio: '4:3'
+                        default: false
+                        enabled: true
+                      - code: 1536x1024
+                        name: 1536x1024
+                        ratio: '3:2'
+                        default: false
+                        enabled: true
+                      - code: 1024x1536
+                        name: 1024x1536
+                        ratio: '2:3'
+                        default: false
+                        enabled: true
+                      - code: 1820x1024
+                        name: 1820x1024
+                        ratio: '16:9'
+                        default: false
+                        enabled: true
+                      - code: 1024x1820
+                        name: 1024x1820
+                        ratio: '9:16'
+                        default: false
+                        enabled: true
+                      - code: 1024x2048
+                        name: 1024x2048
+                        ratio: '1:2'
+                        default: false
+                        enabled: true
+                      - code: 2048x1024
+                        name: 2048x1024
+                        ratio: '2:1'
+                        default: false
+                        enabled: true
+                      - code: 1434x1024
+                        name: 1434x1024
+                        ratio: '7:5'
+                        default: false
+                        enabled: true
+                      - code: 1024x1434
+                        name: 1024x1434
+                        ratio: '5:7'
+                        default: false
+                        enabled: true
+                      - code: 1024x1280
+                        name: 1024x1280
+                        ratio: '4:5'
+                        default: false
+                        enabled: true
+                      - code: 1280x1024
+                        name: 1280x1024
+                        ratio: '5:4'
+                        default: false
+                        enabled: true
+                      - code: 1024x1707
+                        name: 1024x1707
+                        ratio: '3:5'
+                        default: false
+                        enabled: true
+                      - code: 1707x1024
+                        name: 1707x1024
+                        ratio: '5:3'
+                        default: false
+                        enabled: true
+                      additional_fields: []
+                    - code: flux-pro
+                      name: Flux 1.1 Pro Ultra
+                      description: Great for realistic, high-detail images that closely
+                        match your prompts—ideal if you need precision.
+                      price: '0.100000'
+                      mode: TEXT_TO_IMAGE
+                      enabled: true
+                      sizes:
+                      - code: '1:1'
+                        name: '1:1'
+                        ratio: '1:1'
+                        default: true
+                        enabled: true
+                      - code: '9:16'
+                        name: '9:16'
+                        ratio: '9:16'
+                        default: false
+                        enabled: true
+                      - code: '16:9'
+                        name: '16:9'
+                        ratio: '16:9'
+                        default: false
+                        enabled: true
+                      - code: '4:5'
+                        name: '4:5'
+                        ratio: '4:5'
+                        default: false
+                        enabled: true
+                      - code: '4:3'
+                        name: '4:3'
+                        ratio: '4:3'
+                        default: false
+                        enabled: true
+                      - code: '2:3'
+                        name: '2:3'
+                        ratio: '2:3'
+                        default: false
+                        enabled: true
+                      - code: '5:4'
+                        name: '5:4'
+                        ratio: '5:4'
+                        default: false
+                        enabled: true
+                      - code: '3:2'
+                        name: '3:2'
+                        ratio: '3:2'
+                        default: false
+                        enabled: true
+                      - code: '3:4'
+                        name: '3:4'
+                        ratio: '3:4'
+                        default: false
+                        enabled: true
+                      additional_fields: []
+                    - code: flux-schnell
+                      name: Flux Schnell AI
+                      description: Flux.1 Schnell is a model within the image generation
+                        model family, FLUX.1, which was developed by BlackForestLabs,
+                        the original team behind Stable Diffusion. It is known for
+                        its strengths in text generation, complex instruction following,
+                        and hand generation.
+                      price: '0.005000'
+                      mode: TEXT_TO_IMAGE
+                      enabled: true
+                      sizes:
+                      - code: '1:1'
+                        name: '1:1'
+                        ratio: '1:1'
+                        default: true
+                        enabled: true
+                      - code: '16:9'
+                        name: '16:9'
+                        ratio: '16:9'
+                        default: false
+                        enabled: true
+                      - code: '21:9'
+                        name: '21:9'
+                        ratio: '21:9'
+                        default: false
+                        enabled: true
+                      - code: '3:2'
+                        name: '3:2'
+                        ratio: '3:2'
+                        default: false
+                        enabled: true
+                      - code: '2:3'
+                        name: '2:3'
+                        ratio: '2:3'
+                        default: false
+                        enabled: true
+                      - code: '4:5'
+                        name: '4:5'
+                        ratio: '4:5'
+                        default: false
+                        enabled: true
+                      - code: '5:4'
+                        name: '5:4'
+                        ratio: '5:4'
+                        default: false
+                        enabled: true
+                      - code: '3:4'
+                        name: '3:4'
+                        ratio: '3:4'
+                        default: false
+                        enabled: true
+                      - code: '4:3'
+                        name: '4:3'
+                        ratio: '4:3'
+                        default: false
+                        enabled: true
+                      - code: '9:16'
+                        name: '9:16'
+                        ratio: '9:16'
+                        default: false
+                        enabled: true
+                      - code: '9:21'
+                        name: '9:21'
+                        ratio: '9:21'
+                        default: false
+                        enabled: true
+                      additional_fields: []
+                    - code: ideogram
+                      name: Ideogram
+                      description: Perfect for marketing campaigns and social media
+                        posts. Generates vibrant, attention-grabbing visuals and text
+                        that boost engagement.
+                      price: '0.150000'
+                      mode: TEXT_TO_IMAGE
+                      enabled: true
+                      sizes:
+                      - code: '1:1'
+                        name: '1:1'
+                        ratio: '1:1'
+                        default: true
+                        enabled: true
+                      - code: '9:16'
+                        name: '9:16'
+                        ratio: '9:16'
+                        default: false
+                        enabled: true
+                      - code: '16:9'
+                        name: '16:9'
+                        ratio: '16:9'
+                        default: false
+                        enabled: true
+                      - code: '4:3'
+                        name: '4:3'
+                        ratio: '4:3'
+                        default: false
+                        enabled: true
+                      - code: '3:2'
+                        name: '3:2'
+                        ratio: '3:2'
+                        default: false
+                        enabled: true
+                      - code: '10:16'
+                        name: '10:16'
+                        ratio: '10:16'
+                        default: false
+                        enabled: true
+                      - code: '16:10'
+                        name: '16:10'
+                        ratio: '16:10'
+                        default: false
+                        enabled: true
+                      - code: '3:4'
+                        name: '3:4'
+                        ratio: '3:4'
+                        default: false
+                        enabled: true
+                      - code: '3:1'
+                        name: '3:1'
+                        ratio: '3:1'
+                        default: false
+                        enabled: true
+                      - code: '2:3'
+                        name: '2:3'
+                        ratio: '2:3'
+                        default: false
+                        enabled: true
+                      - code: '1:3'
+                        name: '1:3'
+                        ratio: '1:3'
+                        default: false
+                        enabled: true
+                      additional_fields: []
+                    - code: stable-diffusion
+                      name: Stable Diffusion Pro
+                      description: Produces the most detailed and realistic images,
+                        though it’s slower, making it ideal for commercial-quality
+                        work.
+                      price: '0.100000'
+                      mode: TEXT_TO_IMAGE
+                      enabled: true
+                      sizes:
+                      - code: '1:1'
+                        name: '1:1'
+                        ratio: '1:1'
+                        default: true
+                        enabled: true
+                      - code: '9:16'
+                        name: '9:16'
+                        ratio: '9:16'
+                        default: false
+                        enabled: true
+                      - code: '16:9'
+                        name: '16:9'
+                        ratio: '16:9'
+                        default: false
+                        enabled: true
+                      - code: '4:5'
+                        name: '4:5'
+                        ratio: '4:5'
+                        default: false
+                        enabled: true
+                      - code: '4:3'
+                        name: '4:3'
+                        ratio: '4:3'
+                        default: false
+                        enabled: true
+                      - code: '2:3'
+                        name: '2:3'
+                        ratio: '2:3'
+                        default: false
+                        enabled: true
+                      - code: '21:9'
+                        name: '21:9'
+                        ratio: '21:9'
+                        default: false
+                        enabled: true
+                      - code: '3:4'
+                        name: '3:4'
+                        ratio: '3:4'
+                        default: false
+                        enabled: true
+                      - code: '3:2'
+                        name: '3:2'
+                        ratio: '3:2'
+                        default: false
+                        enabled: true
+                      - code: '5:4'
+                        name: '5:4'
+                        ratio: '5:4'
+                        default: false
+                        enabled: true
+                      - code: '9:21'
+                        name: '9:21'
+                        ratio: '9:21'
+                        default: false
+                        enabled: true
+                      additional_fields: []
+                    - code: stable-diffusion-image
+                      name: Stable Diffusion 3.5 ITI
+                      description: Produces the most detailed and realistic images
+                        to images, though it’s slower, making it ideal for commercial-quality
+                        work. Image To Image
+                      price: '0.150000'
+                      mode: IMAGE_TO_IMAGE
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                    - code: controlnet11
+                      name: ControlNet 11
+                      description: ControlNet is a neural network that controls image-to-image
+                        generation in Stable Diffusion by adding extra conditions.
+                      price: '0.140000'
+                      mode: IMAGE_TO_IMAGE
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                    - code: dall-e
+                      name: DALL-E
+                      description: Best for creating a wide range of imaginative and
+                        unique styles, perfect for creative projects.
+                      price: '0.140000'
+                      mode: TEXT_TO_IMAGE
+                      enabled: true
+                      sizes:
+                      - code: 1024x1024
+                        name: 1024x1024
+                        ratio: '1:1'
+                        default: true
+                        enabled: true
+                      - code: 1024x1792
+                        name: 1024x1792
+                        ratio: '9:16'
+                        default: false
+                        enabled: true
+                      - code: 1792x1024
+                        name: 1792x1024
+                        ratio: '16:9'
+                        default: false
+                        enabled: true
+                      additional_fields: []
+                    - code: sdxl-lightning-4step
+                      name: SDXL Lightning 4 Steps
+                      description: Quick at producing decent, lower-resolution images;
+                        good for fast content.
+                      price: '0.040000'
+                      mode: TEXT_TO_IMAGE
+                      enabled: true
+                      sizes:
+                      - code: 256x256
+                        name: 256x256
+                        ratio: '1:1'
+                        default: false
+                        enabled: true
+                      - code: 1024x1024
+                        name: 1024x1024
+                        ratio: '1:1'
+                        default: false
+                        enabled: true
+                      - code: 512x512
+                        name: 512x512
+                        ratio: '1:1'
+                        default: true
+                        enabled: true
+                      - code: 1792x1024
+                        name: 1792x1024
+                        ratio: '16:9'
+                        default: false
+                        enabled: true
+                      additional_fields: []
+                    - code: minimax
+                      name: Minimax
+                      description: some description
+                      price: '0.003000'
+                      mode: TEXT_TO_IMAGE
+                      enabled: true
+                      sizes:
+                      - code: '1:1'
+                        name: '1:1'
+                        ratio: '1:1'
+                        default: true
+                        enabled: true
+                      - code: '16:9'
+                        name: '16:9'
+                        ratio: '16:9'
+                        default: false
+                        enabled: true
+                      - code: '4:3'
+                        name: '4:3'
+                        ratio: '4:3'
+                        default: false
+                        enabled: true
+                      - code: '3:2'
+                        name: '3:2'
+                        ratio: '3:2'
+                        default: false
+                        enabled: true
+                      - code: '2:3'
+                        name: '2:3'
+                        ratio: '2:3'
+                        default: false
+                        enabled: true
+                      - code: '3:4'
+                        name: '3:4'
+                        ratio: '3:4'
+                        default: false
+                        enabled: true
+                      - code: '9:16'
+                        name: '9:16'
+                        ratio: '9:16'
+                        default: false
+                        enabled: true
+                      - code: '21:9'
+                        name: '21:9'
+                        ratio: '21:9'
+                        default: false
+                        enabled: true
+                      additional_fields: []
+                  summary: Success example
+                  description: "\n                Please use the TEXT_TO_IMAGE model\
+                    \ for text to image conversion and IMAGE_TO_IMAGE for image to\
+                    \ image conversion.\n                Text to image models also\
+                    \ have a sizes list.\n                Each model can have additional\
+                    \ fields. Additional fields are optional.\n                "
+          description: ''
+  /v1/external/image/text-to-image/:
+    post:
+      operationId: image_text_to_image_create
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      tags:
+      - image
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageConversionRequest'
+            examples:
+              SuccessResponse:
+                value:
+                  title: The fun programmer
+                  text: Please generate an image about a fun programmer
+                  model: leonardo-phoenix-fast
+                  size: '1:1'
+                  additional_fields:
+                    contrast: medium
+                summary: The request example
+                description: "\n                You should pass the model and size\
+                  \ values. \n                The model value should be the code of\
+                  \ the model you want to use. \n                The size value should\
+                  \ be the ratio or size code.\n                The additional_fields\
+                  \ is optional. Each model can have specific additional fields.\n\
+                  \                "
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ImageConversionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ImageConversionRequest'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageConversion'
+              examples:
+                ExecutedResponse:
+                  value:
+                    id: 359
+                    title: The fun programer
+                    code_ref: L39RRXlZphZIt6eH
+                    output: png
+                    text: Please generate an image about a fun programmer
+                    uploaded_image_url: null
+                    small_uploaded_image_url: null
+                    status: pending
+                    created_at: '2025-04-14T06:43:15.355903Z'
+                    modified_at: '2025-04-14T06:43:15.355941Z'
+                    model:
+                      code: flux-pro
+                      name: Flux 1.1 Pro Ultra
+                      description: Great for realistic, high-detail images that closely
+                        match your prompts—ideal if you need precision.
+                      price: '0.100000'
+                    size: '1:1'
+                    url_file: https://tts-clariteia.s3.eu-west-1.amazonaws.com/images/QIMr2ObfNFsaCgn.png
+                    thumbs_up: false
+                    thumbs_down: false
+                    source_image_path: null
+                  summary: Success example
+                  description: "\n                You receive the code_ref value.\
+                    \ Please use this value to check the status of the conversion.\
+                    \ \n                Please use url_file to upload the speech after\
+                    \ the conversion is completed\n                "
+          description: ''
+  /v1/external/llm/check-status/{code_ref}/:
+    get:
+      operationId: llm_check_status_retrieve
+      description: |-
+        The endpoint to check the LLM conversion status.
+        Please use the code_ref value to check the status of the conversion.
+         If the status is completed you will receive the response text.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: path
+        name: code_ref
+        schema:
+          type: string
+        required: true
+      tags:
+      - llm
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseConversionStatusResponse'
+              examples:
+                SuccessResponse:
+                  value:
+                    status: completed
+                    response: ''
+                  summary: Response example - conversion completed
+                  description: The status should be completed and you can upload the
+                    file using the url_file from your conversion request or check
+                    the response field.
+                PendingResponse:
+                  value:
+                    status: pending
+                    response: ''
+                  summary: Response example - conversion pending
+                  description: If the conversion is in pending status please try to
+                    check in a couple seconds.
+          description: ''
+  /v1/external/llm/conversions/{id}/:
+    get:
+      operationId: llm_conversions_retrieve
+      description: The endpoint to retrieve a specific LLM conversion
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - llm
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LLMConversion'
+          description: ''
+  /v1/external/llm/models/:
+    get:
+      operationId: llm_models_list
+      description: The endpoint to retrieve the list of available LLM conversion models.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - llm
+      security:
+      - ApiKeyAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AudioConversionModel'
+              examples:
+                ExecutedResponse:
+                  value:
+                  - - code: claude_haiku
+                      name: Claude Haiku
+                      description: Claude 3 Haiku, the fastest and most affordable
+                        model in its intelligence class.
+                      credits_per_input_token: '0.100000'
+                      credits_per_output_token: '0.200000'
+                      enabled: true
+                    - code: claude_sonnet
+                      name: Claude Sonnet
+                      description: Claude 3.5 Sonnet sets new industry benchmarks
+                        for graduate-level reasoning (GPQA), undergraduate-level knowledge
+                        (MMLU), and coding proficiency (HumanEval).
+                      credits_per_input_token: '0.020000'
+                      credits_per_output_token: '0.020000'
+                      enabled: true
+                    - code: deepseek
+                      name: DeepSeek
+                      description: DeepSeek, unravel the mystery of AGI with curiosity.
+                        Answer the essential question with long-termism.
+                      credits_per_input_token: '0.010000'
+                      credits_per_output_token: '0.020000'
+                      enabled: true
+                    - code: llama70
+                      name: 'Llama: 70%'
+                      description: The open-source AI models you can fine-tune, distill
+                        and deploy anywhere.
+                      credits_per_input_token: '0.010000'
+                      credits_per_output_token: '0.020000'
+                      enabled: true
+                    - code: llama450
+                      name: Llama 450
+                      description: Develop highly performative and efficient applications
+                        from our latest release.
+                      credits_per_input_token: '0.010000'
+                      credits_per_output_token: '0.020000'
+                      enabled: true
+                    - code: gpt-4o
+                      name: ChatGpt
+                      description: description
+                      credits_per_input_token: '0.100000'
+                      credits_per_output_token: '0.100000'
+                      enabled: true
+                    - code: gpt-4o-mini
+                      name: Gpt-4o Mini
+                      description: descriptosdh
+                      credits_per_input_token: '0.010000'
+                      credits_per_output_token: '0.010000'
+                      enabled: true
+                  summary: Success example
+                  description: The full list of available models. Please use the model
+                    code to start the conversion process
+          description: ''
+  /v1/external/llm/send-request/:
+    post:
+      operationId: llm_send_request_create
+      description: The endpoint to start the LLM conversion process.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      tags:
+      - llm
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMConversionRequest'
+            examples:
+              SuccessResponse:
+                value:
+                  title: The fun programmer
+                  system_prompt: "You are an AI model that generates creative prompts\
+                    \ for image generation. \n    Provide a list of diverse and imaginative\
+                    \ prompts that can be used to test various image generation models."
+                  message: "\n    1. A futuristic cityscape at sunset, with flying\
+                    \ cars and neon lights reflecting off glass skyscrapers.\n   \
+                    \ 2. A serene forest scene with a hidden waterfall, surrounded\
+                    \ by vibrant wildflowers and wildlife.\n    3. A whimsical underwater\
+                    \ world with colorful coral reefs and a variety of exotic fish.\n\
+                    \    4. A cozy, rustic cabin in the mountains during winter, with\
+                    \ smoke coming from the chimney and snow gently falling.\n   \
+                    \ 5. A bustling medieval marketplace with vendors selling fruits,\
+                    \ spices, and handmade crafts.\n    6. A magical library with\
+                    \ floating books and a spiral staircase leading to a starry sky.\n\
+                    \    7. An alien landscape with strange rock formations and a\
+                    \ sky filled with multiple moons.\n    8. A vintage 1950s diner\
+                    \ with classic cars parked outside and people enjoying milkshakes\
+                    \ inside.\n    9. A fantasy castle on a cliff overlooking a vast\
+                    \ ocean, with dragons flying in the distance.\n    10. A peaceful\
+                    \ Zen garden with a koi pond, stone lanterns, and cherry blossom\
+                    \ trees in full bloom.\n    "
+                  model: gpt-4o
+                  max_tokens: 8000
+                summary: The request example
+                description: |-
+                  You should pass the model, a system prompt and a message values.
+                                      The model value should be the code of the model you want to use.
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LLMConversionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LLMConversionRequest'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LLMConversion'
+              examples:
+                ExecutedResponse:
+                  value:
+                    id: 21
+                    title: Image Generation Request
+                    model:
+                      code: gpt-4o
+                      name: ChatGpt
+                      description: description
+                      credits_per_input_token: '0.100000'
+                      credits_per_output_token: '0.100000'
+                      enabled: true
+                    code_ref: 4PZUGvDJpPVRLtcO
+                    status: completed
+                    created_at: '2025-04-15T06:26:11.889506Z'
+                    modified_at: '2025-04-15T06:26:19.669056Z'
+                    system_prompt: You are an AI model that generates creative prompts
+                      for image generation. Provide a list of diverse and imaginative
+                      prompts that can be used to test various image generation models.
+                    user_message: |-
+                      1. A futuristic cityscape at sunset, with flying cars and neon lights reflecting off glass skyscrapers.
+                      2. A serene forest scene with a hidden waterfall, surrounded by vibrant wildflowers and wildlife.
+                      3. A whimsical underwater world with colorful coral reefs and a variety of exotic fish.
+                      4. A cozy, rustic cabin in the mountains during winter, with smoke coming from the chimney and snow gently falling.
+                      5. A bustling medieval marketplace with vendors selling fruits, spices, and handmade crafts.
+                      6. A magical library with floating books and a spiral staircase leading to a starry sky.
+                      7. An alien landscape with strange rock formations and a sky filled with multiple moons.
+                      8. A vintage 1950s diner with classic cars parked outside and people enjoying milkshakes inside.
+                      9. A fantasy castle on a cliff overlooking a vast ocean, with dragons flying in the distance.
+                      10. A peaceful Zen garden with a koi pond, stone lanterns, and cherry blossom trees in full bloom.
+                    response: ''
+                    thumbs_up: false
+                    thumbs_down: false
+                  summary: Success example
+                  description: You receive the code_ref value. The resulting response
+                    will be in the 'response' field
+          description: ''
+  /v1/external/speech/check-status/{code_ref}/:
+    get:
+      operationId: speech_check_status_retrieve
+      description: The endpoint to check conversion status. Use your code_ref value
+        to check the status.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: path
+        name: code_ref
+        schema:
+          type: string
+        required: true
+      tags:
+      - speech
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpeechConversionStatusResponse'
+              examples:
+                SuccessResponse:
+                  value:
+                    status: completed
+                    duration: 0:00:02
+                  summary: Response example - conversion completed
+                  description: The status should be completed and you can upload the
+                    audio file using the url_file from the Text To Speech response
+                PendingResponse:
+                  value:
+                    status: pending
+                    duration: 0:00:00
+                  summary: Response example - conversion pending
+                  description: If the conversion is in pending status please try to
+                    check in a couple seconds.
+          description: ''
+  /v1/external/speech/cloned-voices:
+    get:
+      operationId: speech_cloned_voices_list
+      description: The endpoint to retreive a list of all cloned voices.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: query
+        name: gender__in
+        schema:
+          type: string
+        description: 'The array of genders  to filter the voices for example: female'
+      - in: query
+        name: language_ref__in
+        schema:
+          type: string
+        description: 'The array of language codes to filter the voices for example:
+          ''en,es'''
+      - in: query
+        name: name__icontains
+        schema:
+          type: string
+        description: A voice name should contain a provided value.
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - in: query
+        name: region_ref__in
+        schema:
+          type: string
+        description: 'The array of region ids  to filter the voices for example: 75,110'
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - speech
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClonedVoice'
+              examples:
+                ExecutedResponse:
+                  value:
+                  - id: 61
+                    user: 11
+                    name: Test Clone
+                    language: en
+                    language_details:
+                      code: en
+                      name: English
+                      cloneable: true
+                      profile_language: true
+                    file_url: https://voicegen-storage.s3.amazonaws.com/media/cloned/2025/4/4/0p7iVgGEjM7GISwo.mp3
+                    gender: male
+                    price_tier:
+                      name: Elite
+                      code: ELT
+                      credits_per_char: '0.160000'
+                      description: Top-tier voices with exceptional quality, perfect
+                        for high-end productions. Consumes 160 credits per thousand
+                        characters.
+                    provider: ELEVENLABS
+                    provider_details:
+                      code: ELEVENLABS
+                      name: Elevenlabs
+                      additional_fields: []
+                    created_at: '2025-04-04T06:52:14.096017Z'
+                  summary: Success example
+                  description: You can take the voice id to indicate in the conversion
+                    process
+          description: ''
+  /v1/external/speech/conversions/{id}/:
+    get:
+      operationId: speech_conversions_retrieve
+      description: The endpoint to retrieve a specific conversion details
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - speech
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversion'
+          description: ''
+  /v1/external/speech/languages/:
+    get:
+      operationId: speech_languages_list
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - speech
+      security:
+      - ApiKeyAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Language'
+          description: ''
+  /v1/external/speech/regions/:
+    get:
+      operationId: speech_regions_list
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - speech
+      security:
+      - ApiKeyAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Region'
+          description: ''
+  /v1/external/speech/text-to-speech/:
+    post:
+      operationId: speech_text_to_speech_create
+      description: The endpoint to start the speech conversion process
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      tags:
+      - speech
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpeechConversionRequest'
+            examples:
+              SuccessResponse:
+                value:
+                  title: My new speech
+                  speed: 1
+                  voice: 3029
+                  additional_fields:
+                    speed: 1
+                    volume: 1
+                    pitch: 0
+                    emotion: auto
+                    sample_rate: '32000'
+                    bitrate: '128000'
+                    channel: stereo
+                    language_boost: None
+                  output: mp3
+                  text: Text to convert
+                  is_clone: false
+                summary: The request example with standard voice
+                description: "\n                is_clone is set to False if you don't\
+                  \ use your cloned voice. The additional_fields is optional. \n \
+                  \               Each voice provider can have specific additional\
+                  \ fields.\n                "
+              ClonedVoice:
+                value:
+                  title: My new speech
+                  speed: 1
+                  voice: 233
+                  additional_fields:
+                    speed: 1
+                    volume: 1
+                    pitch: 0
+                    emotion: auto
+                    sample_rate: '32000'
+                    bitrate: '128000'
+                    channel: stereo
+                    language_boost: None
+                  output: mp3
+                  text: Text to convert
+                  is_clone: true
+                summary: The request example with cloned voice
+                description: "\n                is_clone is set to True. The additional_fields\
+                  \ is optional. \n                Each voice provider can have specific\
+                  \ additional fields.\n                "
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SpeechConversionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SpeechConversionRequest'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversion'
+              examples:
+                ExecutedResponse:
+                  value:
+                    id: 189
+                    title: Test Record
+                    code_ref: vsoRIlACbLg1WYQ0
+                    output: mp3
+                    text: Text  to  Test Functionality
+                    speed: '1.0'
+                    status: pending
+                    created_at: '2025-04-12T07:41:39.268256Z'
+                    modified_at: '2025-04-12T07:41:39.268317Z'
+                    voice:
+                      id: 3137
+                      name: Aaron
+                      gender: male
+                      api_name: en-US-Standard-J
+                      language_ref:
+                        code: en
+                        name: English
+                        cloneable: true
+                        profile_language: true
+                      region_ref:
+                        id: 27
+                        code: US
+                        name: United States
+                      provider: GOOGLE
+                      provider_details:
+                        code: GOOGLE
+                        name: google
+                        additional_fields: []
+                      api_engine: null
+                      example: https://tts-clariteia.s3.eu-west-1.amazonaws.com/audios/audios/K0RFPFw0UVNe1hQP.mp3
+                      status: true
+                      quality: Standard
+                    cloned_voice: true
+                    url_file: https://tts-clariteia.s3.eu-west-1.amazonaws.com/2d8Vxm9SrWgQKjmr.mp3
+                    duration: null
+                    thumbs_up: true
+                    thumbs_down: true
+                  summary: Success example
+                  description: "\n                You receive the code_ref value.\
+                    \ Please use this value to check the status of the conversion.\
+                    \ \n                Please use url_file to upload the speech after\
+                    \ the conversion is completed\n                "
+          description: ''
+  /v1/external/speech/voices/:
+    get:
+      operationId: speech_voices_list
+      description: The endpoint to retrieve a list of available voices. You can filter
+        and paginate.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: query
+        name: gender__in
+        schema:
+          type: string
+        description: 'The array of genders  to filter the voices for example: female'
+      - in: query
+        name: language_ref__in
+        schema:
+          type: string
+        description: 'The array of language codes to filter the voices for example:
+          ''en,es'''
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: name__icontains
+        schema:
+          type: string
+        description: A voice name should contain a provided value.
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - in: query
+        name: price_tier__in
+        schema:
+          type: string
+        description: 'The array of pricing tiers to filter the voices. The following
+          engines are available: ESS, PRO, PRM, ELT, ULT'
+      - in: query
+        name: provider_id__in
+        schema:
+          type: string
+        description: The array of providers to filter the voices. You can use prviders
+          enpoint to retrieve the list of providers.
+      - in: query
+        name: quality__in
+        schema:
+          type: string
+        description: 'The array of engines to filter the voices. The following engines
+          are available: Generative, Generative HD, Neural, Standard, Wavenet'
+      - in: query
+        name: region_ref__in
+        schema:
+          type: string
+        description: 'The array of region ids  to filter the voices for example: 75,110'
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - speech
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedVoicesList'
+              examples:
+                ExecutedResponse:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?offset=400&limit=100
+                    previous: http://api.example.org/accounts/?offset=200&limit=100
+                    results:
+                    - id: 3137
+                      name: Aaron
+                      gender: male
+                      api_name: en-US-Standard-J
+                      provider: GOOGLE
+                      provider_details:
+                        code: GOOGLE
+                        name: Google
+                        additional_fields: []
+                      api_engine: null
+                      description: null
+                      price_tier:
+                        name: Essential
+                        code: ESS
+                        credits_per_char: '0.010000'
+                        description: Affordable voices suitable for basic needs and
+                          producing content at scale. Consumes 10 credits per thousand
+                          characters.
+                      choice_badge: true
+                      language_ref: en
+                      language_details:
+                        code: en
+                        name: English
+                        cloneable: true
+                        profile_language: true
+                      region_ref: 27
+                      region_details:
+                        id: 27
+                        code: US
+                        name: United States
+                      example: https://tts-clariteia.s3.eu-west-1.amazonaws.com/audios/audios/K0RFPFw0UVNe1hQP.mp3
+                      status: true
+                      styles: []
+                      finger_up: true
+                      finger_down: true
+                      rating: null
+                      quality: Standard
+                  summary: Success example
+                  description: You can take the voice id to indicate in the conversion
+                    process
+          description: ''
+  /v1/external/speech/voices/providers/:
+    get:
+      operationId: speech_voices_providers_list
+      description: The endpoint to retrieve the list of available voice providers.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - speech
+      security:
+      - ApiKeyAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VoiceProvider'
+          description: ''
+  /v1/external/video/check-status/{code_ref}/:
+    get:
+      operationId: video_check_status_retrieve
+      description: |-
+        The endpoint to check the video conversion status.
+        Please use the code_ref value to check the status of the conversion.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: path
+        name: code_ref
+        schema:
+          type: string
+        required: true
+      tags:
+      - video
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseConversionStatusResponse'
+              examples:
+                SuccessResponse:
+                  value:
+                    status: completed
+                    response: ''
+                  summary: Response example - conversion completed
+                  description: The status should be completed and you can upload the
+                    file using the url_file from your conversion request or check
+                    the response field.
+                PendingResponse:
+                  value:
+                    status: pending
+                    response: ''
+                  summary: Response example - conversion pending
+                  description: If the conversion is in pending status please try to
+                    check in a couple seconds.
+          description: ''
+  /v1/external/video/conversions/{id}/:
+    get:
+      operationId: video_conversions_retrieve
+      description: The endpoint to retrieve a specific video conversion
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - video
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoConversion'
+          description: ''
+  /v1/external/video/convert-to-video/:
+    post:
+      operationId: video_convert_to_video_create
+      description: The endpoint to start the video conversion process.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      tags:
+      - video
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VideoConversionRequest'
+            examples:
+              TextToVideoRequest:
+                value:
+                  title: The fun programmer
+                  text: The video about a fun programmer
+                  model: google-veo3
+                  ratio: '1:1'
+                  additional_fields:
+                    negative_prompt: no text, no logo, no watermark
+                summary: Text to video request
+                description: "\n                You should pass the title, text, model,\
+                  \ and ratio.\n                Each model can have additional fields.\
+                  \ Additional fields are optional.\n                "
+              ImageToVideoRequest:
+                value:
+                  title: A fun dog with an effect
+                  text: Please add a zoom effect
+                  model: kling_standard
+                  source_image_path: https://tts-clariteia.s3.eu-west-1.amazonaws.com/images/vleqwD48aiTCk8d.png
+                summary: Image to video request
+                description: "\n                You should pass the title, text, model,\
+                  \ and source_image_path.\n                Each model can have additional\
+                  \ fields. Additional fields are optional.\n                "
+              AddAudioToVideoRequest:
+                value:
+                  title: Dog and fun music
+                  text: add a fun music
+                  model: add_audio
+                  source_video_path: https://tts-clariteia.s3.eu-west-1.amazonaws.com/video/WN0pZB7vLqAjNKK.mp4
+                summary: Add audio to video request
+                description: "You should pass the title, text and source_video_path.\n\
+                  \                                "
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VideoConversionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VideoConversionRequest'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoConversion'
+              examples:
+                TextToVideoResponse:
+                  value:
+                    id: 116
+                    title: The fun programmer
+                    text: The video about a fun programmer
+                    source_image_path: null
+                    ratio: '1:1'
+                    model:
+                      code: minimax-t
+                      name: Minimax
+                      description: ReplicateMinimaxVideo
+                      price: '0.280000'
+                    code_ref: jDXyrC4Pb7aufO3E
+                    output: mp4
+                    status: pending
+                    created_at: '2025-04-14T11:14:23.003537Z'
+                    modified_at: '2025-04-14T11:14:23.003577Z'
+                    uploaded_video_url: null
+                    filename: 56yVnfUMZqZndNm.mp4
+                    url_file: https://tts-clariteia.s3.eu-west-1.amazonaws.com/video/56yVnfUMZqZndNm.mp4
+                    thumbs_up: false
+                    thumbs_down: false
+                  summary: Text to video response
+                  description: "You receive the code_ref value. Please use this value\
+                    \ to check the status of the conversion. \n                  \
+                    \      Please use url_file to upload the speech after the conversion\
+                    \ is completed"
+                ImageToVideoResponse:
+                  value:
+                    id: 117
+                    title: Generate an Image with Zoom Effect
+                    text: Please add a zoom effect
+                    source_image_path: https://tts-clariteia.s3.eu-west-1.amazonaws.com/images/vleqwD48aiTCk8d.png
+                    ratio: null
+                    model:
+                      code: kling_standard
+                      name: Kling
+                      description: Transforms images into vibrant, crisp visual content,
+                        highlighting details and colors for striking outputs.
+                      price: '0.450000'
+                    code_ref: hxQ92YNPdyy1S1YR
+                    output: mp4
+                    status: pending
+                    created_at: '2025-04-14T11:33:15.809435Z'
+                    modified_at: '2025-04-14T11:33:15.809518Z'
+                    uploaded_video_url: null
+                    filename: WN0pZB7vLqAjNKK.mp4
+                    url_file: https://tts-clariteia.s3.eu-west-1.amazonaws.com/video/WN0pZB7vLqAjNKK.mp4
+                    thumbs_up: false
+                    thumbs_down: false
+                  summary: Image to video response
+                  description: "You receive the code_ref value. Please use this value\
+                    \ to check the status of the conversion. \n                  \
+                    \          Please use url_file to upload the speech after the\
+                    \ conversion is completed"
+                AddAudioToVideoResponse:
+                  value:
+                    id: 118
+                    title: Dog and fun music
+                    text: add a fun music
+                    source_image_path: null
+                    ratio: null
+                    model:
+                      code: add_audio
+                      name: Add Audio To Video
+                      description: ''
+                      price: '0.030000'
+                    code_ref: IvWNJk71crgWiOJz
+                    output: mp4
+                    status: pending
+                    created_at: '2025-04-14T11:46:52.766221Z'
+                    modified_at: '2025-04-14T11:46:52.766265Z'
+                    uploaded_video_url: null
+                    filename: 54Y562bUi2fpcxO.mp4
+                    url_file: https://tts-clariteia.s3.eu-west-1.amazonaws.com/video/54Y562bUi2fpcxO.mp4
+                    thumbs_up: false
+                    thumbs_down: false
+                  summary: Add audio to video response
+                  description: "You receive the code_ref value. Please use this value\
+                    \ to check the status of the conversion. \n                  \
+                    \              Please use url_file to upload the speech after\
+                    \ the conversion is completed"
+          description: ''
+  /v1/external/video/models/:
+    get:
+      operationId: video_models_list
+      description: The endpoint to retrieve the list of available video conversion
+        models.
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        description: The value should begin from 'Api-Key ' followed by your key
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - video
+      security:
+      - ApiKeyAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoConversionModel'
+              examples:
+                ExecutedResponse:
+                  value:
+                  - - code: google-veo3
+                      name: Google's Veo 3
+                      description: Google DeepMind’s flagship text-to-video model
+                        now generates 8‑second cinematic clips with native audio—ambient
+                        sounds, dialogue, and effects all in one take. It excels at
+                        capturing camera motion, realistic physics, and prompt accuracy,
+                        making it ideal for quick storytelling, visual prototyping,
+                        or immersive game-world previews.
+                      price: '8.000000'
+                      mode: TEXT_TO_VIDEO
+                      placeholder: ''
+                      additional_fields:
+                      - code: negative_prompt
+                        type: TEXT
+                        name: Negative prompt
+                        default_value: null
+                        min: null
+                        max: null
+                        step: null
+                        options: ''
+                        style_class: null
+                        required: false
+                        enabled: true
+                      enabled: true
+                      sizes:
+                      - code: 1280x720
+                        name: 1280x720
+                        ratio: '16:9'
+                        default: true
+                        enabled: true
+                    - code: luma
+                      name: Luma
+                      description: Ideal for creating high-quality, realistic videos
+                        from images, perfect for professional projects.
+                      price: '0.600000'
+                      mode: IMAGE_TO_VIDEO
+                      placeholder: ''
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                    - code: cogx
+                      name: cogX
+                      description: Excels at generating dynamic videos from static
+                        images, offering an efficient solution for quick animations.
+                      price: '0.450000'
+                      mode: IMAGE_TO_VIDEO
+                      placeholder: ''
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                    - code: runway
+                      name: Runway 5s
+                      description: Generates videos with natural camera movements
+                        and cinematic finishes, delivering versatile, high-quality
+                        results.
+                      price: '0.450000'
+                      mode: IMAGE_TO_VIDEO
+                      placeholder: ''
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                    - code: runway-10
+                      name: Runway 10s
+                      description: Generates videos with natural camera movements
+                        and cinematic finishes, delivering versatile, high-quality
+                        results.
+                      price: '0.900000'
+                      mode: IMAGE_TO_VIDEO
+                      placeholder: ''
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                    - code: kling_standard
+                      name: Kling
+                      description: Transforms images into vibrant, crisp visual content,
+                        highlighting details and colors for striking outputs.
+                      price: '0.450000'
+                      mode: IMAGE_TO_VIDEO
+                      placeholder: ''
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                    - code: kling_pro
+                      name: King Pro
+                      description: Optimizes consistency and precision in conversion,
+                        achieving refined, professional-grade quality ideal for demanding
+                        projects.
+                      price: '0.800000'
+                      mode: IMAGE_TO_VIDEO
+                      placeholder: ''
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                    - code: wan2-1
+                      name: WAN2.1
+                      description: Wan is an advanced and powerful visual generation
+                        model developed by Tongyi Lab of Alibaba Group. It can generate
+                        videos based on text, images, and other control signals. The
+                        Wan2.1 series models are now fully open-source.
+                      price: '0.320000'
+                      mode: TEXT_TO_VIDEO
+                      placeholder: ''
+                      enabled: true
+                      sizes:
+                      - code: '16:9'
+                        name: '16:9'
+                        ratio: '16:9'
+                        default: true
+                        enabled: true
+                      - code: '9:16'
+                        name: '9:16'
+                        ratio: '9:16'
+                        default: false
+                        enabled: true
+                      additional_fields: []
+                    - code: add_audio
+                      name: Add Audio To Video
+                      description: ''
+                      price: '0.030000'
+                      mode: ADD_AUDIO_TO_VIDEO
+                      placeholder: ''
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                    - code: minimax
+                      name: Minimax
+                      description: ReplicateMinimaxVideo
+                      price: '0.280000'
+                      mode: IMAGE_TO_VIDEO
+                      placeholder: ''
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                    - code: minimax-t
+                      name: Minimax
+                      description: ReplicateMinimaxVideo
+                      price: '0.280000'
+                      mode: TEXT_TO_VIDEO
+                      placeholder: ''
+                      enabled: true
+                      sizes:
+                      - code: '1:1'
+                        name: '1:1'
+                        ratio: '1:1'
+                        default: true
+                        enabled: true
+                      additional_fields: []
+                    - code: minimax-director
+                      name: Minimax Director
+                      description: ReplicateMinimaxVideo01DirectorCommand
+                      price: '0.250000'
+                      mode: IMAGE_TO_VIDEO
+                      placeholder: 'Camera movement instructions can be added using
+                        square brackets (e.g. [Pan left] or [Zoom in]). You can use
+                        up to 3 combined movements per prompt. Supported movements:
+                        Truck left/right, Pan left/right, Push in/Pull out, Pedestal
+                        up/down, Tilt up/down, Zoom in/out, Shake, Tracking shot,
+                        Static shot. For example: [Truck left, Pan right, Zoom in]'
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                    - code: minimax-director-t
+                      name: Minimax Director
+                      description: ReplicateMinimaxVideo01DirectorCommand
+                      price: '0.250000'
+                      mode: TEXT_TO_VIDEO
+                      placeholder: 'Camera movement instructions can be added using
+                        square brackets (e.g. [Pan left] or [Zoom in]). You can use
+                        up to 3 combined movements per prompt. Supported movements:
+                        Truck left/right, Pan left/right, Push in/Pull out, Pedestal
+                        up/down, Tilt up/down, Zoom in/out, Shake, Tracking shot,
+                        Static shot. For example: [Truck left, Pan right, Zoom in]'
+                      enabled: true
+                      sizes:
+                      - code: '1:1'
+                        name: '1:1'
+                        ratio: '1:1'
+                        default: true
+                        enabled: true
+                      additional_fields: []
+                    - code: minimax-live
+                      name: Minimax Live
+                      description: ReplicateMinimaxVideo01LiveCommand
+                      price: '0.280000'
+                      mode: IMAGE_TO_VIDEO
+                      placeholder: ''
+                      enabled: true
+                      sizes: []
+                      additional_fields: []
+                  summary: Success example
+                  description: "\n                There are three types of models.\
+                    \ IMAGE_TO_VIDEO, ADD_AUDIO_TO_VIDEO, and TEXT_TO_VIDEO.\n   \
+                    \             Text to video models also have a sizes list.\n \
+                    \               Each model can have additional fields. Additional\
+                    \ fields are optional.\n                "
+          description: ''
+components:
+  schemas:
+    AdditionalModelFields:
+      type: object
+      properties:
+        code:
+          type: string
+        type:
+          type: string
+        items_type:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        default_value:
+          type: string
+        min:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        max:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        step:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        options:
+          type: string
+        style_class:
+          type: string
+        small_style_class:
+          type: string
+        required:
+          type: boolean
+        enabled:
+          type: boolean
+      required:
+      - code
+      - default_value
+      - description
+      - enabled
+      - items_type
+      - max
+      - min
+      - name
+      - options
+      - required
+      - small_style_class
+      - step
+      - style_class
+      - type
+    AudioConversion:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 100
+        code_ref:
+          type: string
+          nullable: true
+          maxLength: 50
+        output:
+          type: string
+          nullable: true
+          maxLength: 20
+        text:
+          type: string
+          nullable: true
+        input:
+          nullable: true
+        uploaded_audio_url:
+          type: string
+          readOnly: true
+        seconds:
+          type: number
+          format: double
+        status:
+          type: string
+          maxLength: 30
+        error:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        model:
+          allOf:
+          - $ref: '#/components/schemas/AudioConversionModel'
+          readOnly: true
+        url_file:
+          type: string
+          readOnly: true
+        thumbs_up:
+          type: boolean
+        thumbs_down:
+          type: boolean
+        source_audio_path:
+          type: string
+          nullable: true
+          maxLength: 250
+      required:
+      - created_at
+      - id
+      - model
+      - modified_at
+      - status
+      - title
+      - uploaded_audio_url
+      - url_file
+    AudioConversionModel:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 50
+        name:
+          type: string
+          maxLength: 120
+        description:
+          type: string
+          nullable: true
+        has_duration_in_seconds:
+          type: boolean
+        additional_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalModelFields'
+          readOnly: true
+        credits_per_second:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,6})?$
+          nullable: true
+        mode:
+          $ref: '#/components/schemas/AudioConversionModelModeEnum'
+        enabled:
+          type: boolean
+      required:
+      - additional_fields
+      - code
+      - name
+    AudioConversionModelModeEnum:
+      enum:
+      - MUSIC
+      - SOUND
+      - MUSIC_TO_MUSIC
+      type: string
+      description: |-
+        * `MUSIC` - Music
+        * `SOUND` - Sound
+        * `MUSIC_TO_MUSIC` - Music to Music
+    AudioConversionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        speed:
+          type: number
+          format: double
+          default: 1.0
+        model:
+          type: string
+        seconds:
+          type: integer
+        source_path:
+          type: string
+          format: uri
+      required:
+      - model
+      - seconds
+      - title
+    BaseConversionStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        response:
+          type: string
+      required:
+      - response
+      - status
+    BaseImageConversion:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+        url_file:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - title
+      - url_file
+    BlankEnum:
+      enum:
+      - ''
+    ClonedVoice:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        language:
+          type: string
+          nullable: true
+        language_details:
+          allOf:
+          - $ref: '#/components/schemas/Language'
+          readOnly: true
+        file_url:
+          type: string
+          readOnly: true
+        gender:
+          type: string
+          nullable: true
+          maxLength: 50
+        price_tier:
+          allOf:
+          - $ref: '#/components/schemas/VoiceTier'
+          readOnly: true
+        type:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/TypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        uuid_ref:
+          type: string
+          nullable: true
+          maxLength: 50
+        model:
+          type: string
+          nullable: true
+          maxLength: 50
+        provider:
+          type: string
+          nullable: true
+        provider_details:
+          allOf:
+          - $ref: '#/components/schemas/VoiceProvider'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - file_url
+      - id
+      - language_details
+      - name
+      - price_tier
+      - provider_details
+      - user
+    Conversion:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 100
+        code_ref:
+          type: string
+          nullable: true
+          maxLength: 50
+        output:
+          type: string
+          nullable: true
+          maxLength: 20
+        text:
+          type: string
+        speed:
+          type: string
+          maxLength: 20
+        input:
+          nullable: true
+        status:
+          type: string
+          maxLength: 30
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        voice:
+          allOf:
+          - $ref: '#/components/schemas/VoicesDetails'
+          readOnly: true
+        cloned_voice:
+          allOf:
+          - $ref: '#/components/schemas/ClonedVoice'
+          readOnly: true
+        url_file:
+          type: string
+          readOnly: true
+        duration:
+          type: string
+          nullable: true
+          maxLength: 30
+        price_tier:
+          allOf:
+          - $ref: '#/components/schemas/VoiceTier'
+          readOnly: true
+        thumbs_up:
+          type: boolean
+        thumbs_down:
+          type: boolean
+      required:
+      - cloned_voice
+      - created_at
+      - id
+      - modified_at
+      - price_tier
+      - status
+      - text
+      - title
+      - url_file
+      - voice
+    ConversionModel:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 50
+        name:
+          type: string
+          maxLength: 120
+        description:
+          type: string
+          nullable: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,6})?$
+          nullable: true
+      required:
+      - code
+      - name
+    ConversionModelSize:
+      type: object
+      properties:
+        code:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        ratio:
+          type: string
+          readOnly: true
+          nullable: true
+        default:
+          type: boolean
+          readOnly: true
+        enabled:
+          type: boolean
+          readOnly: true
+      required:
+      - code
+      - default
+      - enabled
+      - name
+      - ratio
+    ImageConversion:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+        code_ref:
+          type: string
+          readOnly: true
+          nullable: true
+        output:
+          type: string
+          readOnly: true
+          nullable: true
+        text:
+          type: string
+          readOnly: true
+          nullable: true
+        input:
+          readOnly: true
+          nullable: true
+        uploaded_image_url:
+          type: string
+          readOnly: true
+        small_uploaded_image_url:
+          type: string
+          readOnly: true
+        status:
+          type: string
+          readOnly: true
+        error:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        model:
+          allOf:
+          - $ref: '#/components/schemas/ConversionModel'
+          readOnly: true
+        size:
+          type: string
+          readOnly: true
+          nullable: true
+        url_file:
+          type: string
+          readOnly: true
+        urls:
+          type: string
+          readOnly: true
+        thumbs_up:
+          type: boolean
+          readOnly: true
+        thumbs_down:
+          type: boolean
+          readOnly: true
+        source_image_path:
+          type: string
+          readOnly: true
+          nullable: true
+        child_conversions:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseImageConversion'
+          readOnly: true
+      required:
+      - child_conversions
+      - code_ref
+      - created_at
+      - id
+      - input
+      - model
+      - modified_at
+      - output
+      - size
+      - small_uploaded_image_url
+      - source_image_path
+      - status
+      - text
+      - thumbs_down
+      - thumbs_up
+      - title
+      - uploaded_image_url
+      - url_file
+      - urls
+    ImageConversionModel:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 50
+        name:
+          type: string
+          maxLength: 120
+        description:
+          type: string
+          nullable: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,6})?$
+          nullable: true
+        mode:
+          $ref: '#/components/schemas/ImageConversionModelModeEnum'
+        enabled:
+          type: boolean
+        sizes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConversionModelSize'
+          readOnly: true
+        additional_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalModelFields'
+          readOnly: true
+      required:
+      - additional_fields
+      - code
+      - name
+      - sizes
+    ImageConversionModelModeEnum:
+      enum:
+      - TEXT_TO_IMAGE
+      - IMAGE_TO_IMAGE
+      type: string
+      description: |-
+        * `TEXT_TO_IMAGE` - Text To Image
+        * `IMAGE_TO_IMAGE` - Image To Image
+    ImageConversionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        speed:
+          type: number
+          format: double
+          default: 1.0
+        model:
+          type: string
+        size:
+          type: string
+      required:
+      - model
+      - size
+      - title
+    ImageToImageConversionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        speed:
+          type: number
+          format: double
+          default: 1.0
+        model:
+          type: string
+        file_reference:
+          type: string
+          format: uri
+      required:
+      - file_reference
+      - model
+      - title
+    LLMConversion:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 100
+        model:
+          allOf:
+          - $ref: '#/components/schemas/LLMConversionModel'
+          readOnly: true
+        code_ref:
+          type: string
+          nullable: true
+          maxLength: 50
+        status:
+          type: string
+          maxLength: 30
+        error:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        system_prompt:
+          type: string
+          nullable: true
+        user_message:
+          type: string
+          nullable: true
+        response:
+          type: string
+          nullable: true
+        input:
+          nullable: true
+        thumbs_up:
+          type: boolean
+        thumbs_down:
+          type: boolean
+      required:
+      - created_at
+      - id
+      - model
+      - modified_at
+      - status
+      - title
+    LLMConversionModel:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 50
+        name:
+          type: string
+          maxLength: 120
+        description:
+          type: string
+          nullable: true
+        additional_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalModelFields'
+          readOnly: true
+        credits_per_input_token:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,6})?$
+          nullable: true
+        credits_per_output_token:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,6})?$
+          nullable: true
+        enabled:
+          type: boolean
+      required:
+      - additional_fields
+      - code
+      - name
+    LLMConversionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        system_prompt:
+          type: string
+        message:
+          type: string
+        model:
+          type: string
+        max_tokens:
+          type: integer
+      required:
+      - max_tokens
+      - message
+      - model
+      - system_prompt
+      - title
+    Language:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 6
+        name:
+          type: string
+          maxLength: 50
+        cloneable:
+          type: boolean
+        profile_language:
+          type: boolean
+      required:
+      - code
+      - name
+    NullEnum:
+      enum:
+      - null
+    OutputEnum:
+      enum:
+      - mp3
+      - opus
+      - aac
+      - flac
+      - wav
+      - pcm
+      type: string
+      description: |-
+        * `mp3` - mp3
+        * `opus` - opus
+        * `aac` - aac
+        * `flac` - flac
+        * `wav` - wav
+        * `pcm` - pcm
+    PaginatedVoicesList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Voices'
+    Rating:
+      type: object
+      properties:
+        voice:
+          type: integer
+        rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,2})?$
+          nullable: true
+        votes:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+        finger_up:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+        finger_down:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+        finger_rating:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        finger_votes:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+      required:
+      - voice
+    Region:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+          maxLength: 15
+        name:
+          type: string
+          maxLength: 50
+      required:
+      - code
+      - id
+      - name
+    SpeechConversionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        speed:
+          type: number
+          format: double
+          default: 1.0
+        voice:
+          type: integer
+        output:
+          allOf:
+          - $ref: '#/components/schemas/OutputEnum'
+          default: mp3
+        text:
+          type: string
+        additional_fields:
+          type: object
+          additionalProperties: {}
+        is_clone:
+          type: boolean
+          default: false
+      required:
+      - text
+      - title
+      - voice
+    SpeechConversionStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        duration:
+          type: string
+      required:
+      - duration
+      - status
+    TypeEnum:
+      enum:
+      - FREE
+      - ELEVENLABS
+      - MINIMAX
+      type: string
+      description: |-
+        * `FREE` - Free
+        * `ELEVENLABS` - ElevenLabs
+        * `MINIMAX` - Minimax
+    VideoConversion:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 100
+        text:
+          type: string
+          nullable: true
+        source_image_path:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        ratio:
+          type: string
+          nullable: true
+          maxLength: 20
+        input:
+          nullable: true
+        model:
+          allOf:
+          - $ref: '#/components/schemas/ConversionModel'
+          readOnly: true
+        code_ref:
+          type: string
+          nullable: true
+          maxLength: 50
+        output:
+          type: string
+          nullable: true
+          maxLength: 20
+        status:
+          type: string
+          maxLength: 30
+        error:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        uploaded_video_url:
+          type: string
+          readOnly: true
+        filename:
+          type: string
+          nullable: true
+          maxLength: 200
+        url_file:
+          type: string
+          readOnly: true
+        thumbs_up:
+          type: boolean
+        thumbs_down:
+          type: boolean
+      required:
+      - created_at
+      - id
+      - model
+      - modified_at
+      - status
+      - title
+      - uploaded_video_url
+      - url_file
+    VideoConversionModel:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 50
+        name:
+          type: string
+          maxLength: 120
+        description:
+          type: string
+          nullable: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,6})?$
+          nullable: true
+        mode:
+          $ref: '#/components/schemas/VideoConversionModelModeEnum'
+        placeholder:
+          type: string
+          nullable: true
+        additional_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalModelFields'
+          readOnly: true
+        enabled:
+          type: boolean
+        sizes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConversionModelSize'
+          readOnly: true
+      required:
+      - additional_fields
+      - code
+      - name
+      - sizes
+    VideoConversionModelModeEnum:
+      enum:
+      - TEXT_TO_VIDEO
+      - IMAGE_TO_VIDEO
+      - ADD_AUDIO_TO_VIDEO
+      type: string
+      description: |-
+        * `TEXT_TO_VIDEO` - Text To Video
+        * `IMAGE_TO_VIDEO` - Image To Video
+        * `ADD_AUDIO_TO_VIDEO` - Add Audio To Video
+    VideoConversionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        speed:
+          type: number
+          format: double
+          default: 1.0
+        model:
+          type: string
+        ratio:
+          type: string
+        source_image_path:
+          type: string
+          format: uri
+        source_video_path:
+          type: string
+          format: uri
+      required:
+      - model
+      - title
+    VoiceProvider:
+      type: object
+      properties:
+        code:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        additional_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalModelFields'
+          readOnly: true
+      required:
+      - additional_fields
+      - code
+      - name
+    VoiceTier:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        code:
+          type: string
+          maxLength: 5
+        credits_per_char:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,6})?$
+          nullable: true
+        description:
+          type: string
+          nullable: true
+      required:
+      - code
+      - name
+    Voices:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        gender:
+          type: string
+          nullable: true
+          maxLength: 50
+        api_name:
+          type: string
+          maxLength: 50
+        api_engine:
+          type: string
+          nullable: true
+          maxLength: 50
+        description:
+          type: string
+          nullable: true
+        price_tier:
+          allOf:
+          - $ref: '#/components/schemas/VoiceTier'
+          readOnly: true
+        choice_badge:
+          type: boolean
+          nullable: true
+        language_ref:
+          type: string
+          nullable: true
+        language_details:
+          allOf:
+          - $ref: '#/components/schemas/Language'
+          readOnly: true
+        region_ref:
+          type: integer
+          nullable: true
+        region_details:
+          allOf:
+          - $ref: '#/components/schemas/Region'
+          readOnly: true
+        provider:
+          type: string
+          nullable: true
+        provider_details:
+          allOf:
+          - $ref: '#/components/schemas/VoiceProvider'
+          readOnly: true
+        example:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        status:
+          type: boolean
+          nullable: true
+        styles:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        finger_up:
+          type: boolean
+          readOnly: true
+          default: false
+        finger_down:
+          type: boolean
+          readOnly: true
+          default: false
+        rating:
+          allOf:
+          - $ref: '#/components/schemas/Rating'
+          readOnly: true
+        quality:
+          type: string
+          nullable: true
+          maxLength: 100
+      required:
+      - api_name
+      - finger_down
+      - finger_up
+      - id
+      - language_details
+      - name
+      - price_tier
+      - provider_details
+      - rating
+      - region_details
+      - styles
+    VoicesDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        gender:
+          type: string
+          nullable: true
+          maxLength: 50
+        api_name:
+          type: string
+          maxLength: 50
+        language_ref:
+          allOf:
+          - $ref: '#/components/schemas/Language'
+          readOnly: true
+        region_ref:
+          allOf:
+          - $ref: '#/components/schemas/Region'
+          readOnly: true
+        provider:
+          type: string
+          nullable: true
+        provider_details:
+          allOf:
+          - $ref: '#/components/schemas/VoiceProvider'
+          readOnly: true
+        api_engine:
+          type: string
+          nullable: true
+          maxLength: 50
+        example:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        status:
+          type: boolean
+          nullable: true
+        quality:
+          type: string
+          nullable: true
+          maxLength: 100
+      required:
+      - api_name
+      - id
+      - language_ref
+      - name
+      - provider_details
+      - region_ref
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Please enter the value: Api-Key your api key'
+servers:
+- url: https://api.1forall.ai/
+  description: API Server

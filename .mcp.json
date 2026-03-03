@@ -7,6 +7,12 @@
       "env": {
         "NCB_TOKEN": "ncb_6ca267d92d7bbacc332fb89601a103498a3cadbac600b48c"
       }
+    },
+    "t0ggles": {
+      "url": "https://t0ggles.com/mcp",
+      "headers": {
+        "Authorization": "Bearer t0mcp_1RtWS8wAqC6YpuetuVgARzRAE7EegXZ1lACbgfWxAJN"
+      }
     }
   }
 }

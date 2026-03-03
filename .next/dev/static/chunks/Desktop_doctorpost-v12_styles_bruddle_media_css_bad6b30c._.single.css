@@ -1,0 +1,61 @@
+/* [project]/Desktop/doctorpost-v12/styles/bruddle/media.css [app-client] (css) */
+.bru-avatar {
+  border: var(--bru-border);
+  -o-object-fit: cover;
+  object-fit: cover;
+  width: 64px;
+  height: 64px;
+  display: inline-block;
+}
+
+.bru-avatar--sm {
+  width: 40px;
+  height: 40px;
+}
+
+.bru-avatar--lg {
+  width: 96px;
+  height: 96px;
+}
+
+.bru-carousel {
+  border: var(--bru-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.bru-carousel__track {
+  transition: transform var(--bru-duration-slow) var(--bru-ease);
+  display: flex;
+}
+
+.bru-carousel__slide {
+  aspect-ratio: 16 / 9;
+  -o-object-fit: cover;
+  object-fit: cover;
+  min-width: 100%;
+}
+
+.bru-carousel__nav {
+  bottom: var(--bru-space-4);
+  gap: var(--bru-space-2);
+  display: flex;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bru-carousel__dot {
+  border: var(--bru-border);
+  background: var(--bru-white);
+  cursor: pointer;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+}
+
+.bru-carousel__dot.active {
+  background: var(--bru-purple);
+}
+
+/*# sourceMappingURL=Desktop_doctorpost-v12_styles_bruddle_media_css_bad6b30c._.single.css.map*/

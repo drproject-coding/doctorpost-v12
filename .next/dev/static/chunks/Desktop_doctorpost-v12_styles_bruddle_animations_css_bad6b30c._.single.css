@@ -1,0 +1,122 @@
+/* [project]/Desktop/doctorpost-v12/styles/bruddle/animations.css [app-client] (css) */
+@keyframes bru-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bru-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bru-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bru-glitch {
+  0%, 100% {
+    transform: translate(0);
+  }
+
+  20% {
+    transform: translate(-2px, 2px);
+  }
+
+  40% {
+    transform: translate(-2px, -2px);
+  }
+
+  60% {
+    transform: translate(2px, 2px);
+  }
+
+  80% {
+    transform: translate(2px, -2px);
+  }
+}
+
+@keyframes bru-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes bru-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bru-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.bru-anim-slide-up {
+  animation: bru-slide-up var(--bru-duration-normal) var(--bru-ease);
+}
+
+.bru-anim-slide-down {
+  animation: bru-slide-down var(--bru-duration-normal) var(--bru-ease);
+}
+
+.bru-anim-scale-in {
+  animation: bru-scale-in var(--bru-duration-normal) var(--bru-ease);
+}
+
+.bru-anim-glitch {
+  animation: bru-glitch var(--bru-duration-fast) steps(2, end);
+}
+
+.bru-anim-bounce {
+  animation: 1s infinite bru-bounce;
+}
+
+.bru-anim-pulse {
+  animation: 2s infinite bru-pulse;
+}
+
+.bru-anim-shake {
+  animation: bru-shake var(--bru-duration-fast) ease infinite;
+}
+
+/*# sourceMappingURL=Desktop_doctorpost-v12_styles_bruddle_animations_css_bad6b30c._.single.css.map*/

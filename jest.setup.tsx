@@ -26,7 +26,7 @@ jest.mock("next/navigation", () => ({
 // Mock Next.js Image component
 jest.mock("next/image", () => ({
   __esModule: true,
-  default: (props) => {
+  default: (props: any) => {
     // eslint-disable-next-line @next/next/no-img-element
     return <img {...props} />;
   },
@@ -50,11 +50,18 @@ if (typeof window !== "undefined") {
 
   // Mock IntersectionObserver
   global.IntersectionObserver = class IntersectionObserver {
+    readonly root: Element | Document | null = null;
+    readonly rootMargin: string = "";
+    readonly thresholds: ReadonlyArray<number> = [];
+
     constructor() {}
     disconnect() {}
     observe() {}
     unobserve() {}
-  };
+    takeRecords() {
+      return [];
+    }
+  } as any;
 
   // Mock ResizeObserver
   global.ResizeObserver = class ResizeObserver {
@@ -62,7 +69,7 @@ if (typeof window !== "undefined") {
     disconnect() {}
     observe() {}
     unobserve() {}
-  };
+  } as any;
 }
 
 // Setup console warnings/errors to fail tests

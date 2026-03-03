@@ -139,9 +139,7 @@ export function PipelineStepper({
                     height: "100%",
                     background: isError
                       ? "var(--bru-error, #FF4444)"
-                      : isViewing
-                        ? "var(--bru-purple)"
-                        : "var(--bru-purple)",
+                      : "var(--bru-purple)",
                     transition: "width 0.3s ease",
                   }}
                 />

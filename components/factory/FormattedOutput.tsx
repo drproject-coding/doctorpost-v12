@@ -172,7 +172,7 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
         <div style={{ padding: "0 16px 12px" }}>
           <pre
             style={{
-              fontSize: previewMode === "mobile" ? 14 : 14,
+              fontSize: 14,
               lineHeight: 1.5,
               whiteSpace: "pre-wrap",
               wordWrap: "break-word",

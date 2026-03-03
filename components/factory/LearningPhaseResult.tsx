@@ -198,7 +198,7 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
                       textTransform: "capitalize",
                     }}
                   >
-                    {signal.signalType.replace("-", " ")}
+                    {signal.signalType.replaceAll("-", " ")}
                   </span>
                   <span
                     style={{

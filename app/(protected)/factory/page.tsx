@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Button, Card } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
 import { Loader, Play, ArrowRight } from "lucide-react";
@@ -26,6 +26,8 @@ import { Scorecard } from "@/components/factory/Scorecard";
 import { FormattedOutput } from "@/components/factory/FormattedOutput";
 import { PostReview } from "@/components/factory/PostReview";
 import { LearningPhaseResult } from "@/components/factory/LearningPhaseResult";
+import { SessionHistory } from "@/components/factory/SessionHistory";
+import { saveSession } from "@/lib/sessionStorage";
 
 interface PipelineClientState {
   sessionId: string;
@@ -329,6 +331,27 @@ export default function FactoryPage() {
   // Template selection for write phase
   const [templateInput, setTemplateInput] = useState("");
 
+  // Auto-save session after phase transitions
+  useEffect(() => {
+    if (state.phase !== "idle" && state.phase !== "error") {
+      const title =
+        state.selectedTopic?.headline ||
+        state.selectedTopic?.angle ||
+        "Untitled";
+      saveSession(state.sessionId, title, state.phase, JSON.stringify(state));
+    }
+  }, [state.phase, state.sessionId, state.selectedTopic]);
+
+  const handleResumeSession = (stateJson: string) => {
+    try {
+      const restored = JSON.parse(stateJson) as PipelineClientState;
+      setState(restored);
+      setViewPhase(undefined);
+    } catch {
+      // Invalid session data, ignore
+    }
+  };
+
   // If user is viewing a past phase, show that phase's section read-only
   const isViewingPast = viewPhase !== undefined && viewPhase !== state.phase;
   const showPhase = (phase: PipelinePhase) =>
@@ -423,6 +446,11 @@ export default function FactoryPage() {
           <Loader size={16} className="animate-spin" />
           Processing...
         </div>
+      )}
+
+      {/* Session History (shown on idle) */}
+      {state.phase === "idle" && !running && (
+        <SessionHistory onResume={handleResumeSession} />
       )}
 
       {/* IDLE — Start */}

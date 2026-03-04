@@ -23,6 +23,8 @@ export interface CampaignSlot {
 
 export interface CampaignPlanInput {
   apiKey: string;
+  provider?: "claude" | "1forall" | "straico";
+  providerModel?: string;
   knowledge: KnowledgeDocument[];
   campaignId: string;
   durationWeeks: number;
@@ -58,6 +60,8 @@ export async function planCampaign(
   for (let week = 0; week < input.durationWeeks; week++) {
     const output = await runStrategist({
       apiKey: input.apiKey,
+      provider: input.provider,
+      providerModel: input.providerModel,
       knowledge: input.knowledge,
       recentPosts: [
         ...(input.recentPosts || []),

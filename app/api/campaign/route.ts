@@ -114,12 +114,45 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // Resolve __server_resolved__ sentinel key
-  let claudeKey = body.keys.claude;
-  if (claudeKey === "__server_resolved__") {
-    const profile = await fetchUserProfile(cookie);
-    claudeKey = profile?.claude_api_key || "";
-    if (!claudeKey) {
+  // Fetch user profile to get AI settings
+  const profile = await fetchUserProfile(cookie);
+  if (!profile) {
+    return new Response(
+      JSON.stringify({ error: "Failed to fetch user profile" }),
+      { status: 400, headers: { "Content-Type": "application/json" } },
+    );
+  }
+
+  // Determine API key and provider based on user's AI settings
+  let apiKey: string;
+  let provider = profile.ai_provider || "claude";
+
+  if (provider === "1forall") {
+    apiKey = profile.oneforall_api_key || "";
+    if (!apiKey) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "No 1ForAll API key configured. Please add your key in Settings.",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+  } else if (provider === "straico") {
+    apiKey = profile.straico_api_key || "";
+    if (!apiKey) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "No Straico API key configured. Please add your key in Settings.",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+  } else {
+    // Default to Claude
+    apiKey = profile.claude_api_key || "";
+    if (!apiKey) {
       return new Response(
         JSON.stringify({
           error:
@@ -131,6 +164,14 @@ export async function POST(req: NextRequest) {
   }
 
   const knowledge = await fetchKnowledgeForUser(user.id, cookie);
+
+  // Get provider model
+  const providerModel =
+    provider === "1forall"
+      ? profile.oneforall_model
+      : provider === "straico"
+        ? profile.straico_model
+        : undefined;
 
   // SSE stream
   const encoder = new TextEncoder();
@@ -150,7 +191,9 @@ export async function POST(req: NextRequest) {
 
         // Plan topics
         const plan = await planCampaign({
-          apiKey: claudeKey,
+          apiKey,
+          provider: provider as "claude" | "1forall" | "straico",
+          providerModel,
           knowledge,
           campaignId,
           durationWeeks: body.durationWeeks,

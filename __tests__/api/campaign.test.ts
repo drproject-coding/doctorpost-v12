@@ -212,6 +212,10 @@ describe("POST /api/campaign", () => {
 
     it("proceeds when session is valid", async () => {
       mockGetSessionUser.mockResolvedValue(MOCK_USER);
+      mockFetchUserProfile.mockResolvedValue({
+        ai_provider: "claude",
+        claude_api_key: "sk-ant-test-key",
+      });
       stubAllDbFetches();
       mockPlanCampaign.mockResolvedValue(MOCK_PLAN);
 
@@ -298,16 +302,17 @@ describe("POST /api/campaign", () => {
   });
 
   // -------------------------------------------------------------------------
-  // Server-resolved API key
+  // AI provider resolution from user profile
   // -------------------------------------------------------------------------
 
-  describe("__server_resolved__ sentinel key", () => {
+  describe("AI provider resolution from user profile", () => {
     beforeEach(() => {
       mockGetSessionUser.mockResolvedValue(MOCK_USER);
     });
 
-    it("resolves key from user profile when sentinel value is used", async () => {
+    it("uses Claude provider from profile by default", async () => {
       mockFetchUserProfile.mockResolvedValue({
+        ai_provider: "claude",
         claude_api_key: "sk-ant-from-profile",
       });
       stubAllDbFetches();
@@ -322,24 +327,106 @@ describe("POST /api/campaign", () => {
       await collectSSEEvents(res);
 
       expect(mockFetchUserProfile).toHaveBeenCalledTimes(1);
-      // planCampaign should receive the resolved key
+      // planCampaign should receive Claude provider
       expect(mockPlanCampaign).toHaveBeenCalledWith(
-        expect.objectContaining({ apiKey: "sk-ant-from-profile" }),
+        expect.objectContaining({
+          apiKey: "sk-ant-from-profile",
+          provider: "claude",
+        }),
       );
     });
 
-    it("returns 400 when sentinel key used but profile has no claude_api_key", async () => {
-      mockFetchUserProfile.mockResolvedValue({});
+    it("uses 1forall provider from profile when configured", async () => {
+      mockFetchUserProfile.mockResolvedValue({
+        ai_provider: "1forall",
+        oneforall_api_key: "ofa-key-123",
+        oneforall_model: "anthropic/claude-4-sonnet",
+      });
+      stubAllDbFetches();
+      mockPlanCampaign.mockResolvedValue(MOCK_PLAN);
+
+      const body = { ...VALID_BODY, keys: { claude: "__server_resolved__" } };
+      const req = buildRequest(body);
+      const res = await POST(req);
+
+      expect(res.status).toBe(200);
+      // Drain the stream so the ReadableStream start() callback completes
+      await collectSSEEvents(res);
+
+      // planCampaign should receive 1forall provider and model
+      expect(mockPlanCampaign).toHaveBeenCalledWith(
+        expect.objectContaining({
+          apiKey: "ofa-key-123",
+          provider: "1forall",
+          providerModel: "anthropic/claude-4-sonnet",
+        }),
+      );
+    });
+
+    it("uses straico provider from profile when configured", async () => {
+      mockFetchUserProfile.mockResolvedValue({
+        ai_provider: "straico",
+        straico_api_key: "straico-key-123",
+        straico_model: "openai/gpt-4o",
+      });
+      stubAllDbFetches();
+      mockPlanCampaign.mockResolvedValue(MOCK_PLAN);
+
+      const body = { ...VALID_BODY, keys: { claude: "__server_resolved__" } };
+      const req = buildRequest(body);
+      const res = await POST(req);
+
+      expect(res.status).toBe(200);
+      await collectSSEEvents(res);
+
+      // planCampaign should receive straico provider and model
+      expect(mockPlanCampaign).toHaveBeenCalledWith(
+        expect.objectContaining({
+          apiKey: "straico-key-123",
+          provider: "straico",
+          providerModel: "openai/gpt-4o",
+        }),
+      );
+    });
+
+    it("returns 400 when profile returns null", async () => {
+      mockFetchUserProfile.mockResolvedValue(null);
       const body = { ...VALID_BODY, keys: { claude: "__server_resolved__" } };
       const req = buildRequest(body);
       const res = await POST(req);
       expect(res.status).toBe(400);
       const json = await res.json();
-      expect(json.error).toMatch(/No Claude API key/i);
+      expect(json.error).toMatch(/Failed to fetch user profile/i);
     });
 
-    it("returns 400 when sentinel key used but profile returns null", async () => {
-      mockFetchUserProfile.mockResolvedValue(null);
+    it("returns 400 when 1forall provider configured but no API key", async () => {
+      mockFetchUserProfile.mockResolvedValue({
+        ai_provider: "1forall",
+      });
+      const body = { ...VALID_BODY, keys: { claude: "__server_resolved__" } };
+      const req = buildRequest(body);
+      const res = await POST(req);
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.error).toMatch(/No 1ForAll API key/i);
+    });
+
+    it("returns 400 when straico provider configured but no API key", async () => {
+      mockFetchUserProfile.mockResolvedValue({
+        ai_provider: "straico",
+      });
+      const body = { ...VALID_BODY, keys: { claude: "__server_resolved__" } };
+      const req = buildRequest(body);
+      const res = await POST(req);
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.error).toMatch(/No Straico API key/i);
+    });
+
+    it("returns 400 when claude provider configured but no API key", async () => {
+      mockFetchUserProfile.mockResolvedValue({
+        ai_provider: "claude",
+      });
       const body = { ...VALID_BODY, keys: { claude: "__server_resolved__" } };
       const req = buildRequest(body);
       const res = await POST(req);
@@ -356,6 +443,10 @@ describe("POST /api/campaign", () => {
   describe("successful campaign creation (SSE stream)", () => {
     beforeEach(() => {
       mockGetSessionUser.mockResolvedValue(MOCK_USER);
+      mockFetchUserProfile.mockResolvedValue({
+        ai_provider: "claude",
+        claude_api_key: "sk-ant-test-key",
+      });
       stubAllDbFetches();
       mockPlanCampaign.mockResolvedValue(MOCK_PLAN);
     });
@@ -437,7 +528,7 @@ describe("POST /api/campaign", () => {
       expect(data.pillarDistribution).toEqual({ education: 3, inspiration: 3 });
     });
 
-    it("calls planCampaign with all expected fields", async () => {
+    it("calls planCampaign with all expected fields including provider", async () => {
       const req = buildRequest(VALID_BODY);
       const res = await POST(req);
       // Drain the stream so the ReadableStream start() callback completes
@@ -445,6 +536,7 @@ describe("POST /api/campaign", () => {
       expect(mockPlanCampaign).toHaveBeenCalledWith(
         expect.objectContaining({
           apiKey: VALID_BODY.keys.claude,
+          provider: "claude",
           campaignId: "camp-456",
           durationWeeks: VALID_BODY.durationWeeks,
           postsPerWeek: VALID_BODY.postsPerWeek,
@@ -516,6 +608,10 @@ describe("POST /api/campaign", () => {
   describe("error handling via SSE error events", () => {
     beforeEach(() => {
       mockGetSessionUser.mockResolvedValue(MOCK_USER);
+      mockFetchUserProfile.mockResolvedValue({
+        ai_provider: "claude",
+        claude_api_key: "sk-ant-test-key",
+      });
     });
 
     it("streams an 'error' event when createCampaignInDb fails", async () => {
@@ -550,6 +646,11 @@ describe("POST /api/campaign", () => {
     });
 
     it("streams an 'error' event when saveCampaignPost fails", async () => {
+      // Note: fetchUserProfile will be called before DB calls, so mock it first
+      mockFetchUserProfile.mockResolvedValueOnce({
+        ai_provider: "claude",
+        claude_api_key: "sk-ant-test-key",
+      });
       global.fetch = jest
         .fn()
         .mockResolvedValueOnce({
@@ -574,6 +675,11 @@ describe("POST /api/campaign", () => {
     });
 
     it("closes the stream even after error (no hanging streams)", async () => {
+      // Mock fetchUserProfile, then all other fetches will fail
+      mockFetchUserProfile.mockResolvedValueOnce({
+        ai_provider: "claude",
+        claude_api_key: "sk-ant-test-key",
+      });
       global.fetch = jest.fn().mockResolvedValue({
         ok: false,
         statusText: "Service Unavailable",
@@ -599,6 +705,10 @@ describe("POST /api/campaign", () => {
   describe("edge cases", () => {
     beforeEach(() => {
       mockGetSessionUser.mockResolvedValue(MOCK_USER);
+      mockFetchUserProfile.mockResolvedValue({
+        ai_provider: "claude",
+        claude_api_key: "sk-ant-test-key",
+      });
     });
 
     it("handles empty pillarWeights object gracefully", async () => {
@@ -629,13 +739,18 @@ describe("POST /api/campaign", () => {
       expect(events.filter((e) => e.event === "slot")).toHaveLength(0);
     });
 
-    it("uses a literal API key (not sentinel) without fetching user profile", async () => {
+    it("fetches user profile to determine AI provider even with literal API key", async () => {
+      mockFetchUserProfile.mockResolvedValue({
+        ai_provider: "claude",
+        claude_api_key: "profile-key",
+      });
       stubAllDbFetches();
       mockPlanCampaign.mockResolvedValue(MOCK_PLAN);
 
       const req = buildRequest(VALID_BODY);
       await POST(req);
-      expect(mockFetchUserProfile).not.toHaveBeenCalled();
+      // Now we always fetch profile to get the provider
+      expect(mockFetchUserProfile).toHaveBeenCalledTimes(1);
     });
 
     it("accepts name with special characters (not XSS-sanitized at route level)", async () => {

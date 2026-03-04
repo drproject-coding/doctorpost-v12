@@ -28,6 +28,7 @@ import { PostReview } from "@/components/factory/PostReview";
 import { LearningPhaseResult } from "@/components/factory/LearningPhaseResult";
 import { SessionHistory } from "@/components/factory/SessionHistory";
 import { saveSession } from "@/lib/sessionStorage";
+import { schedulePost } from "@/lib/api";
 
 interface PipelineClientState {
   sessionId: string;
@@ -86,6 +87,30 @@ export default function FactoryPage() {
   const abortRef = useRef<AbortController | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
+
+  // Save post when pipeline completes
+  useEffect(() => {
+    if (state.phase === "complete" && state.formattedPost && state.selectedTopic && !running) {
+      const saveCompletedPost = async () => {
+        try {
+          await schedulePost({
+            id: "",
+            title: state.selectedTopic.title || "Untitled Post",
+            content: state.formattedPost!.content,
+            pillar: state.selectedTopic.pillar,
+            status: "scheduled",
+            scheduledAt: new Date().toISOString(),
+            userId: user?.id || "",
+            factoryScore: state.scoreResult?.totalScore,
+          });
+          console.log("Post saved successfully to library");
+        } catch (error) {
+          console.error("Failed to save completed post:", error);
+        }
+      };
+      void saveCompletedPost();
+    }
+  }, [state.phase, state.formattedPost, state.selectedTopic, state.scoreResult, running, user?.id]);
 
   const callPipeline = useCallback(
     async (action: string, extraBody: Record<string, unknown> = {}) => {

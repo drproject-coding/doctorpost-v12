@@ -515,6 +515,11 @@ export default function FactoryPage() {
               setViewPhase(phase);
             }
           }}
+          onRetryPhase={(phase) => {
+            // Clear view mode and retry the phase
+            setViewPhase(undefined);
+            handleRetryFromPhase(phase);
+          }}
         />
       )}
 

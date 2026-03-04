@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
 
 const STEPS: { phase: PipelinePhase; label: string }[] = [
@@ -45,6 +45,8 @@ interface PipelineStepperProps {
   viewPhase?: PipelinePhase;
   /** Called when user clicks a completed phase to review it */
   onPhaseClick?: (phase: PipelinePhase) => void;
+  /** Called when user clicks retry button on a completed phase */
+  onRetryPhase?: (phase: PipelinePhase) => void;
 }
 
 export function PipelineStepper({
@@ -54,6 +56,7 @@ export function PipelineStepper({
   metadata,
   viewPhase,
   onPhaseClick,
+  onRetryPhase,
 }: PipelineStepperProps) {
   const isErrorState = currentPhase === "error";
   const effectiveIdx =
@@ -111,6 +114,7 @@ export function PipelineStepper({
           const isError = isCurrent && isErrorState;
           const isViewing = viewPhase === step.phase && isViewingPast;
           const canClick = isComplete && onPhaseClick;
+          const canRetry = isComplete && onRetryPhase;
 
           return (
             <div
@@ -123,6 +127,7 @@ export function PipelineStepper({
                 alignItems: "center",
                 gap: "var(--bru-space-1)",
                 cursor: canClick ? "pointer" : "default",
+                position: "relative",
               }}
             >
               {/* Progress bar segment */}
@@ -153,22 +158,60 @@ export function PipelineStepper({
                   }}
                 />
               </div>
-              {/* Label */}
-              <span
+              {/* Label + Retry button */}
+              <div
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  fontWeight: isCurrent || isViewing ? 700 : 400,
-                  color: isViewing
-                    ? "var(--bru-purple)"
-                    : isComplete || isCurrent
-                      ? "var(--bru-black)"
-                      : "var(--bru-grey)",
-                  whiteSpace: "nowrap",
-                  textDecoration: canClick ? "underline" : "none",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "var(--bru-space-1)",
                 }}
               >
-                {step.label}
-              </span>
+                <span
+                  style={{
+                    fontSize: "var(--bru-text-xs)",
+                    fontWeight: isCurrent || isViewing ? 700 : 400,
+                    color: isViewing
+                      ? "var(--bru-purple)"
+                      : isComplete || isCurrent
+                        ? "var(--bru-black)"
+                        : "var(--bru-grey)",
+                    whiteSpace: "nowrap",
+                    textDecoration: canClick ? "underline" : "none",
+                  }}
+                >
+                  {step.label}
+                </span>
+                {canRetry && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRetryPhase(step.phase);
+                    }}
+                    title={`Reload ${step.label}`}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "var(--bru-purple)",
+                      padding: "2px 4px",
+                      display: "flex",
+                      alignItems: "center",
+                      opacity: 0.7,
+                      transition: "opacity 0.2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.opacity =
+                        "1";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.opacity =
+                        "0.7";
+                    }}
+                  >
+                    <RotateCcw size={12} />
+                  </button>
+                )}
+              </div>
             </div>
           );
         })}

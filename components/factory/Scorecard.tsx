@@ -38,7 +38,7 @@ export function Scorecard({
   const criteria = score.criteriaScores;
 
   return (
-    <Card variant="raised">
+    <Card variant="raised" style={{ minWidth: 0, overflow: "hidden" }}>
       <div
         style={{
           display: "flex",
@@ -212,14 +212,26 @@ function CriteriaRow({
         alignItems: "center",
         gap: "var(--bru-space-2)",
         fontSize: "var(--bru-text-sm)",
+        minWidth: 0,
       }}
     >
-      <span style={{ width: 140, fontWeight: 500 }}>{label}</span>
+      <span
+        style={{
+          minWidth: 100,
+          maxWidth: 140,
+          fontWeight: 500,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {label}
+      </span>
       {/* Bar */}
       <div
         style={{
           flex: 1,
-          minWidth: 0,
+          minWidth: 60,
           height: 6,
           background: "var(--bru-border-color, #e0e0e0)",
           position: "relative",
@@ -237,17 +249,20 @@ function CriteriaRow({
       </div>
       <span
         style={{
-          width: 50,
+          minWidth: 45,
+          maxWidth: 50,
           textAlign: "right",
           fontWeight: 700,
           color: scoreColor(score, max),
+          fontSize: "var(--bru-text-xs)",
         }}
       >
         {score}/{max}
       </span>
       <span
         style={{
-          flex: 2,
+          flex: 1,
+          minWidth: 0,
           fontSize: "var(--bru-text-xs)",
           color: "var(--bru-grey)",
           overflow: "hidden",

@@ -463,7 +463,13 @@ export default function FactoryPage() {
     isViewingPast ? viewPhase === phase : undefined; // undefined = use normal logic
 
   return (
-    <div>
+    <div
+      style={{
+        maxWidth: "1400px",
+        margin: "0 auto",
+        padding: "var(--bru-space-6)",
+      }}
+    >
       {/* Header */}
       <div
         style={{
@@ -802,8 +808,11 @@ export default function FactoryPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: state.scoreResult ? "1fr 1fr" : "1fr",
+              gridTemplateColumns: state.scoreResult
+                ? "minmax(0, 1fr) minmax(0, 1fr)"
+                : "1fr",
               gap: "var(--bru-space-4)",
+              overflowX: "hidden",
             }}
           >
             <DraftEditor

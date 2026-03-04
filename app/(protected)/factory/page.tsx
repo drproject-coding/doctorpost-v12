@@ -95,9 +95,9 @@ export default function FactoryPage() {
         try {
           await schedulePost({
             id: "",
-            title: state.selectedTopic.title || "Untitled Post",
+            title: state.selectedTopic!.title || "Untitled Post",
             content: state.formattedPost!.content,
-            pillar: state.selectedTopic.pillar,
+            pillar: state.selectedTopic!.pillar,
             status: "scheduled",
             scheduledAt: new Date().toISOString(),
             userId: user?.id || "",
@@ -548,7 +548,7 @@ export default function FactoryPage() {
               ? {
                   postType: state.selectedTopic.templateRecommendation,
                   hookPattern: state.selectedTopic.hookCategoryRecommendation,
-                  contentPillar: state.selectedTopic.pillar,
+                  contentPillar: state.selectedTopic!.pillar,
                   tone: state.selectedTopic.angle,
                   phaseStatus: state.phaseStatus,
                   brandContext: state.brandContext,

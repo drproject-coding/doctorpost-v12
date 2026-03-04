@@ -349,18 +349,20 @@ export function PipelineStepper({
                   value={metadata.brandContext.industry}
                 />
               )}
-              {metadata.brandContext.audience.length > 0 && (
-                <MetadataTag
-                  label="Audience"
-                  value={metadata.brandContext.audience.join(", ")}
-                />
-              )}
-              {metadata.brandContext.tones.length > 0 && (
-                <MetadataTag
-                  label="Brand Tone"
-                  value={metadata.brandContext.tones.join(", ")}
-                />
-              )}
+              {metadata.brandContext.audience &&
+                metadata.brandContext.audience.length > 0 && (
+                  <MetadataTag
+                    label="Audience"
+                    value={metadata.brandContext.audience.join(", ")}
+                  />
+                )}
+              {metadata.brandContext.tones &&
+                metadata.brandContext.tones.length > 0 && (
+                  <MetadataTag
+                    label="Brand Tone"
+                    value={metadata.brandContext.tones.join(", ")}
+                  />
+                )}
               {metadata.brandContext.lastUpdated && (
                 <MetadataTag
                   label="Updated"

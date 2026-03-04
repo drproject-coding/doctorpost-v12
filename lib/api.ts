@@ -340,8 +340,14 @@ export const schedulePost = async (post: ScheduledPost): Promise<void> => {
       // Response wasn't JSON, that's ok
       const text = await res.text();
       console.log("[schedulePost] Error response text:", text);
-      if (text) errorDetail = text.slice(0, 200);
+      if (text) errorDetail = text.slice(0, 500); // Increased from 200 to 500
     }
+    console.error("[schedulePost] Full error details:", {
+      status: res.status,
+      statusText: res.statusText,
+      errorDetail,
+      payload,
+    });
     throw new Error(`Failed to schedule post: ${errorDetail}`);
   }
 

@@ -165,10 +165,10 @@ function validateFormatterResponse(output: unknown): {
     };
   }
 
-  if (typeof hook.mobile !== "string" || typeof hook.desktop !== "string") {
+  if (typeof hook.mobile !== "boolean" || typeof hook.desktop !== "boolean") {
     return {
       valid: false,
-      error: "Formatter output hookBeforeFold missing mobile/desktop",
+      error: "Formatter output hookBeforeFold mobile/desktop must be booleans",
     };
   }
 

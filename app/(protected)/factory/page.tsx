@@ -570,6 +570,45 @@ export default function FactoryPage() {
         </div>
       )}
 
+      {/* Paused/Resumed indicator with Continue button */}
+      {!running &&
+        state.phase !== "idle" &&
+        state.phase !== "error" &&
+        state.phase !== "complete" && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--bru-space-3)",
+              marginBottom: "var(--bru-space-4)",
+              padding: "var(--bru-space-3)",
+              background: "rgba(124, 58, 237, 0.08)",
+              borderRadius: "4px",
+              border: "1px solid rgba(124, 58, 237, 0.2)",
+            }}
+          >
+            <div
+              style={{
+                flex: 1,
+                fontSize: "var(--bru-text-sm)",
+                color: "var(--bru-black)",
+              }}
+            >
+              Paused at{" "}
+              <strong>{PHASE_LABELS[state.phase] || state.phase}</strong> —
+              Click to continue
+            </div>
+            <Button
+              variant="primary"
+              onClick={() => handleRetryFromPhase(state.phase as PipelinePhase)}
+              disabled={running}
+            >
+              <ArrowRight size={14} />
+              Continue
+            </Button>
+          </div>
+        )}
+
       {/* Loading indicator */}
       {running && (
         <div

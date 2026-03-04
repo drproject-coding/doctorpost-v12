@@ -11,6 +11,24 @@
  * or surrounding text.
  */
 export function extractJson<T>(raw: string): T {
+  // Detect if response is an error page (HTML with loading spinner or error indicators)
+  if (
+    raw.includes("<!DOCTYPE") ||
+    raw.includes("<html") ||
+    raw.includes("loading-spinner") ||
+    raw.includes("Application error") ||
+    (raw.includes("<") &&
+      raw.includes(">") &&
+      raw.length < 5000 &&
+      !raw.includes("{"))
+  ) {
+    // This is likely an HTML error page
+    const excerpt = raw.slice(0, 300);
+    throw new Error(
+      `Formatter agent returned an HTML error page instead of JSON. The agent may have crashed or made an invalid API call. HTML excerpt: "${excerpt}..."`,
+    );
+  }
+
   // Try direct parse first
   try {
     return JSON.parse(raw) as T;
@@ -92,7 +110,7 @@ export function extractJson<T>(raw: string): T {
   }
 
   throw new Error(
-    `Failed to extract JSON from agent response. Raw output starts with: "${raw.slice(0, 100)}..."`,
+    `Failed to extract JSON from agent response. Raw output starts with: "${raw.slice(0, 200)}..."`,
   );
 }
 

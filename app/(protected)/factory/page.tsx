@@ -739,7 +739,7 @@ export default function FactoryPage() {
               onSelect={handleTopicSelect}
               selectedTopic={state.selectedTopic}
             />
-            {state.selectedTopic && !running && state.phase === "direction" && (
+            {state.selectedTopic && !running && (
               <div
                 style={{
                   marginTop: "var(--bru-space-4)",

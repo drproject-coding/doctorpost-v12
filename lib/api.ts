@@ -282,21 +282,41 @@ export const savePostDraft = async (post: ScheduledPost): Promise<void> => {
 };
 
 export const schedulePost = async (post: ScheduledPost): Promise<void> => {
+  const payload = {
+    title: post.title,
+    content: post.content,
+    scheduled_at: post.scheduledAt,
+    pillar: post.pillar,
+    status: post.status,
+  };
+
+  console.log("[schedulePost] Sending payload:", payload);
+
   const res = await fetch("/api/data/create/posts", {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      title: post.title,
-      content: post.content,
-      scheduled_at: post.scheduledAt,
-      pillar: post.pillar,
-      status: post.status,
-    }),
+    body: JSON.stringify(payload),
   });
+
+  console.log("[schedulePost] Response status:", res.status, res.statusText);
+
   if (!res.ok) {
-    throw new Error(`Failed to schedule post: ${res.statusText}`);
+    let errorDetail = res.statusText;
+    try {
+      const errorBody = await res.json();
+      console.log("[schedulePost] Error response:", errorBody);
+      errorDetail = errorBody.error || errorBody.message || res.statusText;
+    } catch {
+      // Response wasn't JSON, that's ok
+      const text = await res.text();
+      console.log("[schedulePost] Error response text:", text);
+      if (text) errorDetail = text.slice(0, 200);
+    }
+    throw new Error(`Failed to schedule post: ${errorDetail}`);
   }
+
+  console.log("[schedulePost] Post saved successfully");
 };
 
 export const deletePost = async (postId: string): Promise<void> => {

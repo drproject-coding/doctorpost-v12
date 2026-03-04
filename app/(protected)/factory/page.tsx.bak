@@ -28,7 +28,6 @@ import { PostReview } from "@/components/factory/PostReview";
 import { LearningPhaseResult } from "@/components/factory/LearningPhaseResult";
 import { SessionHistory } from "@/components/factory/SessionHistory";
 import { saveSession } from "@/lib/sessionStorage";
-import { schedulePost } from "@/lib/api";
 
 interface PipelineClientState {
   sessionId: string;
@@ -84,92 +83,9 @@ export default function FactoryPage() {
   });
   const [running, setRunning] = useState(false);
   const [viewPhase, setViewPhase] = useState<PipelinePhase | undefined>();
-  const [isSaving, setIsSaving] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
-
-  // Save post when pipeline completes
-  useEffect(() => {
-    if (
-      state.phase === "complete" &&
-      state.formattedPost &&
-      state.selectedTopic &&
-      !running
-    ) {
-      const saveCompletedPost = async () => {
-        try {
-          await schedulePost({
-            id: "",
-            title:
-              state.selectedTopic!.headline ||
-              state.selectedTopic!.angle ||
-              "Untitled Post",
-            content: state.formattedPost!.content,
-            pillar: state.selectedTopic!.pillar,
-            status: "scheduled",
-            scheduledAt: new Date().toISOString(),
-            userId: user?.id || "",
-            factoryScore: state.scoreResult?.totalScore,
-          });
-          console.log("[Auto-save] Post saved successfully to library");
-        } catch (error) {
-          const errorMsg =
-            error instanceof Error ? error.message : String(error);
-          console.error("[Auto-save] Failed to save completed post:", errorMsg);
-        }
-      };
-      void saveCompletedPost();
-    }
-  }, [
-    state.phase,
-    state.formattedPost,
-    state.selectedTopic,
-    state.scoreResult,
-    running,
-    user?.id,
-  ]);
-
-  const handleManualSave = useCallback(async () => {
-    if (!state.formattedPost || !state.selectedTopic || !user?.id) {
-      alert("Cannot save: missing post data");
-      return;
-    }
-
-    setIsSaving(true);
-    try {
-      console.log("[handleManualSave] Saving post with data:", {
-        title:
-          state.selectedTopic!.headline ||
-          state.selectedTopic!.angle ||
-          "Untitled Post",
-        pillar: state.selectedTopic!.pillar,
-        status: "scheduled",
-      });
-
-      await schedulePost({
-        id: "",
-        title:
-          state.selectedTopic!.headline ||
-          state.selectedTopic!.angle ||
-          "Untitled Post",
-        content: state.formattedPost.content,
-        pillar: state.selectedTopic!.pillar,
-        status: "scheduled",
-        scheduledAt: new Date().toISOString(),
-        userId: user.id,
-        factoryScore: state.scoreResult?.totalScore,
-      });
-      alert("Post saved to library successfully!");
-      console.log("[handleManualSave] Save completed successfully");
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      console.error("[handleManualSave] Failed to save post:", errorMsg);
-      alert(`Failed to save post: ${errorMsg}`);
-    } finally {
-      setIsSaving(false);
-    }
-  }, [state.formattedPost, state.selectedTopic, state.scoreResult, user?.id]);
 
   const callPipeline = useCallback(
     async (action: string, extraBody: Record<string, unknown> = {}) => {
@@ -288,6 +204,11 @@ export default function FactoryPage() {
       }
 
       // Track phase success/failure status
+      if (currentPhase && event.status === "done") {
+        phaseStatus[currentPhase] = "success";
+        next.phaseStatus = phaseStatus;
+      }
+
       if (event.status === "error") {
         const phase = currentPhase || prev.phase;
         if (phase && phase !== "error") {
@@ -299,12 +220,6 @@ export default function FactoryPage() {
         next.phase = "error";
         next.error =
           (event.data as { error?: string })?.error || "Pipeline error";
-      }
-
-      // Success overwrites any previous failure - if phase completes, it succeeded
-      if (currentPhase && event.status === "done") {
-        phaseStatus[currentPhase] = "success";
-        next.phaseStatus = phaseStatus;
       }
 
       // Capture brand context
@@ -608,7 +523,7 @@ export default function FactoryPage() {
               ? {
                   postType: state.selectedTopic.templateRecommendation,
                   hookPattern: state.selectedTopic.hookCategoryRecommendation,
-                  contentPillar: state.selectedTopic!.pillar,
+                  contentPillar: state.selectedTopic.pillar,
                   tone: state.selectedTopic.angle,
                   phaseStatus: state.phaseStatus,
                   brandContext: state.brandContext,
@@ -974,11 +889,7 @@ export default function FactoryPage() {
       {state.formattedPost &&
         (!isViewingPast || viewPhase === "formatting") && (
           <div style={{ marginTop: "var(--bru-space-4)" }}>
-            <FormattedOutput
-              post={state.formattedPost}
-              onSave={handleManualSave}
-              isSaving={isSaving}
-            />
+            <FormattedOutput post={state.formattedPost} />
           </div>
         )}
 

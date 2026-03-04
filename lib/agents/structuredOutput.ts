@@ -36,31 +36,29 @@ export function extractJson<T>(raw: string): T {
     // Continue to extraction strategies
   }
 
-  // Try extracting from markdown code fence (with or without closing fence)
-  // Handle cases like: ```json { ... } or ```json\n{ ... }\n```
-  let fenceMatch = raw.match(/```(?:json)?\s*\n?([\s\S]*?)(?:\n?```)?$/);
-  if (fenceMatch) {
-    try {
-      const extracted = fenceMatch[1].trim();
-      if (extracted) {
-        return JSON.parse(extracted) as T;
-      }
-    } catch {
-      // Continue
+  // Try extracting from markdown code fence
+  // Match: ```[json] followed by content until ``` or end
+  // Handles both same-line (```json {...}) and multi-line formats
+  const fenceStart = raw.indexOf("```");
+  if (fenceStart !== -1) {
+    let contentStart = fenceStart + 3; // Skip ```
+    // Skip optional 'json' tag and whitespace
+    const afterFence = raw.slice(contentStart);
+    const langMatch = afterFence.match(/^(json)?\s*\n?/);
+    if (langMatch) {
+      contentStart += langMatch[0].length;
     }
-  }
 
-  // Alternative: try single-line fence format
-  if (!fenceMatch) {
-    fenceMatch = raw.match(/```json\s*([\s\S]*?)(?:```|$)/);
-    if (fenceMatch) {
+    // Find closing fence or end of string
+    const fenceEnd = raw.indexOf("```", contentStart);
+    const endPos = fenceEnd !== -1 ? fenceEnd : raw.length;
+    const content = raw.slice(contentStart, endPos).trim();
+
+    if (content) {
       try {
-        const extracted = fenceMatch[1].trim();
-        if (extracted) {
-          return JSON.parse(extracted) as T;
-        }
+        return JSON.parse(content) as T;
       } catch {
-        // Continue
+        // Continue to next strategy
       }
     }
   }

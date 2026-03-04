@@ -518,19 +518,24 @@ export default function FactoryPage() {
               flexWrap: "wrap",
             }}
           >
-            <input
-              className="bru-input"
-              placeholder="Tone override (optional)"
-              value={toneInput}
-              onChange={(e) => {
-                setToneInput(e.target.value);
-                setState((prev) => ({
-                  ...prev,
-                  toneOverride: e.target.value || undefined,
-                }));
-              }}
-              style={{ width: 200 }}
-            />
+            <div
+              style={{ position: "relative", display: "inline-block" }}
+              title="Override your brand tones for this session only. E.g., 'casual', 'humorous', 'celebratory'. Your brand profile remains unchanged."
+            >
+              <input
+                className="bru-input"
+                placeholder="Tone override (optional)"
+                value={toneInput}
+                onChange={(e) => {
+                  setToneInput(e.target.value);
+                  setState((prev) => ({
+                    ...prev,
+                    toneOverride: e.target.value || undefined,
+                  }));
+                }}
+                style={{ width: 200 }}
+              />
+            </div>
             <Button variant="primary" onClick={handleStart} disabled={running}>
               <Play size={14} />
               Start Pipeline

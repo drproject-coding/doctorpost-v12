@@ -279,6 +279,70 @@ export function createPipelineState(params: {
   };
 }
 
+// ── State Restoration ──
+
+/**
+ * Determines the last completed pipeline phase from the restored state fields.
+ */
+function inferPhaseFromState(state: PipelineState): PipelinePhase {
+  if (state.formattedPost) return "formatting";
+  if (state.scoreResult) return "scoring";
+  if (state.writerOutput) return "writing";
+  if (state.evidencePack) return "evidence";
+  if (state.discoveryBrief) return "discovery";
+  if (state.strategistOutput) return "direction";
+  return "idle";
+}
+
+/**
+ * Reconstructs a PipelineState from base state and saved session data.
+ * Used when resuming a pipeline from a previously persisted session.
+ */
+export function restorePipelineState(
+  baseState: Pick<
+    PipelineState,
+    "sessionId" | "knowledge" | "keys" | "brandContext" | "toneOverride"
+  >,
+  savedState: Record<string, unknown>,
+): PipelineState {
+  const state = createPipelineState({
+    sessionId: baseState.sessionId,
+    knowledge: baseState.knowledge,
+    keys: baseState.keys,
+    brandContext: baseState.brandContext,
+  });
+  if (baseState.toneOverride) state.toneOverride = baseState.toneOverride;
+
+  // Restore phase outputs from saved state
+  if (savedState.strategistOutput)
+    state.strategistOutput = savedState.strategistOutput as StrategistOutput;
+  if (savedState.selectedTopic)
+    state.selectedTopic = savedState.selectedTopic as TopicProposal;
+  if (savedState.discoveryBrief)
+    state.discoveryBrief = savedState.discoveryBrief as DiscoveryBrief;
+  if (savedState.refinedTopic)
+    state.refinedTopic = savedState.refinedTopic as TopicProposal;
+  if (savedState.evidencePack)
+    state.evidencePack = savedState.evidencePack as EvidencePack;
+  if (savedState.selectedTemplate)
+    state.selectedTemplate = savedState.selectedTemplate as string;
+  if (savedState.writerOutput)
+    state.writerOutput = savedState.writerOutput as WriterOutput;
+  if (savedState.scoreResult)
+    state.scoreResult = savedState.scoreResult as ScoreResult;
+  if (savedState.formattedPost)
+    state.formattedPost = savedState.formattedPost as FormattedPost;
+  if (savedState.finalVersion)
+    state.finalVersion = savedState.finalVersion as string;
+  if (Array.isArray(savedState.userFeedback))
+    state.userFeedback = savedState.userFeedback as string[];
+
+  // Determine phase from restored state (latest phase with data)
+  state.phase = inferPhaseFromState(state);
+
+  return state;
+}
+
 /**
  * Run Phase 1: Direction — Strategist proposes topics.
  */

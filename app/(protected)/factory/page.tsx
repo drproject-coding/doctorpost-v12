@@ -27,7 +27,11 @@ import { FormattedOutput } from "@/components/factory/FormattedOutput";
 import { PostReview } from "@/components/factory/PostReview";
 import { LearningPhaseResult } from "@/components/factory/LearningPhaseResult";
 import { SessionHistory } from "@/components/factory/SessionHistory";
-import { saveSession } from "@/lib/sessionStorage";
+import {
+  saveSession,
+  listSessions,
+  type SavedSession,
+} from "@/lib/sessionStorage";
 import { schedulePost } from "@/lib/api";
 
 interface PipelineClientState {
@@ -72,6 +76,25 @@ function generateSessionId(): string {
   return `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function truncateSessionId(id: string): string {
+  if (id.length <= 16) return id;
+  return `${id.slice(0, 10)}...${id.slice(-4)}`;
+}
+
+function formatTimestamp(iso: string): string {
+  const d = new Date(iso);
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHrs < 24) return `${diffHrs}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return d.toLocaleDateString();
+}
+
 export default function FactoryPage() {
   const { user } = useAuth();
   const [state, setState] = useState<PipelineClientState>({
@@ -85,9 +108,23 @@ export default function FactoryPage() {
   const [running, setRunning] = useState(false);
   const [viewPhase, setViewPhase] = useState<PipelinePhase | undefined>();
   const [isSaving, setIsSaving] = useState(false);
+  const [incompleteSession, setIncompleteSession] =
+    useState<SavedSession | null>(null);
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
+
+  // On mount: check localStorage for the most recent incomplete session
+  useEffect(() => {
+    const sessions = listSessions();
+    const recent = sessions.find(
+      (s) => s.phase !== "complete" && s.phase !== "idle",
+    );
+    if (recent) {
+      setIncompleteSession(recent);
+    }
+  }, []);
 
   // Save post when pipeline completes
   useEffect(() => {
@@ -307,6 +344,24 @@ export default function FactoryPage() {
         next.phaseStatus = phaseStatus;
       }
 
+      // Handle resume: mark skipped phases as success so stepper shows them as completed
+      if (
+        event.step === "pipeline" &&
+        event.status === "resuming" &&
+        event.data
+      ) {
+        const { skippedPhases } = event.data as {
+          startPhase: string;
+          skippedPhases: string[];
+        };
+        if (skippedPhases) {
+          for (const sp of skippedPhases) {
+            phaseStatus[sp as PipelinePhase] = "success";
+          }
+          next.phaseStatus = phaseStatus;
+        }
+      }
+
       // Capture brand context
       if (
         event.step === "pipeline" &&
@@ -453,6 +508,8 @@ export default function FactoryPage() {
       guardrailFixing: false,
       rewriteCount: 0,
     });
+    setIncompleteSession(null);
+    setLastSavedAt(null);
   };
 
   /** Map a pipeline phase to the API action needed to retry it */
@@ -478,6 +535,16 @@ export default function FactoryPage() {
     formatting: "Formatting",
     learning: "Learning",
   };
+
+  const PHASE_ORDER: PipelinePhase[] = [
+    "direction",
+    "discovery",
+    "evidence",
+    "writing",
+    "scoring",
+    "formatting",
+    "learning",
+  ];
 
   /** Retry from the phase that errored */
   const handleRetryFromPhase = (phase: PipelinePhase) => {
@@ -521,20 +588,35 @@ export default function FactoryPage() {
         state.selectedTopic?.angle ||
         "Untitled";
       saveSession(state.sessionId, title, state.phase, JSON.stringify(state));
+      setLastSavedAt(new Date().toISOString());
     }
   }, [state.phase, state.sessionId, state.selectedTopic]);
 
   const handleResumeSession = (stateJson: string) => {
     try {
       const restored = JSON.parse(stateJson) as PipelineClientState;
-      // If resuming from error state, reset to the last successful phase
+      // Determine the start phase for resume
+      let startPhase: PipelinePhase;
       if (restored.phase === "error" && restored.errorAtPhase) {
+        // If errored, retry from the failed phase
+        startPhase = restored.errorAtPhase;
         restored.phase = restored.errorAtPhase;
         restored.error = undefined;
         restored.errorAtPhase = undefined;
+      } else {
+        // If paused successfully, resume from the next phase
+        const currentIdx = PHASE_ORDER.indexOf(restored.phase as PipelinePhase);
+        const nextPhase =
+          currentIdx >= 0 && currentIdx < PHASE_ORDER.length - 1
+            ? PHASE_ORDER[currentIdx + 1]
+            : (restored.phase as PipelinePhase);
+        startPhase = nextPhase;
       }
       setState(restored);
       setViewPhase(undefined);
+      setIncompleteSession(null);
+      // Trigger pipeline resume after state settles
+      setTimeout(() => callPipeline("resume", { startPhase }), 100);
     } catch {
       // Invalid session data, ignore
     }
@@ -545,17 +627,14 @@ export default function FactoryPage() {
     try {
       const restored = JSON.parse(stateJson) as PipelineClientState;
       // Clear error, set phase back
-      restored.phase = phase as PipelinePhase;
+      const startPhase = phase as PipelinePhase;
+      restored.phase = startPhase;
       restored.error = undefined;
       restored.errorAtPhase = undefined;
       setState(restored);
       setViewPhase(undefined);
-      // Need to wait for state update, then trigger
-      const action = getActionForPhase(phase as PipelinePhase);
-      if (action) {
-        // Use setTimeout to let state settle before calling pipeline
-        setTimeout(() => callPipeline(action), 100);
-      }
+      // Use action: "resume" with startPhase to let state settle before calling pipeline
+      setTimeout(() => callPipeline("resume", { startPhase }), 100);
     } catch {
       // Invalid session data, ignore
     }
@@ -637,6 +716,44 @@ export default function FactoryPage() {
             handleRetryFromPhase(phase);
           }}
         />
+      )}
+
+      {/* Session Status Bar — shown when a session is active */}
+      {state.phase !== "idle" && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--bru-space-3)",
+            padding: "var(--bru-space-2) var(--bru-space-3)",
+            marginBottom: "var(--bru-space-4)",
+            background: "rgba(0,0,0,0.04)",
+            border: "1px solid rgba(0,0,0,0.08)",
+            borderRadius: "4px",
+            fontSize: "var(--bru-text-xs)",
+            color: "var(--bru-grey)",
+          }}
+        >
+          <span>
+            Session:{" "}
+            <code style={{ fontFamily: "monospace" }}>
+              {truncateSessionId(state.sessionId)}
+            </code>
+          </span>
+          <span style={{ opacity: 0.4 }}>|</span>
+          <span>
+            Phase:{" "}
+            <strong style={{ color: "var(--bru-black)" }}>
+              {PHASE_LABELS[state.phase] || state.phase}
+            </strong>
+          </span>
+          {lastSavedAt && (
+            <>
+              <span style={{ opacity: 0.4 }}>|</span>
+              <span>Saved {formatTimestamp(lastSavedAt)}</span>
+            </>
+          )}
+        </div>
       )}
 
       {/* Error */}
@@ -738,12 +855,87 @@ export default function FactoryPage() {
           }}
         >
           <Loader size={16} className="animate-spin" />
-          Processing...
+          {state.phase && PHASE_ORDER.includes(state.phase as PipelinePhase) ? (
+            <>
+              Processing {PHASE_LABELS[state.phase] || state.phase} (step{" "}
+              {PHASE_ORDER.indexOf(state.phase as PipelinePhase) + 1}/7)...
+            </>
+          ) : (
+            "Processing..."
+          )}
         </div>
       )}
 
-      {/* Session History (shown on idle) */}
-      {state.phase === "idle" && !running && (
+      {/* Auto-resume prompt — shown when page loads with an incomplete session */}
+      {state.phase === "idle" && !running && incompleteSession && (
+        <Card
+          variant="raised"
+          style={{
+            marginBottom: "var(--bru-space-4)",
+            borderLeft: "4px solid var(--bru-purple)",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "var(--bru-space-3)",
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: "var(--bru-text-md)",
+                  marginBottom: "var(--bru-space-1)",
+                }}
+              >
+                You have an incomplete session
+              </div>
+              <div
+                style={{
+                  fontSize: "var(--bru-text-sm)",
+                  color: "var(--bru-grey)",
+                  marginBottom: "var(--bru-space-3)",
+                }}
+              >
+                Last phase:{" "}
+                <strong>
+                  {PHASE_LABELS[incompleteSession.phase] ||
+                    incompleteSession.phase}
+                </strong>
+                {incompleteSession.title &&
+                incompleteSession.title !== "Untitled"
+                  ? ` — "${incompleteSession.title}"`
+                  : ""}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "var(--bru-space-2)",
+                  flexWrap: "wrap",
+                }}
+              >
+                <Button
+                  variant="primary"
+                  onClick={() =>
+                    handleResumeSession(incompleteSession.stateJson)
+                  }
+                >
+                  <Play size={14} />
+                  Resume from{" "}
+                  {PHASE_LABELS[incompleteSession.phase] ||
+                    incompleteSession.phase}
+                </Button>
+                <Button onClick={handleNewPost}>Start Fresh</Button>
+              </div>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Session History (shown on idle when no incomplete session prompt) */}
+      {state.phase === "idle" && !running && !incompleteSession && (
         <SessionHistory
           onResume={handleResumeSession}
           onRetryFromPhase={handleRetryFromSession}

@@ -50,8 +50,27 @@ import {
 } from "@/lib/agents/orchestrator";
 import type { PipelineEvent, TopicProposal } from "@/lib/knowledge/types";
 
+const PHASE_ORDER = [
+  "direction",
+  "discovery",
+  "evidence",
+  "writing",
+  "scoring",
+  "formatting",
+  "learning",
+] as const;
+
+type PhaseName = (typeof PHASE_ORDER)[number];
+
 interface StreamRequestBody {
-  action: "start" | "discover" | "evidence" | "write" | "format" | "learn";
+  action:
+    | "start"
+    | "discover"
+    | "evidence"
+    | "write"
+    | "format"
+    | "learn"
+    | "resume";
   sessionId: string;
   keys: {
     claude: string;
@@ -70,6 +89,8 @@ interface StreamRequestBody {
   userFeedback?: string[];
   /** Session-level tone override */
   toneOverride?: string;
+  /** Phase to resume from (used with action === "resume") */
+  startPhase?: PhaseName;
 }
 
 export async function POST(req: NextRequest) {
@@ -310,6 +331,75 @@ export async function POST(req: NextRequest) {
               }
             }
             break;
+          case "resume": {
+            const startPhase = body.startPhase;
+            if (!startPhase) {
+              emit({
+                step: "pipeline",
+                status: "error",
+                percent: 0,
+                data: { error: "resume action requires startPhase" },
+              });
+              break;
+            }
+
+            const startIndex = PHASE_ORDER.indexOf(startPhase);
+            if (startIndex === -1) {
+              emit({
+                step: "pipeline",
+                status: "error",
+                percent: 0,
+                data: {
+                  error: `Invalid startPhase: ${startPhase}. Valid values: ${PHASE_ORDER.join(", ")}`,
+                },
+              });
+              break;
+            }
+
+            const skippedPhases = PHASE_ORDER.slice(0, startIndex);
+
+            emit({
+              step: "pipeline",
+              status: "resuming",
+              percent: 0,
+              data: { startPhase, skippedPhases },
+            });
+
+            // Run from startPhase through to the end
+            const phasesToRun = PHASE_ORDER.slice(startIndex);
+
+            for (const phase of phasesToRun) {
+              // Stop if a phase errored
+              if (state.phase === "error") break;
+
+              switch (phase) {
+                case "direction":
+                  await runDirection(state, emit, signal);
+                  break;
+                case "discovery":
+                  await runDiscovery(state, emit, signal);
+                  break;
+                case "evidence":
+                  await runEvidence(state, emit, signal);
+                  break;
+                case "writing":
+                case "scoring":
+                  // writing and scoring are combined in runWriteAndScore
+                  // only run once even if both appear in phasesToRun
+                  if (phase === "writing") {
+                    await runWriteAndScore(state, emit, signal);
+                  }
+                  break;
+                case "formatting":
+                  await runFormat(state, emit, signal);
+                  break;
+                case "learning":
+                  await runLearn(state, emit, signal);
+                  break;
+              }
+            }
+            break;
+          }
         }
 
         // Persist session to NCB (fire-and-forget, don't block SSE)

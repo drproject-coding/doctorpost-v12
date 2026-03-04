@@ -263,7 +263,13 @@ export interface GuardrailResult {
 
 export interface PipelineEvent {
   step: string;
-  status: "running" | "done" | "error" | "waiting-for-user" | "brand-context";
+  status:
+    | "running"
+    | "done"
+    | "error"
+    | "waiting-for-user"
+    | "brand-context"
+    | "resuming";
   percent: number;
   data?: unknown;
   guardrailResults?: GuardrailResult[];

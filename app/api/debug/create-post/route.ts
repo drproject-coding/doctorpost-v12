@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
     const payload = {
       title: "Debug Test Post",
       content: "This is a debug test to see if post creation works",
-      scheduled_at: new Date().toISOString(),
       pillar: "Test Pillar",
       status: "draft",
       user_id: user.id,

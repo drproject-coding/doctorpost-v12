@@ -6,19 +6,28 @@ import {
   RotateCcw,
   CheckCircle,
   XCircle,
+  Compass,
+  Search,
+  BookOpen,
+  PenTool,
+  Target,
+  Wand2,
+  Eye,
+  Lightbulb,
 } from "lucide-react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
 
-const STEPS: { phase: PipelinePhase; label: string }[] = [
-  { phase: "direction", label: "Direction" },
-  { phase: "discovery", label: "Discovery" },
-  { phase: "evidence", label: "Evidence" },
-  { phase: "writing", label: "Writing" },
-  { phase: "scoring", label: "Scoring" },
-  { phase: "formatting", label: "Formatting" },
-  { phase: "review", label: "Review" },
-  { phase: "learning", label: "Learning" },
-];
+const STEPS: { phase: PipelinePhase; label: string; icon: React.ReactNode }[] =
+  [
+    { phase: "direction", label: "Direction", icon: <Compass size={20} /> },
+    { phase: "discovery", label: "Discovery", icon: <Search size={20} /> },
+    { phase: "evidence", label: "Evidence", icon: <BookOpen size={20} /> },
+    { phase: "writing", label: "Writing", icon: <PenTool size={20} /> },
+    { phase: "scoring", label: "Scoring", icon: <Target size={20} /> },
+    { phase: "formatting", label: "Formatting", icon: <Wand2 size={20} /> },
+    { phase: "review", label: "Review", icon: <Eye size={20} /> },
+    { phase: "learning", label: "Learning", icon: <Lightbulb size={20} /> },
+  ];
 
 const PHASE_ORDER: PipelinePhase[] = STEPS.map((s) => s.phase);
 
@@ -138,6 +147,23 @@ export function PipelineStepper({
                 position: "relative",
               }}
             >
+              {/* Icon */}
+              <div
+                style={{
+                  color: isViewing
+                    ? "var(--bru-purple)"
+                    : isComplete || isCurrent
+                      ? "var(--bru-black)"
+                      : "var(--bru-grey)",
+                  opacity: isComplete || isCurrent || isViewing ? 1 : 0.5,
+                  transition: "all 0.2s ease",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {step.icon}
+              </div>
               {/* Progress bar segment */}
               <div
                 style={{

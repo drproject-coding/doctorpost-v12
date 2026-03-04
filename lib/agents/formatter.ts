@@ -36,16 +36,32 @@ export async function runFormatter(
 
   const userMessage = `Format this approved draft for LinkedIn. Strip all markdown, verify see-more fold compliance, apply visual rhythm, count characters, and generate a suggested pinned comment. Return a FormattedPost JSON with: content (plain text), characterCount, hookBeforeFold ({mobile: bool, desktop: bool}), suggestedPinnedComment, metadata ({template, pillar, angle, score}).`;
 
-  const { text } = await callAgentClaude({
-    apiKey: input.apiKey,
-    model: config.model,
-    maxTokens: config.maxTokens,
-    systemPrompt,
-    userMessage,
-    signal: input.signal,
-    provider: input.provider,
-    providerModel: input.providerModel,
-  });
+  let text: string;
+  try {
+    const response = await callAgentClaude({
+      apiKey: input.apiKey,
+      model: config.model,
+      maxTokens: config.maxTokens,
+      systemPrompt,
+      userMessage,
+      signal: input.signal,
+      provider: input.provider,
+      providerModel: input.providerModel,
+    });
+    text = response.text;
+  } catch (err) {
+    throw new Error(
+      `Formatter failed to call Claude API: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
 
-  return extractJson<FormattedPost>(text);
+  try {
+    return extractJson<FormattedPost>(text);
+  } catch (err) {
+    // If extraction fails, log the actual response for debugging
+    const responsePreview = text.slice(0, 500);
+    throw new Error(
+      `Formatter extraction failed. Response preview: "${responsePreview}..." Error: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
 }

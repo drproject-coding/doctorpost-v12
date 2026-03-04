@@ -127,7 +127,11 @@ function validateScorerResponse(output: unknown): {
     };
   }
 
-  if (!["publish", "rewrite", "scrap"].includes(obj.verdict as string)) {
+  if (
+    !["publish", "minor-tweaks", "rework", "rewrite", "scrap"].includes(
+      obj.verdict as string,
+    )
+  ) {
     return {
       valid: false,
       error: `Scorer output invalid 'verdict': ${obj.verdict}`,

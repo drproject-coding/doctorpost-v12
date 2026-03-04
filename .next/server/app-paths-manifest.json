@@ -22,6 +22,7 @@
   "/api/knowledge/ingest/route": "app/api/knowledge/ingest/route.js",
   "/api/models/route": "app/api/models/route.js",
   "/api/oneforall/route": "app/api/oneforall/route.js",
+  "/api/pipeline/sessions/route": "app/api/pipeline/sessions/route.js",
   "/api/pipeline/stream/route": "app/api/pipeline/stream/route.js",
   "/api/seed-knowledge/route": "app/api/seed-knowledge/route.js",
   "/api/seed-profile/route": "app/api/seed-profile/route.js",

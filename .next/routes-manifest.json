@@ -114,6 +114,12 @@
       "namedRegex": "^/api/oneforall(?:/)?$"
     },
     {
+      "page": "/api/pipeline/sessions",
+      "regex": "^/api/pipeline/sessions(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/pipeline/sessions(?:/)?$"
+    },
+    {
       "page": "/api/pipeline/stream",
       "regex": "^/api/pipeline/stream(?:/)?$",
       "routeKeys": {},

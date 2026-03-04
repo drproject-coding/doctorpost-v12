@@ -263,6 +263,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../app/api/pipeline/sessions/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/pipeline/sessions">> = Specific
+  const handler = {} as typeof import("../../app/api/pipeline/sessions/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/api/pipeline/stream/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/pipeline/stream">> = Specific

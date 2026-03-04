@@ -1,0 +1,4127 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API documentation for 50008_doctorpost",
+    "version": "1.0.0",
+    "description": "API documentation for 50008_doctorpost"
+  },
+  "servers": [
+    {
+      "url": "https://openapi.nocodebackend.com"
+    }
+  ],
+  "paths": {
+    "/create/campaign_posts?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in campaign_posts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "campaign_id": {
+                    "type": "integer"
+                  },
+                  "post_id": {
+                    "type": "integer"
+                  },
+                  "slot_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "slot_order": {
+                    "type": "integer"
+                  },
+                  "topic_card": {
+                    "type": "string"
+                  },
+                  "generation_status": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/campaign_posts?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from campaign_posts",
+        "description": "### Filtering and query options\n\nUse query parameters to filter results. Operators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field` | `?status=active` | Equal (default) |\n| `field[ne]` | `?status[ne]=inactive` | Not equal |\n| `field[gt]` | `?price[gt]=100` | Greater than |\n| `field[gte]` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]` | `?score[lt]=500` | Less than |\n| `field[lte]` | `?score[lte]=800` | Less than or equal |\n| `field[in]` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]` | `?name[like]=john` | Partial match |\n\n**Examples**\n- `?price[gte]=100&price[lte]=200`\n- `?name[like]=john`\n- `?status=active`\n\n**Additional helpers**\n- **Pagination**: `page`, `limit` (defaults 1, 10)\n- **Totals**: `includeTotal=true` adds `total` and `totalPages`\n- **Sorting**: `sort=colA,colB`, `order=asc,desc`\n- **Single record**: `only=latest` or `only=oldest` (optional `by=column`, defaults `id`)",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "campaign_id": {
+                            "type": "integer"
+                          },
+                          "post_id": {
+                            "type": "integer"
+                          },
+                          "slot_date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "slot_order": {
+                            "type": "integer"
+                          },
+                          "topic_card": {
+                            "type": "string"
+                          },
+                          "generation_status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/campaign_posts/{id}?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from campaign_posts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "campaign_id": {
+                          "type": "integer"
+                        },
+                        "post_id": {
+                          "type": "integer"
+                        },
+                        "slot_date": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "slot_order": {
+                          "type": "integer"
+                        },
+                        "topic_card": {
+                          "type": "string"
+                        },
+                        "generation_status": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/campaign_posts?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in campaign_posts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "campaign_id": {
+                    "type": "integer"
+                  },
+                  "post_id": {
+                    "type": "integer"
+                  },
+                  "slot_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "slot_order": {
+                    "type": "integer"
+                  },
+                  "topic_card": {
+                    "type": "string"
+                  },
+                  "generation_status": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "campaign_id": {
+                            "type": "integer"
+                          },
+                          "post_id": {
+                            "type": "integer"
+                          },
+                          "slot_date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "slot_order": {
+                            "type": "integer"
+                          },
+                          "topic_card": {
+                            "type": "string"
+                          },
+                          "generation_status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/campaign_posts/{id}?Instance=50008_doctorpost": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in campaign_posts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "campaign_id": {
+                    "type": "integer"
+                  },
+                  "post_id": {
+                    "type": "integer"
+                  },
+                  "slot_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "slot_order": {
+                    "type": "integer"
+                  },
+                  "topic_card": {
+                    "type": "string"
+                  },
+                  "generation_status": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/campaign_posts/{id}?Instance=50008_doctorpost": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from campaign_posts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/create/campaigns?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in campaigns",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "duration_weeks": {
+                    "type": "integer"
+                  },
+                  "posts_per_week": {
+                    "type": "integer"
+                  },
+                  "goals": {
+                    "type": "string"
+                  },
+                  "pillar_weights": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/campaigns?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from campaigns",
+        "description": "### Filtering and query options\n\nUse query parameters to filter results. Operators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field` | `?status=active` | Equal (default) |\n| `field[ne]` | `?status[ne]=inactive` | Not equal |\n| `field[gt]` | `?price[gt]=100` | Greater than |\n| `field[gte]` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]` | `?score[lt]=500` | Less than |\n| `field[lte]` | `?score[lte]=800` | Less than or equal |\n| `field[in]` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]` | `?name[like]=john` | Partial match |\n\n**Examples**\n- `?price[gte]=100&price[lte]=200`\n- `?name[like]=john`\n- `?status=active`\n\n**Additional helpers**\n- **Pagination**: `page`, `limit` (defaults 1, 10)\n- **Totals**: `includeTotal=true` adds `total` and `totalPages`\n- **Sorting**: `sort=colA,colB`, `order=asc,desc`\n- **Single record**: `only=latest` or `only=oldest` (optional `by=column`, defaults `id`)",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user_id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "duration_weeks": {
+                            "type": "integer"
+                          },
+                          "posts_per_week": {
+                            "type": "integer"
+                          },
+                          "goals": {
+                            "type": "string"
+                          },
+                          "pillar_weights": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/campaigns/{id}?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from campaigns",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user_id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "duration_weeks": {
+                          "type": "integer"
+                        },
+                        "posts_per_week": {
+                          "type": "integer"
+                        },
+                        "goals": {
+                          "type": "string"
+                        },
+                        "pillar_weights": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/campaigns?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in campaigns",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "duration_weeks": {
+                    "type": "integer"
+                  },
+                  "posts_per_week": {
+                    "type": "integer"
+                  },
+                  "goals": {
+                    "type": "string"
+                  },
+                  "pillar_weights": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user_id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "duration_weeks": {
+                            "type": "integer"
+                          },
+                          "posts_per_week": {
+                            "type": "integer"
+                          },
+                          "goals": {
+                            "type": "string"
+                          },
+                          "pillar_weights": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/campaigns/{id}?Instance=50008_doctorpost": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in campaigns",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "duration_weeks": {
+                    "type": "integer"
+                  },
+                  "posts_per_week": {
+                    "type": "integer"
+                  },
+                  "goals": {
+                    "type": "string"
+                  },
+                  "pillar_weights": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/campaigns/{id}?Instance=50008_doctorpost": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from campaigns",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/create/document_versions?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in document_versions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "document_id": {
+                    "type": "integer"
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "change_reason": {
+                    "type": "string"
+                  },
+                  "changed_by": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/document_versions?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from document_versions",
+        "description": "### Filtering and query options\n\nUse query parameters to filter results. Operators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field` | `?status=active` | Equal (default) |\n| `field[ne]` | `?status[ne]=inactive` | Not equal |\n| `field[gt]` | `?price[gt]=100` | Greater than |\n| `field[gte]` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]` | `?score[lt]=500` | Less than |\n| `field[lte]` | `?score[lte]=800` | Less than or equal |\n| `field[in]` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]` | `?name[like]=john` | Partial match |\n\n**Examples**\n- `?price[gte]=100&price[lte]=200`\n- `?name[like]=john`\n- `?status=active`\n\n**Additional helpers**\n- **Pagination**: `page`, `limit` (defaults 1, 10)\n- **Totals**: `includeTotal=true` adds `total` and `totalPages`\n- **Sorting**: `sort=colA,colB`, `order=asc,desc`\n- **Single record**: `only=latest` or `only=oldest` (optional `by=column`, defaults `id`)",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "document_id": {
+                            "type": "integer"
+                          },
+                          "version": {
+                            "type": "integer"
+                          },
+                          "content": {
+                            "type": "string"
+                          },
+                          "change_reason": {
+                            "type": "string"
+                          },
+                          "changed_by": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/document_versions/{id}?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from document_versions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "document_id": {
+                          "type": "integer"
+                        },
+                        "version": {
+                          "type": "integer"
+                        },
+                        "content": {
+                          "type": "string"
+                        },
+                        "change_reason": {
+                          "type": "string"
+                        },
+                        "changed_by": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/document_versions?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in document_versions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "document_id": {
+                    "type": "integer"
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "change_reason": {
+                    "type": "string"
+                  },
+                  "changed_by": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "document_id": {
+                            "type": "integer"
+                          },
+                          "version": {
+                            "type": "integer"
+                          },
+                          "content": {
+                            "type": "string"
+                          },
+                          "change_reason": {
+                            "type": "string"
+                          },
+                          "changed_by": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/document_versions/{id}?Instance=50008_doctorpost": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in document_versions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "document_id": {
+                    "type": "integer"
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "change_reason": {
+                    "type": "string"
+                  },
+                  "changed_by": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/document_versions/{id}?Instance=50008_doctorpost": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from document_versions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/create/documents?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in documents",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "subcategory": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "is_active": {
+                    "type": "integer"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  },
+                  "updated_by": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/documents?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from documents",
+        "description": "### Filtering and query options\n\nUse query parameters to filter results. Operators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field` | `?status=active` | Equal (default) |\n| `field[ne]` | `?status[ne]=inactive` | Not equal |\n| `field[gt]` | `?price[gt]=100` | Greater than |\n| `field[gte]` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]` | `?score[lt]=500` | Less than |\n| `field[lte]` | `?score[lte]=800` | Less than or equal |\n| `field[in]` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]` | `?name[like]=john` | Partial match |\n\n**Examples**\n- `?price[gte]=100&price[lte]=200`\n- `?name[like]=john`\n- `?status=active`\n\n**Additional helpers**\n- **Pagination**: `page`, `limit` (defaults 1, 10)\n- **Totals**: `includeTotal=true` adds `total` and `totalPages`\n- **Sorting**: `sort=colA,colB`, `order=asc,desc`\n- **Single record**: `only=latest` or `only=oldest` (optional `by=column`, defaults `id`)",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user_id": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "subcategory": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "content": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "integer"
+                          },
+                          "is_active": {
+                            "type": "integer"
+                          },
+                          "source": {
+                            "type": "string"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          },
+                          "updated_by": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/documents/{id}?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from documents",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user_id": {
+                          "type": "string"
+                        },
+                        "category": {
+                          "type": "string"
+                        },
+                        "subcategory": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "content": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "integer"
+                        },
+                        "is_active": {
+                          "type": "integer"
+                        },
+                        "source": {
+                          "type": "string"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00"
+                        },
+                        "updated_by": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/documents?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in documents",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "subcategory": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "is_active": {
+                    "type": "integer"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  },
+                  "updated_by": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user_id": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "subcategory": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "content": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "integer"
+                          },
+                          "is_active": {
+                            "type": "integer"
+                          },
+                          "source": {
+                            "type": "string"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          },
+                          "updated_by": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/documents/{id}?Instance=50008_doctorpost": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in documents",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "subcategory": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "is_active": {
+                    "type": "integer"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  },
+                  "updated_by": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/documents/{id}?Instance=50008_doctorpost": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from documents",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/create/posts?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in posts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "scheduled_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  },
+                  "pillar": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/posts?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from posts",
+        "description": "### Filtering and query options\n\nUse query parameters to filter results. Operators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field` | `?status=active` | Equal (default) |\n| `field[ne]` | `?status[ne]=inactive` | Not equal |\n| `field[gt]` | `?price[gt]=100` | Greater than |\n| `field[gte]` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]` | `?score[lt]=500` | Less than |\n| `field[lte]` | `?score[lte]=800` | Less than or equal |\n| `field[in]` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]` | `?name[like]=john` | Partial match |\n\n**Examples**\n- `?price[gte]=100&price[lte]=200`\n- `?name[like]=john`\n- `?status=active`\n\n**Additional helpers**\n- **Pagination**: `page`, `limit` (defaults 1, 10)\n- **Totals**: `includeTotal=true` adds `total` and `totalPages`\n- **Sorting**: `sort=colA,colB`, `order=asc,desc`\n- **Single record**: `only=latest` or `only=oldest` (optional `by=column`, defaults `id`)",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string"
+                          },
+                          "content": {
+                            "type": "string"
+                          },
+                          "scheduled_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          },
+                          "pillar": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "user_id": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/posts/{id}?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from posts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "content": {
+                          "type": "string"
+                        },
+                        "scheduled_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00"
+                        },
+                        "pillar": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "user_id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/posts?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in posts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "scheduled_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  },
+                  "pillar": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string"
+                          },
+                          "content": {
+                            "type": "string"
+                          },
+                          "scheduled_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          },
+                          "pillar": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "user_id": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/posts/{id}?Instance=50008_doctorpost": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in posts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "scheduled_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  },
+                  "pillar": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/posts/{id}?Instance=50008_doctorpost": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from posts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/create/profiles?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in profiles",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "company_name": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "industry": {
+                    "type": "string"
+                  },
+                  "audience": {
+                    "type": "string"
+                  },
+                  "tones": {
+                    "type": "string"
+                  },
+                  "offers": {
+                    "type": "string"
+                  },
+                  "taboos": {
+                    "type": "string"
+                  },
+                  "style_guide_emoji": {
+                    "type": "integer"
+                  },
+                  "style_guide_hashtags": {
+                    "type": "integer"
+                  },
+                  "style_guide_links": {
+                    "type": "string"
+                  },
+                  "copy_guideline": {
+                    "type": "string"
+                  },
+                  "content_strategy": {
+                    "type": "string"
+                  },
+                  "definition": {
+                    "type": "string"
+                  },
+                  "openai_key": {
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "ai_provider": {
+                    "type": "string"
+                  },
+                  "claude_api_key": {
+                    "type": "string"
+                  },
+                  "straico_api_key": {
+                    "type": "string"
+                  },
+                  "straico_model": {
+                    "type": "string"
+                  },
+                  "oneforall_api_key": {
+                    "type": "string"
+                  },
+                  "oneforall_model": {
+                    "type": "string"
+                  },
+                  "perplexity_api_key": {
+                    "type": "string"
+                  },
+                  "reddit_client_id": {
+                    "type": "string"
+                  },
+                  "reddit_client_secret": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/profiles?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from profiles",
+        "description": "### Filtering and query options\n\nUse query parameters to filter results. Operators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field` | `?status=active` | Equal (default) |\n| `field[ne]` | `?status[ne]=inactive` | Not equal |\n| `field[gt]` | `?price[gt]=100` | Greater than |\n| `field[gte]` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]` | `?score[lt]=500` | Less than |\n| `field[lte]` | `?score[lte]=800` | Less than or equal |\n| `field[in]` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]` | `?name[like]=john` | Partial match |\n\n**Examples**\n- `?price[gte]=100&price[lte]=200`\n- `?name[like]=john`\n- `?status=active`\n\n**Additional helpers**\n- **Pagination**: `page`, `limit` (defaults 1, 10)\n- **Totals**: `includeTotal=true` adds `total` and `totalPages`\n- **Sorting**: `sort=colA,colB`, `order=asc,desc`\n- **Single record**: `only=latest` or `only=oldest` (optional `by=column`, defaults `id`)",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "first_name": {
+                            "type": "string"
+                          },
+                          "last_name": {
+                            "type": "string"
+                          },
+                          "company_name": {
+                            "type": "string"
+                          },
+                          "role": {
+                            "type": "string"
+                          },
+                          "industry": {
+                            "type": "string"
+                          },
+                          "audience": {
+                            "type": "string"
+                          },
+                          "tones": {
+                            "type": "string"
+                          },
+                          "offers": {
+                            "type": "string"
+                          },
+                          "taboos": {
+                            "type": "string"
+                          },
+                          "style_guide_emoji": {
+                            "type": "integer"
+                          },
+                          "style_guide_hashtags": {
+                            "type": "integer"
+                          },
+                          "style_guide_links": {
+                            "type": "string"
+                          },
+                          "copy_guideline": {
+                            "type": "string"
+                          },
+                          "content_strategy": {
+                            "type": "string"
+                          },
+                          "definition": {
+                            "type": "string"
+                          },
+                          "openai_key": {
+                            "type": "string"
+                          },
+                          "user_id": {
+                            "type": "string"
+                          },
+                          "ai_provider": {
+                            "type": "string"
+                          },
+                          "claude_api_key": {
+                            "type": "string"
+                          },
+                          "straico_api_key": {
+                            "type": "string"
+                          },
+                          "straico_model": {
+                            "type": "string"
+                          },
+                          "oneforall_api_key": {
+                            "type": "string"
+                          },
+                          "oneforall_model": {
+                            "type": "string"
+                          },
+                          "perplexity_api_key": {
+                            "type": "string"
+                          },
+                          "reddit_client_id": {
+                            "type": "string"
+                          },
+                          "reddit_client_secret": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/profiles/{id}?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from profiles",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "first_name": {
+                          "type": "string"
+                        },
+                        "last_name": {
+                          "type": "string"
+                        },
+                        "company_name": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "industry": {
+                          "type": "string"
+                        },
+                        "audience": {
+                          "type": "string"
+                        },
+                        "tones": {
+                          "type": "string"
+                        },
+                        "offers": {
+                          "type": "string"
+                        },
+                        "taboos": {
+                          "type": "string"
+                        },
+                        "style_guide_emoji": {
+                          "type": "integer"
+                        },
+                        "style_guide_hashtags": {
+                          "type": "integer"
+                        },
+                        "style_guide_links": {
+                          "type": "string"
+                        },
+                        "copy_guideline": {
+                          "type": "string"
+                        },
+                        "content_strategy": {
+                          "type": "string"
+                        },
+                        "definition": {
+                          "type": "string"
+                        },
+                        "openai_key": {
+                          "type": "string"
+                        },
+                        "user_id": {
+                          "type": "string"
+                        },
+                        "ai_provider": {
+                          "type": "string"
+                        },
+                        "claude_api_key": {
+                          "type": "string"
+                        },
+                        "straico_api_key": {
+                          "type": "string"
+                        },
+                        "straico_model": {
+                          "type": "string"
+                        },
+                        "oneforall_api_key": {
+                          "type": "string"
+                        },
+                        "oneforall_model": {
+                          "type": "string"
+                        },
+                        "perplexity_api_key": {
+                          "type": "string"
+                        },
+                        "reddit_client_id": {
+                          "type": "string"
+                        },
+                        "reddit_client_secret": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/profiles?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in profiles",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "company_name": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "industry": {
+                    "type": "string"
+                  },
+                  "audience": {
+                    "type": "string"
+                  },
+                  "tones": {
+                    "type": "string"
+                  },
+                  "offers": {
+                    "type": "string"
+                  },
+                  "taboos": {
+                    "type": "string"
+                  },
+                  "style_guide_emoji": {
+                    "type": "integer"
+                  },
+                  "style_guide_hashtags": {
+                    "type": "integer"
+                  },
+                  "style_guide_links": {
+                    "type": "string"
+                  },
+                  "copy_guideline": {
+                    "type": "string"
+                  },
+                  "content_strategy": {
+                    "type": "string"
+                  },
+                  "definition": {
+                    "type": "string"
+                  },
+                  "openai_key": {
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "ai_provider": {
+                    "type": "string"
+                  },
+                  "claude_api_key": {
+                    "type": "string"
+                  },
+                  "straico_api_key": {
+                    "type": "string"
+                  },
+                  "straico_model": {
+                    "type": "string"
+                  },
+                  "oneforall_api_key": {
+                    "type": "string"
+                  },
+                  "oneforall_model": {
+                    "type": "string"
+                  },
+                  "perplexity_api_key": {
+                    "type": "string"
+                  },
+                  "reddit_client_id": {
+                    "type": "string"
+                  },
+                  "reddit_client_secret": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "first_name": {
+                            "type": "string"
+                          },
+                          "last_name": {
+                            "type": "string"
+                          },
+                          "company_name": {
+                            "type": "string"
+                          },
+                          "role": {
+                            "type": "string"
+                          },
+                          "industry": {
+                            "type": "string"
+                          },
+                          "audience": {
+                            "type": "string"
+                          },
+                          "tones": {
+                            "type": "string"
+                          },
+                          "offers": {
+                            "type": "string"
+                          },
+                          "taboos": {
+                            "type": "string"
+                          },
+                          "style_guide_emoji": {
+                            "type": "integer"
+                          },
+                          "style_guide_hashtags": {
+                            "type": "integer"
+                          },
+                          "style_guide_links": {
+                            "type": "string"
+                          },
+                          "copy_guideline": {
+                            "type": "string"
+                          },
+                          "content_strategy": {
+                            "type": "string"
+                          },
+                          "definition": {
+                            "type": "string"
+                          },
+                          "openai_key": {
+                            "type": "string"
+                          },
+                          "user_id": {
+                            "type": "string"
+                          },
+                          "ai_provider": {
+                            "type": "string"
+                          },
+                          "claude_api_key": {
+                            "type": "string"
+                          },
+                          "straico_api_key": {
+                            "type": "string"
+                          },
+                          "straico_model": {
+                            "type": "string"
+                          },
+                          "oneforall_api_key": {
+                            "type": "string"
+                          },
+                          "oneforall_model": {
+                            "type": "string"
+                          },
+                          "perplexity_api_key": {
+                            "type": "string"
+                          },
+                          "reddit_client_id": {
+                            "type": "string"
+                          },
+                          "reddit_client_secret": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/profiles/{id}?Instance=50008_doctorpost": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in profiles",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "company_name": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "industry": {
+                    "type": "string"
+                  },
+                  "audience": {
+                    "type": "string"
+                  },
+                  "tones": {
+                    "type": "string"
+                  },
+                  "offers": {
+                    "type": "string"
+                  },
+                  "taboos": {
+                    "type": "string"
+                  },
+                  "style_guide_emoji": {
+                    "type": "integer"
+                  },
+                  "style_guide_hashtags": {
+                    "type": "integer"
+                  },
+                  "style_guide_links": {
+                    "type": "string"
+                  },
+                  "copy_guideline": {
+                    "type": "string"
+                  },
+                  "content_strategy": {
+                    "type": "string"
+                  },
+                  "definition": {
+                    "type": "string"
+                  },
+                  "openai_key": {
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "ai_provider": {
+                    "type": "string"
+                  },
+                  "claude_api_key": {
+                    "type": "string"
+                  },
+                  "straico_api_key": {
+                    "type": "string"
+                  },
+                  "straico_model": {
+                    "type": "string"
+                  },
+                  "oneforall_api_key": {
+                    "type": "string"
+                  },
+                  "oneforall_model": {
+                    "type": "string"
+                  },
+                  "perplexity_api_key": {
+                    "type": "string"
+                  },
+                  "reddit_client_id": {
+                    "type": "string"
+                  },
+                  "reddit_client_secret": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/profiles/{id}?Instance=50008_doctorpost": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from profiles",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/create/rule_proposals?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in rule_proposals",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "target_document": {
+                    "type": "string"
+                  },
+                  "proposal_type": {
+                    "type": "string"
+                  },
+                  "evidence_signals": {
+                    "type": "string"
+                  },
+                  "current_content": {
+                    "type": "string"
+                  },
+                  "proposed_content": {
+                    "type": "string"
+                  },
+                  "reasoning": {
+                    "type": "string"
+                  },
+                  "confidence": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/rule_proposals?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from rule_proposals",
+        "description": "### Filtering and query options\n\nUse query parameters to filter results. Operators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field` | `?status=active` | Equal (default) |\n| `field[ne]` | `?status[ne]=inactive` | Not equal |\n| `field[gt]` | `?price[gt]=100` | Greater than |\n| `field[gte]` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]` | `?score[lt]=500` | Less than |\n| `field[lte]` | `?score[lte]=800` | Less than or equal |\n| `field[in]` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]` | `?name[like]=john` | Partial match |\n\n**Examples**\n- `?price[gte]=100&price[lte]=200`\n- `?name[like]=john`\n- `?status=active`\n\n**Additional helpers**\n- **Pagination**: `page`, `limit` (defaults 1, 10)\n- **Totals**: `includeTotal=true` adds `total` and `totalPages`\n- **Sorting**: `sort=colA,colB`, `order=asc,desc`\n- **Single record**: `only=latest` or `only=oldest` (optional `by=column`, defaults `id`)",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user_id": {
+                            "type": "string"
+                          },
+                          "target_document": {
+                            "type": "string"
+                          },
+                          "proposal_type": {
+                            "type": "string"
+                          },
+                          "evidence_signals": {
+                            "type": "string"
+                          },
+                          "current_content": {
+                            "type": "string"
+                          },
+                          "proposed_content": {
+                            "type": "string"
+                          },
+                          "reasoning": {
+                            "type": "string"
+                          },
+                          "confidence": {
+                            "type": "number"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/rule_proposals/{id}?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from rule_proposals",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user_id": {
+                          "type": "string"
+                        },
+                        "target_document": {
+                          "type": "string"
+                        },
+                        "proposal_type": {
+                          "type": "string"
+                        },
+                        "evidence_signals": {
+                          "type": "string"
+                        },
+                        "current_content": {
+                          "type": "string"
+                        },
+                        "proposed_content": {
+                          "type": "string"
+                        },
+                        "reasoning": {
+                          "type": "string"
+                        },
+                        "confidence": {
+                          "type": "number"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/rule_proposals?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in rule_proposals",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "target_document": {
+                    "type": "string"
+                  },
+                  "proposal_type": {
+                    "type": "string"
+                  },
+                  "evidence_signals": {
+                    "type": "string"
+                  },
+                  "current_content": {
+                    "type": "string"
+                  },
+                  "proposed_content": {
+                    "type": "string"
+                  },
+                  "reasoning": {
+                    "type": "string"
+                  },
+                  "confidence": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user_id": {
+                            "type": "string"
+                          },
+                          "target_document": {
+                            "type": "string"
+                          },
+                          "proposal_type": {
+                            "type": "string"
+                          },
+                          "evidence_signals": {
+                            "type": "string"
+                          },
+                          "current_content": {
+                            "type": "string"
+                          },
+                          "proposed_content": {
+                            "type": "string"
+                          },
+                          "reasoning": {
+                            "type": "string"
+                          },
+                          "confidence": {
+                            "type": "number"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/rule_proposals/{id}?Instance=50008_doctorpost": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in rule_proposals",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "target_document": {
+                    "type": "string"
+                  },
+                  "proposal_type": {
+                    "type": "string"
+                  },
+                  "evidence_signals": {
+                    "type": "string"
+                  },
+                  "current_content": {
+                    "type": "string"
+                  },
+                  "proposed_content": {
+                    "type": "string"
+                  },
+                  "reasoning": {
+                    "type": "string"
+                  },
+                  "confidence": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/rule_proposals/{id}?Instance=50008_doctorpost": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from rule_proposals",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/create/signals?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in signals",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "session_id": {
+                    "type": "string"
+                  },
+                  "signal_type": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "context": {
+                    "type": "string"
+                  },
+                  "observation": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/signals?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from signals",
+        "description": "### Filtering and query options\n\nUse query parameters to filter results. Operators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field` | `?status=active` | Equal (default) |\n| `field[ne]` | `?status[ne]=inactive` | Not equal |\n| `field[gt]` | `?price[gt]=100` | Greater than |\n| `field[gte]` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]` | `?score[lt]=500` | Less than |\n| `field[lte]` | `?score[lte]=800` | Less than or equal |\n| `field[in]` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]` | `?name[like]=john` | Partial match |\n\n**Examples**\n- `?price[gte]=100&price[lte]=200`\n- `?name[like]=john`\n- `?status=active`\n\n**Additional helpers**\n- **Pagination**: `page`, `limit` (defaults 1, 10)\n- **Totals**: `includeTotal=true` adds `total` and `totalPages`\n- **Sorting**: `sort=colA,colB`, `order=asc,desc`\n- **Single record**: `only=latest` or `only=oldest` (optional `by=column`, defaults `id`)",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user_id": {
+                            "type": "string"
+                          },
+                          "session_id": {
+                            "type": "string"
+                          },
+                          "signal_type": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "context": {
+                            "type": "string"
+                          },
+                          "observation": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/signals/{id}?Instance=50008_doctorpost": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from signals",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user_id": {
+                          "type": "string"
+                        },
+                        "session_id": {
+                          "type": "string"
+                        },
+                        "signal_type": {
+                          "type": "string"
+                        },
+                        "category": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "string"
+                        },
+                        "observation": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/signals?Instance=50008_doctorpost": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in signals",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "session_id": {
+                    "type": "string"
+                  },
+                  "signal_type": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "context": {
+                    "type": "string"
+                  },
+                  "observation": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user_id": {
+                            "type": "string"
+                          },
+                          "session_id": {
+                            "type": "string"
+                          },
+                          "signal_type": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "context": {
+                            "type": "string"
+                          },
+                          "observation": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/signals/{id}?Instance=50008_doctorpost": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in signals",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "session_id": {
+                    "type": "string"
+                  },
+                  "signal_type": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "context": {
+                    "type": "string"
+                  },
+                  "observation": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/signals/{id}?Instance=50008_doctorpost": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from signals",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+      "Instance": {
+        "name": "Instance",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "default": "50008_doctorpost"
+        },
+        "description": "Instance Name"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Endpoints",
+      "description": "Operations related to the API endpoints"
+    },
+    {
+      "name": "Join Endpoints",
+      "description": "Operations related to table joins"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Card } from "@bruddle/react";
-import { Copy, Check, Smartphone, Monitor } from "lucide-react";
+import { Copy, Check, Smartphone, Monitor, Save } from "lucide-react";
 import type { FormattedPost } from "@/lib/knowledge/types";
 
 type PreviewMode = "mobile" | "desktop";
@@ -11,9 +11,11 @@ const FOLD_CHARS = { mobile: 210, desktop: 280 };
 
 interface FormattedOutputProps {
   post: FormattedPost;
+  onSave?: () => void;
+  isSaving?: boolean;
 }
 
-export function FormattedOutput({ post }: FormattedOutputProps) {
+export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps) {
   const [copied, setCopied] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile");
   const [showMore, setShowMore] = useState(false);
@@ -127,6 +129,16 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
             {copied ? <Check size={14} /> : <Copy size={14} />}
             {copied ? "Copied!" : "Copy"}
           </Button>
+          {onSave && (
+            <Button
+              onClick={onSave}
+              disabled={isSaving}
+              style={{ fontSize: "var(--bru-text-sm)" }}
+            >
+              <Save size={14} />
+              {isSaving ? "Saving..." : "Save to Library"}
+            </Button>
+          )}
         </div>
       </div>
 

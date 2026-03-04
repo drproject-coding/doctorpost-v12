@@ -231,10 +231,33 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
                 padding: "var(--bru-space-3)",
                 fontSize: "var(--bru-text-sm)",
                 color: "var(--bru-grey)",
-                textAlign: "center",
               }}
             >
-              No specific signals captured from this session.
+              <p style={{ margin: 0, marginBottom: "var(--bru-space-2)" }}>
+                <strong>No signals captured</strong>
+              </p>
+              <p style={{ margin: 0, lineHeight: 1.5 }}>
+                Signals are learning data points captured from your actions
+                during the pipeline, such as approvals, rejections, edits, or
+                feedback you provide.
+              </p>
+              <p style={{ margin: "var(--bru-space-2) 0 0", lineHeight: 1.5 }}>
+                This session had no interactive feedback signals, which is
+                normal for auto-completed sessions. Signals are captured when
+                you manually:
+              </p>
+              <ul
+                style={{
+                  margin: "var(--bru-space-1) 0 0",
+                  paddingLeft: "var(--bru-space-4)",
+                  fontSize: "var(--bru-text-xs)",
+                }}
+              >
+                <li>Approve or reject content</li>
+                <li>Edit the draft</li>
+                <li>Provide tone or style feedback</li>
+                <li>Override automatic scores</li>
+              </ul>
             </div>
           )}
         </div>

@@ -84,6 +84,7 @@ export default function FactoryPage() {
   });
   const [running, setRunning] = useState(false);
   const [viewPhase, setViewPhase] = useState<PipelinePhase | undefined>();
+  const [isSaving, setIsSaving] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -111,6 +112,34 @@ export default function FactoryPage() {
       void saveCompletedPost();
     }
   }, [state.phase, state.formattedPost, state.selectedTopic, state.scoreResult, running, user?.id]);
+
+
+  const handleManualSave = useCallback(async () => {
+    if (!state.formattedPost || !state.selectedTopic || !user?.id) {
+      alert("Cannot save: missing post data");
+      return;
+    }
+    
+    setIsSaving(true);
+    try {
+      await schedulePost({
+        id: "",
+        title: state.selectedTopic!.headline || state.selectedTopic!.angle || "Untitled Post",
+        content: state.formattedPost.content,
+        pillar: state.selectedTopic!.pillar,
+        status: "scheduled",
+        scheduledAt: new Date().toISOString(),
+        userId: user.id,
+        factoryScore: state.scoreResult?.totalScore,
+      });
+      alert("Post saved to library successfully!");
+    } catch (error) {
+      console.error("Failed to save post:", error);
+      alert("Failed to save post. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  }, [state.formattedPost, state.selectedTopic, state.scoreResult, user?.id]);
 
   const callPipeline = useCallback(
     async (action: string, extraBody: Record<string, unknown> = {}) => {
@@ -229,11 +258,6 @@ export default function FactoryPage() {
       }
 
       // Track phase success/failure status
-      if (currentPhase && event.status === "done") {
-        phaseStatus[currentPhase] = "success";
-        next.phaseStatus = phaseStatus;
-      }
-
       if (event.status === "error") {
         const phase = currentPhase || prev.phase;
         if (phase && phase !== "error") {
@@ -245,6 +269,12 @@ export default function FactoryPage() {
         next.phase = "error";
         next.error =
           (event.data as { error?: string })?.error || "Pipeline error";
+      }
+
+      // Success overwrites any previous failure - if phase completes, it succeeded
+      if (currentPhase && event.status === "done") {
+        phaseStatus[currentPhase] = "success";
+        next.phaseStatus = phaseStatus;
       }
 
       // Capture brand context
@@ -914,7 +944,7 @@ export default function FactoryPage() {
       {state.formattedPost &&
         (!isViewingPast || viewPhase === "formatting") && (
           <div style={{ marginTop: "var(--bru-space-4)" }}>
-            <FormattedOutput post={state.formattedPost} />
+            <FormattedOutput post={state.formattedPost} onSave={handleManualSave} isSaving={isSaving} />
           </div>
         )}
 

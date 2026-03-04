@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function DebugPage() {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<unknown>(null);
+  const [result, setResult] = useState<Record<string, unknown> | null>(null);
   const [error, setError] = useState("");
 
   const testPostCreation = async () => {

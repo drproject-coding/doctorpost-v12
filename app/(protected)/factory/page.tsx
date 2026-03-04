@@ -601,7 +601,13 @@ export default function FactoryPage() {
       const restored = JSON.parse(stateJson) as PipelineClientState;
       // Determine the start phase for resume
       let startPhase: PipelinePhase;
-      if (restored.phase === "error" && restored.errorAtPhase) {
+      
+      // If pipeline already completed, restart from beginning
+      if (restored.phase === "complete") {
+        console.log("[handleResumeSession] Pipeline already complete, starting fresh");
+        startPhase = PHASE_ORDER[0];
+        restored.phase = "idle";
+      } else if (restored.phase === "error" && restored.errorAtPhase) {
         // If errored, retry from the failed phase
         startPhase = restored.errorAtPhase;
         restored.phase = restored.errorAtPhase;
@@ -613,7 +619,7 @@ export default function FactoryPage() {
         const nextPhase =
           currentIdx >= 0 && currentIdx < PHASE_ORDER.length - 1
             ? PHASE_ORDER[currentIdx + 1]
-            : (restored.phase as PipelinePhase);
+            : PHASE_ORDER[0]; // Default to first phase if invalid
         startPhase = nextPhase;
       }
       setState(restored);

@@ -47,11 +47,7 @@ export default function CreatePostDialog({
     loading: profileLoading,
     error: profileError,
   } = useProfileData();
-  const {
-    presets,
-    loading: presetsLoading,
-    error: presetsError,
-  } = usePostPresets();
+  const { loading: presetsLoading, error: presetsError } = usePostPresets();
 
   // Form state
   const [postType, setPostType] = useState("");
@@ -126,7 +122,7 @@ export default function CreatePostDialog({
 
   const isLoading = profileLoading || presetsLoading;
   const isFormComplete = postType && hookPattern && contentPillar && toneId;
-  const hasError = profileError || presetsError;
+  const hasError = profileError ?? presetsError;
 
   // Loading state
   if (isLoading) {

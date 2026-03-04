@@ -36,6 +36,8 @@ const config = {
   testPathIgnorePatterns: [
     '/node_modules/',
     '/.next/',
+    '/.claude/worktrees/',
+    '/e2e/',
   ],
   globals: {
     'ts-jest': {

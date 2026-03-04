@@ -83,7 +83,7 @@ const POST_PRESETS: PostPreset[] = [
   },
 ];
 
-export async function GET() {
+export function GET() {
   return NextResponse.json(POST_PRESETS, {
     headers: {
       "Cache-Control": "public, max-age=3600, s-maxage=3600",

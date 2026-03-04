@@ -46,10 +46,13 @@ async function handleRequest(req: NextRequest, method: string) {
     url = `${ONEFORALL_BASE}/check-status/${codeRef}/`;
   }
 
+  // Read body once — req.clone().json() can consume the stream on some runtimes
+  const bodyText = method === "POST" ? await req.text() : undefined;
+
   // Validate max_tokens on send-request
-  if (action === "send-request" && method === "POST") {
+  if (action === "send-request" && bodyText) {
     try {
-      const body = await req.clone().json();
+      const body = JSON.parse(bodyText);
       if (body?.max_tokens != null) {
         const mt = Number(body.max_tokens);
         if (!Number.isFinite(mt) || mt < 1 || mt > 128000) {
@@ -65,18 +68,6 @@ async function handleRequest(req: NextRequest, method: string) {
   }
 
   try {
-    const bodyText = method === "POST" ? await req.text() : undefined;
-
-    // Log request details for debugging
-    if (process.env.NODE_ENV !== "production") {
-      console.log(`[1forall proxy] ${action} request:`, {
-        url,
-        method: action === "send-request" ? "POST" : "GET",
-        hasApiKey: !!apiKey,
-        bodyLength: bodyText?.length,
-      });
-    }
-
     const upstream = await fetch(url, {
       method: action === "send-request" ? "POST" : "GET",
       headers: {
@@ -88,21 +79,12 @@ async function handleRequest(req: NextRequest, method: string) {
 
     const data = await upstream.text();
 
-    // Log response for debugging
-    if (process.env.NODE_ENV !== "production" && !upstream.ok) {
-      console.log(`[1forall proxy] error response:`, {
-        status: upstream.status,
-        body: data,
-      });
-    }
-
     return new NextResponse(data, {
       status: upstream.status,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Proxy error";
-    console.error("[1forall proxy] error:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

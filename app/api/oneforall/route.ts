@@ -14,7 +14,10 @@ async function handleRequest(req: NextRequest, method: string) {
   const action = req.nextUrl.searchParams.get("action") || "";
 
   if (!action) {
-    return NextResponse.json({ error: "Missing action param" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing action param" },
+      { status: 400 },
+    );
   }
 
   if (!["send-request", "check-status"].includes(action)) {
@@ -62,25 +65,44 @@ async function handleRequest(req: NextRequest, method: string) {
   }
 
   try {
+    const bodyText = method === "POST" ? await req.text() : undefined;
+
+    // Log request details for debugging
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[1forall proxy] ${action} request:`, {
+        url,
+        method: action === "send-request" ? "POST" : "GET",
+        hasApiKey: !!apiKey,
+        bodyLength: bodyText?.length,
+      });
+    }
+
     const upstream = await fetch(url, {
       method: action === "send-request" ? "POST" : "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Api-Key ${apiKey}`,
       },
-      body:
-        action === "send-request" && method === "POST"
-          ? await req.text()
-          : undefined,
+      body: bodyText,
     });
 
     const data = await upstream.text();
+
+    // Log response for debugging
+    if (process.env.NODE_ENV !== "production" && !upstream.ok) {
+      console.log(`[1forall proxy] error response:`, {
+        status: upstream.status,
+        body: data,
+      });
+    }
+
     return new NextResponse(data, {
       status: upstream.status,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Proxy error";
+    console.error("[1forall proxy] error:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

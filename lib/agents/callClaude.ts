@@ -171,6 +171,35 @@ async function callOneForAllDirect(params: {
 }): Promise<{ text: string; tokensUsed: number }> {
   const model = params.providerModel || "anthropic/claude-4-sonnet";
 
+  // Validate required fields
+  if (!params.systemPrompt) {
+    throw new Error("systemPrompt is required but empty");
+  }
+  if (!params.userMessage) {
+    throw new Error("userMessage is required but empty");
+  }
+  if (!model) {
+    throw new Error("model is required but empty");
+  }
+
+  const requestBody = {
+    title: "DoctorPost content generation",
+    system_prompt: params.systemPrompt,
+    message: params.userMessage,
+    model,
+    max_tokens: params.maxTokens,
+  };
+
+  // Log request for debugging
+  if (process.env.NODE_ENV !== "production") {
+    console.log("[1forall] Sending request:", {
+      model,
+      max_tokens: params.maxTokens,
+      systemPromptLength: params.systemPrompt.length,
+      messageLength: params.userMessage.length,
+    });
+  }
+
   // Step 1: Submit request
   const submitResponse = await fetch(ONEFORALL_SUBMIT_URL, {
     method: "POST",
@@ -178,13 +207,7 @@ async function callOneForAllDirect(params: {
       "Content-Type": "application/json",
       Authorization: `Api-Key ${params.apiKey}`,
     },
-    body: JSON.stringify({
-      title: "DoctorPost content generation",
-      system_prompt: params.systemPrompt,
-      message: params.userMessage,
-      model,
-      max_tokens: params.maxTokens,
-    }),
+    body: JSON.stringify(requestBody),
     signal: params.signal,
   });
 

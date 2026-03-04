@@ -165,6 +165,16 @@ export async function POST(req: NextRequest) {
 
   const knowledge = await fetchKnowledgeForUser(user.id, cookie);
 
+  if (!knowledge || knowledge.length === 0) {
+    return new Response(
+      JSON.stringify({
+        error:
+          "No knowledge documents found. Please add brand knowledge in the Knowledge section first.",
+      }),
+      { status: 400, headers: { "Content-Type": "application/json" } },
+    );
+  }
+
   // Get provider model
   const providerModel =
     provider === "1forall"

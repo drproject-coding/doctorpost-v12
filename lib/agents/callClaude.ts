@@ -1,6 +1,15 @@
 import { MODEL_IDS, type AgentConfig } from "./types";
 
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
+const STRAICO_API_URL = "https://api.straico.com/v1/prompt/completion";
+const ONEFORALL_SUBMIT_URL =
+  "https://api.1forall.ai/v1/external/llm/send-request/";
+const ONEFORALL_STATUS_URL =
+  "https://api.1forall.ai/v1/external/llm/check-status/";
+
+const ONEFORALL_POLL_INTERVAL_MS = 2000;
+const ONEFORALL_POLL_TIMEOUT_MS = 120000;
+const ONEFORALL_MAX_POLL_FAILURES = 3;
 
 interface ClaudeApiResponse {
   content: { type: string; text: string }[];
@@ -9,10 +18,37 @@ interface ClaudeApiResponse {
 }
 
 /**
- * Shared Claude API call for all agents.
- * Returns the raw text response from Claude.
+ * Shared AI API call for all pipeline agents.
+ * Routes to Claude, Straico, or 1ForAll based on provider param.
+ * Defaults to Claude for backwards compatibility.
  */
 export async function callAgentClaude(params: {
+  apiKey: string;
+  model: AgentConfig["model"];
+  maxTokens: number;
+  systemPrompt: string;
+  userMessage: string;
+  signal?: AbortSignal;
+  /** AI provider to use. Defaults to "claude". */
+  provider?: "claude" | "straico" | "1forall";
+  /** Model ID for non-Claude providers (e.g. "openai/gpt-4o-mini"). */
+  providerModel?: string;
+}): Promise<{ text: string; tokensUsed: number }> {
+  const provider = params.provider || "claude";
+
+  switch (provider) {
+    case "straico":
+      return callStraicoDirect(params);
+    case "1forall":
+      return callOneForAllDirect(params);
+    default:
+      return callClaudeDirect(params);
+  }
+}
+
+// ── Claude (Anthropic) ──
+
+async function callClaudeDirect(params: {
   apiKey: string;
   model: AgentConfig["model"];
   maxTokens: number;
@@ -52,4 +88,191 @@ export async function callAgentClaude(params: {
     (data.usage?.input_tokens ?? 0) + (data.usage?.output_tokens ?? 0);
 
   return { text, tokensUsed };
+}
+
+// ── Straico ──
+
+async function callStraicoDirect(params: {
+  apiKey: string;
+  maxTokens: number;
+  systemPrompt: string;
+  userMessage: string;
+  signal?: AbortSignal;
+  providerModel?: string;
+}): Promise<{ text: string; tokensUsed: number }> {
+  const model = params.providerModel || "openai/gpt-4o-mini";
+
+  const response = await fetch(STRAICO_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${params.apiKey}`,
+    },
+    body: JSON.stringify({
+      models: [model],
+      message: `${params.systemPrompt}\n\n${params.userMessage}`,
+      max_tokens: params.maxTokens,
+    }),
+    signal: params.signal,
+  });
+
+  if (!response.ok) {
+    const errBody = await response.text();
+    throw new Error(`Straico API error (${response.status}): ${errBody}`);
+  }
+
+  const data = await response.json();
+
+  // Parse response - handle both new and legacy formats
+  let content: string | undefined;
+
+  // New format: completions keyed by model name
+  const completions = data.data?.completions;
+  if (completions && typeof completions === "object") {
+    const firstModel = Object.values(completions)[0] as
+      | Record<string, unknown>
+      | undefined;
+    const completion = firstModel?.completion as
+      | Record<string, unknown>
+      | undefined;
+    const choices = completion?.choices as
+      | { message?: { content?: string } }[]
+      | undefined;
+    content = choices?.[0]?.message?.content;
+  }
+
+  // Fallback: legacy format
+  if (!content) {
+    content =
+      data.data?.completion?.choices?.[0]?.message?.content ||
+      data.completion?.choices?.[0]?.message?.content ||
+      data.data?.completion?.response ||
+      data.completion?.response ||
+      data.response ||
+      data.data?.response;
+  }
+
+  if (!content) {
+    throw new Error("Straico API returned an empty response");
+  }
+
+  return { text: content, tokensUsed: 0 };
+}
+
+// ── 1ForAll ──
+
+async function callOneForAllDirect(params: {
+  apiKey: string;
+  maxTokens: number;
+  systemPrompt: string;
+  userMessage: string;
+  signal?: AbortSignal;
+  providerModel?: string;
+}): Promise<{ text: string; tokensUsed: number }> {
+  const model = params.providerModel || "anthropic/claude-4-sonnet";
+
+  // Step 1: Submit request
+  const submitResponse = await fetch(ONEFORALL_SUBMIT_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Api-Key ${params.apiKey}`,
+    },
+    body: JSON.stringify({
+      title: "DoctorPost content generation",
+      system_prompt: params.systemPrompt,
+      message: params.userMessage,
+      model,
+      max_tokens: params.maxTokens,
+    }),
+    signal: params.signal,
+  });
+
+  if (!submitResponse.ok) {
+    const errBody = await submitResponse.text();
+    throw new Error(
+      `1ForAll submit error (${submitResponse.status}): ${errBody}`,
+    );
+  }
+
+  const submitData = await submitResponse.json();
+
+  // Some models respond immediately
+  if (!submitData.code_ref && submitData.response) {
+    return { text: submitData.response, tokensUsed: 0 };
+  }
+
+  const codeRef = submitData.code_ref;
+  if (!codeRef) {
+    throw new Error(
+      "1ForAll API did not return a code_ref or immediate response",
+    );
+  }
+
+  // Step 2: Poll for completion
+  const startTime = Date.now();
+  let consecutiveFailures = 0;
+
+  while (Date.now() - startTime < ONEFORALL_POLL_TIMEOUT_MS) {
+    await sleep(ONEFORALL_POLL_INTERVAL_MS, params.signal);
+
+    let statusResult;
+    try {
+      const statusResponse = await fetch(
+        `${ONEFORALL_STATUS_URL}${encodeURIComponent(codeRef)}/`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Api-Key ${params.apiKey}`,
+          },
+          signal: params.signal,
+        },
+      );
+
+      if (!statusResponse.ok) {
+        throw new Error(`Poll request failed (${statusResponse.status})`);
+      }
+
+      statusResult = await statusResponse.json();
+      consecutiveFailures = 0;
+    } catch (error) {
+      if (params.signal?.aborted) throw error;
+      consecutiveFailures++;
+      if (consecutiveFailures >= ONEFORALL_MAX_POLL_FAILURES) {
+        throw new Error(
+          `1ForAll polling failed after ${ONEFORALL_MAX_POLL_FAILURES} consecutive errors: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+      continue;
+    }
+
+    if (statusResult.status === "completed") {
+      return { text: statusResult.response, tokensUsed: 0 };
+    }
+
+    if (statusResult.status === "error") {
+      throw new Error(
+        `1ForAll processing error: ${statusResult.error || "Unknown error"}`,
+      );
+    }
+  }
+
+  throw new Error(
+    `1ForAll polling timed out after ${ONEFORALL_POLL_TIMEOUT_MS / 1000} seconds`,
+  );
+}
+
+function sleep(ms: number, signal?: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) return reject(signal.reason);
+    const timer = setTimeout(resolve, ms);
+    signal?.addEventListener(
+      "abort",
+      () => {
+        clearTimeout(timer);
+        reject(signal.reason);
+      },
+      { once: true },
+    );
+  });
 }

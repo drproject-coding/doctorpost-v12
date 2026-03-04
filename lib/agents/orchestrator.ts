@@ -215,6 +215,10 @@ export interface PipelineState {
     claude: string;
     perplexity?: string;
     reddit?: { clientId: string; clientSecret: string };
+    /** Active AI provider */
+    provider?: "claude" | "straico" | "1forall";
+    /** Model ID for non-Claude providers (e.g. "openai/gpt-4o-mini") */
+    providerModel?: string;
   };
   /** Recent posts for pillar balance */
   recentPosts?: { pillar: string; date: string }[];
@@ -283,6 +287,8 @@ export async function runDirection(
   try {
     const output = await runStrategist({
       apiKey: state.keys.claude,
+      provider: state.keys.provider,
+      providerModel: state.keys.providerModel,
       knowledge: state.knowledge,
       recentPosts: state.recentPosts,
       brandContext: state.brandContext,
@@ -328,6 +334,8 @@ export async function runDiscovery(
     emit({ step: "discovery-research", status: "running", percent: 20 });
     const brief = await runResearcher({
       apiKey: state.keys.claude,
+      provider: state.keys.provider,
+      providerModel: state.keys.providerModel,
       knowledge: state.knowledge,
       mode: "discovery",
       topic: state.selectedTopic.headline,
@@ -347,6 +355,8 @@ export async function runDiscovery(
     emit({ step: "discovery-refine", status: "running", percent: 60 });
     const refined = await runStrategist({
       apiKey: state.keys.claude,
+      provider: state.keys.provider,
+      providerModel: state.keys.providerModel,
       knowledge: state.knowledge,
       discoveryBrief: JSON.stringify(state.discoveryBrief),
       brandContext: state.brandContext,
@@ -401,6 +411,8 @@ export async function runEvidence(
   try {
     const pack = await runResearcher({
       apiKey: state.keys.claude,
+      provider: state.keys.provider,
+      providerModel: state.keys.providerModel,
       knowledge: state.knowledge,
       mode: "evidence",
       topic: topic.headline,
@@ -465,6 +477,8 @@ export async function runWriteAndScore(
 
       writerOutput = await runWriter({
         apiKey: state.keys.claude,
+        provider: state.keys.provider,
+        providerModel: state.keys.providerModel,
         knowledge: state.knowledge,
         topicCard: topic,
         evidencePack: state.evidencePack,
@@ -513,6 +527,8 @@ export async function runWriteAndScore(
 
       scoreResult = await runScorer({
         apiKey: state.keys.claude,
+        provider: state.keys.provider,
+        providerModel: state.keys.providerModel,
         knowledge: state.knowledge,
         draft: writerOutput.content,
         topicCard: topic,
@@ -589,6 +605,8 @@ export async function runFormat(
   try {
     const formatted = await runFormatter({
       apiKey: state.keys.claude,
+      provider: state.keys.provider,
+      providerModel: state.keys.providerModel,
       knowledge: state.knowledge,
       draft: state.writerOutput.content,
       score: state.scoreResult.totalScore,
@@ -646,6 +664,8 @@ export async function runLearn(
   try {
     const learnerOutput = await runLearner({
       apiKey: state.keys.claude,
+      provider: state.keys.provider,
+      providerModel: state.keys.providerModel,
       knowledge: state.knowledge,
       originalDraft: state.writerOutput.content,
       finalVersion: state.finalVersion,

@@ -9,6 +9,8 @@ const config = AGENT_CONFIGS.strategist;
 
 export interface StrategistInput {
   apiKey: string;
+  provider?: "claude" | "straico" | "1forall";
+  providerModel?: string;
   knowledge: KnowledgeDocument[];
   /** Optional: recent posts for pillar balance analysis */
   recentPosts?: { pillar: string; date: string }[];
@@ -66,6 +68,8 @@ export async function runStrategist(
     systemPrompt,
     userMessage,
     signal: input.signal,
+    provider: input.provider,
+    providerModel: input.providerModel,
   });
 
   return extractJson<StrategistOutput>(text);

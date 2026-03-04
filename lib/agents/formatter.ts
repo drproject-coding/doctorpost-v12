@@ -9,6 +9,8 @@ const config = AGENT_CONFIGS.formatter;
 
 export interface FormatterInput {
   apiKey: string;
+  provider?: "claude" | "straico" | "1forall";
+  providerModel?: string;
   knowledge: KnowledgeDocument[];
   draft: string;
   score: number;
@@ -41,6 +43,8 @@ export async function runFormatter(
     systemPrompt,
     userMessage,
     signal: input.signal,
+    provider: input.provider,
+    providerModel: input.providerModel,
   });
 
   return extractJson<FormattedPost>(text);

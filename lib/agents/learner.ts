@@ -8,6 +8,8 @@ const config = AGENT_CONFIGS.learner;
 
 export interface LearnerInput {
   apiKey: string;
+  provider?: "claude" | "straico" | "1forall";
+  providerModel?: string;
   knowledge: KnowledgeDocument[];
   /** The original draft from the writer */
   originalDraft: string;
@@ -74,6 +76,8 @@ ${input.userFeedback?.length ? `### User Feedback\n${input.userFeedback.map((f) 
     systemPrompt,
     userMessage,
     signal: input.signal,
+    provider: input.provider,
+    providerModel: input.providerModel,
   });
 
   return extractJson<LearnerOutput>(text);

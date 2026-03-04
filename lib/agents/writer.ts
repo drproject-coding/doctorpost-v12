@@ -9,6 +9,8 @@ const config = AGENT_CONFIGS.writer;
 
 export interface WriterInput {
   apiKey: string;
+  provider?: "claude" | "straico" | "1forall";
+  providerModel?: string;
   knowledge: KnowledgeDocument[];
   topicCard: TopicProposal;
   evidencePack: EvidencePack;
@@ -74,6 +76,8 @@ export async function runWriter(input: WriterInput): Promise<WriterOutput> {
     systemPrompt,
     userMessage,
     signal: input.signal,
+    provider: input.provider,
+    providerModel: input.providerModel,
   });
 
   return extractJson<WriterOutput>(text);

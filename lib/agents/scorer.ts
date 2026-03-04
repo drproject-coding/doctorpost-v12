@@ -9,6 +9,8 @@ const config = AGENT_CONFIGS.scorer;
 
 export interface ScorerInput {
   apiKey: string;
+  provider?: "claude" | "straico" | "1forall";
+  providerModel?: string;
   knowledge: KnowledgeDocument[];
   draft: string;
   topicCard: TopicProposal;
@@ -37,6 +39,8 @@ export async function runScorer(input: ScorerInput): Promise<ScoreResult> {
     systemPrompt,
     userMessage,
     signal: input.signal,
+    provider: input.provider,
+    providerModel: input.providerModel,
   });
 
   return extractJson<ScoreResult>(text);

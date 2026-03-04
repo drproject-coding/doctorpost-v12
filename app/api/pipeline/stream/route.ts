@@ -155,11 +155,27 @@ export async function POST(req: NextRequest) {
       }
     : undefined;
 
+  // Resolve provider + model for pipeline
+  const activeProvider = ((profile?.ai_provider as string) || "claude") as
+    | "claude"
+    | "straico"
+    | "1forall";
+  const providerModel =
+    activeProvider === "straico"
+      ? (profile?.straico_model as string) || "openai/gpt-4o-mini"
+      : activeProvider === "1forall"
+        ? (profile?.oneforall_model as string) || "anthropic/claude-4-sonnet"
+        : undefined;
+
   // Build pipeline state from request
   const state = createPipelineState({
     sessionId: body.sessionId,
     knowledge,
-    keys: resolvedKeys,
+    keys: {
+      ...resolvedKeys,
+      provider: activeProvider,
+      providerModel,
+    },
     brandContext,
   });
 

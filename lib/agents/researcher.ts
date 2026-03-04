@@ -11,6 +11,8 @@ const config = AGENT_CONFIGS.researcher;
 
 export interface ResearcherInput {
   apiKey: string;
+  provider?: "claude" | "straico" | "1forall";
+  providerModel?: string;
   knowledge: KnowledgeDocument[];
   mode: "discovery" | "evidence";
   topic: string;
@@ -90,6 +92,8 @@ export async function runResearcher(
     systemPrompt,
     userMessage,
     signal: input.signal,
+    provider: input.provider,
+    providerModel: input.providerModel,
   });
 
   if (input.mode === "discovery") {

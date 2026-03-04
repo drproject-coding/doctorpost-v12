@@ -196,7 +196,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
             Cancel
           </Button>
           <Button
-            onClick={void handleSave}
+            onClick={() => handleSave()}
             variant="primary"
             disabled={isSaving}
           >

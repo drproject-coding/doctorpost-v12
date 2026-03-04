@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Button, Card } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
-import { Loader, Play, ArrowRight } from "lucide-react";
+import { Loader, Play, ArrowRight, RotateCcw } from "lucide-react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
 import type {
   TopicProposal,
@@ -351,6 +351,59 @@ export default function FactoryPage() {
     });
   };
 
+  /** Map a pipeline phase to the API action needed to retry it */
+  const getActionForPhase = (phase: PipelinePhase): string | null => {
+    const map: Partial<Record<PipelinePhase, string>> = {
+      direction: "start",
+      discovery: "discover",
+      evidence: "evidence",
+      writing: "write",
+      scoring: "write", // scoring is part of the write action
+      formatting: "format",
+      learning: "learn",
+    };
+    return map[phase] ?? null;
+  };
+
+  const PHASE_LABELS: Record<string, string> = {
+    direction: "Direction",
+    discovery: "Discovery",
+    evidence: "Evidence",
+    writing: "Writing",
+    scoring: "Scoring",
+    formatting: "Formatting",
+    learning: "Learning",
+  };
+
+  /** Retry from the phase that errored */
+  const handleRetryFromPhase = (phase: PipelinePhase) => {
+    const action = getActionForPhase(phase);
+    if (!action) return;
+    // Clear error state, set phase back so UI shows correctly
+    setState((prev) => ({
+      ...prev,
+      phase: phase,
+      error: undefined,
+      errorAtPhase: undefined,
+      percent: 0,
+    }));
+    callPipeline(action);
+  };
+
+  /** Resume from a specific earlier phase (re-run from that point) */
+  const handleResumeFromPhase = (phase: PipelinePhase) => {
+    const action = getActionForPhase(phase);
+    if (!action) return;
+    setState((prev) => ({
+      ...prev,
+      phase: phase,
+      error: undefined,
+      errorAtPhase: undefined,
+      percent: 0,
+    }));
+    callPipeline(action);
+  };
+
   // Template selection for write phase
   const [templateInput, setTemplateInput] = useState("");
   // Tone override for this session
@@ -370,8 +423,35 @@ export default function FactoryPage() {
   const handleResumeSession = (stateJson: string) => {
     try {
       const restored = JSON.parse(stateJson) as PipelineClientState;
+      // If resuming from error state, reset to the last successful phase
+      if (restored.phase === "error" && restored.errorAtPhase) {
+        restored.phase = restored.errorAtPhase;
+        restored.error = undefined;
+        restored.errorAtPhase = undefined;
+      }
       setState(restored);
       setViewPhase(undefined);
+    } catch {
+      // Invalid session data, ignore
+    }
+  };
+
+  /** Resume session and immediately retry the failed phase */
+  const handleRetryFromSession = (stateJson: string, phase: string) => {
+    try {
+      const restored = JSON.parse(stateJson) as PipelineClientState;
+      // Clear error, set phase back
+      restored.phase = phase as PipelinePhase;
+      restored.error = undefined;
+      restored.errorAtPhase = undefined;
+      setState(restored);
+      setViewPhase(undefined);
+      // Need to wait for state update, then trigger
+      const action = getActionForPhase(phase as PipelinePhase);
+      if (action) {
+        // Use setTimeout to let state settle before calling pipeline
+        setTimeout(() => callPipeline(action), 100);
+      }
     } catch {
       // Invalid session data, ignore
     }
@@ -449,13 +529,39 @@ export default function FactoryPage() {
             <div className="bru-alert__text">
               {state.error || "An error occurred"}
             </div>
+            {state.errorAtPhase && (
+              <div
+                style={{
+                  fontSize: "var(--bru-text-xs)",
+                  color: "var(--bru-grey)",
+                  marginTop: 2,
+                }}
+              >
+                Failed at:{" "}
+                {PHASE_LABELS[state.errorAtPhase] || state.errorAtPhase}
+              </div>
+            )}
           </div>
-          <Button
-            style={{ marginLeft: "var(--bru-space-3)", flexShrink: 0 }}
-            onClick={handleNewPost}
+          <div
+            style={{
+              display: "flex",
+              gap: "var(--bru-space-2)",
+              marginLeft: "var(--bru-space-3)",
+              flexShrink: 0,
+            }}
           >
-            Start Over
-          </Button>
+            {state.errorAtPhase && getActionForPhase(state.errorAtPhase) && (
+              <Button
+                variant="primary"
+                onClick={() => handleRetryFromPhase(state.errorAtPhase!)}
+                disabled={running}
+              >
+                <RotateCcw size={14} />
+                Retry {PHASE_LABELS[state.errorAtPhase] || state.errorAtPhase}
+              </Button>
+            )}
+            <Button onClick={handleNewPost}>Start Over</Button>
+          </div>
         </div>
       )}
 
@@ -478,7 +584,10 @@ export default function FactoryPage() {
 
       {/* Session History (shown on idle) */}
       {state.phase === "idle" && !running && (
-        <SessionHistory onResume={handleResumeSession} />
+        <SessionHistory
+          onResume={handleResumeSession}
+          onRetryFromPhase={handleRetryFromSession}
+        />
       )}
 
       {/* IDLE — Start */}

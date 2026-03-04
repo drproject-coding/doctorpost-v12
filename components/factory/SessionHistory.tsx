@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button, Card } from "@bruddle/react";
-import { Clock, Trash2, Play } from "lucide-react";
+import { Clock, Trash2, Play, RotateCcw } from "lucide-react";
 import {
   listSessions as listLocalSessions,
   deleteSession as deleteLocalSession,
@@ -10,6 +10,7 @@ import {
 
 interface SessionHistoryProps {
   onResume: (stateJson: string) => void;
+  onRetryFromPhase?: (stateJson: string, phase: string) => void;
 }
 
 const PHASE_LABELS: Record<string, string> = {
@@ -26,7 +27,10 @@ const PHASE_LABELS: Record<string, string> = {
   error: "Error",
 };
 
-export function SessionHistory({ onResume }: SessionHistoryProps) {
+export function SessionHistory({
+  onResume,
+  onRetryFromPhase,
+}: SessionHistoryProps) {
   const [sessions, setSessions] = useState<SavedSession[]>([]);
   const [expanded, setExpanded] = useState(false);
   const [source, setSource] = useState<"local" | "ncb">("local");
@@ -188,15 +192,51 @@ export function SessionHistory({ onResume }: SessionHistoryProps) {
                 </span>
               </div>
             </div>
-            <Button
-              size="sm"
-              variant="primary"
-              onClick={() => onResume(session.stateJson)}
-              style={{ flexShrink: 0 }}
-            >
-              <Play size={12} />
-              Resume
-            </Button>
+            {session.phase === "error" && onRetryFromPhase ? (
+              (() => {
+                // Parse stateJson to find errorAtPhase
+                let errorAtPhase: string | undefined;
+                try {
+                  const parsed = JSON.parse(session.stateJson);
+                  errorAtPhase = parsed.errorAtPhase;
+                } catch {
+                  /* ignore */
+                }
+                return errorAtPhase ? (
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    onClick={() =>
+                      onRetryFromPhase(session.stateJson, errorAtPhase!)
+                    }
+                    style={{ flexShrink: 0 }}
+                  >
+                    <RotateCcw size={12} />
+                    Retry {PHASE_LABELS[errorAtPhase] || errorAtPhase}
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    onClick={() => onResume(session.stateJson)}
+                    style={{ flexShrink: 0 }}
+                  >
+                    <Play size={12} />
+                    Resume
+                  </Button>
+                );
+              })()
+            ) : (
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={() => onResume(session.stateJson)}
+                style={{ flexShrink: 0 }}
+              >
+                <Play size={12} />
+                {session.phase === "complete" ? "View" : "Resume"}
+              </Button>
+            )}
             <button
               onClick={() => handleDelete(session.id)}
               style={{

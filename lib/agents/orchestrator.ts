@@ -464,66 +464,92 @@ export async function runWriteAndScore(
   }
 
   state.phase = "writing";
-  state.rewriteCount = 0;
+  // Only reset rewriteCount if starting fresh (no writerOutput from previous attempt)
+  if (!state.writerOutput) {
+    state.rewriteCount = 0;
+  }
 
   try {
-    let writerOutput: WriterOutput | undefined;
+    let writerOutput: WriterOutput | undefined = state.writerOutput;
     let scoreResult: ScoreResult | undefined;
 
+    // Check if we're retrying from a scoring failure (writerOutput exists)
+    const isRetryingFromScoring = !!state.writerOutput;
+
     for (let attempt = 1; attempt <= MAX_REWRITES + 1; attempt++) {
-      // Writing phase
-      emit({
-        step: "writing",
-        status: "running",
-        percent: attempt === 1 ? 10 : 50,
-        data: attempt > 1 ? { rewriteAttempt: attempt } : undefined,
-      });
+      // Skip writing phase if retrying from scoring (writerOutput already exists)
+      if (!isRetryingFromScoring || attempt === 1) {
+        // Writing phase
+        emit({
+          step: "writing",
+          status: "running",
+          percent: attempt === 1 ? 10 : 50,
+          data: attempt > 1 ? { rewriteAttempt: attempt } : undefined,
+        });
 
-      writerOutput = await runWriter({
-        apiKey: state.keys.claude,
-        provider: state.keys.provider,
-        providerModel: state.keys.providerModel,
-        knowledge: state.knowledge,
-        topicCard: topic,
-        evidencePack: state.evidencePack,
-        template: state.selectedTemplate,
-        rewriteContext:
-          attempt > 1 && writerOutput && scoreResult
-            ? {
-                previousDraft: writerOutput.content,
-                scorerFeedback:
-                  scoreResult.rewriteInstructions ||
-                  JSON.stringify(scoreResult.criteriaScores),
-                attemptNumber: attempt,
-              }
-            : undefined,
-        signal,
-      });
+        writerOutput = await runWriter({
+          apiKey: state.keys.claude,
+          provider: state.keys.provider,
+          providerModel: state.keys.providerModel,
+          knowledge: state.knowledge,
+          topicCard: topic,
+          evidencePack: state.evidencePack,
+          template: state.selectedTemplate,
+          rewriteContext:
+            attempt > 1 && writerOutput && scoreResult
+              ? {
+                  previousDraft: writerOutput.content,
+                  scorerFeedback:
+                    scoreResult.rewriteInstructions ||
+                    JSON.stringify(scoreResult.criteriaScores),
+                  attemptNumber: attempt,
+                }
+              : undefined,
+          signal,
+        });
 
-      // Validate writer response shape
-      const writerValidation = validateWriterResponse(writerOutput);
-      if (!writerValidation.valid) {
-        throw new Error(`Invalid writer response: ${writerValidation.error}`);
+        // Validate writer response shape
+        const writerValidation = validateWriterResponse(writerOutput);
+        if (!writerValidation.valid) {
+          throw new Error(`Invalid writer response: ${writerValidation.error}`);
+        }
+
+        state.writerOutput = writerOutput;
+        emit({
+          step: "writing",
+          status: "done",
+          percent: 40,
+          data: writerOutput,
+        });
+
+        // Quick Kill Check (guardrails)
+        const qk = quickKillCheck(writerOutput.content, state.knowledge);
+        const guardrails = runGuardrails(writerOutput.content, state.knowledge);
+        emit({
+          step: "guardrails",
+          status: "done",
+          percent: 50,
+          data: { quickKill: qk },
+          guardrailResults: guardrails,
+        });
+      } else {
+        // Retrying from scoring, skip writing and go straight to scoring
+        emit({
+          step: "writing",
+          status: "done",
+          percent: 40,
+          data: writerOutput,
+        });
+
+        // Skip guardrails on retry
+        emit({
+          step: "guardrails",
+          status: "done",
+          percent: 50,
+          data: { quickKill: false, retryMode: true },
+          guardrailResults: [],
+        });
       }
-
-      state.writerOutput = writerOutput;
-      emit({
-        step: "writing",
-        status: "done",
-        percent: 40,
-        data: writerOutput,
-      });
-
-      // Quick Kill Check (guardrails)
-      const qk = quickKillCheck(writerOutput.content, state.knowledge);
-      const guardrails = runGuardrails(writerOutput.content, state.knowledge);
-      emit({
-        step: "guardrails",
-        status: "done",
-        percent: 50,
-        data: { quickKill: qk },
-        guardrailResults: guardrails,
-      });
 
       // Scoring phase
       state.phase = "scoring";
@@ -534,7 +560,7 @@ export async function runWriteAndScore(
         provider: state.keys.provider,
         providerModel: state.keys.providerModel,
         knowledge: state.knowledge,
-        draft: writerOutput.content,
+        draft: writerOutput!.content,
         topicCard: topic,
         previousScore: attempt > 1 ? scoreResult : undefined,
         signal,

@@ -108,7 +108,18 @@ export async function POST(req: NextRequest) {
   const resolvedKeys = { ...body.keys };
   if (resolvedKeys.claude === "__server_resolved__") {
     if (profile) {
-      resolvedKeys.claude = profile.claude_api_key || "";
+      // Resolve to appropriate AI provider key based on user's active provider
+      const activeProvider = (profile.ai_provider as string) || "claude";
+
+      if (activeProvider === "straico") {
+        resolvedKeys.claude = profile.straico_api_key || "";
+      } else if (activeProvider === "1forall") {
+        resolvedKeys.claude = profile.oneforall_api_key || "";
+      } else {
+        // Default to Claude/Anthropic
+        resolvedKeys.claude = profile.claude_api_key || "";
+      }
+
       if (!resolvedKeys.perplexity && profile.perplexity_api_key) {
         resolvedKeys.perplexity = profile.perplexity_api_key;
       }
@@ -120,10 +131,10 @@ export async function POST(req: NextRequest) {
       }
     }
     if (!resolvedKeys.claude) {
+      const activeProvider = (profile?.ai_provider as string) || "claude";
       return new Response(
         JSON.stringify({
-          error:
-            "No Claude API key configured. Please add your key in Settings.",
+          error: `No ${activeProvider} API key configured. Please add your key in Settings.`,
         }),
         { status: 400, headers: { "Content-Type": "application/json" } },
       );

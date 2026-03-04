@@ -7,6 +7,49 @@ const UNAUTHORIZED = (msg = "Unauthorized") =>
     headers: { "Content-Type": "application/json" },
   });
 
+/**
+ * Convert ISO 8601 datetime strings to MySQL format (YYYY-MM-DD HH:MM:SS)
+ * Handles both full ISO strings with timezone and partial strings
+ */
+function convertDatetimeFields(obj: Record<string, unknown>): void {
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === "string" && isIso8601DateTime(value)) {
+      obj[key] = convertIso8601ToMysql(value);
+      console.log(
+        `[convertDatetimeFields] Converted ${key}: ${value} → ${obj[key]}`,
+      );
+    }
+  }
+}
+
+/**
+ * Check if a string looks like an ISO 8601 datetime
+ */
+function isIso8601DateTime(str: string): boolean {
+  // Pattern: YYYY-MM-DDTHH:MM:SS with optional milliseconds and timezone
+  return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(str);
+}
+
+/**
+ * Convert ISO 8601 to MySQL datetime format
+ */
+function convertIso8601ToMysql(isoString: string): string {
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) {
+    return isoString; // Return unchanged if not a valid date
+  }
+
+  // Format as YYYY-MM-DD HH:MM:SS
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
@@ -70,6 +113,9 @@ export async function POST(
       delete parsed.user_id;
       parsed.user_id = user.id;
 
+      // Convert ISO 8601 datetime strings to MySQL format
+      convertDatetimeFields(parsed);
+
       console.log(
         `[POST ${pathStr}] Final payload with injected user_id:`,
         JSON.stringify(parsed, null, 2),
@@ -104,6 +150,10 @@ export async function PUT(
     try {
       const parsed = JSON.parse(body) as Record<string, unknown>;
       delete parsed.user_id;
+
+      // Convert ISO 8601 datetime strings to MySQL format
+      convertDatetimeFields(parsed);
+
       return proxyToNCB(req, pathStr, JSON.stringify(parsed));
     } catch {
       // fall through

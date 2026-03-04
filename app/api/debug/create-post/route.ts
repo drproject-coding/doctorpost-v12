@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getSessionUser, CONFIG, extractAuthCookies } from "@/lib/ncb-utils";
+import { getSessionUser } from "@/lib/ncb-utils";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,36 +13,33 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Simulate what the proxy does
+    // Test payload with ISO 8601 datetime (should be converted by proxy)
     const payload = {
       title: "Debug Test Post",
       content: "This is a debug test to see if post creation works",
+      scheduled_at: new Date().toISOString(),
       pillar: "Test Pillar",
       status: "draft",
-      user_id: user.id,
     };
 
     console.log(
-      "[DEBUG] Payload to send to NCB:",
+      "[DEBUG] Payload to send via proxy:",
       JSON.stringify(payload, null, 2),
     );
 
-    const authCookies = extractAuthCookies(cookieHeader);
-    const url = `${CONFIG.dataApiUrl}/create/posts?instance=${CONFIG.instance}`;
-
-    const res = await fetch(url, {
+    // Use the authenticated proxy endpoint
+    const res = await fetch(`${req.nextUrl.origin}/api/data/create/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Database-Instance": CONFIG.instance,
-        Cookie: authCookies,
+        Cookie: cookieHeader,
       },
       body: JSON.stringify(payload),
     });
 
     const responseText = await res.text();
-    console.log("[DEBUG] NCB Response status:", res.status);
-    console.log("[DEBUG] NCB Response body:", responseText);
+    console.log("[DEBUG] Proxy response status:", res.status);
+    console.log("[DEBUG] Proxy response body:", responseText);
 
     return new Response(
       JSON.stringify(
@@ -50,7 +47,7 @@ export async function POST(req: NextRequest) {
           success: res.ok,
           status: res.status,
           payload,
-          ncbResponse: responseText,
+          proxyResponse: responseText,
           parsed: (() => {
             try {
               return JSON.parse(responseText);

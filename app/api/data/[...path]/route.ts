@@ -41,9 +41,11 @@ export async function POST(
     JSON.stringify(user, null, 2),
   );
 
-  if (!user) {
-    console.log(`[POST ${pathStr}] ERROR: getSessionUser returned null/falsy`);
-    return UNAUTHORIZED("Session user not found");
+  if (!user || !user.id) {
+    console.log(
+      `[POST ${pathStr}] ERROR: getSessionUser returned null/falsy or user.id is missing`,
+    );
+    return UNAUTHORIZED("Session user not found or user ID is invalid");
   }
 
   console.log(`[POST ${pathStr}] user.id value: "${user.id}"`);

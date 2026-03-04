@@ -43,24 +43,59 @@ export async function getSessionUser(cookieHeader: string): Promise<{
   name?: string;
   image?: string;
 } | null> {
+  console.log(`[getSessionUser] Starting session retrieval`);
   const authCookies = extractAuthCookies(cookieHeader);
-  if (!authCookies) return null;
-  const url = `${CONFIG.authApiUrl}/get-session?instance=${CONFIG.instance}`;
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Database-Instance": CONFIG.instance,
-      Cookie: authCookies,
-    },
-  });
-  if (res.ok) {
-    const data = (await res.json()) as {
-      user?: { id: string; email?: string; name?: string; image?: string };
-    };
-    return data.user || null;
+  console.log(`[getSessionUser] Auth cookies extracted:`, !!authCookies);
+  if (!authCookies) {
+    console.log(`[getSessionUser] No auth cookies found, returning null`);
+    return null;
   }
-  return null;
+
+  const url = `${CONFIG.authApiUrl}/get-session?instance=${CONFIG.instance}`;
+  console.log(`[getSessionUser] Calling URL:`, url);
+
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Database-Instance": CONFIG.instance,
+        Cookie: authCookies,
+      },
+    });
+
+    console.log(`[getSessionUser] Response status:`, res.status);
+
+    if (res.ok) {
+      const data = (await res.json()) as {
+        user?: { id: string; email?: string; name?: string; image?: string };
+      };
+      console.log(
+        `[getSessionUser] Response data:`,
+        JSON.stringify(data, null, 2),
+      );
+
+      if (data.user) {
+        console.log(
+          `[getSessionUser] Returning user with id: "${data.user.id}"`,
+        );
+        return data.user;
+      } else {
+        console.log(`[getSessionUser] Response had no user field`);
+        return null;
+      }
+    } else {
+      const errorText = await res.text();
+      console.log(
+        `[getSessionUser] Error response (${res.status}):`,
+        errorText,
+      );
+      return null;
+    }
+  } catch (error) {
+    console.error(`[getSessionUser] Exception:`, error);
+    return null;
+  }
 }
 
 /**

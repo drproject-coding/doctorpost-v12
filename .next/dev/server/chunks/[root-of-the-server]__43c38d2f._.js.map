@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 46, "column": 0}, "map": {"version":3,"sources":["file:///Users/y/Desktop/doctorpost-v12/app/api/auth-providers/route.ts"],"sourcesContent":["import { NextResponse } from \"next/server\";\n\nexport async function GET() {\n  const url = `${process.env.NCB_AUTH_API_URL}/providers?instance=${process.env.NCB_INSTANCE}`;\n  const res = await fetch(url);\n  const data = await res.json();\n  return NextResponse.json(data);\n}\n"],"names":[],"mappings":";;;;AAAA;;AAEO,eAAe;IACpB,MAAM,MAAM,GAAG,QAAQ,GAAG,CAAC,gBAAgB,CAAC,oBAAoB,EAAE,QAAQ,GAAG,CAAC,YAAY,EAAE;IAC5F,MAAM,MAAM,MAAM,MAAM;IACxB,MAAM,OAAO,MAAM,IAAI,IAAI;IAC3B,OAAO,gLAAY,CAAC,IAAI,CAAC;AAC3B"}}]
-}

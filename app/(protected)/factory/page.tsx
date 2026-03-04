@@ -335,8 +335,12 @@ export default function FactoryPage() {
           phaseStatus[phase] = "failed";
           next.phaseStatus = phaseStatus;
         }
+        // Only set errorAtPhase if it's a valid phase to retry from
+        const validPhases = ["direction", "discovery", "evidence", "writing", "scoring", "formatting", "learning"];
         next.errorAtPhase =
-          prev.phase !== "error" ? prev.phase : prev.errorAtPhase;
+          prev.phase !== "error" && validPhases.includes(prev.phase as string)
+            ? prev.phase
+            : prev.errorAtPhase;
         next.phase = "error";
         next.error =
           (event.data as { error?: string })?.error || "Pipeline error";

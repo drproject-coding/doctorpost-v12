@@ -15,6 +15,7 @@
   "/api/ai/route": "app/api/ai/route.js",
   "/api/auth-providers/route": "app/api/auth-providers/route.js",
   "/api/auth/[...path]/route": "app/api/auth/[...path]/route.js",
+  "/api/auth/ensure-user/route": "app/api/auth/ensure-user/route.js",
   "/api/campaign/route": "app/api/campaign/route.js",
   "/api/data/[...path]/route": "app/api/data/[...path]/route.js",
   "/api/knowledge/[...path]/route": "app/api/knowledge/[...path]/route.js",

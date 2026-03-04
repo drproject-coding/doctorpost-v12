@@ -78,6 +78,12 @@
       "namedRegex": "^/api/ai(?:/)?$"
     },
     {
+      "page": "/api/auth/ensure-user",
+      "regex": "^/api/auth/ensure\\-user(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/ensure\\-user(?:/)?$"
+    },
+    {
       "page": "/api/auth-providers",
       "regex": "^/api/auth\\-providers(?:/)?$",
       "routeKeys": {},

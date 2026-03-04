@@ -32,7 +32,7 @@ import {
   listSessions,
   type SavedSession,
 } from "@/lib/sessionStorage";
-import { schedulePost } from "@/lib/api";
+import { schedulePost, ensureUserExists } from "@/lib/api";
 
 interface PipelineClientState {
   sessionId: string;
@@ -136,6 +136,7 @@ export default function FactoryPage() {
     ) {
       const saveCompletedPost = async () => {
         try {
+          await ensureUserExists();
           await schedulePost({
             id: "",
             title:
@@ -175,6 +176,9 @@ export default function FactoryPage() {
 
     setIsSaving(true);
     try {
+      console.log("[handleManualSave] Ensuring user exists in NCB");
+      await ensureUserExists();
+
       console.log("[handleManualSave] Saving post with data:", {
         title:
           state.selectedTopic!.headline ||

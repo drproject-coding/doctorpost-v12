@@ -230,6 +230,26 @@ export const updateBrandProfile = async (
 
 // --- Posts ---
 
+export const ensureUserExists = async (): Promise<void> => {
+  // Ensure user exists in NCB before allowing post creation
+  // This prevents foreign key constraint violations
+  try {
+    const res = await fetch("/api/auth/ensure-user", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) {
+      console.warn(
+        "[ensureUserExists] Failed to ensure user exists:",
+        res.statusText,
+      );
+    }
+  } catch (error) {
+    console.warn("[ensureUserExists] Error:", error);
+  }
+};
+
 export const getScheduledPosts = async (): Promise<ScheduledPost[]> => {
   const res = await fetch("/api/data/read/posts", {
     credentials: "include",

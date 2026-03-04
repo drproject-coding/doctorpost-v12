@@ -15,6 +15,7 @@
   "/api/ai/route": "/api/ai",
   "/api/auth-providers/route": "/api/auth-providers",
   "/api/auth/[...path]/route": "/api/auth/[...path]",
+  "/api/auth/ensure-user/route": "/api/auth/ensure-user",
   "/api/campaign/route": "/api/campaign",
   "/api/data/[...path]/route": "/api/data/[...path]",
   "/api/knowledge/[...path]/route": "/api/knowledge/[...path]",

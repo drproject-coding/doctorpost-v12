@@ -18,13 +18,32 @@ export function extractJson<T>(raw: string): T {
     // Continue to extraction strategies
   }
 
-  // Try extracting from markdown code fence
-  const fenceMatch = raw.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+  // Try extracting from markdown code fence (with or without closing fence)
+  // Handle cases like: ```json { ... } or ```json\n{ ... }\n```
+  let fenceMatch = raw.match(/```(?:json)?\s*\n?([\s\S]*?)(?:\n?```)?$/);
   if (fenceMatch) {
     try {
-      return JSON.parse(fenceMatch[1].trim()) as T;
+      const extracted = fenceMatch[1].trim();
+      if (extracted) {
+        return JSON.parse(extracted) as T;
+      }
     } catch {
       // Continue
+    }
+  }
+
+  // Alternative: try single-line fence format
+  if (!fenceMatch) {
+    fenceMatch = raw.match(/```json\s*([\s\S]*?)(?:```|$)/);
+    if (fenceMatch) {
+      try {
+        const extracted = fenceMatch[1].trim();
+        if (extracted) {
+          return JSON.parse(extracted) as T;
+        }
+      } catch {
+        // Continue
+      }
     }
   }
 

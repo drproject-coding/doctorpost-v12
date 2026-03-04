@@ -18,9 +18,19 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
   const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile");
   const [showMore, setShowMore] = useState(false);
 
+  // Provide safe defaults if post data is incomplete
+  const postContent = post?.content ?? "";
+  const postCharCount = post?.characterCount ?? 0;
+  const postHookBeforeFold = post?.hookBeforeFold ?? {
+    mobile: false,
+    desktop: false,
+  };
+  const postMetadata = post?.metadata ?? { template: "", pillar: "", score: 0 };
+  const postPinnedComment = post?.suggestedPinnedComment ?? "";
+
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(post.content);
+      await navigator.clipboard.writeText(postContent);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -29,9 +39,9 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
   };
 
   const foldAt = FOLD_CHARS[previewMode];
-  const isTruncated = post.content.length > foldAt;
+  const isTruncated = postContent.length > foldAt;
   const displayContent =
-    isTruncated && !showMore ? post.content.slice(0, foldAt) : post.content;
+    isTruncated && !showMore ? postContent.slice(0, foldAt) : postContent;
 
   const containerWidth = previewMode === "mobile" ? 375 : 550;
 
@@ -182,7 +192,7 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
               color: "#191919",
             }}
           >
-            {displayContent}
+            {displayContent || "(No content)"}
             {isTruncated && !showMore && "..."}
           </pre>
           {isTruncated && !showMore && (
@@ -267,12 +277,12 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
         Hook is{" "}
         <strong
           style={{
-            color: post.hookBeforeFold[previewMode]
+            color: postHookBeforeFold[previewMode]
               ? "var(--bru-success-dark, #2d7a3a)"
               : "var(--bru-error-dark, #c0392b)",
           }}
         >
-          {post.hookBeforeFold[previewMode] ? "above" : "below"}
+          {postHookBeforeFold[previewMode] ? "above" : "below"}
         </strong>{" "}
         the fold on {previewMode}
       </div>
@@ -286,22 +296,22 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
           gap: "var(--bru-space-2)",
         }}
       >
-        <MetaStat label="Characters" value={String(post.characterCount)} />
+        <MetaStat label="Characters" value={String(postCharCount)} />
         <MetaStat
           label="Mobile fold"
-          value={post.hookBeforeFold.mobile ? "Above" : "Below"}
+          value={postHookBeforeFold.mobile ? "Above" : "Below"}
         />
         <MetaStat
           label="Desktop fold"
-          value={post.hookBeforeFold.desktop ? "Above" : "Below"}
+          value={postHookBeforeFold.desktop ? "Above" : "Below"}
         />
-        <MetaStat label="Template" value={post.metadata.template} />
-        <MetaStat label="Pillar" value={post.metadata.pillar} />
-        <MetaStat label="Score" value={String(post.metadata.score)} />
+        <MetaStat label="Template" value={postMetadata.template} />
+        <MetaStat label="Pillar" value={postMetadata.pillar} />
+        <MetaStat label="Score" value={String(postMetadata.score)} />
       </div>
 
       {/* Pinned comment suggestion */}
-      {post.suggestedPinnedComment && (
+      {postPinnedComment && (
         <div
           style={{
             marginTop: "var(--bru-space-4)",
@@ -320,7 +330,7 @@ export function FormattedOutput({ post }: FormattedOutputProps) {
             Suggested Pinned Comment
           </h4>
           <p style={{ fontSize: "var(--bru-text-sm)", margin: 0 }}>
-            {post.suggestedPinnedComment}
+            {postPinnedComment}
           </p>
         </div>
       )}

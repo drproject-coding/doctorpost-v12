@@ -95,7 +95,7 @@ export default function FactoryPage() {
         try {
           await schedulePost({
             id: "",
-            title: state.selectedTopic!.title || "Untitled Post",
+            title: state.selectedTopic!.headline || state.selectedTopic!.angle || "Untitled Post",
             content: state.formattedPost!.content,
             pillar: state.selectedTopic!.pillar,
             status: "scheduled",

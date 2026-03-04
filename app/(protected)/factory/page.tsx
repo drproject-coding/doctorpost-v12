@@ -475,12 +475,21 @@ export default function FactoryPage() {
     }));
   };
 
+  // Check if all guardrails are passing
+  const allGuardrailsPassing = () => {
+    if (!state.guardrailResults || state.guardrailResults.length === 0) {
+      return false; // No results yet = not passing
+    }
+    return state.guardrailResults.every((g) => g.passed);
+  };
+
   const handleGuardrailManualEdit = (editedContent: string) => {
     setState((prev) => ({
       ...prev,
       writerOutput: prev.writerOutput
         ? { ...prev.writerOutput, content: editedContent }
         : undefined,
+      formattedPost: undefined, // Clear formatted post - must regenerate from edited draft
     }));
     // Re-run write phase with edited content to re-check guardrails
     callPipeline("write", {
@@ -1157,22 +1166,37 @@ export default function FactoryPage() {
           </div>
         )}
 
-      {/* After scoring — proceed to format */}
+      {/* After scoring — proceed to format ONLY if all guardrails pass */}
       {state.scoreResult &&
         !state.formattedPost &&
         !running &&
         (state.phase === "scoring" || state.phase === "writing") && (
-          <div
-            style={{
-              marginTop: "var(--bru-space-4)",
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
-            <Button variant="primary" onClick={handleFormat}>
-              <ArrowRight size={14} />
-              Format for LinkedIn
-            </Button>
+          <div style={{ marginTop: "var(--bru-space-4)" }}>
+            {!allGuardrailsPassing() && (
+              <div
+                style={{
+                  padding: "var(--bru-space-3)",
+                  backgroundColor: "rgba(255, 193, 7, 0.1)",
+                  border: "1px solid rgba(255, 193, 7, 0.3)",
+                  borderRadius: "4px",
+                  fontSize: "var(--bru-text-sm)",
+                  color: "var(--bru-grey)",
+                  marginBottom: "var(--bru-space-2)",
+                }}
+              >
+                ⚠️ Fix failing guardrails before formatting
+              </div>
+            )}
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                variant="primary"
+                onClick={handleFormat}
+                disabled={!allGuardrailsPassing()}
+              >
+                <ArrowRight size={14} />
+                Format for LinkedIn
+              </Button>
+            </div>
           </div>
         )}
 

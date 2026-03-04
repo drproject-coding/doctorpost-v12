@@ -35,7 +35,7 @@ export function Scorecard({
   isApplying,
   rewriteCount,
 }: ScorecardProps) {
-  const criteria = score.criteriaScores;
+  const criteria = score?.criteriaScores;
 
   return (
     <Card variant="raised" style={{ minWidth: 0, overflow: "hidden" }}>
@@ -96,88 +96,97 @@ export function Scorecard({
       </div>
 
       {/* Criteria breakdown */}
-      <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
-        <CriteriaRow
-          label="Hook"
-          score={criteria.hook.score}
-          max={criteria.hook.max}
-          feedback={criteria.hook.feedback}
-        />
-        <CriteriaRow
-          label="Strategic Relevance"
-          score={criteria.strategicRelevance.score}
-          max={criteria.strategicRelevance.max}
-          feedback={criteria.strategicRelevance.feedback}
-        />
-        <CriteriaRow
-          label="Structure & Rhythm"
-          score={criteria.structureRhythm.score}
-          max={criteria.structureRhythm.max}
-          feedback={criteria.structureRhythm.feedback}
-        />
-        <CriteriaRow
-          label="Tone & Style"
-          score={criteria.toneStyle.score}
-          max={criteria.toneStyle.max}
-          feedback={criteria.toneStyle.feedback}
-        />
-        <CriteriaRow
-          label="Content Value"
-          score={criteria.contentValue.score}
-          max={criteria.contentValue.max}
-          feedback={criteria.contentValue.feedback}
-        />
-        <CriteriaRow
-          label="Conclusion & CTA"
-          score={criteria.conclusionCTA.score}
-          max={criteria.conclusionCTA.max}
-          feedback={criteria.conclusionCTA.feedback}
-        />
-      </div>
+      {criteria && (
+        <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
+          <CriteriaRow
+            label="Hook"
+            score={criteria.hook?.score ?? 0}
+            max={criteria.hook?.max ?? 20}
+            feedback={criteria.hook?.feedback ?? ""}
+          />
+          <CriteriaRow
+            label="Strategic Relevance"
+            score={criteria.strategicRelevance?.score ?? 0}
+            max={criteria.strategicRelevance?.max ?? 20}
+            feedback={criteria.strategicRelevance?.feedback ?? ""}
+          />
+          <CriteriaRow
+            label="Structure & Rhythm"
+            score={criteria.structureRhythm?.score ?? 0}
+            max={criteria.structureRhythm?.max ?? 15}
+            feedback={criteria.structureRhythm?.feedback ?? ""}
+          />
+          <CriteriaRow
+            label="Tone & Style"
+            score={criteria.toneStyle?.score ?? 0}
+            max={criteria.toneStyle?.max ?? 15}
+            feedback={criteria.toneStyle?.feedback ?? ""}
+          />
+          <CriteriaRow
+            label="Content Value"
+            score={criteria.contentValue?.score ?? 0}
+            max={criteria.contentValue?.max ?? 15}
+            feedback={criteria.contentValue?.feedback ?? ""}
+          />
+          <CriteriaRow
+            label="Conclusion & CTA"
+            score={criteria.conclusionCTA?.score ?? 0}
+            max={criteria.conclusionCTA?.max ?? 10}
+            feedback={criteria.conclusionCTA?.feedback ?? ""}
+          />
+        </div>
+      )}
 
       {/* Bonus/Penalty */}
-      {criteria.bonusPenalty.score !== 0 && (
+      {criteria?.bonusPenalty?.score !== 0 &&
+        criteria?.bonusPenalty?.score !== undefined && (
+          <div
+            style={{
+              marginTop: "var(--bru-space-3)",
+              padding: "var(--bru-space-2)",
+              border: "var(--bru-border)",
+              fontSize: "var(--bru-text-sm)",
+            }}
+          >
+            <strong>
+              Bonus/Penalty:{" "}
+              {(criteria.bonusPenalty?.score ?? 0) > 0 ? "+" : ""}
+              {criteria.bonusPenalty?.score ?? 0}
+            </strong>
+            {criteria.bonusPenalty?.details &&
+              criteria.bonusPenalty.details.length > 0 && (
+                <ul
+                  style={{
+                    margin: "var(--bru-space-1) 0 0",
+                    paddingLeft: "var(--bru-space-4)",
+                    fontSize: "var(--bru-text-xs)",
+                    color: "var(--bru-grey)",
+                  }}
+                >
+                  {criteria.bonusPenalty.details.map((d) => (
+                    <li key={d}>{d}</li>
+                  ))}
+                </ul>
+              )}
+          </div>
+        )}
+
+      {/* Checklist score */}
+      {score?.checklistScore !== undefined && (
         <div
           style={{
             marginTop: "var(--bru-space-3)",
             padding: "var(--bru-space-2)",
             border: "var(--bru-border)",
             fontSize: "var(--bru-text-sm)",
+            display: "flex",
+            justifyContent: "space-between",
           }}
         >
-          <strong>
-            Bonus/Penalty: {criteria.bonusPenalty.score > 0 ? "+" : ""}
-            {criteria.bonusPenalty.score}
-          </strong>
-          <ul
-            style={{
-              margin: "var(--bru-space-1) 0 0",
-              paddingLeft: "var(--bru-space-4)",
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-grey)",
-            }}
-          >
-            {criteria.bonusPenalty.details.map((d) => (
-              <li key={d}>{d}</li>
-            ))}
-          </ul>
+          <span>Checklist Score</span>
+          <strong>{score.checklistScore}/40</strong>
         </div>
       )}
-
-      {/* Checklist score */}
-      <div
-        style={{
-          marginTop: "var(--bru-space-3)",
-          padding: "var(--bru-space-2)",
-          border: "var(--bru-border)",
-          fontSize: "var(--bru-text-sm)",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <span>Checklist Score</span>
-        <strong>{score.checklistScore}/40</strong>
-      </div>
 
       {/* Rewrite instructions */}
       {score.rewriteInstructions && (

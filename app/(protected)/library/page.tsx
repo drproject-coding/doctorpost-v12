@@ -1,10 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Card } from "@bruddle/react";
-import { getScheduledPosts } from "@/lib/api";
+import { getScheduledPosts, updatePost } from "@/lib/api";
 import { ScheduledPost } from "@/lib/types";
 import { FileText, Save, Edit } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import PostEditorModal from "@/components/PostEditorModal";
 
 export default function LibraryPage() {
   const { user } = useAuth();
@@ -13,6 +14,8 @@ export default function LibraryPage() {
   const [filter, setFilter] = useState<
     "all" | "generated" | "saved" | "drafts"
   >("all");
+  const [editingPost, setEditingPost] = useState<ScheduledPost | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -31,6 +34,23 @@ export default function LibraryPage() {
     };
     void fetchPosts();
   }, [user?.id]);
+
+  const handleEditPost = (post: ScheduledPost) => {
+    setEditingPost(post);
+    setIsModalOpen(true);
+  };
+
+  const handleSavePost = async (updatedPost: ScheduledPost) => {
+    try {
+      await updatePost(updatedPost);
+      setPosts(posts.map((p) => (p.id === updatedPost.id ? updatedPost : p)));
+      setIsModalOpen(false);
+      setEditingPost(null);
+    } catch (error) {
+      console.error("Failed to save post:", error);
+      throw error;
+    }
+  };
 
   const filteredPosts = posts.filter((post) => {
     if (filter === "all") return true;
@@ -114,7 +134,10 @@ export default function LibraryPage() {
                       {post.status.charAt(0).toUpperCase() +
                         post.status.slice(1)}
                     </span>
-                    <button className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200">
+                    <button
+                      onClick={() => handleEditPost(post)}
+                      className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
+                    >
                       View/Edit
                     </button>
                   </div>
@@ -124,6 +147,13 @@ export default function LibraryPage() {
           )}
         </Card>
       </div>
+
+      <PostEditorModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        post={editingPost}
+        onSave={handleSavePost}
+      />
     </div>
   );
 }

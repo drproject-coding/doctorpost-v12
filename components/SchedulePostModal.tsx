@@ -142,7 +142,7 @@ const SchedulePostModal: React.FC<SchedulePostModalProps> = ({
           <Button onClick={onClose} variant="secondary">
             Cancel
           </Button>
-          <Button onClick={void handleSchedule} variant="primary">
+          <Button onClick={() => handleSchedule()} variant="primary">
             Schedule
           </Button>
         </div>

@@ -256,7 +256,7 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
               className="bru-form-actions"
               style={{ marginTop: "var(--bru-space-3)" }}
             >
-              <Button size="sm" onClick={void copyToClipboard}>
+              <Button size="sm" onClick={() => copyToClipboard()}>
                 <Copy size={14} />
                 {copied ? "Copied!" : "Copy"}
               </Button>

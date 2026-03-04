@@ -306,7 +306,16 @@ export const schedulePost = async (post: ScheduledPost): Promise<void> => {
     try {
       const errorBody = await res.json();
       console.log("[schedulePost] Error response:", errorBody);
-      errorDetail = errorBody.error || errorBody.message || res.statusText;
+      // Handle various error formats from NCB
+      if (typeof errorBody === "object" && errorBody !== null) {
+        errorDetail =
+          errorBody.error ||
+          errorBody.message ||
+          errorBody.details ||
+          JSON.stringify(errorBody);
+      } else {
+        errorDetail = String(errorBody);
+      }
     } catch {
       // Response wasn't JSON, that's ok
       const text = await res.text();

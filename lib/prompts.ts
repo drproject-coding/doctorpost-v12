@@ -191,7 +191,11 @@ export const generatePost = async (
   signal?: AbortSignal,
 ): Promise<string> => {
   const response = await generateWithAi(
-    { systemPrompt: "", userMessage: prompt },
+    {
+      systemPrompt:
+        "You are an expert LinkedIn content strategist and copywriter specializing in high-engagement posts. Your role is to create compelling, authentic LinkedIn content that resonates with professional audiences. Focus on clarity, impact, and driving meaningful engagement.",
+      userMessage: prompt,
+    },
     settings,
     onProgress,
     signal,

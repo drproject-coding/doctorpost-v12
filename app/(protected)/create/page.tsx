@@ -23,6 +23,7 @@ import {
   savePostDraft,
   schedulePost,
 } from "@/lib/api";
+import { getSmartDefaults } from "@/lib/post-creation/smartDefaults";
 import { Search, TrendingUp, ArrowRight, Loader } from "lucide-react";
 import EnhancedDropdown from "@/components/EnhancedDropdown";
 import PostGenerator, { PostGeneratorRef } from "@/components/PostGenerator";
@@ -75,10 +76,28 @@ export default function CreatePage() {
       try {
         const data = await getBrandProfile(user.id);
         setProfile(data);
-        setSelectedToneId("casual-witty");
-        if (enhancedContentPillars.length > 0) {
-          setContentPillar(enhancedContentPillars[0].value);
-        }
+
+        // Use smart defaults based on profile
+        const defaults = getSmartDefaults(data);
+
+        // Map IDs to values
+        const toneOpt = enhancedToneOptions.find(
+          (o) => o.id === defaults.selectedTone,
+        );
+        const ptOpt = enhancedPostTypes.find(
+          (o) => o.id === defaults.selectedPostType,
+        );
+        const hpOpt = enhancedHookPatterns.find(
+          (o) => o.id === defaults.selectedHookPattern,
+        );
+        const cpOpt = enhancedContentPillars.find(
+          (o) => o.id === defaults.selectedPillar,
+        );
+
+        if (toneOpt) setSelectedToneId(toneOpt.value);
+        if (ptOpt) setPostType(ptOpt.value);
+        if (hpOpt) setHookPattern(hpOpt.value);
+        if (cpOpt) setContentPillar(cpOpt.value);
       } catch (error) {
         console.error("Failed to load profile:", error);
       } finally {

@@ -1,0 +1,13 @@
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_not-found/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__a6e8e3bb._.js")
+R.c("server/chunks/ssr/4c50b_next_dist_1b135c91._.js")
+R.c("server/chunks/ssr/4c50b_next_dist_esm_build_templates_app-page_d33b0c75.js")
+R.c("server/chunks/ssr/[root-of-the-server]__727e6cad._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__45f4f75b._.js")
+R.c("server/chunks/ssr/4c50b_next_dist_d6cd82b0._.js")
+R.c("server/chunks/ssr/Desktop_doctorpost-v12_b9d4b142._.js")
+R.c("server/chunks/ssr/4c50b_next_dist_client_components_0fb4cb8b._.js")
+R.c("server/chunks/ssr/4c50b_next_dist_client_components_builtin_forbidden_b4a4fef3.js")
+R.c("server/chunks/ssr/3d860_doctorpost-v12__next-internal_server_app__not-found_page_actions_f02111be.js")
+R.m(49975)
+module.exports=R.m(49975).exports

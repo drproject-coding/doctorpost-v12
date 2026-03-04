@@ -99,6 +99,12 @@ export async function proxyToNCB(
     const origin = req.headers.get("origin") || req.nextUrl.origin;
     const cookieHeader = req.headers.get("cookie") || "";
     const authCookies = extractAuthCookies(cookieHeader);
+
+    if (body) {
+      console.log(`[proxyToNCB] ${req.method} ${path}`);
+      console.log(`[proxyToNCB] Request body:`, body);
+    }
+
     const res = await fetch(url, {
       method: req.method,
       headers: {
@@ -110,6 +116,12 @@ export async function proxyToNCB(
       body: body || undefined,
     });
     const data = await res.text();
+
+    if (!res.ok) {
+      console.log(`[proxyToNCB] ${req.method} ${path} returned ${res.status}`);
+      console.log(`[proxyToNCB] Response:`, data);
+    }
+
     return new NextResponse(data, {
       status: res.status,
       headers: { "Content-Type": "application/json" },

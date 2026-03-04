@@ -30,10 +30,14 @@ export async function POST(
   if (pathStr.startsWith("create/") && body) {
     try {
       const parsed = JSON.parse(body) as Record<string, unknown>;
+      console.log(`[POST ${pathStr}] Before user_id injection:`, parsed);
       delete parsed.user_id;
       parsed.user_id = user.id;
+      console.log(`[POST ${pathStr}] After user_id injection:`, parsed);
+      console.log(`[POST ${pathStr}] User from session:`, JSON.stringify(user));
       return proxyToNCB(req, pathStr, JSON.stringify(parsed));
-    } catch {
+    } catch (error) {
+      console.error(`[POST ${pathStr}] Error processing body:`, error);
       // fall through
     }
   }

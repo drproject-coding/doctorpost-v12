@@ -144,40 +144,40 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
             </div>
           )}
 
-          <div className="mb-4">
-            <label htmlFor="edit-title" className="bru-field__label">
+          <div className="mb-4 flex flex-col gap-2">
+            <label htmlFor="edit-title" className="bru-field__label block">
               Title
             </label>
             <input
               type="text"
               id="edit-title"
-              className="bru-input"
+              className="bru-input w-full"
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
               disabled={isSaving}
             />
           </div>
 
-          <div className="mb-4">
-            <label htmlFor="edit-content" className="bru-field__label">
+          <div className="mb-4 flex flex-col gap-2">
+            <label htmlFor="edit-content" className="bru-field__label block">
               Content
             </label>
             <textarea
               id="edit-content"
-              className="bru-input h-48 resize-y"
+              className="bru-input w-full h-48 resize-y"
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
               disabled={isSaving}
             ></textarea>
           </div>
 
-          <div className="mb-6">
-            <label htmlFor="edit-status" className="bru-field__label">
+          <div className="mb-6 flex flex-col gap-2">
+            <label htmlFor="edit-status" className="bru-field__label block">
               Status
             </label>
             <select
               id="edit-status"
-              className="bru-input"
+              className="bru-input w-full"
               value={editedStatus}
               onChange={(e) => setEditedStatus(e.target.value as PostStatus)}
               disabled={isSaving}

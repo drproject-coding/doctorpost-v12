@@ -1,6 +1,12 @@
 "use client";
 import React from "react";
-import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  RotateCcw,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
 
 const STEPS: { phase: PipelinePhase; label: string }[] = [
@@ -26,6 +32,8 @@ export interface PipelineMetadata {
   hookPattern?: string;
   contentPillar?: string;
   tone?: string;
+  /** Track success/failure status for each completed phase */
+  phaseStatus?: Record<PipelinePhase, "success" | "failed">;
   /** Brand context from user profile */
   brandContext?: {
     industry: string;
@@ -158,7 +166,7 @@ export function PipelineStepper({
                   }}
                 />
               </div>
-              {/* Label + Retry button */}
+              {/* Label + Status indicator + Retry button */}
               <div
                 style={{
                   display: "flex",
@@ -181,6 +189,19 @@ export function PipelineStepper({
                 >
                   {step.label}
                 </span>
+                {/* Phase status indicator */}
+                {metadata?.phaseStatus?.[step.phase] === "success" && (
+                  <CheckCircle
+                    size={14}
+                    style={{ color: "var(--bru-success-dark, #2d7a3a)" }}
+                  />
+                )}
+                {metadata?.phaseStatus?.[step.phase] === "failed" && (
+                  <XCircle
+                    size={14}
+                    style={{ color: "var(--bru-error-dark, #c0392b)" }}
+                  />
+                )}
                 {canRetry && (
                   <button
                     onClick={(e) => {

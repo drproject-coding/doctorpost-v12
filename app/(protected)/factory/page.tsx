@@ -36,6 +36,8 @@ interface PipelineClientState {
   error?: string;
   /** Tracks which phase was active when error occurred */
   errorAtPhase?: PipelinePhase;
+  /** Track success/failure status for each completed phase */
+  phaseStatus?: Record<PipelinePhase, "success" | "failed">;
   // Phase outputs
   strategistOutput?: StrategistOutput;
   selectedTopic?: TopicProposal;
@@ -178,8 +180,13 @@ export default function FactoryPage() {
   const handleEvent = (event: PipelineEvent) => {
     setState((prev) => {
       const next = { ...prev, percent: event.percent };
+      const phaseStatus = { ...(prev.phaseStatus || {}) } as Record<
+        PipelinePhase,
+        "success" | "failed"
+      >;
 
       // Map step to phase
+      let currentPhase: PipelinePhase | undefined;
       if (event.step !== "pipeline" && event.step !== "guardrails") {
         const phaseMap: Record<string, PipelinePhase> = {
           direction: "direction",
@@ -192,10 +199,22 @@ export default function FactoryPage() {
           formatting: "formatting",
           learning: "learning",
         };
-        next.phase = phaseMap[event.step] || prev.phase;
+        currentPhase = phaseMap[event.step];
+        next.phase = currentPhase || prev.phase;
+      }
+
+      // Track phase success/failure status
+      if (currentPhase && event.status === "done") {
+        phaseStatus[currentPhase] = "success";
+        next.phaseStatus = phaseStatus;
       }
 
       if (event.status === "error") {
+        const phase = currentPhase || prev.phase;
+        if (phase && phase !== "error") {
+          phaseStatus[phase] = "failed";
+          next.phaseStatus = phaseStatus;
+        }
         next.errorAtPhase =
           prev.phase !== "error" ? prev.phase : prev.errorAtPhase;
         next.phase = "error";
@@ -506,11 +525,17 @@ export default function FactoryPage() {
                   hookPattern: state.selectedTopic.hookCategoryRecommendation,
                   contentPillar: state.selectedTopic.pillar,
                   tone: state.selectedTopic.angle,
+                  phaseStatus: state.phaseStatus,
                   brandContext: state.brandContext,
                 }
               : state.brandContext
-                ? { brandContext: state.brandContext }
-                : undefined
+                ? {
+                    brandContext: state.brandContext,
+                    phaseStatus: state.phaseStatus,
+                  }
+                : state.phaseStatus
+                  ? { phaseStatus: state.phaseStatus }
+                  : undefined
           }
           viewPhase={viewPhase}
           onPhaseClick={(phase) => {

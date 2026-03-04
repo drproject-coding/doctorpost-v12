@@ -208,17 +208,16 @@ function CriteriaRow({
   return (
     <div
       style={{
-        display: "flex",
-        alignItems: "center",
+        display: "grid",
+        gridTemplateColumns: "140px 1fr 50px 150px",
         gap: "var(--bru-space-2)",
+        alignItems: "center",
         fontSize: "var(--bru-text-sm)",
-        minWidth: 0,
       }}
     >
+      {/* Label column */}
       <span
         style={{
-          minWidth: 100,
-          maxWidth: 140,
           fontWeight: 500,
           overflow: "hidden",
           textOverflow: "ellipsis",
@@ -227,11 +226,10 @@ function CriteriaRow({
       >
         {label}
       </span>
-      {/* Bar */}
+
+      {/* Progress bar column */}
       <div
         style={{
-          flex: 1,
-          minWidth: 60,
           height: 6,
           background: "var(--bru-border-color, #e0e0e0)",
           position: "relative",
@@ -247,10 +245,10 @@ function CriteriaRow({
           }}
         />
       </div>
+
+      {/* Score column - right aligned */}
       <span
         style={{
-          minWidth: 45,
-          maxWidth: 50,
           textAlign: "right",
           fontWeight: 700,
           color: scoreColor(score, max),
@@ -259,10 +257,10 @@ function CriteriaRow({
       >
         {score}/{max}
       </span>
+
+      {/* Feedback column */}
       <span
         style={{
-          flex: 1,
-          minWidth: 0,
           fontSize: "var(--bru-text-xs)",
           color: "var(--bru-grey)",
           overflow: "hidden",

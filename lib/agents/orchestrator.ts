@@ -250,6 +250,8 @@ export interface PipelineState {
   rewriteCount: number;
   /** Error if pipeline failed */
   error?: string;
+  /** Track success/failure status for each completed phase */
+  phaseStatus?: Record<PipelinePhase, "success" | "failed">;
 }
 
 export type EventCallback = (event: PipelineEvent) => void;

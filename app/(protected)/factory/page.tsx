@@ -54,6 +54,8 @@ interface PipelineClientState {
   learnerOutput?: LearnerOutput;
   finalVersion?: string;
   userFeedback?: string[];
+  /** Session-level tone override */
+  toneOverride?: string;
   brandContext?: {
     industry: string;
     audience: string[];
@@ -109,6 +111,7 @@ export default function FactoryPage() {
             formattedPost: snap.formattedPost,
             finalVersion: snap.finalVersion,
             userFeedback: snap.userFeedback,
+            toneOverride: snap.toneOverride || undefined,
             ...extraBody,
           }),
           signal: abortRef.current.signal,
@@ -350,6 +353,8 @@ export default function FactoryPage() {
 
   // Template selection for write phase
   const [templateInput, setTemplateInput] = useState("");
+  // Tone override for this session
+  const [toneInput, setToneInput] = useState("");
 
   // Auto-save session after phase transitions
   useEffect(() => {
@@ -504,10 +509,33 @@ export default function FactoryPage() {
             topic proposals, research, evidence, writing, scoring, formatting,
             review, and learning.
           </p>
-          <Button variant="primary" onClick={handleStart} disabled={running}>
-            <Play size={14} />
-            Start Pipeline
-          </Button>
+          <div
+            style={{
+              display: "flex",
+              gap: "var(--bru-space-2)",
+              justifyContent: "center",
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <input
+              className="bru-input"
+              placeholder="Tone override (optional)"
+              value={toneInput}
+              onChange={(e) => {
+                setToneInput(e.target.value);
+                setState((prev) => ({
+                  ...prev,
+                  toneOverride: e.target.value || undefined,
+                }));
+              }}
+              style={{ width: 200 }}
+            />
+            <Button variant="primary" onClick={handleStart} disabled={running}>
+              <Play size={14} />
+              Start Pipeline
+            </Button>
+          </div>
         </Card>
       )}
 

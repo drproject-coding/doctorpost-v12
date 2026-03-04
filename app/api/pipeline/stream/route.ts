@@ -30,7 +30,12 @@ function safeParseArray(val: string | undefined | null): string[] {
     return val ? [val] : [];
   }
 }
-import { savePipelineSession } from "@/lib/pipeline/savePipelineData";
+import {
+  savePipelineSession,
+  savePipelineDirections,
+  savePipelineClaims,
+  savePipelinePatterns,
+} from "@/lib/pipeline/savePipelineData";
 import { fetchKnowledgeForUser } from "@/lib/knowledge/fetch";
 import {
   createPipelineState,
@@ -185,12 +190,43 @@ export async function POST(req: NextRequest) {
         switch (body.action) {
           case "start":
             await runDirection(state, emit, signal);
+            // Save direction proposals to NCB (fire-and-forget)
+            if (state.strategistOutput?.proposals?.length) {
+              savePipelineDirections(
+                cookie,
+                body.sessionId,
+                state.strategistOutput.proposals.map((p) => ({
+                  headline: p.headline,
+                  angle: p.angle,
+                  pillar: p.pillar,
+                  reasoning: p.reasoning,
+                })),
+              ).catch((err) => console.error("[savePipelineDirections]", err));
+            }
             break;
           case "discover":
             await runDiscovery(state, emit, signal);
             break;
           case "evidence":
             await runEvidence(state, emit, signal);
+            // Save evidence claims to NCB (fire-and-forget)
+            if (state.evidencePack?.claims?.length) {
+              savePipelineClaims(
+                cookie,
+                body.sessionId,
+                state.evidencePack.claims.map((c) => ({
+                  claim: c.fact,
+                  source: c.source,
+                  strength:
+                    c.verification === "verified"
+                      ? "strong"
+                      : c.verification === "estimate"
+                        ? "moderate"
+                        : "weak",
+                  category: c.usageNote || undefined,
+                })),
+              ).catch((err) => console.error("[savePipelineClaims]", err));
+            }
             break;
           case "write":
             await runWriteAndScore(state, emit, signal);
@@ -200,6 +236,52 @@ export async function POST(req: NextRequest) {
             break;
           case "learn":
             await runLearn(state, emit, signal);
+            // Save learned patterns to NCB (fire-and-forget)
+            if (state.learnerOutput) {
+              const patterns: {
+                patternType: string;
+                value: string;
+                effectiveness?: string;
+                score?: number;
+              }[] = [];
+              const lo = state.learnerOutput as unknown as Record<
+                string,
+                unknown
+              >;
+              // Extract patterns from learner output structure
+              if (Array.isArray(lo.patterns)) {
+                for (const p of lo.patterns) {
+                  const pat = p as Record<string, unknown>;
+                  patterns.push({
+                    patternType: String(
+                      pat.type || pat.patternType || "general",
+                    ),
+                    value: String(
+                      pat.value || pat.description || JSON.stringify(p),
+                    ),
+                    effectiveness: String(pat.effectiveness || "medium"),
+                    score: Number(pat.score || 0),
+                  });
+                }
+              }
+              if (Array.isArray(lo.signals)) {
+                for (const s of lo.signals) {
+                  const sig = s as Record<string, unknown>;
+                  patterns.push({
+                    patternType: String(sig.signalType || sig.type || "signal"),
+                    value: String(
+                      sig.observation || sig.value || JSON.stringify(s),
+                    ),
+                    effectiveness: "medium",
+                  });
+                }
+              }
+              if (patterns.length > 0) {
+                savePipelinePatterns(cookie, body.sessionId, patterns).catch(
+                  (err) => console.error("[savePipelinePatterns]", err),
+                );
+              }
+            }
             break;
         }
 

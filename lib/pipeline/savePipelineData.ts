@@ -183,3 +183,115 @@ export async function deletePipelineSession(
   });
   if (!res.ok) throw new Error(`NCB delete failed: ${res.status}`);
 }
+
+// ── Pipeline Directions ──
+
+/**
+ * Save direction proposals from Phase 1 (strategist output).
+ */
+export async function savePipelineDirections(
+  cookieHeader: string,
+  sessionId: string,
+  directions: {
+    headline: string;
+    angle: string;
+    pillar?: string;
+    reasoning?: string;
+    score?: number;
+  }[],
+): Promise<void> {
+  const authCookies = extractAuthCookies(cookieHeader);
+  const url = `${CONFIG.dataApiUrl}/create/pipeline_directions?instance=${CONFIG.instance}`;
+  for (const d of directions) {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Database-Instance": CONFIG.instance,
+        Cookie: authCookies,
+      },
+      body: JSON.stringify({
+        session_id: sessionId,
+        headline: d.headline || "",
+        angle: d.angle || "",
+        pillar: d.pillar || null,
+        reasoning: d.reasoning || null,
+        score: d.score || 0,
+      }),
+    });
+  }
+}
+
+// ── Pipeline Claims ──
+
+/**
+ * Save evidence claims from Phase 3 (researcher output).
+ */
+export async function savePipelineClaims(
+  cookieHeader: string,
+  sessionId: string,
+  claims: {
+    claim: string;
+    source?: string;
+    strength?: string;
+    category?: string;
+    usedInPost?: boolean;
+  }[],
+): Promise<void> {
+  const authCookies = extractAuthCookies(cookieHeader);
+  const url = `${CONFIG.dataApiUrl}/create/pipeline_claims?instance=${CONFIG.instance}`;
+  for (const c of claims) {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Database-Instance": CONFIG.instance,
+        Cookie: authCookies,
+      },
+      body: JSON.stringify({
+        session_id: sessionId,
+        claim: c.claim,
+        source: c.source || null,
+        strength: c.strength || "moderate",
+        category: c.category || null,
+        used_in_post: c.usedInPost ? 1 : 0,
+      }),
+    });
+  }
+}
+
+// ── Pipeline Patterns ──
+
+/**
+ * Save learned patterns from Phase 8 (learner output).
+ */
+export async function savePipelinePatterns(
+  cookieHeader: string,
+  sessionId: string,
+  patterns: {
+    patternType: string;
+    value: string;
+    effectiveness?: string;
+    score?: number;
+  }[],
+): Promise<void> {
+  const authCookies = extractAuthCookies(cookieHeader);
+  const url = `${CONFIG.dataApiUrl}/create/pipeline_patterns?instance=${CONFIG.instance}`;
+  for (const p of patterns) {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Database-Instance": CONFIG.instance,
+        Cookie: authCookies,
+      },
+      body: JSON.stringify({
+        session_id: sessionId,
+        pattern_type: p.patternType,
+        value: p.value,
+        effectiveness: p.effectiveness || "medium",
+        score: p.score || 0,
+      }),
+    });
+  }
+}

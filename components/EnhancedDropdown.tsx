@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import {
   DropdownOption,
-  PerformanceIndicator,
   CompatibilityMap,
   CompatibilityStatus,
 } from "@/lib/types";
@@ -58,49 +57,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
   "Niche & Specific": <Target size={16} />,
 };
 
-// Helper for performance badges
-const PerformanceBadge: React.FC<{
-  indicator?: PerformanceIndicator;
-  isTrending?: boolean;
-}> = ({ indicator, isTrending }) => {
-  if (!indicator && !isTrending) return null;
-
-  const baseClasses = "text-xs font-bold py-0.5 px-1.5 border";
-  let indicatorClasses = "";
-  let indicatorLabel = "";
-
-  switch (indicator) {
-    case "high":
-      indicatorClasses = "badge-high";
-      indicatorLabel = "Avg. 5k+ views";
-      break;
-    case "medium":
-      indicatorClasses = "badge-medium";
-      indicatorLabel = "Avg. 2-5k views";
-      break;
-    case "experimental":
-      indicatorClasses = "badge-experimental";
-      indicatorLabel = "New format";
-      break;
-    default:
-      break;
-  }
-
-  return (
-    <div className="flex items-center space-x-1">
-      {indicator && (
-        <span className={`${baseClasses} ${indicatorClasses}`}>
-          {indicatorLabel}
-        </span>
-      )}
-      {isTrending && (
-        <span className={`${baseClasses} badge-trending flex items-center`}>
-          <Sparkles size={12} className="mr-1" /> Trending
-        </span>
-      )}
-    </div>
-  );
-};
+// PerformanceBadge removed — performance claims were inaccurate
 
 // Helper for compatibility badges
 const CompatibilityBadge: React.FC<{
@@ -189,16 +146,8 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
         option.description.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
-    if (activeFilters.includes("high-performance")) {
-      filtered = filtered.filter((opt) => opt.performanceIndicator === "high");
-    }
     if (activeFilters.includes("trending")) {
       filtered = filtered.filter((opt) => opt.isTrending);
-    }
-    if (activeFilters.includes("experimental")) {
-      filtered = filtered.filter(
-        (opt) => opt.performanceIndicator === "experimental",
-      );
     }
     if (activeFilters.includes("recommended")) {
       filtered = filtered.filter(
@@ -206,7 +155,6 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
       );
     }
 
-    // Group by category
     const grouped: Record<string, DropdownOption[]> = {};
     filtered.forEach((option) => {
       if (!grouped[option.category]) {
@@ -232,18 +180,8 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
 
   const filterTags = [
     { id: "all", label: "All", filter: "" },
-    {
-      id: "high-performance",
-      label: "High Performance \u2728",
-      filter: "high-performance",
-    },
-    { id: "trending", label: "Trending \ud83d\udd25", filter: "trending" },
-    {
-      id: "experimental",
-      label: "Experimental \ud83e\uddea",
-      filter: "experimental",
-    },
-    { id: "recommended", label: "Recommended \u2705", filter: "recommended" },
+    { id: "trending", label: "Trending 🔥", filter: "trending" },
+    { id: "recommended", label: "Recommended ✅", filter: "recommended" },
   ];
 
   return (
@@ -260,17 +198,16 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
         aria-expanded={isOpen}
         disabled={loading}
       >
-        <span className="flex items-center">
+        <span className="flex items-center gap-2 min-w-0">
           {selectedOption ? (
             <>
               {selectedOption.category &&
                 categoryIcons[selectedOption.category] && (
-                  <span className="mr-2 text-gray-500">
+                  <span className="shrink-0 text-gray-500">
                     {categoryIcons[selectedOption.category]}
                   </span>
                 )}
-              {selectedOption.label}
-              {/* Render CompatibilityBadge next to the selected label */}
+              <span className="truncate">{selectedOption.label}</span>
               <CompatibilityBadge
                 status={compatibilityMap[selectedOption.id]?.status}
                 reason={compatibilityMap[selectedOption.id]?.reason}
@@ -282,7 +219,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
         </span>
         <ChevronDown
           size={16}
-          className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={`shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
@@ -314,13 +251,13 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             ))}
           </div>
           {Object.keys(filteredOptions).length === 0 ? (
-            <div className="p-3 text-center text-gray-500">
+            <div className="p-3 text-center text-gray-500 text-sm">
               No options found.
             </div>
           ) : (
             Object.entries(filteredOptions).map(([category, optionsInCat]) => (
               <div key={category}>
-                <div className="enhanced-dropdown-category-header flex items-center space-x-2">
+                <div className="enhanced-dropdown-category-header flex items-center gap-1.5">
                   {categoryIcons[category] && (
                     <span className="text-gray-400">
                       {categoryIcons[category]}
@@ -337,35 +274,23 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                     aria-selected={option.value === value}
                   >
                     <div className="enhanced-dropdown-option-content">
-                      {option.value === value && (
-                        <Check size={16} className="mr-2 text-bru-purple" />
-                      )}
-                      <span className="flex-1">{option.label}</span>
-                      <div className="enhanced-dropdown-option-badges">
-                        <PerformanceBadge
-                          indicator={option.performanceIndicator}
-                          isTrending={option.isTrending}
-                        />
+                      <span className="shrink-0 w-4">
+                        {option.value === value && (
+                          <Check size={14} className="text-bru-purple" />
+                        )}
+                      </span>
+                      <span className="flex-1 text-sm leading-tight">
+                        {option.label}
+                      </span>
+                      <div className="shrink-0 flex items-center gap-1">
+                        {option.isTrending && (
+                          <span className="text-xs text-orange-500">🔥</span>
+                        )}
                         <CompatibilityBadge
                           status={compatibilityMap[option.id]?.status}
                           reason={compatibilityMap[option.id]?.reason}
                         />
                       </div>
-                    </div>
-                    {/* Hover Tooltip */}
-                    <div className="absolute hidden group-hover:block enhanced-dropdown-tooltip">
-                      <h4 className="font-bold">{option.label}</h4>
-                      <p className="mb-2">{option.description}</p>
-                      <p className="font-semibold">\ud83d\udca1 Example:</p>
-                      <p className="italic mb-2">
-                        &quot;{option.exampleSnippet}&quot;
-                      </p>
-                      <p className="font-semibold">\u2705 Best for:</p>
-                      <ul className="list-disc list-inside ml-4">
-                        {option.useCases.map((uc, i) => (
-                          <li key={i}>{uc}</li>
-                        ))}
-                      </ul>
                     </div>
                   </div>
                 ))}

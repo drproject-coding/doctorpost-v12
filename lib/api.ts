@@ -483,6 +483,62 @@ Only return the JSON object, no other text.`;
   }
 };
 
+export const generateBrandSection = async (
+  section: string,
+  profile: BrandProfile,
+  settings: AiSettings,
+): Promise<string> => {
+  const profileContext = JSON.stringify({
+    role: profile.role,
+    industry: profile.industry,
+    audience: profile.audience,
+    tones: profile.tones,
+    contentStrategy: profile.contentStrategy,
+    definition: profile.definition,
+    positioning: profile.positioning,
+  });
+
+  const systemPrompt = `You are a brand strategist helping a LinkedIn content creator develop their brand identity. Based on their existing profile context, generate compelling content for the "${section}" section of their brand guidelines. Be specific, actionable, and aligned with their existing brand signals. Return plain text only — no markdown headers, no JSON.`;
+
+  const response = await generateWithAi(
+    {
+      systemPrompt,
+      userMessage: `Profile context: ${profileContext}\n\nGenerate the "${section}" section content.`,
+    },
+    settings,
+  );
+  return response.content.trim();
+};
+
+export const auditBrand = async (
+  profile: BrandProfile,
+  settings: AiSettings,
+): Promise<{ strengths: string[]; gaps: string[]; suggestions: string[] }> => {
+  const systemPrompt = `You are a brand strategist auditing a LinkedIn content creator's brand profile. Review the profile and identify strengths, gaps, and specific improvement suggestions. Return ONLY a JSON object with this exact shape: { "strengths": string[], "gaps": string[], "suggestions": string[] }`;
+
+  const response = await generateWithAi(
+    {
+      systemPrompt,
+      userMessage: `Brand profile to audit:\n${JSON.stringify(profile, null, 2)}`,
+    },
+    settings,
+  );
+
+  try {
+    const cleaned = response.content
+      .replace(/```json?\n?/g, "")
+      .replace(/```/g, "")
+      .trim();
+    return JSON.parse(cleaned) as {
+      strengths: string[];
+      gaps: string[];
+      suggestions: string[];
+    };
+  } catch {
+    return { strengths: [], gaps: [], suggestions: [response.content] };
+  }
+};
+
 // --- Dropdown Data (client-side) ---
 export {
   enhancedPostTypes,

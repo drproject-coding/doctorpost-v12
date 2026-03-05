@@ -1,7 +1,12 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Loader } from "lucide-react";
-import { getBrandProfile, updateBrandProfile } from "@/lib/api";
+import {
+  getBrandProfile,
+  updateBrandProfile,
+  auditBrand,
+  generateBrandSection,
+} from "@/lib/api";
 import { BrandProfile } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
 import {
@@ -28,6 +33,13 @@ export default function BrandPage() {
   const [savingSection, setSavingSection] = useState<string | null>(null);
   const [exportOpen, setExportOpen] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
+  const [auditResult, setAuditResult] = useState<{
+    strengths: string[];
+    gaps: string[];
+    suggestions: string[];
+  } | null>(null);
+  const [auditing, setAuditing] = useState(false);
+  const [auditOpen, setAuditOpen] = useState(false);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -79,6 +91,37 @@ export default function BrandPage() {
     }
   };
 
+  const aiSettings = profile
+    ? {
+        activeProvider: profile.aiProvider,
+        claudeApiKey: profile.claudeApiKey,
+        straicoApiKey: profile.straicoApiKey,
+        straicoModel: profile.straicoModel,
+        oneforallApiKey: profile.oneforallApiKey,
+        oneforallModel: profile.oneforallModel,
+      }
+    : null;
+
+  const handleAudit = async () => {
+    if (!profile || !aiSettings) return;
+    setAuditing(true);
+    setAuditOpen(true);
+    try {
+      const result = await auditBrand(profile, aiSettings);
+      setAuditResult(result);
+    } catch (e) {
+      console.error("Audit failed:", e);
+    } finally {
+      setAuditing(false);
+    }
+  };
+
+  const handleAiGenerate = async (section: string): Promise<void> => {
+    if (!profile || !aiSettings || !draft) return;
+    await generateBrandSection(section, profile, aiSettings);
+    // Result shown as suggestion — for now just log it (full integration in future)
+  };
+
   if (loading) {
     return (
       <div className="p-6">
@@ -110,64 +153,142 @@ export default function BrandPage() {
               Your brand identity, voice, and strategy in one place.
             </p>
           </div>
-          <div style={{ position: "relative" }} ref={exportRef}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <button
-              className="bru-btn bru-btn--secondary bru-btn--sm"
-              onClick={() => setExportOpen((o) => !o)}
+              className="bru-btn bru-btn--primary bru-btn--sm"
+              onClick={() => void handleAudit()}
+              disabled={auditing || !aiSettings}
             >
-              Export ↓
+              {auditing ? "Auditing..." : "✦ Audit Brand"}
             </button>
-            {exportOpen && profile && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  top: "100%",
-                  marginTop: 4,
-                  background: "white",
-                  border: "1px solid #121212",
-                  zIndex: 50,
-                  minWidth: 180,
-                }}
+            <div style={{ position: "relative" }} ref={exportRef}>
+              <button
+                className="bru-btn bru-btn--secondary bru-btn--sm"
+                onClick={() => setExportOpen((o) => !o)}
               >
-                {[
-                  {
-                    label: "Download Markdown",
-                    action: () => exportAndDownloadMarkdown(profile),
-                  },
-                  {
-                    label: "Download JSON",
-                    action: () => exportAndDownloadJson(profile),
-                  },
-                  {
-                    label: "Copy as Text",
-                    action: () => copyToClipboard(profile),
-                  },
-                  { label: "Print / PDF", action: () => triggerPrint() },
-                ].map((item) => (
-                  <button
-                    key={item.label}
-                    style={{
-                      display: "block",
-                      width: "100%",
-                      textAlign: "left",
-                      padding: "8px 12px",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      item.action();
-                      setExportOpen(false);
-                    }}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            )}
+                Export ↓
+              </button>
+              {exportOpen && profile && (
+                <div
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: "100%",
+                    marginTop: 4,
+                    background: "white",
+                    border: "1px solid #121212",
+                    zIndex: 50,
+                    minWidth: 180,
+                  }}
+                >
+                  {[
+                    {
+                      label: "Download Markdown",
+                      action: () => exportAndDownloadMarkdown(profile),
+                    },
+                    {
+                      label: "Download JSON",
+                      action: () => exportAndDownloadJson(profile),
+                    },
+                    {
+                      label: "Copy as Text",
+                      action: () => copyToClipboard(profile),
+                    },
+                    { label: "Print / PDF", action: () => triggerPrint() },
+                  ].map((item) => (
+                    <button
+                      key={item.label}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        textAlign: "left",
+                        padding: "8px 12px",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        item.action();
+                        setExportOpen(false);
+                      }}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Audit panel */}
+        {auditOpen && (
+          <div
+            style={{
+              border: "1px solid #121212",
+              padding: 16,
+              marginBottom: 24,
+              background: "#F2F2F2",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 12,
+              }}
+            >
+              <strong>Brand Audit</strong>
+              <button
+                onClick={() => setAuditOpen(false)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                ✕
+              </button>
+            </div>
+            {auditing ? (
+              <div>Analyzing your brand...</div>
+            ) : auditResult ? (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr 1fr",
+                  gap: 16,
+                }}
+              >
+                <div>
+                  <strong style={{ color: "#00AA00" }}>Strengths</strong>
+                  <ul>
+                    {auditResult.strengths.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <strong style={{ color: "#FF4444" }}>Gaps</strong>
+                  <ul>
+                    {auditResult.gaps.map((g, i) => (
+                      <li key={i}>{g}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <strong style={{ color: "#631DED" }}>Suggestions</strong>
+                  <ul>
+                    {auditResult.suggestions.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        )}
 
         {/* Sections */}
         {profile && (
@@ -179,6 +300,7 @@ export default function BrandPage() {
               color="#631DED"
               onSave={() => handleSave("profile", draft ? { ...draft } : {})}
               saving={savingSection === "profile"}
+              onAiGenerate={() => handleAiGenerate("Profile")}
             >
               {(editing) => (
                 <ProfileSection
@@ -198,6 +320,7 @@ export default function BrandPage() {
               color="#FF6C01"
               onSave={() => handleSave("voice", draft ? { ...draft } : {})}
               saving={savingSection === "voice"}
+              onAiGenerate={() => handleAiGenerate("Voice & Guidelines")}
             >
               {(editing) => (
                 <VoiceSection
@@ -217,6 +340,7 @@ export default function BrandPage() {
               color="#00A896"
               onSave={() => handleSave("strategy", draft ? { ...draft } : {})}
               saving={savingSection === "strategy"}
+              onAiGenerate={() => handleAiGenerate("Content Strategy")}
             >
               {(editing) => (
                 <StrategySection
@@ -236,6 +360,7 @@ export default function BrandPage() {
               color="#D4A800"
               onSave={() => handleSave("offers", draft ? { ...draft } : {})}
               saving={savingSection === "offers"}
+              onAiGenerate={() => handleAiGenerate("Offers & Value Prop")}
             >
               {(editing) => (
                 <OffersSection
@@ -268,6 +393,7 @@ export default function BrandPage() {
                 handleSave("positioning", draft ? { ...draft } : {})
               }
               saving={savingSection === "positioning"}
+              onAiGenerate={() => handleAiGenerate("Brand Positioning")}
             >
               {(editing) => (
                 <PositioningSection

@@ -155,7 +155,7 @@ export async function POST(req: NextRequest) {
       const activeProvider = (profile?.ai_provider as string) || "claude";
       return new Response(
         JSON.stringify({
-          error: `No ${activeProvider} API key configured. Please add your key in Settings.`,
+          error: `No ${activeProvider.charAt(0).toUpperCase() + activeProvider.slice(1)} API key configured. Please add your key in Settings.`,
         }),
         { status: 400, headers: { "Content-Type": "application/json" } },
       );

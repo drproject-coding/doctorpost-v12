@@ -54,12 +54,7 @@ function validateStrategistResponse(output: unknown): {
     };
   }
 
-  if (obj.proposals.length === 0) {
-    return {
-      valid: false,
-      error: "Strategist output has empty 'proposals' array",
-    };
-  }
+  // Empty proposals is allowed — callers handle the fallback (e.g. selectedTopic)
 
   const requiredFields = [
     "pillarAssessment",

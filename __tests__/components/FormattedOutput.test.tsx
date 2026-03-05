@@ -159,11 +159,14 @@ describe("FormattedOutput", () => {
   it("shows correct styling for LinkedIn preview", () => {
     render(<FormattedOutput post={mockPost} />);
 
+    // pre → padding div → LinkedIn card div (has background + maxWidth)
     const previewContainer = screen
       .getByText(/This is a sample LinkedIn post content/, { exact: false })
-      .closest("pre")?.parentElement;
+      .closest("pre")?.parentElement?.parentElement;
     expect(previewContainer).toHaveStyle({ background: "white" });
-    expect(previewContainer).toHaveStyle({ border: "1px solid #e0e0e0" });
-    expect(previewContainer).toHaveStyle({ maxWidth: "550px" });
+    // Card uses boxShadow for border effect, no border property
+    expect(previewContainer).toHaveStyle({ overflow: "hidden" });
+    // Default previewMode is "mobile" so maxWidth is 375
+    expect(previewContainer).toHaveStyle({ maxWidth: "375px" });
   });
 });

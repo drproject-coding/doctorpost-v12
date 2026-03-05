@@ -5,18 +5,22 @@ import { PipelineStepper } from "../../components/factory/PipelineStepper";
 // Helper: given a label text, get the inner progress fill div
 // Component structure per step:
 //   <div> (outer wrapper, flex column)
-//     <div> (progress bar container)
+//     <div> (icon)
+//     <div> (progress bar container)  ← children[1]
 //       <div style={{width: ...}} />  ← fill bar (what we want)
 //     </div>
-//     <span> (label text)
+//     <div> (label + icons row)
+//       <span> (label text)  ← getByText returns this
+//     </div>
 //   </div>
-// getByText returns <span>, parentElement is outer wrapper,
-// firstElementChild is the progress container, firstElementChild of that is the fill.
+// getByText returns <span>, go up to labelDiv, then outerWrapper, then children[1].
 function getFillBar(labelText: string): Element | null {
   const span = screen.getByText(labelText);
-  const outerWrapper = span.parentElement;
+  const labelDiv = span.parentElement; // div containing label + icons
+  if (!labelDiv) return null;
+  const outerWrapper = labelDiv.parentElement; // outer step div (flex column)
   if (!outerWrapper) return null;
-  const progressContainer = outerWrapper.firstElementChild;
+  const progressContainer = outerWrapper.children[1]; // 2nd child = progress bar
   if (!progressContainer) return null;
   return progressContainer.firstElementChild;
 }

@@ -79,10 +79,11 @@ describe("EvidencePack", () => {
   it("displays claims with verification status", () => {
     render(<EvidencePack evidence={mockEvidence} />);
 
-    const verifiedBadge = screen.getByText("verified");
+    // Use selector to get the badge <span>, not the filter <button> with same text
+    const verifiedBadge = screen.getByText("verified", { selector: "span" });
     expect(verifiedBadge).toHaveStyle({ fontWeight: "700" });
 
-    const estimateBadge = screen.getByText("estimate");
+    const estimateBadge = screen.getByText("estimate", { selector: "span" });
     expect(estimateBadge).toHaveStyle({ fontWeight: "700" });
   });
 
@@ -176,10 +177,11 @@ describe("EvidencePack", () => {
   it("applies correct styling to verification badges", () => {
     render(<EvidencePack evidence={mockEvidence} />);
 
-    const verifiedBadge = screen.getByText("verified");
+    // Use selector to get the badge <span>, not the filter <button> with same text
+    const verifiedBadge = screen.getByText("verified", { selector: "span" });
     expect(verifiedBadge).toHaveStyle({ background: "rgba(0, 170, 0, 0.15)" });
 
-    const estimateBadge = screen.getByText("estimate");
+    const estimateBadge = screen.getByText("estimate", { selector: "span" });
     expect(estimateBadge).toHaveStyle({
       background: "rgba(233, 215, 152, 0.3)",
     });
@@ -188,9 +190,10 @@ describe("EvidencePack", () => {
   it("maintains consistent section layout", () => {
     render(<EvidencePack evidence={mockEvidence} />);
 
-    // Check that all section buttons are present
+    // Section buttons + filter buttons (all/verified/estimate/anecdotal) + action buttons
+    // (Select all, Clear, Verified only) = 4 + 4 + 3 = 11 when claims is expanded
     const sectionButtons = screen.getAllByRole("button");
-    expect(sectionButtons).toHaveLength(4); // Claims, Voices, Counter, Angles
+    expect(sectionButtons).toHaveLength(11);
   });
 
   it("shows correct counts in section titles", () => {

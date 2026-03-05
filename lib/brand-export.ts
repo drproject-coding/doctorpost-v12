@@ -161,3 +161,7 @@ export function exportAndDownloadJson(profile: BrandProfile): void {
     : "brand-profile.json";
   downloadFile(filename, content, "application/json;charset=utf-8");
 }
+
+export function triggerPrint(): void {
+  window.print();
+}

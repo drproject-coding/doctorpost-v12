@@ -1,9 +1,15 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Loader } from "lucide-react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import { BrandProfile } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
+import {
+  exportAndDownloadMarkdown,
+  exportAndDownloadJson,
+  copyToClipboard,
+  triggerPrint,
+} from "@/lib/brand-export";
 import BrandSection from "@/components/brand/BrandSection";
 import ProfileSection from "@/components/brand/sections/ProfileSection";
 import VoiceSection from "@/components/brand/sections/VoiceSection";
@@ -20,6 +26,21 @@ export default function BrandPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [savingSection, setSavingSection] = useState<string | null>(null);
+  const [exportOpen, setExportOpen] = useState(false);
+  const exportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        exportRef.current &&
+        !exportRef.current.contains(event.target as Node)
+      ) {
+        setExportOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -89,12 +110,63 @@ export default function BrandPage() {
               Your brand identity, voice, and strategy in one place.
             </p>
           </div>
-          <button
-            disabled
-            className="py-2 px-4 text-sm font-bold border-2 border-black bg-gray-100 text-gray-400 cursor-not-allowed"
-          >
-            Export ↓
-          </button>
+          <div style={{ position: "relative" }} ref={exportRef}>
+            <button
+              className="bru-btn bru-btn--secondary bru-btn--sm"
+              onClick={() => setExportOpen((o) => !o)}
+            >
+              Export ↓
+            </button>
+            {exportOpen && profile && (
+              <div
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: "100%",
+                  marginTop: 4,
+                  background: "white",
+                  border: "1px solid #121212",
+                  zIndex: 50,
+                  minWidth: 180,
+                }}
+              >
+                {[
+                  {
+                    label: "Download Markdown",
+                    action: () => exportAndDownloadMarkdown(profile),
+                  },
+                  {
+                    label: "Download JSON",
+                    action: () => exportAndDownloadJson(profile),
+                  },
+                  {
+                    label: "Copy as Text",
+                    action: () => copyToClipboard(profile),
+                  },
+                  { label: "Print / PDF", action: () => triggerPrint() },
+                ].map((item) => (
+                  <button
+                    key={item.label}
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "8px 12px",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      item.action();
+                      setExportOpen(false);
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Sections */}

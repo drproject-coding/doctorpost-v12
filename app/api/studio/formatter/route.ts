@@ -10,9 +10,10 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { getAIClient } from "@/lib/ai-client";
-import { getSessionUser } from "@/lib/ncb-utils";
+import { createAnthropicClient } from "@/lib/ai-client";
+import { getSessionUser, fetchUserProfile } from "@/lib/ncb-utils";
 import { createSSEResponse } from "@/lib/sse";
+import { callAgentClaude } from "@/lib/agents/callClaude";
 
 // ---------------------------------------------------------------------------
 // Input schema
@@ -79,41 +80,76 @@ export async function POST(req: NextRequest): Promise<Response> {
     );
   }
 
-  // --- Fetch AI client (before SSE opens so errors surface as HTTP responses) ---
-  let anthropic: Awaited<ReturnType<typeof getAIClient>>;
-  try {
-    anthropic = await getAIClient(user.id, cookieHeader);
-  } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Failed to initialise AI client";
-    console.error("[formatter] Init error:", err);
-    return NextResponse.json({ error: message }, { status: 500 });
+  // --- Resolve AI provider and API key from user profile ---
+  const profile = await fetchUserProfile(cookieHeader);
+  const activeProvider = ((profile?.ai_provider as string) || "claude") as
+    | "claude"
+    | "straico"
+    | "1forall";
+  let apiKey: string;
+  let providerModel: string | undefined;
+
+  if (activeProvider === "straico") {
+    apiKey = (profile?.straico_api_key as string) || "";
+    providerModel = (profile?.straico_model as string) || "openai/gpt-4o-mini";
+  } else if (activeProvider === "1forall") {
+    apiKey = (profile?.oneforall_api_key as string) || "";
+    providerModel =
+      (profile?.oneforall_model as string) || "anthropic/claude-4-sonnet";
+  } else {
+    apiKey = (profile?.claude_api_key as string) || "";
+  }
+
+  if (!apiKey) {
+    const providerName =
+      activeProvider.charAt(0).toUpperCase() + activeProvider.slice(1);
+    return NextResponse.json(
+      {
+        error: "no_api_key",
+        message: `No ${providerName} API key configured. Please add your key in Settings.`,
+      },
+      { status: 401 },
+    );
   }
 
   // --- Build prompts ---
   const systemPrompt = buildSystemPrompt();
-  const userPrompt = buildUserPrompt(post_text, format);
+  const userMessage = buildUserPrompt(post_text, format);
 
   // --- Open SSE stream ---
   return createSSEResponse(async (send) => {
     let accumulated = "";
 
-    const stream = anthropic.messages.stream({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 4000,
-      temperature: 0.1,
-      system: systemPrompt,
-      messages: [{ role: "user", content: userPrompt }],
-    });
-
-    for await (const event of stream) {
-      if (
-        event.type === "content_block_delta" &&
-        event.delta.type === "text_delta"
-      ) {
-        accumulated += event.delta.text;
-        send({ type: "token", content: event.delta.text });
+    if (activeProvider === "claude") {
+      const anthropic = createAnthropicClient(apiKey);
+      const stream = anthropic.messages.stream({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 4000,
+        temperature: 0.1,
+        system: systemPrompt,
+        messages: [{ role: "user", content: userMessage }],
+      });
+      for await (const event of stream) {
+        if (
+          event.type === "content_block_delta" &&
+          event.delta.type === "text_delta"
+        ) {
+          accumulated += event.delta.text;
+          send({ type: "token", content: event.delta.text });
+        }
       }
+    } else {
+      const { text } = await callAgentClaude({
+        apiKey,
+        model: "haiku",
+        maxTokens: 4000,
+        systemPrompt,
+        userMessage,
+        provider: activeProvider,
+        providerModel,
+      });
+      accumulated = text;
+      send({ type: "token", content: text });
     }
 
     // Derive character_count from the post_text field in the JSON output

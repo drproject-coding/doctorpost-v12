@@ -9,10 +9,11 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { getAIClient } from "@/lib/ai-client";
+import { createAnthropicClient } from "@/lib/ai-client";
 import { getBrandContext } from "@/lib/brand-context";
-import { getSessionUser } from "@/lib/ncb-utils";
+import { getSessionUser, fetchUserProfile } from "@/lib/ncb-utils";
 import { createSSEResponse } from "@/lib/sse";
+import { callAgentClaude } from "@/lib/agents/callClaude";
 
 // ---------------------------------------------------------------------------
 // Input schema
@@ -75,43 +76,81 @@ export async function POST(req: NextRequest): Promise<Response> {
     );
   }
 
-  // --- Fetch brand context and AI client (before SSE opens so errors are HTTP) ---
-  let brandContext: string;
-  let anthropic: Awaited<ReturnType<typeof getAIClient>>;
+  // --- Resolve AI provider and API key from user profile ---
+  const profile = await fetchUserProfile(cookieHeader);
+  const activeProvider = ((profile?.ai_provider as string) || "claude") as
+    | "claude"
+    | "straico"
+    | "1forall";
+  let apiKey: string;
+  let providerModel: string | undefined;
 
+  if (activeProvider === "straico") {
+    apiKey = (profile?.straico_api_key as string) || "";
+    providerModel = (profile?.straico_model as string) || "openai/gpt-4o-mini";
+  } else if (activeProvider === "1forall") {
+    apiKey = (profile?.oneforall_api_key as string) || "";
+    providerModel =
+      (profile?.oneforall_model as string) || "anthropic/claude-4-sonnet";
+  } else {
+    apiKey = (profile?.claude_api_key as string) || "";
+  }
+
+  if (!apiKey) {
+    const providerName =
+      activeProvider.charAt(0).toUpperCase() + activeProvider.slice(1);
+    return NextResponse.json(
+      {
+        error: "no_api_key",
+        message: `No ${providerName} API key configured. Please add your key in Settings.`,
+      },
+      { status: 401 },
+    );
+  }
+
+  // --- Fetch brand context (before SSE opens so errors surface as HTTP) ---
+  let brandContext: string;
   try {
-    [brandContext, anthropic] = await Promise.all([
-      getBrandContext(user.id, cookieHeader),
-      getAIClient(user.id, cookieHeader),
-    ]);
+    brandContext = await getBrandContext(user.id, cookieHeader);
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Failed to initialise AI client";
-    console.error("[writer] Init error:", err);
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[writer] Brand context error:", err);
+    brandContext = "";
   }
 
   // --- Build prompts ---
   const systemPrompt = buildSystemPrompt(brandContext);
-  const userPrompt = buildUserPrompt(strategy, format);
+  const userMessage = buildUserPrompt(strategy, format);
 
   // --- Open SSE stream ---
   return createSSEResponse(async (send) => {
-    const stream = anthropic.messages.stream({
-      model: "claude-opus-4-6",
-      max_tokens: 4000,
-      temperature: 0.8,
-      system: systemPrompt,
-      messages: [{ role: "user", content: userPrompt }],
-    });
-
-    for await (const event of stream) {
-      if (
-        event.type === "content_block_delta" &&
-        event.delta.type === "text_delta"
-      ) {
-        send({ type: "token", content: event.delta.text });
+    if (activeProvider === "claude") {
+      const anthropic = createAnthropicClient(apiKey);
+      const stream = anthropic.messages.stream({
+        model: "claude-opus-4-6",
+        max_tokens: 4000,
+        temperature: 0.8,
+        system: systemPrompt,
+        messages: [{ role: "user", content: userMessage }],
+      });
+      for await (const event of stream) {
+        if (
+          event.type === "content_block_delta" &&
+          event.delta.type === "text_delta"
+        ) {
+          send({ type: "token", content: event.delta.text });
+        }
       }
+    } else {
+      const { text } = await callAgentClaude({
+        apiKey,
+        model: "opus",
+        maxTokens: 4000,
+        systemPrompt,
+        userMessage,
+        provider: activeProvider,
+        providerModel,
+      });
+      send({ type: "token", content: text });
     }
 
     send({ type: "stage_complete", stage: "writer" });

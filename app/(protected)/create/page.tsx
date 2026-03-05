@@ -119,6 +119,18 @@ export default function CreatePage() {
     };
   }, [profile]);
 
+  const brandContext = useMemo(() => {
+    if (!profile) return undefined;
+    return {
+      industry: profile.industry,
+      role: profile.role,
+      audience: profile.audience,
+      tones: profile.tones,
+      contentStrategy: profile.contentStrategy,
+      definition: profile.definition,
+    };
+  }, [profile]);
+
   const handleTopicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTopic(e.target.value);
     setSubtopics([]);
@@ -157,6 +169,7 @@ export default function CreatePage() {
         topic,
         subtopic.text,
         aiSettings ?? undefined,
+        brandContext,
       );
       setRecommendation(result);
       setPostType(
@@ -194,22 +207,59 @@ export default function CreatePage() {
     }
   };
 
-  const handleGeneratePostClick = () => {
-    if (
-      !profile ||
-      !topic ||
-      !postType ||
-      !hookPattern ||
-      !contentPillar ||
-      !selectedToneId
-    ) {
+  const handleGeneratePostClick = async () => {
+    if (!profile || !topic) {
+      setSaveFeedback("Please fill in a topic before generating.");
+      setTimeout(() => setSaveFeedback(null), 3000);
+      return;
+    }
+
+    setSaveFeedback(null);
+
+    // If no AI recommendation yet, fetch one now using the topic directly
+    if (!recommendation && aiSettings) {
+      setLoadingRecommendation(true);
+      try {
+        const result = await getPostRecommendations(
+          topic,
+          topic, // use topic as subtopic when no subtopic selected
+          aiSettings,
+          brandContext,
+        );
+        setRecommendation(result);
+        if (enhancedPostTypes.some((opt) => opt.value === result.postType)) {
+          setPostType(result.postType);
+        }
+        if (
+          enhancedHookPatterns.some((opt) => opt.value === result.hookPattern)
+        ) {
+          setHookPattern(result.hookPattern);
+        }
+        if (
+          enhancedContentPillars.some((opt) => opt.value === result.contentPillar)
+        ) {
+          setContentPillar(result.contentPillar);
+        }
+        if (result.toneId) {
+          setSelectedToneId(result.toneId);
+        }
+      } catch (error) {
+        console.error("Failed to get recommendations:", error);
+        // Non-fatal: proceed with current dropdown values
+      } finally {
+        setLoadingRecommendation(false);
+      }
+    }
+
+    // Require form completeness before generating
+    if (!postType || !hookPattern || !contentPillar || !selectedToneId) {
       setSaveFeedback(
-        "Please fill in all required fields (Topic, Post Type, Hook Pattern, Content Pillar, Tone) before generating.",
+        "Please fill in all required fields (Post Type, Hook Pattern, Content Pillar, Tone) before generating.",
       );
       setTimeout(() => setSaveFeedback(null), 3000);
       return;
     }
-    setSaveFeedback(null);
+
     setGeneratedContent("");
     setTriggerPostGeneration((prev) => prev + 1);
   };

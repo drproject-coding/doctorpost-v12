@@ -97,7 +97,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
   // --- Open SSE stream ---
   return createSSEResponse(async (send) => {
-    const stream = await anthropic.messages.stream({
+    const stream = anthropic.messages.stream({
       model: "claude-opus-4-6",
       max_tokens: 4000,
       temperature: 0.8,

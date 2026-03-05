@@ -98,7 +98,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   return createSSEResponse(async (send) => {
     let accumulated = "";
 
-    const stream = await anthropic.messages.stream({
+    const stream = anthropic.messages.stream({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 4000,
       temperature: 0.1,

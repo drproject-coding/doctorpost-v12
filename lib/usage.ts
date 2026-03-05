@@ -221,7 +221,7 @@ export async function incrementUsage(
 ): Promise<void> {
   const row = await fetchUserSettings(sessionCookie);
 
-  if (!row || !row.id) {
+  if (!row?.id) {
     // No row exists — create with count = 1 and walk away.
     // createUserSettings defaults to 0; immediately patch to 1.
     await createUserSettings(userId, sessionCookie);

@@ -147,7 +147,7 @@ ${icp_id ? `Target ICP: ${icp_id}` : "Target ICP: use brand profile audience"}
 Produce the strategic brief JSON.`;
 
     // Stream from Anthropic
-    const stream = await anthropic.messages.stream({
+    const stream = anthropic.messages.stream({
       model: "claude-sonnet-4-6",
       max_tokens: 1000,
       temperature: 0.7,

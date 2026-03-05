@@ -170,7 +170,7 @@ ${post_text}
 Score the post.`;
 
     // Stream from Anthropic
-    const stream = await anthropic.messages.stream({
+    const stream = anthropic.messages.stream({
       model: "claude-sonnet-4-6",
       max_tokens: 2000,
       temperature: 0.2,

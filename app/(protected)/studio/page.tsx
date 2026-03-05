@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Card } from "@bruddle/react";
 import {
   Zap,
   Copy,

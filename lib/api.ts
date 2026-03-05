@@ -30,6 +30,7 @@ interface NcbProfileRow {
   copy_guideline?: string | null;
   content_strategy?: string | null;
   definition?: string | null;
+  positioning?: string | null;
   openai_key?: string | null;
   ai_provider?: string | null;
   claude_api_key?: string | null;
@@ -107,6 +108,7 @@ function mapProfileFromNcb(row: NcbProfileRow): BrandProfile {
     copyGuideline: row.copy_guideline ?? "",
     contentStrategy: row.content_strategy ?? "",
     definition: row.definition ?? "",
+    positioning: row.positioning ?? "",
     perplexityApiKey: row.perplexity_api_key ?? undefined,
     redditClientId: row.reddit_client_id ?? undefined,
     redditClientSecret: row.reddit_client_secret ?? undefined,
@@ -173,6 +175,7 @@ export const getBrandProfile = async (
       copyGuideline: "",
       contentStrategy: "",
       definition: "",
+      positioning: "",
     };
   }
   return mapProfileFromNcb(rows[0]);
@@ -197,6 +200,7 @@ export const updateBrandProfile = async (
     copy_guideline: profile.copyGuideline,
     content_strategy: profile.contentStrategy,
     definition: profile.definition,
+    positioning: profile.positioning || "",
     ai_provider: profile.aiProvider,
     claude_api_key: profile.claudeApiKey,
     straico_api_key: profile.straicoApiKey,

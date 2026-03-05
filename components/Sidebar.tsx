@@ -15,6 +15,7 @@ import {
   Megaphone,
   BookOpen,
   Brain,
+  Palette,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
@@ -33,6 +34,7 @@ const navItems = [
   { name: "Learning", path: "/learning", icon: Brain },
   { name: "Library", path: "/library", icon: Book },
   { name: "Analytics", path: "/analytics", icon: BarChart2 },
+  { name: "Brand", path: "/brand", icon: Palette },
   { name: "Settings", path: "/settings", icon: Settings },
 ];
 

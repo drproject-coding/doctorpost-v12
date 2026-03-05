@@ -85,6 +85,7 @@ export interface BrandProfile {
   copyGuideline: string;
   contentStrategy: string;
   definition: string;
+  positioning?: string;
   perplexityApiKey?: string;
   redditClientId?: string;
   redditClientSecret?: string;

@@ -363,10 +363,6 @@ export default function SettingsPage() {
     }
   };
 
-  const updateField = (field: keyof BrandProfile, value: string) => {
-    setProfile((prev) => (prev ? { ...prev, [field]: value } : prev));
-  };
-
   const isClaude = activeProvider === "claude";
   const isOneforall = activeProvider === "1forall";
   const isStraico = activeProvider === "straico";
@@ -410,7 +406,7 @@ export default function SettingsPage() {
           marginBottom: "var(--bru-space-6)",
         }}
       >
-        Settings
+        AI & Integrations
       </h1>
 
       {/* Integration Status Overview Bar */}
@@ -560,188 +556,6 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </Card>
-
-      {/* ── Brand Profile Card (full width) ── */}
-      <Card variant="raised" style={{ marginBottom: "var(--bru-space-6)" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "var(--bru-space-6)",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "var(--bru-text-h5)",
-              fontWeight: 700,
-              margin: 0,
-            }}
-          >
-            Brand Profile
-          </h2>
-          {!profile?.companyName && (
-            <Button
-              variant="primary"
-              onClick={async () => {
-                try {
-                  const res = await fetch("/api/seed-profile", {
-                    method: "POST",
-                    credentials: "include",
-                  });
-                  if (res.ok) {
-                    window.location.reload();
-                  }
-                } catch (e) {
-                  console.error("Seed failed:", e);
-                }
-              }}
-            >
-              Load Doctor Project Profile
-            </Button>
-          )}
-        </div>
-
-        <div
-          className="bru-form-row"
-          style={{ marginBottom: "var(--bru-space-4)" }}
-        >
-          <div className="bru-field">
-            <label htmlFor="firstName" className="bru-field__label">
-              First Name
-            </label>
-            <input
-              type="text"
-              id="firstName"
-              className="bru-input"
-              style={{ width: "100%" }}
-              value={profile?.firstName ?? ""}
-              onChange={(e) => updateField("firstName", e.target.value)}
-            />
-          </div>
-          <div className="bru-field">
-            <label htmlFor="lastName" className="bru-field__label">
-              Last Name
-            </label>
-            <input
-              type="text"
-              id="lastName"
-              className="bru-input"
-              style={{ width: "100%" }}
-              value={profile?.lastName ?? ""}
-              onChange={(e) => updateField("lastName", e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div
-          className="bru-form-row"
-          style={{ marginBottom: "var(--bru-space-4)" }}
-        >
-          <div className="bru-field">
-            <label htmlFor="companyName" className="bru-field__label">
-              Company Name
-            </label>
-            <input
-              type="text"
-              id="companyName"
-              className="bru-input"
-              style={{ width: "100%" }}
-              value={profile?.companyName ?? ""}
-              onChange={(e) => updateField("companyName", e.target.value)}
-            />
-          </div>
-          <div className="bru-field">
-            <label htmlFor="role" className="bru-field__label">
-              Role
-            </label>
-            <input
-              type="text"
-              id="role"
-              className="bru-input"
-              style={{ width: "100%" }}
-              value={profile?.role ?? ""}
-              onChange={(e) => updateField("role", e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div
-          className="bru-field"
-          style={{ marginBottom: "var(--bru-space-4)" }}
-        >
-          <label htmlFor="industry" className="bru-field__label">
-            Industry
-          </label>
-          <input
-            type="text"
-            id="industry"
-            className="bru-input"
-            style={{ width: "100%" }}
-            value={profile?.industry ?? ""}
-            onChange={(e) => updateField("industry", e.target.value)}
-          />
-        </div>
-
-        <div
-          className="bru-field"
-          style={{ marginBottom: "var(--bru-space-4)" }}
-        >
-          <label className="bru-field__label">Audience</label>
-          <div
-            style={{
-              border: "var(--bru-border)",
-              padding: "var(--bru-space-3)",
-              background: "var(--bru-cream)",
-            }}
-          >
-            {profile?.audience.map((audience, index) => (
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom:
-                    index < (profile?.audience.length ?? 0) - 1
-                      ? "var(--bru-space-2)"
-                      : 0,
-                }}
-              >
-                <span
-                  style={{ fontSize: "var(--bru-text-md)", fontWeight: 500 }}
-                >
-                  {audience}
-                </span>
-                <Button size="sm">Edit</Button>
-              </div>
-            ))}
-            <button
-              style={{
-                marginTop: "var(--bru-space-2)",
-                fontSize: "var(--bru-text-md)",
-                fontWeight: 700,
-                color: "var(--bru-purple)",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-                fontFamily: "var(--bru-font-primary)",
-              }}
-            >
-              + Add Audience
-            </button>
-          </div>
-        </div>
-
-        <Button
-          variant="primary"
-          onClick={() => void handleSaveAll()}
-          disabled={saving}
-        >
-          {saving ? "Saving..." : "Save Profile"}
-        </Button>
       </Card>
 
       {/* ── AI Providers Section (full width) ── */}
@@ -1368,75 +1182,6 @@ export default function SettingsPage() {
             "Save & Validate All"
           )}
         </Button>
-      </Card>
-
-      {/* ── Brand Guidelines Card (full width) ── */}
-      <Card variant="raised" style={{ marginTop: "var(--bru-space-6)" }}>
-        <h2
-          style={{
-            fontSize: "var(--bru-text-h5)",
-            fontWeight: 700,
-            marginBottom: "var(--bru-space-6)",
-          }}
-        >
-          Brand Guidelines
-        </h2>
-
-        <div
-          className="bru-form-row"
-          style={{ marginBottom: "var(--bru-space-4)" }}
-        >
-          <div className="bru-field">
-            <label htmlFor="copyGuideline" className="bru-field__label">
-              Copy Guideline
-            </label>
-            <textarea
-              id="copyGuideline"
-              className="bru-input"
-              style={{ width: "100%", minHeight: 120, resize: "vertical" }}
-              value={profile?.copyGuideline ?? ""}
-              onChange={(e) => updateField("copyGuideline", e.target.value)}
-            />
-          </div>
-          <div className="bru-field">
-            <label htmlFor="contentStrategy" className="bru-field__label">
-              Content Strategy
-            </label>
-            <textarea
-              id="contentStrategy"
-              className="bru-input"
-              style={{ width: "100%", minHeight: 120, resize: "vertical" }}
-              value={profile?.contentStrategy ?? ""}
-              onChange={(e) => updateField("contentStrategy", e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div
-          className="bru-field"
-          style={{ marginBottom: "var(--bru-space-4)" }}
-        >
-          <label htmlFor="definition" className="bru-field__label">
-            Brand Definition
-          </label>
-          <textarea
-            id="definition"
-            className="bru-input"
-            style={{ width: "100%", minHeight: 120, resize: "vertical" }}
-            value={profile?.definition ?? ""}
-            onChange={(e) => updateField("definition", e.target.value)}
-          />
-        </div>
-
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            variant="primary"
-            onClick={() => void handleSaveAll()}
-            disabled={saving}
-          >
-            {saving ? "Saving..." : "Save Guidelines"}
-          </Button>
-        </div>
       </Card>
     </>
   );

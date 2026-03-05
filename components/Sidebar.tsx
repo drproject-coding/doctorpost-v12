@@ -16,6 +16,7 @@ import {
   BookOpen,
   Brain,
   Palette,
+  Clapperboard,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
@@ -26,6 +27,7 @@ interface SidebarProps {
 
 const navItems = [
   { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+  { name: "Studio", path: "/studio", icon: Clapperboard },
   { name: "Create", path: "/create", icon: PenSquare },
   { name: "Factory", path: "/factory", icon: Factory },
   { name: "Campaigns", path: "/campaigns", icon: Megaphone },

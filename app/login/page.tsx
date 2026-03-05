@@ -22,8 +22,6 @@ export default function LoginPage() {
   // Email auth state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [isRegistering, setIsRegistering] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   // Redirect if already logged in
@@ -54,26 +52,16 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const endpoint = isRegistering
-        ? "/api/auth/sign-up/email"
-        : "/api/auth/sign-in/email";
-      const body = isRegistering
-        ? { email, password, name: name || email.split("@")[0] }
-        : { email, password };
-
-      const res = await fetch(endpoint, {
+      const res = await fetch("/api/auth/sign-in/email", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!res.ok) {
         const data = (await res.json()) as { message?: string };
-        throw new Error(
-          data.message ||
-            (isRegistering ? "Registration failed." : "Login failed."),
-        );
+        throw new Error(data.message || "Login failed.");
       }
 
       // Session cookie is now set, refresh auth state
@@ -170,18 +158,6 @@ export default function LoginPage() {
                   onSubmit={(e) => void handleEmailSubmit(e)}
                   className="space-y-4"
                 >
-                  {isRegistering && (
-                    <div>
-                      <input
-                        type="text"
-                        className="bru-input"
-                        style={{ width: "100%" }}
-                        placeholder="Your name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </div>
-                  )}
                   <div>
                     <input
                       type="email"
@@ -210,30 +186,23 @@ export default function LoginPage() {
                     </button>
                   </div>
                   <Button type="submit" variant="primary" block>
-                    {isRegistering ? "Create Account" : "Sign In"}
+                    Sign In
                   </Button>
                 </form>
 
                 <button
-                  onClick={() => {
-                    setIsRegistering(!isRegistering);
-                    setError(null);
-                  }}
+                  onClick={() => router.push("/signup")}
                   className="mt-4 text-sm text-bru-purple font-medium hover:underline"
                 >
-                  {isRegistering
-                    ? "Already have an account? Sign in"
-                    : "Don't have an account? Register"}
+                  Don&apos;t have an account? <strong>Sign up</strong>
                 </button>
 
-                {!isRegistering && (
-                  <button
-                    onClick={() => router.push("/reset-password")}
-                    className="block mx-auto mt-2 text-sm text-gray-500 hover:text-bru-purple"
-                  >
-                    Forgot password?
-                  </button>
-                )}
+                <button
+                  onClick={() => router.push("/forgot-password")}
+                  className="block mx-auto mt-2 text-sm text-gray-500 hover:text-bru-purple"
+                >
+                  Forgot password?
+                </button>
               </>
             )}
           </>

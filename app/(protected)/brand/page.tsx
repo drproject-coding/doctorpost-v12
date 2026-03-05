@@ -1,25 +1,25 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Loader } from "lucide-react";
-import { getBrandProfile } from "@/lib/api";
+import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import { BrandProfile } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
-
-const SECTIONS = [
-  "Profile",
-  "Voice & Guidelines",
-  "Content Strategy",
-  "Offers & Value Prop",
-  "Content Pillars",
-  "Brand Positioning",
-  "AI & Tools",
-] as const;
+import BrandSection from "@/components/brand/BrandSection";
+import ProfileSection from "@/components/brand/sections/ProfileSection";
+import VoiceSection from "@/components/brand/sections/VoiceSection";
+import StrategySection from "@/components/brand/sections/StrategySection";
+import OffersSection from "@/components/brand/sections/OffersSection";
+import PillarsSection from "@/components/brand/sections/PillarsSection";
+import PositioningSection from "@/components/brand/sections/PositioningSection";
+import AiToolsSection from "@/components/brand/sections/AiToolsSection";
 
 export default function BrandPage() {
   const { user } = useAuth();
   const [profile, setProfile] = useState<BrandProfile | null>(null);
+  const [draft, setDraft] = useState<BrandProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [savingSection, setSavingSection] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -30,6 +30,7 @@ export default function BrandPage() {
       try {
         const data = await getBrandProfile(user.id);
         setProfile(data);
+        setDraft(data);
       } catch (err) {
         console.error("Failed to load brand profile:", err);
         setError("Failed to load brand profile. Please try again.");
@@ -39,6 +40,23 @@ export default function BrandPage() {
     };
     void fetchProfile();
   }, [user?.id]);
+
+  const handleSave = async (
+    section: string,
+    updates: Partial<BrandProfile>,
+  ) => {
+    if (!profile) return;
+    setSavingSection(section);
+    try {
+      const updated = await updateBrandProfile({ ...profile, ...updates });
+      setProfile(updated);
+      setDraft(updated);
+    } catch (e) {
+      console.error("Failed to save:", e);
+    } finally {
+      setSavingSection(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -79,17 +97,137 @@ export default function BrandPage() {
           </button>
         </div>
 
-        {/* Section placeholders */}
-        <div className="space-y-4">
-          {SECTIONS.map((section) => (
-            <div
-              key={section}
-              className="p-4 border-2 border-black bg-white font-medium"
+        {/* Sections */}
+        {profile && (
+          <div className="space-y-4">
+            {/* Profile */}
+            <BrandSection
+              title="Profile"
+              tag="PROFILE"
+              color="#631DED"
+              onSave={() => handleSave("profile", draft ? { ...draft } : {})}
+              saving={savingSection === "profile"}
             >
-              Section: {section}
-            </div>
-          ))}
-        </div>
+              {(editing) => (
+                <ProfileSection
+                  profile={draft ?? profile}
+                  editing={editing}
+                  onChange={(updates) =>
+                    setDraft((prev) => (prev ? { ...prev, ...updates } : null))
+                  }
+                />
+              )}
+            </BrandSection>
+
+            {/* Voice & Guidelines */}
+            <BrandSection
+              title="Voice & Guidelines"
+              tag="VOICE"
+              color="#FF6C01"
+              onSave={() => handleSave("voice", draft ? { ...draft } : {})}
+              saving={savingSection === "voice"}
+            >
+              {(editing) => (
+                <VoiceSection
+                  profile={draft ?? profile}
+                  editing={editing}
+                  onChange={(updates) =>
+                    setDraft((prev) => (prev ? { ...prev, ...updates } : null))
+                  }
+                />
+              )}
+            </BrandSection>
+
+            {/* Content Strategy */}
+            <BrandSection
+              title="Content Strategy"
+              tag="STRATEGY"
+              color="#00A896"
+              onSave={() => handleSave("strategy", draft ? { ...draft } : {})}
+              saving={savingSection === "strategy"}
+            >
+              {(editing) => (
+                <StrategySection
+                  profile={draft ?? profile}
+                  editing={editing}
+                  onChange={(updates) =>
+                    setDraft((prev) => (prev ? { ...prev, ...updates } : null))
+                  }
+                />
+              )}
+            </BrandSection>
+
+            {/* Offers & Value Prop */}
+            <BrandSection
+              title="Offers & Value Prop"
+              tag="OFFERS"
+              color="#D4A800"
+              onSave={() => handleSave("offers", draft ? { ...draft } : {})}
+              saving={savingSection === "offers"}
+            >
+              {(editing) => (
+                <OffersSection
+                  profile={draft ?? profile}
+                  editing={editing}
+                  onChange={(updates) =>
+                    setDraft((prev) => (prev ? { ...prev, ...updates } : null))
+                  }
+                />
+              )}
+            </BrandSection>
+
+            {/* Content Pillars */}
+            <BrandSection
+              title="Content Pillars"
+              tag="PILLARS"
+              color="#2D8A6B"
+              onSave={() => handleSave("pillars", {})}
+              saving={savingSection === "pillars"}
+            >
+              {(editing) => <PillarsSection editing={editing} />}
+            </BrandSection>
+
+            {/* Brand Positioning */}
+            <BrandSection
+              title="Brand Positioning"
+              tag="POSITIONING"
+              color="#C97070"
+              onSave={() =>
+                handleSave("positioning", draft ? { ...draft } : {})
+              }
+              saving={savingSection === "positioning"}
+            >
+              {(editing) => (
+                <PositioningSection
+                  profile={draft ?? profile}
+                  editing={editing}
+                  onChange={(updates) =>
+                    setDraft((prev) => (prev ? { ...prev, ...updates } : null))
+                  }
+                />
+              )}
+            </BrandSection>
+
+            {/* AI & Tools */}
+            <BrandSection
+              title="AI & Tools"
+              tag="AI & TOOLS"
+              color="#282828"
+              onSave={() => handleSave("aitools", draft ? { ...draft } : {})}
+              saving={savingSection === "aitools"}
+            >
+              {(editing) => (
+                <AiToolsSection
+                  profile={draft ?? profile}
+                  editing={editing}
+                  onChange={(updates) =>
+                    setDraft((prev) => (prev ? { ...prev, ...updates } : null))
+                  }
+                />
+              )}
+            </BrandSection>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -32,6 +32,8 @@ interface NcbProfileRow {
   content_strategy?: string | null;
   definition?: string | null;
   positioning?: string | null;
+  content_pillars?: string | null;
+  custom_pillars?: string | null;
   ai_provider?: string | null;
   claude_api_key?: string | null;
   straico_api_key?: string | null;
@@ -92,6 +94,8 @@ function mapProfileFromNcbRow(row: NcbProfileRow): BrandProfile {
     contentStrategy: row.content_strategy ?? "",
     definition: row.definition ?? "",
     positioning: row.positioning ?? "",
+    pillars: parseJsonArray(row.content_pillars),
+    customPillars: [],
     perplexityApiKey: row.perplexity_api_key ?? undefined,
     redditClientId: row.reddit_client_id ?? undefined,
     redditClientSecret: row.reddit_client_secret ?? undefined,

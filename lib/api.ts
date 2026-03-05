@@ -1,5 +1,6 @@
 import {
   BrandProfile,
+  CustomPillar,
   ScheduledPost,
   AnalyticsData,
   SubtopicSuggestion,
@@ -31,6 +32,8 @@ interface NcbProfileRow {
   content_strategy?: string | null;
   definition?: string | null;
   positioning?: string | null;
+  content_pillars?: string | null;
+  custom_pillars?: string | null;
   openai_key?: string | null;
   ai_provider?: string | null;
   claude_api_key?: string | null;
@@ -63,6 +66,22 @@ interface BrandContextForRecommendation {
   tones: string[];
   contentStrategy: string;
   definition: string;
+}
+
+function parseCustomPillars(val: string | null | undefined): CustomPillar[] {
+  if (!val) return [];
+  try {
+    const parsed: unknown = JSON.parse(val);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (item): item is CustomPillar =>
+        typeof item === "object" &&
+        item !== null &&
+        typeof (item as CustomPillar).id === "string",
+    );
+  } catch {
+    return [];
+  }
 }
 
 function parseJsonArray(val: string | null | undefined): string[] {
@@ -109,6 +128,8 @@ function mapProfileFromNcb(row: NcbProfileRow): BrandProfile {
     contentStrategy: row.content_strategy ?? "",
     definition: row.definition ?? "",
     positioning: row.positioning ?? "",
+    pillars: parseJsonArray(row.content_pillars),
+    customPillars: parseCustomPillars(row.custom_pillars),
     perplexityApiKey: row.perplexity_api_key ?? undefined,
     redditClientId: row.reddit_client_id ?? undefined,
     redditClientSecret: row.reddit_client_secret ?? undefined,
@@ -176,6 +197,8 @@ export const getBrandProfile = async (
       contentStrategy: "",
       definition: "",
       positioning: "",
+      pillars: [],
+      customPillars: [],
     };
   }
   return mapProfileFromNcb(rows[0]);
@@ -201,6 +224,8 @@ export const updateBrandProfile = async (
     content_strategy: profile.contentStrategy,
     definition: profile.definition,
     positioning: profile.positioning || "",
+    content_pillars: JSON.stringify(profile.pillars ?? []),
+    custom_pillars: JSON.stringify(profile.customPillars ?? []),
     ai_provider: profile.aiProvider,
     claude_api_key: profile.claudeApiKey,
     straico_api_key: profile.straicoApiKey,

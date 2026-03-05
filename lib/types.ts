@@ -56,6 +56,14 @@ export interface StraicoUserInfo {
   lastName: string;
 }
 
+// --- Custom Pillar ---
+
+export interface CustomPillar {
+  id: string;
+  label: string;
+  description: string;
+}
+
 // --- Brand Profile ---
 
 export interface BrandProfile {
@@ -86,6 +94,8 @@ export interface BrandProfile {
   contentStrategy: string;
   definition: string;
   positioning?: string;
+  pillars?: string[];
+  customPillars?: CustomPillar[];
   perplexityApiKey?: string;
   redditClientId?: string;
   redditClientSecret?: string;

@@ -378,10 +378,29 @@ export default function BrandPage() {
               title="Content Pillars"
               tag="PILLARS"
               color="#2D8A6B"
-              onSave={() => handleSave("pillars", {})}
+              onSave={() =>
+                handleSave(
+                  "pillars",
+                  draft
+                    ? {
+                        pillars: draft.pillars,
+                        customPillars: draft.customPillars,
+                      }
+                    : {},
+                )
+              }
               saving={savingSection === "pillars"}
             >
-              {(editing) => <PillarsSection editing={editing} />}
+              {(editing) => (
+                <PillarsSection
+                  profile={draft ?? profile}
+                  editing={editing}
+                  onChange={(updates) =>
+                    setDraft((prev) => (prev ? { ...prev, ...updates } : null))
+                  }
+                  onAutoSave={(updates) => handleSave("pillars", updates)}
+                />
+              )}
             </BrandSection>
 
             {/* Brand Positioning */}

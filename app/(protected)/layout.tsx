@@ -6,6 +6,8 @@ import { useAuth } from "@/lib/auth-context";
 import { Loader } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+import { ToastProvider } from "@/components/Toast";
+import { ConfirmProvider } from "@/components/ConfirmDialog";
 
 export default function ProtectedLayout({
   children,
@@ -38,19 +40,23 @@ export default function ProtectedLayout({
   }
 
   return (
-    <div className="app-layout">
-      <Sidebar
-        collapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-      />
-      <div className="main-content">
-        <Header
-          onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
-        <main className="content">
-          <div className="container">{children}</div>
-        </main>
-      </div>
-    </div>
+    <ToastProvider>
+      <ConfirmProvider>
+        <div className="app-layout">
+          <Sidebar
+            collapsed={sidebarCollapsed}
+            onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+          />
+          <div className="main-content">
+            <Header
+              onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
+            />
+            <main className="content">
+              <div className="container">{children}</div>
+            </main>
+          </div>
+        </div>
+      </ConfirmProvider>
+    </ToastProvider>
   );
 }

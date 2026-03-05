@@ -55,6 +55,15 @@ interface NcbPostRow {
   updated_at?: string;
 }
 
+interface BrandContextForRecommendation {
+  industry: string;
+  role: string;
+  audience: string[];
+  tones: string[];
+  contentStrategy: string;
+  definition: string;
+}
+
 function parseJsonArray(val: string | null | undefined): string[] {
   if (!val) return [];
   try {
@@ -419,6 +428,7 @@ export const getPostRecommendations = async (
   topic: string,
   subtopic: string,
   settings?: AiSettings,
+  brandContext?: BrandContextForRecommendation,
 ): Promise<PostRecommendation> => {
   if (!settings) {
     throw new Error(
@@ -426,7 +436,21 @@ export const getPostRecommendations = async (
     );
   }
 
-  const systemPrompt = `You are a LinkedIn content strategist. Given a topic and subtopic, recommend the best post configuration. Return a single JSON object with these fields:
+  const brandSection = brandContext
+    ? `
+You are personalizing recommendations for this specific LinkedIn content creator:
+- Industry: ${brandContext.industry || "not specified"}
+- Role: ${brandContext.role || "not specified"}
+- Target audience: ${brandContext.audience.length ? brandContext.audience.join(", ") : "general"}
+- Preferred tones: ${brandContext.tones.length ? brandContext.tones.join(", ") : "professional"}
+- Content strategy: ${brandContext.contentStrategy || "not specified"}
+- Brand definition: ${brandContext.definition || "not specified"}
+
+Choose options that are MOST COHERENT with this brand profile.
+`
+    : "";
+
+  const systemPrompt = `You are a LinkedIn content strategist.${brandSection} Given a topic and subtopic, recommend the best post configuration. Return a single JSON object with these fields:
 - postType (string): one of "educational", "storytelling", "opinion", "how-to", "case-study", "listicle"
 - hookPattern (string): one of "question", "statistic", "bold-claim", "story-opener", "contrarian", "curiosity-gap"
 - contentPillar (string): one of "thought-leadership", "industry-insights", "personal-branding", "how-to-guides", "case-studies", "trends"

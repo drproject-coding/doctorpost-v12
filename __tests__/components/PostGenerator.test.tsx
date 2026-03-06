@@ -78,8 +78,10 @@ describe("PostGenerator", () => {
     claudeApiKey: "test-key",
     straicoApiKey: "",
     straicoModel: "",
+    straicoImageModel: "",
     oneforallApiKey: "",
     oneforallModel: "",
+    oneforallImageModel: "",
     industry: "healthcare",
     audience: ["healthcare-professionals"],
     tones: ["professional", "educational"],
@@ -100,8 +102,10 @@ describe("PostGenerator", () => {
     claudeApiKey: "test-key",
     straicoApiKey: "",
     straicoModel: "",
+    straicoImageModel: "",
     oneforallApiKey: "",
     oneforallModel: "",
+    oneforallImageModel: "",
   };
 
   const mockOnContentGenerated = jest.fn();

@@ -114,8 +114,10 @@ export default function CreatePage() {
       claudeApiKey: profile.claudeApiKey,
       straicoApiKey: profile.straicoApiKey,
       straicoModel: profile.straicoModel,
+      straicoImageModel: profile.straicoImageModel,
       oneforallApiKey: profile.oneforallApiKey,
       oneforallModel: profile.oneforallModel,
+      oneforallImageModel: profile.oneforallImageModel,
     };
   }, [profile]);
 
@@ -236,7 +238,9 @@ export default function CreatePage() {
           setHookPattern(result.hookPattern);
         }
         if (
-          enhancedContentPillars.some((opt) => opt.value === result.contentPillar)
+          enhancedContentPillars.some(
+            (opt) => opt.value === result.contentPillar,
+          )
         ) {
           setContentPillar(result.contentPillar);
         }

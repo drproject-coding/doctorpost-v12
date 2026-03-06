@@ -76,8 +76,10 @@ const claudeSettings: AiSettings = {
   claudeApiKey: "sk-ant-test",
   straicoApiKey: "",
   straicoModel: "openai/gpt-4o-mini",
+  straicoImageModel: "",
   oneforallApiKey: "",
   oneforallModel: "anthropic/claude-4-sonnet",
+  oneforallImageModel: "",
 };
 
 // ─── generateViaServer ───────────────────────────────────────────────────────

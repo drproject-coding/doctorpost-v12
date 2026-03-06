@@ -58,8 +58,10 @@ export async function POST(req: NextRequest) {
     claudeApiKey: profile.claude_api_key || "",
     straicoApiKey: profile.straico_api_key || "",
     straicoModel: profile.straico_model || "openai/gpt-4o-mini",
+    straicoImageModel: profile.straico_image_model || "",
     oneforallApiKey: profile.oneforall_api_key || "",
     oneforallModel: profile.oneforall_model || "anthropic/claude-4-sonnet",
+    oneforallImageModel: profile.oneforall_image_model || "",
   };
 
   try {

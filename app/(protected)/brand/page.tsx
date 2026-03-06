@@ -97,8 +97,10 @@ export default function BrandPage() {
         claudeApiKey: profile.claudeApiKey,
         straicoApiKey: profile.straicoApiKey,
         straicoModel: profile.straicoModel,
+        straicoImageModel: profile.straicoImageModel,
         oneforallApiKey: profile.oneforallApiKey,
         oneforallModel: profile.oneforallModel,
+        oneforallImageModel: profile.oneforallImageModel,
       }
     : null;
 

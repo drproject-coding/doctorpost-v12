@@ -38,8 +38,10 @@ interface NcbProfileRow {
   claude_api_key?: string | null;
   straico_api_key?: string | null;
   straico_model?: string | null;
+  straico_image_model?: string | null;
   oneforall_api_key?: string | null;
   oneforall_model?: string | null;
+  oneforall_image_model?: string | null;
   perplexity_api_key?: string | null;
   reddit_client_id?: string | null;
   reddit_client_secret?: string | null;
@@ -78,8 +80,10 @@ function mapProfileFromNcbRow(row: NcbProfileRow): BrandProfile {
     claudeApiKey: row.claude_api_key ?? "",
     straicoApiKey: row.straico_api_key ?? "",
     straicoModel: row.straico_model ?? "openai/gpt-4o-mini",
+    straicoImageModel: row.straico_image_model ?? "",
     oneforallApiKey: row.oneforall_api_key ?? "",
     oneforallModel: row.oneforall_model ?? "anthropic/claude-4-sonnet",
+    oneforallImageModel: row.oneforall_image_model ?? "",
     industry: row.industry ?? "",
     audience: parseJsonArray(row.audience),
     tones: parseJsonArray(row.tones),

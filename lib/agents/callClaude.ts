@@ -269,13 +269,35 @@ async function callOneForAllDirect(params: {
       continue;
     }
 
-    if (statusResult.status === "completed") {
-      return { text: statusResult.response, tokensUsed: 0 };
+    // Log raw response for debugging
+    console.log("[1forall] Poll response:", JSON.stringify(statusResult));
+
+    // Normalise status — API may return "completed", "complete", "done", "success"
+    const rawStatus = (statusResult.status ?? "").toString().toLowerCase();
+    const isSuccess = ["completed", "complete", "done", "success"].includes(
+      rawStatus,
+    );
+    const isError = ["error", "failed", "failure"].includes(rawStatus);
+
+    if (isSuccess) {
+      const text: string =
+        statusResult.response ??
+        statusResult.result ??
+        statusResult.output ??
+        statusResult.content ??
+        statusResult.text ??
+        statusResult.message;
+      if (!text) {
+        throw new Error(
+          `1ForAll returned success but no response content. Full response: ${JSON.stringify(statusResult)}`,
+        );
+      }
+      return { text, tokensUsed: 0 };
     }
 
-    if (statusResult.status === "error") {
+    if (isError) {
       throw new Error(
-        `1ForAll processing error: ${statusResult.error || "Unknown error"}`,
+        `1ForAll processing error: ${statusResult.error ?? statusResult.message ?? "Unknown error"}`,
       );
     }
   }

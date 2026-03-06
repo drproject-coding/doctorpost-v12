@@ -14,8 +14,12 @@ import {
   fetchStraicoUserInfo,
 } from "@/lib/ai/straicoService";
 import { validateOneForAllKey } from "@/lib/ai/oneforallService";
-import { fetchModels } from "@/lib/ai/modelService";
-import { ONEFORALL_MODELS, STRAICO_MODELS } from "@/lib/ai/constants";
+import { fetchModels, fetchImageModels } from "@/lib/ai/modelService";
+import {
+  ONEFORALL_MODELS,
+  STRAICO_MODELS,
+  ONEFORALL_IMAGE_MODELS,
+} from "@/lib/ai/constants";
 import { StraicoModelPicker } from "@/components/settings/StraicoModelPicker";
 import {
   Loader,
@@ -142,10 +146,12 @@ export default function SettingsPage() {
   const [claudeApiKey, setClaudeApiKey] = useState("");
   const [straicoApiKey, setStraicoApiKey] = useState("");
   const [straicoModel, setStraicoModel] = useState("openai/gpt-4o-mini");
+  const [straicoImageModel, setStraicoImageModel] = useState("flux/1.1");
   const [oneforallApiKey, setOneforallApiKey] = useState("");
   const [oneforallModel, setOneforallModel] = useState(
     "anthropic/claude-4-sonnet",
   );
+  const [oneforallImageModel, setOneforallImageModel] = useState("dall-e");
 
   // Research API keys (Content Factory pipeline)
   const [perplexityApiKey, setPerplexityApiKey] = useState("");
@@ -159,9 +165,15 @@ export default function SettingsPage() {
   const [showPerplexityKey, setShowPerplexityKey] = useState(false);
   const [showRedditSecret, setShowRedditSecret] = useState(false);
 
-  // Expandable provider cards
+  // Active provider tab
   const [expandedProvider, setExpandedProvider] =
-    useState<AiProviderType | null>(null);
+    useState<AiProviderType>("claude");
+
+  // Model section dropdowns (copy + image, per provider)
+  const [straicoModelOpen, setStraicoModelOpen] = useState(false);
+  const [straicoImageOpen, setStraicoImageOpen] = useState(false);
+  const [oneforallModelOpen, setOneforallModelOpen] = useState(false);
+  const [oneforallImageOpen, setOneforallImageOpen] = useState(false);
 
   // Per-provider validation states
   const [claudeValidation, setClaudeValidation] = useState<ValidationState>({
@@ -180,12 +192,46 @@ export default function SettingsPage() {
   const [oneforallModels, setOneforallModels] = useState<AiModel[]>([
     ...ONEFORALL_MODELS,
   ]);
+  const [oneforallImageModels, setOneforallImageModels] = useState<AiModel[]>([
+    ...ONEFORALL_IMAGE_MODELS,
+  ]);
   const [modelsLoading, setModelsLoading] = useState<Record<string, boolean>>(
     {},
   );
 
   const [straicoUserInfo, setStraicoUserInfo] =
     useState<StraicoUserInfo | null>(null);
+
+  // Enrich 1ForAll models with Straico metadata where models overlap
+  const enrichedOneforallModels = React.useMemo(() => {
+    const chatModels = straicoModels.filter(
+      (m) => !m.modelType || m.modelType === "chat",
+    );
+    if (chatModels.length === 0) return oneforallModels;
+    return oneforallModels.map((m) => {
+      const keywords = m.label
+        .toLowerCase()
+        .split(/[\s\-_]+/)
+        .filter((w) => w.length > 2);
+      const match = chatModels.find(
+        (s) =>
+          s.provider === m.provider &&
+          keywords.some((kw) => s.label.toLowerCase().includes(kw)),
+      );
+      if (!match) return m;
+      return {
+        ...m,
+        // Only enrich display/quality metadata — never overwrite provider-specific pricing
+        editorsChoiceLevel: m.editorsChoiceLevel ?? match.editorsChoiceLevel,
+        applications: m.applications ?? match.applications,
+        features: m.features ?? match.features,
+        pros: m.pros ?? match.pros,
+        cons: m.cons ?? match.cons,
+        icon: m.icon ?? match.icon,
+        modelDate: m.modelDate ?? match.modelDate,
+      };
+    });
+  }, [oneforallModels, straicoModels]);
 
   // Auto-save profile to NCB (silent, no validation)
   const saveProfileSilent = useCallback(
@@ -198,8 +244,10 @@ export default function SettingsPage() {
           claudeApiKey,
           straicoApiKey,
           straicoModel,
+          straicoImageModel,
           oneforallApiKey,
           oneforallModel,
+          oneforallImageModel,
           perplexityApiKey: perplexityApiKey || undefined,
           redditClientId: redditClientId || undefined,
           redditClientSecret: redditClientSecret || undefined,
@@ -217,8 +265,10 @@ export default function SettingsPage() {
       claudeApiKey,
       straicoApiKey,
       straicoModel,
+      straicoImageModel,
       oneforallApiKey,
       oneforallModel,
+      oneforallImageModel,
       perplexityApiKey,
       redditClientId,
       redditClientSecret,
@@ -293,9 +343,15 @@ export default function SettingsPage() {
 
       // Fetch models from API (like Straico)
       setModelsLoading((prev) => ({ ...prev, "1forall": true }));
-      const modelsResult = await fetchModels("1forall", oneforallApiKey);
+      const [modelsResult, imageModelsResult] = await Promise.all([
+        fetchModels("1forall", oneforallApiKey),
+        fetchImageModels("1forall", oneforallApiKey),
+      ]);
       if (modelsResult.models.length > 0) {
         setOneforallModels(modelsResult.models);
+      }
+      if (imageModelsResult.models.length > 0) {
+        setOneforallImageModels(imageModelsResult.models);
       }
       setModelsLoading((prev) => ({ ...prev, "1forall": false }));
 
@@ -322,8 +378,10 @@ export default function SettingsPage() {
         setClaudeApiKey(data.claudeApiKey ?? "");
         setStraicoApiKey(data.straicoApiKey ?? "");
         setStraicoModel(data.straicoModel ?? "openai/gpt-4o-mini");
+        setStraicoImageModel(data.straicoImageModel ?? "flux/1.1");
         setOneforallApiKey(data.oneforallApiKey ?? "");
         setOneforallModel(data.oneforallModel ?? "anthropic/claude-4-sonnet");
+        setOneforallImageModel(data.oneforallImageModel ?? "dall-e");
         setPerplexityApiKey(data.perplexityApiKey ?? "");
         setRedditClientId(data.redditClientId ?? "");
         setRedditClientSecret(data.redditClientSecret ?? "");
@@ -560,388 +618,341 @@ export default function SettingsPage() {
 
       {/* ── AI Providers Section (full width) ── */}
       <Card variant="raised" style={{ marginBottom: "var(--bru-space-6)" }}>
-        <h2
-          style={{
-            fontSize: "var(--bru-text-h5)",
-            fontWeight: 700,
-            marginBottom: "var(--bru-space-6)",
-          }}
-        >
-          AI Providers
-        </h2>
-
+        {/* Tab Navigation */}
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            gap: "var(--bru-space-3)",
+            borderBottom: "2px solid rgba(0,0,0,0.08)",
+            marginBottom: "var(--bru-space-5)",
           }}
         >
-          {/* ── Claude Card ── */}
-          {(() => {
-            const isExpanded = expandedProvider === "claude";
+          {[
+            {
+              id: "claude" as AiProviderType,
+              label: "Claude",
+              color: "#7C3AED",
+            },
+            {
+              id: "straico" as AiProviderType,
+              label: "Straico",
+              color: "#F59E0B",
+            },
+            {
+              id: "1forall" as AiProviderType,
+              label: "1ForAll",
+              color: "#0EA5E9",
+            },
+          ].map(({ id, label, color }) => {
+            const isActive = expandedProvider === id;
             return (
-              <div
+              <button
+                key={id}
+                type="button"
+                onClick={() => setExpandedProvider(id)}
                 style={{
-                  border: isClaude
-                    ? "2px solid var(--bru-purple)"
-                    : "var(--bru-border)",
-                  background: isClaude
-                    ? "rgba(99, 29, 237, 0.05)"
-                    : "var(--bru-white)",
+                  padding: "10px 20px",
+                  background: "none",
+                  border: "none",
+                  borderBottom: isActive
+                    ? `3px solid ${color}`
+                    : "3px solid transparent",
+                  cursor: "pointer",
+                  fontFamily: "var(--bru-font-primary)",
+                  fontSize: "var(--bru-text-md)",
+                  fontWeight: isActive ? 700 : 400,
+                  color: isActive ? color : "var(--bru-grey)",
+                  marginBottom: -2,
+                  transition: "color 0.15s, border-color 0.15s",
                 }}
               >
-                <button
-                  type="button"
-                  onClick={() =>
-                    setExpandedProvider(isExpanded ? null : "claude")
-                  }
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "var(--bru-space-3)",
-                    textAlign: "left",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    fontFamily: "var(--bru-font-primary)",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "var(--bru-space-3)",
-                    }}
-                  >
-                    {isExpanded ? (
-                      <ChevronDown size={14} />
-                    ) : (
-                      <ChevronRight size={14} />
-                    )}
-                    <span
-                      style={{
-                        fontSize: "var(--bru-text-md)",
-                        fontWeight: 700,
-                      }}
-                    >
-                      Claude
-                    </span>
-                    <ValidationBadge status={claudeValidation} />
-                    {isClaude && (
-                      <span
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: claudeReady
-                            ? "var(--bru-purple)"
-                            : "var(--bru-error, #FF4444)",
-                          background: claudeReady
-                            ? "var(--bru-purple-20)"
-                            : "rgba(231, 76, 60, 0.1)",
-                          padding: "2px 6px",
-                        }}
-                      >
-                        {claudeReady ? "Active" : "No Key"}
-                      </span>
-                    )}
-                  </div>
-                </button>
-                {isExpanded && (
-                  <div
-                    style={{
-                      padding: "0 var(--bru-space-4) var(--bru-space-4)",
-                      borderTop: "1px solid rgba(0,0,0,0.1)",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "var(--bru-space-3)",
-                    }}
-                  >
-                    {!isClaude && (
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        style={{
-                          marginTop: "var(--bru-space-3)",
-                          alignSelf: "flex-start",
-                        }}
-                        onClick={() => setActiveProvider("claude")}
-                      >
-                        Set as Active
-                      </Button>
-                    )}
-                    <div style={{ marginTop: "var(--bru-space-3)" }}>
-                      <label
-                        style={{
-                          fontSize: 11,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--bru-grey)",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 6,
-                          marginBottom: "var(--bru-space-2)",
-                        }}
-                      >
-                        <Key size={12} /> API Key
-                      </label>
-                      <div style={{ position: "relative" }}>
-                        <input
-                          type={showClaudeKey ? "text" : "password"}
-                          value={claudeApiKey}
-                          onChange={(e) => {
-                            setClaudeApiKey(e.target.value);
-                            setClaudeValidation({ state: "idle" });
-                          }}
-                          placeholder="sk-ant-..."
-                          className="bru-input"
-                          style={{ width: "100%", paddingRight: 40 }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowClaudeKey((v) => !v)}
-                          style={{
-                            position: "absolute",
-                            right: 10,
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            color: "var(--bru-grey)",
-                            padding: 0,
-                          }}
-                        >
-                          {showClaudeKey ? (
-                            <EyeOff size={16} />
-                          ) : (
-                            <Eye size={16} />
-                          )}
-                        </button>
-                      </div>
-                      {claudeValidation.state === "error" && (
-                        <p
-                          style={{
-                            fontSize: 10,
-                            color: "#dc2626",
-                            marginTop: 4,
-                          }}
-                        >
-                          {claudeValidation.message}
-                        </p>
-                      )}
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      onClick={() => void handleValidateClaude()}
-                      disabled={claudeValidation.state === "validating"}
-                      style={{ alignSelf: "flex-start" }}
-                    >
-                      {claudeValidation.state === "validating" ? (
-                        <>
-                          <Loader size={12} className="animate-spin" />
-                          Validating...
-                        </>
-                      ) : (
-                        "Validate Key"
-                      )}
-                    </Button>
-                    <p style={{ fontSize: 10, color: "var(--bru-grey)" }}>
-                      Claude uses direct browser API — model selection is
-                      automatic (Claude Sonnet 4.5).
-                    </p>
-                  </div>
-                )}
-              </div>
+                {label}
+              </button>
             );
-          })()}
+          })}
+        </div>
 
-          {/* ── Straico Card ── */}
-          {(() => {
-            const isExpanded = expandedProvider === "straico";
-            return (
-              <div
+        {/* ── Claude Tab ── */}
+        {expandedProvider === "claude" && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--bru-space-3)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--bru-space-3)",
+              }}
+            >
+              <ValidationBadge status={claudeValidation} />
+              {isClaude && (
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    color: claudeReady
+                      ? "#7C3AED"
+                      : "var(--bru-error, #FF4444)",
+                    background: claudeReady
+                      ? "rgba(124, 58, 237, 0.1)"
+                      : "rgba(231, 76, 60, 0.1)",
+                    padding: "2px 6px",
+                  }}
+                >
+                  {claudeReady ? "Active" : "No Key"}
+                </span>
+              )}
+              {!isClaude && (
+                <Button
+                  size="sm"
+                  variant="primary"
+                  style={{ alignSelf: "flex-start" }}
+                  onClick={() => setActiveProvider("claude")}
+                >
+                  Set as Active
+                </Button>
+              )}
+            </div>
+            <div>
+              <label
                 style={{
-                  border: isStraico
-                    ? "2px solid var(--bru-purple)"
-                    : "var(--bru-border)",
-                  background: isStraico
-                    ? "rgba(99, 29, 237, 0.05)"
-                    : "var(--bru-white)",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  color: "var(--bru-grey)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  marginBottom: "var(--bru-space-2)",
                 }}
               >
+                <Key size={12} /> API Key
+              </label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showClaudeKey ? "text" : "password"}
+                  value={claudeApiKey}
+                  onChange={(e) => {
+                    setClaudeApiKey(e.target.value);
+                    setClaudeValidation({ state: "idle" });
+                  }}
+                  placeholder="sk-ant-..."
+                  className="bru-input"
+                  style={{ width: "100%", paddingRight: 40 }}
+                />
                 <button
                   type="button"
-                  onClick={() => {
-                    const next = isExpanded
-                      ? null
-                      : ("straico" as AiProviderType);
-                    setExpandedProvider(next);
-                    // Models loaded on validation or auto-validate
-                  }}
+                  onClick={() => setShowClaudeKey((v) => !v)}
                   style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "var(--bru-space-3)",
-                    textAlign: "left",
+                    position: "absolute",
+                    right: 10,
+                    top: "50%",
+                    transform: "translateY(-50%)",
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    fontFamily: "var(--bru-font-primary)",
+                    color: "var(--bru-grey)",
+                    padding: 0,
                   }}
                 >
-                  <div
+                  {showClaudeKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              {claudeValidation.state === "error" && (
+                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
+                  {claudeValidation.message}
+                </p>
+              )}
+            </div>
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={() => void handleValidateClaude()}
+              disabled={claudeValidation.state === "validating"}
+              style={{ alignSelf: "flex-start" }}
+            >
+              {claudeValidation.state === "validating" ? (
+                <>
+                  <Loader size={12} className="animate-spin" />
+                  Validating...
+                </>
+              ) : (
+                "Validate Key"
+              )}
+            </Button>
+            <p style={{ fontSize: 10, color: "var(--bru-grey)" }}>
+              Claude uses direct browser API — model selection is automatic
+              (Claude Sonnet 4.5).
+            </p>
+          </div>
+        )}
+
+        {/* ── Straico Tab ── */}
+        {expandedProvider === "straico" && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--bru-space-3)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--bru-space-3)",
+              }}
+            >
+              <ValidationBadge status={straicoValidation} />
+              {isStraico && (
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    color: straicoReady
+                      ? "#F59E0B"
+                      : "var(--bru-error, #FF4444)",
+                    background: straicoReady
+                      ? "rgba(245, 158, 11, 0.1)"
+                      : "rgba(231, 76, 60, 0.1)",
+                    padding: "2px 6px",
+                  }}
+                >
+                  {straicoReady ? "Active" : "No Key"}
+                </span>
+              )}
+              {!isStraico && (
+                <Button
+                  size="sm"
+                  variant="primary"
+                  style={{ alignSelf: "flex-start" }}
+                  onClick={() => setActiveProvider("straico")}
+                >
+                  Set as Active
+                </Button>
+              )}
+            </div>
+            <div>
+              <label
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  color: "var(--bru-grey)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  marginBottom: "var(--bru-space-2)",
+                }}
+              >
+                <Key size={12} /> API Key
+              </label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showStraicoKey ? "text" : "password"}
+                  value={straicoApiKey}
+                  onChange={(e) => {
+                    setStraicoApiKey(e.target.value);
+                    setStraicoValidation({ state: "idle" });
+                  }}
+                  placeholder="Your Straico API key"
+                  className="bru-input"
+                  style={{ width: "100%", paddingRight: 40 }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowStraicoKey((v) => !v)}
+                  style={{
+                    position: "absolute",
+                    right: 10,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "var(--bru-grey)",
+                    padding: 0,
+                  }}
+                >
+                  {showStraicoKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              {straicoValidation.state === "error" && (
+                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
+                  {straicoValidation.message}
+                </p>
+              )}
+            </div>
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={() => void handleValidateStraico()}
+              disabled={straicoValidation.state === "validating"}
+              style={{ alignSelf: "flex-start" }}
+            >
+              {straicoValidation.state === "validating" ? (
+                <>
+                  <Loader size={12} className="animate-spin" />
+                  Validating...
+                </>
+              ) : (
+                "Validate Key & Load Models"
+              )}
+            </Button>
+            {straicoApiKey.trim() && (
+              <>
+                {/* Model for Copy dropdown */}
+                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
+                  <button
+                    type="button"
+                    onClick={() => setStraicoModelOpen((v) => !v)}
                     style={{
+                      width: "100%",
                       display: "flex",
                       alignItems: "center",
-                      gap: "var(--bru-space-3)",
+                      justifyContent: "space-between",
+                      padding: "10px 14px",
+                      background: straicoModelOpen
+                        ? "rgba(245, 158, 11, 0.05)"
+                        : "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "var(--bru-font-primary)",
                     }}
                   >
-                    {isExpanded ? (
-                      <ChevronDown size={14} />
-                    ) : (
-                      <ChevronRight size={14} />
-                    )}
                     <span
                       style={{
-                        fontSize: "var(--bru-text-md)",
+                        fontSize: 11,
                         fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                        color: "var(--bru-grey)",
                       }}
                     >
-                      Straico
+                      Model for Copy
                     </span>
-                    <ValidationBadge status={straicoValidation} />
-                    {isStraico && (
-                      <span
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: straicoReady
-                            ? "var(--bru-purple)"
-                            : "var(--bru-error, #FF4444)",
-                          background: straicoReady
-                            ? "var(--bru-purple-20)"
-                            : "rgba(231, 76, 60, 0.1)",
-                          padding: "2px 6px",
-                        }}
-                      >
-                        {straicoReady ? "Active" : "No Key"}
-                      </span>
+                    {straicoModelOpen ? (
+                      <ChevronDown size={14} color="var(--bru-grey)" />
+                    ) : (
+                      <ChevronRight size={14} color="var(--bru-grey)" />
                     )}
-                  </div>
-                </button>
-                {isExpanded && (
-                  <div
-                    style={{
-                      padding: "0 var(--bru-space-4) var(--bru-space-4)",
-                      borderTop: "1px solid rgba(0,0,0,0.1)",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "var(--bru-space-3)",
-                    }}
-                  >
-                    {!isStraico && (
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        style={{
-                          marginTop: "var(--bru-space-3)",
-                          alignSelf: "flex-start",
-                        }}
-                        onClick={() => setActiveProvider("straico")}
-                      >
-                        Set as Active
-                      </Button>
-                    )}
-                    <div style={{ marginTop: "var(--bru-space-3)" }}>
-                      <label
-                        style={{
-                          fontSize: 11,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--bru-grey)",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 6,
-                          marginBottom: "var(--bru-space-2)",
-                        }}
-                      >
-                        <Key size={12} /> API Key
-                      </label>
-                      <div style={{ position: "relative" }}>
-                        <input
-                          type={showStraicoKey ? "text" : "password"}
-                          value={straicoApiKey}
-                          onChange={(e) => {
-                            setStraicoApiKey(e.target.value);
-                            setStraicoValidation({ state: "idle" });
-                          }}
-                          placeholder="Your Straico API key"
-                          className="bru-input"
-                          style={{ width: "100%", paddingRight: 40 }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowStraicoKey((v) => !v)}
-                          style={{
-                            position: "absolute",
-                            right: 10,
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            color: "var(--bru-grey)",
-                            padding: 0,
-                          }}
-                        >
-                          {showStraicoKey ? (
-                            <EyeOff size={16} />
-                          ) : (
-                            <Eye size={16} />
-                          )}
-                        </button>
-                      </div>
-                      {straicoValidation.state === "error" && (
-                        <p
-                          style={{
-                            fontSize: 10,
-                            color: "#dc2626",
-                            marginTop: 4,
-                          }}
-                        >
-                          {straicoValidation.message}
-                        </p>
-                      )}
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      onClick={() => void handleValidateStraico()}
-                      disabled={straicoValidation.state === "validating"}
-                      style={{ alignSelf: "flex-start" }}
+                  </button>
+                  {straicoModelOpen && (
+                    <div
+                      style={{
+                        padding: "0 14px 14px",
+                        borderTop: "1px solid rgba(0,0,0,0.08)",
+                      }}
                     >
-                      {straicoValidation.state === "validating" ? (
-                        <>
-                          <Loader size={12} className="animate-spin" />
-                          Validating...
-                        </>
-                      ) : (
-                        "Validate Key & Load Models"
-                      )}
-                    </Button>
-                    {straicoApiKey.trim() && (
                       <StraicoModelPicker
                         models={straicoModels}
                         selectedModelId={straicoModel}
@@ -949,221 +960,305 @@ export default function SettingsPage() {
                         loading={modelsLoading.straico}
                         userInfo={straicoUserInfo}
                       />
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })()}
+                    </div>
+                  )}
+                </div>
 
-          {/* ── 1ForAll Card ── */}
-          {(() => {
-            const isExpanded = expandedProvider === "1forall";
-            return (
-              <div
+                {/* Model for Image dropdown */}
+                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
+                  <button
+                    type="button"
+                    onClick={() => setStraicoImageOpen((v) => !v)}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "10px 14px",
+                      background: straicoImageOpen
+                        ? "rgba(245, 158, 11, 0.05)"
+                        : "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "var(--bru-font-primary)",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                        color: "var(--bru-grey)",
+                      }}
+                    >
+                      Model for Image
+                    </span>
+                    {straicoImageOpen ? (
+                      <ChevronDown size={14} color="var(--bru-grey)" />
+                    ) : (
+                      <ChevronRight size={14} color="var(--bru-grey)" />
+                    )}
+                  </button>
+                  {straicoImageOpen && (
+                    <div
+                      style={{
+                        padding: "0 14px 14px",
+                        borderTop: "1px solid rgba(0,0,0,0.08)",
+                      }}
+                    >
+                      <StraicoModelPicker
+                        models={straicoModels.filter(
+                          (m) => m.modelType === "image",
+                        )}
+                        selectedModelId={straicoImageModel}
+                        onSelectModel={(id) => {
+                          setStraicoImageModel(id);
+                          void saveProfileSilent({ straicoImageModel: id });
+                        }}
+                        loading={modelsLoading.straico}
+                        allowAllTypes
+                      />
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* ── 1ForAll Tab ── */}
+        {expandedProvider === "1forall" && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--bru-space-3)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--bru-space-3)",
+              }}
+            >
+              <ValidationBadge status={oneforallValidation} />
+              {isOneforall && (
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    color: oneforallReady
+                      ? "#0EA5E9"
+                      : "var(--bru-error, #FF4444)",
+                    background: oneforallReady
+                      ? "rgba(14, 165, 233, 0.1)"
+                      : "rgba(231, 76, 60, 0.1)",
+                    padding: "2px 6px",
+                  }}
+                >
+                  {oneforallReady ? "Active" : "No Key"}
+                </span>
+              )}
+              {!isOneforall && (
+                <Button
+                  size="sm"
+                  variant="primary"
+                  style={{ alignSelf: "flex-start" }}
+                  onClick={() => setActiveProvider("1forall")}
+                >
+                  Set as Active
+                </Button>
+              )}
+            </div>
+            <div>
+              <label
                 style={{
-                  border: isOneforall
-                    ? "2px solid var(--bru-purple)"
-                    : "var(--bru-border)",
-                  background: isOneforall
-                    ? "rgba(99, 29, 237, 0.05)"
-                    : "var(--bru-white)",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  color: "var(--bru-grey)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  marginBottom: "var(--bru-space-2)",
                 }}
               >
+                <Key size={12} /> API Key
+              </label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showOneforallKey ? "text" : "password"}
+                  value={oneforallApiKey}
+                  onChange={(e) => {
+                    setOneforallApiKey(e.target.value);
+                    setOneforallValidation({ state: "idle" });
+                  }}
+                  placeholder="Your 1ForAll API key"
+                  className="bru-input"
+                  style={{ width: "100%", paddingRight: 40 }}
+                />
                 <button
                   type="button"
-                  onClick={() => {
-                    const next = isExpanded
-                      ? null
-                      : ("1forall" as AiProviderType);
-                    setExpandedProvider(next);
-                    // Models loaded on validation or auto-validate
-                  }}
+                  onClick={() => setShowOneforallKey((v) => !v)}
                   style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "var(--bru-space-3)",
-                    textAlign: "left",
+                    position: "absolute",
+                    right: 10,
+                    top: "50%",
+                    transform: "translateY(-50%)",
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    fontFamily: "var(--bru-font-primary)",
+                    color: "var(--bru-grey)",
+                    padding: 0,
                   }}
                 >
-                  <div
+                  {showOneforallKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              {oneforallValidation.state === "error" && (
+                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
+                  {oneforallValidation.message}
+                </p>
+              )}
+            </div>
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={() => void handleValidateOneforall()}
+              disabled={oneforallValidation.state === "validating"}
+              style={{ alignSelf: "flex-start" }}
+            >
+              {oneforallValidation.state === "validating" ? (
+                <>
+                  <Loader size={12} className="animate-spin" />
+                  Validating...
+                </>
+              ) : (
+                "Validate Key"
+              )}
+            </Button>
+            {oneforallApiKey.trim() && (
+              <>
+                {/* Model for Copy dropdown */}
+                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
+                  <button
+                    type="button"
+                    onClick={() => setOneforallModelOpen((v) => !v)}
                     style={{
+                      width: "100%",
                       display: "flex",
                       alignItems: "center",
-                      gap: "var(--bru-space-3)",
+                      justifyContent: "space-between",
+                      padding: "10px 14px",
+                      background: oneforallModelOpen
+                        ? "rgba(14, 165, 233, 0.05)"
+                        : "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "var(--bru-font-primary)",
                     }}
                   >
-                    {isExpanded ? (
-                      <ChevronDown size={14} />
-                    ) : (
-                      <ChevronRight size={14} />
-                    )}
                     <span
                       style={{
-                        fontSize: "var(--bru-text-md)",
+                        fontSize: 11,
                         fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                        color: "var(--bru-grey)",
                       }}
                     >
-                      1ForAll
+                      Model for Copy
                     </span>
-                    <ValidationBadge status={oneforallValidation} />
-                    {isOneforall && (
-                      <span
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: oneforallReady
-                            ? "var(--bru-purple)"
-                            : "var(--bru-error, #FF4444)",
-                          background: oneforallReady
-                            ? "var(--bru-purple-20)"
-                            : "rgba(231, 76, 60, 0.1)",
-                          padding: "2px 6px",
-                        }}
-                      >
-                        {oneforallReady ? "Active" : "No Key"}
-                      </span>
+                    {oneforallModelOpen ? (
+                      <ChevronDown size={14} color="var(--bru-grey)" />
+                    ) : (
+                      <ChevronRight size={14} color="var(--bru-grey)" />
                     )}
-                  </div>
-                </button>
-                {isExpanded && (
-                  <div
+                  </button>
+                  {oneforallModelOpen && (
+                    <div
+                      style={{
+                        padding: "0 14px 14px",
+                        borderTop: "1px solid rgba(0,0,0,0.08)",
+                      }}
+                    >
+                      <StraicoModelPicker
+                        models={enrichedOneforallModels}
+                        selectedModelId={oneforallModel}
+                        onSelectModel={setOneforallModel}
+                        loading={modelsLoading["1forall"]}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Model for Image dropdown */}
+                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
+                  <button
+                    type="button"
+                    onClick={() => setOneforallImageOpen((v) => !v)}
                     style={{
-                      padding: "0 var(--bru-space-4) var(--bru-space-4)",
-                      borderTop: "1px solid rgba(0,0,0,0.1)",
+                      width: "100%",
                       display: "flex",
-                      flexDirection: "column",
-                      gap: "var(--bru-space-3)",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "10px 14px",
+                      background: oneforallImageOpen
+                        ? "rgba(14, 165, 233, 0.05)"
+                        : "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "var(--bru-font-primary)",
                     }}
                   >
-                    {!isOneforall && (
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        style={{
-                          marginTop: "var(--bru-space-3)",
-                          alignSelf: "flex-start",
-                        }}
-                        onClick={() => setActiveProvider("1forall")}
-                      >
-                        Set as Active
-                      </Button>
-                    )}
-                    <div style={{ marginTop: "var(--bru-space-3)" }}>
-                      <label
-                        style={{
-                          fontSize: 11,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--bru-grey)",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 6,
-                          marginBottom: "var(--bru-space-2)",
-                        }}
-                      >
-                        <Key size={12} /> API Key
-                      </label>
-                      <div style={{ position: "relative" }}>
-                        <input
-                          type={showOneforallKey ? "text" : "password"}
-                          value={oneforallApiKey}
-                          onChange={(e) => {
-                            setOneforallApiKey(e.target.value);
-                            setOneforallValidation({ state: "idle" });
-                          }}
-                          placeholder="Your 1ForAll API key"
-                          className="bru-input"
-                          style={{ width: "100%", paddingRight: 40 }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowOneforallKey((v) => !v)}
-                          style={{
-                            position: "absolute",
-                            right: 10,
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            color: "var(--bru-grey)",
-                            padding: 0,
-                          }}
-                        >
-                          {showOneforallKey ? (
-                            <EyeOff size={16} />
-                          ) : (
-                            <Eye size={16} />
-                          )}
-                        </button>
-                      </div>
-                      {oneforallValidation.state === "error" && (
-                        <p
-                          style={{
-                            fontSize: 10,
-                            color: "#dc2626",
-                            marginTop: 4,
-                          }}
-                        >
-                          {oneforallValidation.message}
-                        </p>
-                      )}
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      onClick={() => void handleValidateOneforall()}
-                      disabled={oneforallValidation.state === "validating"}
-                      style={{ alignSelf: "flex-start" }}
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                        color: "var(--bru-grey)",
+                      }}
                     >
-                      {oneforallValidation.state === "validating" ? (
-                        <>
-                          <Loader size={12} className="animate-spin" />
-                          Validating...
-                        </>
-                      ) : (
-                        "Validate Key"
-                      )}
-                    </Button>
-                    <div>
-                      <label
-                        style={{
-                          fontSize: 11,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "var(--bru-grey)",
-                          marginBottom: "var(--bru-space-2)",
-                          display: "block",
+                      Model for Image
+                    </span>
+                    {oneforallImageOpen ? (
+                      <ChevronDown size={14} color="var(--bru-grey)" />
+                    ) : (
+                      <ChevronRight size={14} color="var(--bru-grey)" />
+                    )}
+                  </button>
+                  {oneforallImageOpen && (
+                    <div
+                      style={{
+                        padding: "0 14px 14px",
+                        borderTop: "1px solid rgba(0,0,0,0.08)",
+                      }}
+                    >
+                      <StraicoModelPicker
+                        models={oneforallImageModels}
+                        selectedModelId={oneforallImageModel}
+                        onSelectModel={(id) => {
+                          setOneforallImageModel(id);
+                          void saveProfileSilent({
+                            oneforallImageModel: id,
+                          });
                         }}
-                      >
-                        Model
-                      </label>
-                      {oneforallApiKey.trim() && (
-                        <StraicoModelPicker
-                          models={oneforallModels}
-                          selectedModelId={oneforallModel}
-                          onSelectModel={setOneforallModel}
-                          loading={modelsLoading["1forall"]}
-                        />
-                      )}
+                        loading={modelsLoading["1forall"]}
+                        allowAllTypes
+                      />
                     </div>
-                  </div>
-                )}
-              </div>
-            );
-          })()}
-        </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         {/* Save All button */}
         <Button

@@ -33,6 +33,7 @@ import {
   type SavedSession,
 } from "@/lib/sessionStorage";
 import { schedulePost, ensureUserExists } from "@/lib/api";
+import { useToast } from "@/components/Toast";
 
 interface PipelineClientState {
   sessionId: string;
@@ -97,6 +98,7 @@ function formatTimestamp(iso: string): string {
 
 export default function FactoryPage() {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [state, setState] = useState<PipelineClientState>({
     sessionId: generateSessionId(),
     phase: "idle",
@@ -170,7 +172,7 @@ export default function FactoryPage() {
 
   const handleManualSave = useCallback(async () => {
     if (!state.formattedPost || !state.selectedTopic || !user?.id) {
-      alert("Cannot save: missing post data");
+      showToast("Cannot save: missing post data", "error");
       return;
     }
 
@@ -201,12 +203,12 @@ export default function FactoryPage() {
         userId: user.id,
         factoryScore: state.scoreResult?.totalScore,
       });
-      alert("Post saved to library successfully!");
+      showToast("Post saved to library successfully!", "success");
       console.log("[handleManualSave] Save completed successfully");
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       console.error("[handleManualSave] Failed to save post:", errorMsg);
-      alert(`Failed to save post: ${errorMsg}`);
+      showToast(`Failed to save post: ${errorMsg}`, "error");
     } finally {
       setIsSaving(false);
     }
@@ -336,7 +338,15 @@ export default function FactoryPage() {
           next.phaseStatus = phaseStatus;
         }
         // Only set errorAtPhase if it's a valid phase to retry from
-        const validPhases = ["direction", "discovery", "evidence", "writing", "scoring", "formatting", "learning"];
+        const validPhases = [
+          "direction",
+          "discovery",
+          "evidence",
+          "writing",
+          "scoring",
+          "formatting",
+          "learning",
+        ];
         next.errorAtPhase =
           prev.phase !== "error" && validPhases.includes(prev.phase as string)
             ? prev.phase
@@ -614,12 +624,13 @@ export default function FactoryPage() {
       const restored = JSON.parse(stateJson) as PipelineClientState;
       // Determine the start phase for resume
       let startPhase: PipelinePhase;
-      
-      // If pipeline already completed, restart from beginning
+
       if (restored.phase === "complete") {
-        console.log("[handleResumeSession] Pipeline already complete, starting fresh");
-        startPhase = PHASE_ORDER[0];
-        restored.phase = "idle";
+        // Completed sessions must be viewed via handleViewCompletedSession, not resumed
+        console.warn(
+          "[handleResumeSession] Called with a complete session — use handleViewCompletedSession instead",
+        );
+        return;
       } else if (restored.phase === "error" && restored.errorAtPhase) {
         // If errored, retry from the failed phase
         startPhase = restored.errorAtPhase;
@@ -640,6 +651,20 @@ export default function FactoryPage() {
       setIncompleteSession(null);
       // Trigger pipeline resume after state settles
       setTimeout(() => callPipeline("resume", { startPhase }), 100);
+    } catch {
+      // Invalid session data, ignore
+    }
+  };
+
+  /** Restore a completed session for read-only viewing — never relaunches the pipeline */
+  const handleViewCompletedSession = (stateJson: string) => {
+    try {
+      const restored = JSON.parse(stateJson) as PipelineClientState;
+      if (restored.phase !== "complete") return;
+      setState(restored);
+      setViewPhase(undefined);
+      setIncompleteSession(null);
+      // No callPipeline — completed sessions are locked
     } catch {
       // Invalid session data, ignore
     }
@@ -961,6 +986,7 @@ export default function FactoryPage() {
       {state.phase === "idle" && !running && !incompleteSession && (
         <SessionHistory
           onResume={handleResumeSession}
+          onView={handleViewCompletedSession}
           onRetryFromPhase={handleRetryFromSession}
         />
       )}

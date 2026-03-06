@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const ONEFORALL_BASE = "https://api.1forall.ai/v1/external/llm";
+const ONEFORALL_LLM_BASE = "https://api.1forall.ai/v1/external/llm";
+const ONEFORALL_IMAGE_BASE = "https://api.1forall.ai/v1/external/image";
 const STRAICO_BASE = "https://api.straico.com";
 
 interface NormalizedModel {
@@ -109,10 +110,43 @@ const STRAICO_FALLBACK: NormalizedModel[] = [
   },
 ];
 
+async function fetchOneForAllImageModels(
+  apiKey: string,
+): Promise<NormalizedModel[]> {
+  const response = await fetch(`${ONEFORALL_IMAGE_BASE}/models/`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Api-Key ${apiKey}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`1ForAll image models fetch failed (${response.status})`);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data = await response.json();
+  const raw = Array.isArray(data) ? data : data.models || data.data || [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const models: any[] = Array.isArray(raw) ? raw : [];
+
+  // Filter to TEXT_TO_IMAGE only
+  return models
+    .filter((m) => m.enabled !== false && m.mode === "TEXT_TO_IMAGE")
+    .map((m) => ({
+      id: String(m.code || m.id || ""),
+      label: String(m.name || m.code || ""),
+      ...(m.description ? { description: String(m.description) } : {}),
+      ...(m.price != null ? { creditsPerInputToken: parseFloat(m.price) } : {}),
+      provider: inferProvider(String(m.code || "")),
+    }));
+}
+
 async function fetchOneForAllModels(
   apiKey: string,
 ): Promise<NormalizedModel[]> {
-  const response = await fetch(`${ONEFORALL_BASE}/models/`, {
+  const response = await fetch(`${ONEFORALL_LLM_BASE}/models/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -125,7 +159,7 @@ async function fetchOneForAllModels(
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data = (await response.json());
+  const data = await response.json();
   // 1ForAll returns a flat JSON array
   const raw = Array.isArray(data) ? data : data.models || data.data || [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -179,7 +213,10 @@ async function fetchOneForAllModels(
     });
 }
 
-async function fetchStraicoModels(apiKey: string): Promise<NormalizedModel[]> {
+async function fetchStraicoModels(
+  apiKey: string,
+  type: "llm" | "image" | "all" = "llm",
+): Promise<NormalizedModel[]> {
   const response = await fetch(`${STRAICO_BASE}/v2/models`, {
     method: "GET",
     headers: {
@@ -193,7 +230,7 @@ async function fetchStraicoModels(apiKey: string): Promise<NormalizedModel[]> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data = (await response.json());
+  const data = await response.json();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const raw: any[] = Array.isArray(data.data)
     ? data.data
@@ -205,10 +242,14 @@ async function fetchStraicoModels(apiKey: string): Promise<NormalizedModel[]> {
     throw new Error("Straico returned empty models list");
   }
 
-  // Filter to chat models only
-  const chatModels = raw.filter((m) => (m.model_type || "chat") === "chat");
+  const filtered =
+    type === "all"
+      ? raw
+      : type === "image"
+        ? raw.filter((m) => m.model_type === "image")
+        : raw.filter((m) => (m.model_type || "chat") === "chat");
 
-  return chatModels.map((m) => ({
+  return filtered.map((m) => ({
     id: String(m.id || m.model || m.name || ""),
     label: String(m.name || m.id || m.model || ""),
     ...(m.max_output
@@ -236,6 +277,7 @@ async function fetchStraicoModels(apiKey: string): Promise<NormalizedModel[]> {
 
 export async function GET(req: NextRequest) {
   const provider = req.nextUrl.searchParams.get("provider");
+  const type = req.nextUrl.searchParams.get("type") ?? "llm"; // "llm" | "image"
 
   if (!provider || (provider !== "1forall" && provider !== "straico")) {
     return NextResponse.json(
@@ -259,15 +301,49 @@ export async function GET(req: NextRequest) {
     if (!apiKey) {
       throw new Error("No API key provided");
     }
-    models =
-      provider === "1forall"
-        ? await fetchOneForAllModels(apiKey)
-        : await fetchStraicoModels(apiKey);
+    if (provider === "1forall") {
+      models =
+        type === "image"
+          ? await fetchOneForAllImageModels(apiKey)
+          : await fetchOneForAllModels(apiKey);
+    } else {
+      models = await fetchStraicoModels(
+        apiKey,
+        type === "image" ? "image" : type === "all" ? "all" : "llm",
+      );
+    }
     source = "api";
   } catch {
-    models = provider === "1forall" ? ONEFORALL_FALLBACK : STRAICO_FALLBACK;
+    // Image fallbacks — confirmed IDs from specs
+    if (type === "image") {
+      models =
+        provider === "straico"
+          ? [
+              { id: "flux/1.1", label: "Flux 1.1", provider: "flux" },
+              {
+                id: "ideogram/V_2A_TURBO",
+                label: "Ideogram V2A Turbo",
+                provider: "ideogram",
+              },
+              {
+                id: "openai/dall-e-3",
+                label: "DALL-E 3",
+                provider: "openai",
+              },
+            ]
+          : [
+              { id: "dall-e", label: "DALL-E", provider: "openai" },
+              {
+                id: "leonardo-phoenix-fast",
+                label: "Leonardo Phoenix Fast",
+                provider: "leonardo",
+              },
+            ];
+    } else {
+      models = provider === "1forall" ? ONEFORALL_FALLBACK : STRAICO_FALLBACK;
+    }
     source = "fallback";
   }
 
-  return NextResponse.json({ provider, models, source });
+  return NextResponse.json({ provider, models, source, type });
 }

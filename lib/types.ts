@@ -45,8 +45,10 @@ export interface AiSettings {
   claudeApiKey: string;
   straicoApiKey: string;
   straicoModel: string;
+  straicoImageModel: string;
   oneforallApiKey: string;
   oneforallModel: string;
+  oneforallImageModel: string;
 }
 
 export interface StraicoUserInfo {
@@ -77,8 +79,10 @@ export interface BrandProfile {
   claudeApiKey: string;
   straicoApiKey: string;
   straicoModel: string;
+  straicoImageModel: string;
   oneforallApiKey: string;
   oneforallModel: string;
+  oneforallImageModel: string;
   openAIKey?: string;
   industry: string;
   audience: string[];

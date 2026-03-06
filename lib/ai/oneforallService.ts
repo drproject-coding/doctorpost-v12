@@ -80,7 +80,10 @@ export async function callOneForAll(
   }
 
   // Step 2: Poll for completion
-  onProgress?.({ step: "Request submitted. Polling for result...", percent: 10 });
+  onProgress?.({
+    step: "Request submitted. Polling for result...",
+    percent: 10,
+  });
 
   const startTime = Date.now();
   let consecutiveFailures = 0;
@@ -105,6 +108,9 @@ export async function callOneForAll(
 
       statusResult = await statusResponse.json();
       consecutiveFailures = 0;
+
+      // Log raw response to browser console for debugging
+      console.log("[1forall] Poll response:", JSON.stringify(statusResult));
     } catch (error) {
       if (signal?.aborted) throw error;
       consecutiveFailures++;
@@ -122,14 +128,34 @@ export async function callOneForAll(
       continue;
     }
 
-    if (statusResult.status === "completed") {
+    // Normalise status — API may return "completed", "complete", "done", "success"
+    const rawStatus = (statusResult.status ?? "").toString().toLowerCase();
+    const isSuccess = ["completed", "complete", "done", "success"].includes(
+      rawStatus,
+    );
+    const isError = ["error", "failed", "failure"].includes(rawStatus);
+
+    if (isSuccess) {
+      // Response may live under several field names depending on model/version
+      const content: string =
+        statusResult.response ??
+        statusResult.result ??
+        statusResult.output ??
+        statusResult.content ??
+        statusResult.text ??
+        statusResult.message;
+      if (!content) {
+        throw new Error(
+          `1ForAll returned success status but no response content. Full response: ${JSON.stringify(statusResult)}`,
+        );
+      }
       onProgress?.({ step: "Response received", percent: 100 });
-      return { content: statusResult.response, provider: "1forall" };
+      return { content, provider: "1forall" };
     }
 
-    if (statusResult.status === "error") {
+    if (isError) {
       throw new Error(
-        `1ForAll processing error: ${statusResult.error || "Unknown error"}`,
+        `1ForAll processing error: ${statusResult.error ?? statusResult.message ?? "Unknown error"}`,
       );
     }
 

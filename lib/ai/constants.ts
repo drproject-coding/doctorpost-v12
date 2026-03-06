@@ -64,11 +64,39 @@ export const STRAICO_MODELS: AiModel[] = [
   },
 ];
 
+export const STRAICO_IMAGE_MODELS: AiModel[] = [
+  { id: "flux/1.1", label: "Flux 1.1", provider: "flux", modelType: "image" },
+  {
+    id: "ideogram/V_2A_TURBO",
+    label: "Ideogram V2A Turbo",
+    provider: "ideogram",
+    modelType: "image",
+  },
+  {
+    id: "openai/dall-e-3",
+    label: "DALL-E 3",
+    provider: "openai",
+    modelType: "image",
+  },
+];
+
+export const ONEFORALL_IMAGE_MODELS: AiModel[] = [
+  { id: "dall-e", label: "DALL-E", provider: "openai", modelType: "image" },
+  {
+    id: "leonardo-phoenix-fast",
+    label: "Leonardo Phoenix Fast",
+    provider: "leonardo",
+    modelType: "image",
+  },
+];
+
 export const AI_SETTINGS_DEFAULTS: AiSettings = {
   activeProvider: "claude",
   claudeApiKey: "",
   straicoApiKey: "",
   straicoModel: "openai/gpt-4o-mini",
+  straicoImageModel: "flux/1.1",
   oneforallApiKey: "",
   oneforallModel: "anthropic/claude-4-sonnet",
+  oneforallImageModel: "dall-e",
 };

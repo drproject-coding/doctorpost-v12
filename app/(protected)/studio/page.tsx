@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { Card } from "@bruddle/react";
 import {
   Zap,
@@ -15,6 +15,14 @@ import {
 import Link from "next/link";
 import { parseSSEStream } from "@/lib/sse";
 
+function stripJsonFences(raw: string): string {
+  return raw
+    .trim()
+    .replace(/^```json\s*/i, "")
+    .replace(/```\s*$/, "")
+    .trim();
+}
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -26,6 +34,7 @@ type PipelineStage =
   | "writer"
   | "scorer"
   | "formatter"
+  | "visual"
   | "complete"
   | "error";
 
@@ -84,6 +93,506 @@ const STAGE_META: Record<StageName, { label: string; description: string }> = {
   },
 };
 
+function PipelineProgress({
+  stage,
+  completedStages,
+}: {
+  stage: PipelineStage;
+  completedStages: Set<string>;
+}) {
+  const isComplete = stage === "complete";
+  const activeIndex = STAGE_ORDER.indexOf(stage as StageName);
+  const completedCount = completedStages.size;
+  const stepNum = isComplete ? 4 : activeIndex >= 0 ? activeIndex + 1 : 1;
+  const activeMeta =
+    activeIndex >= 0 ? STAGE_META[STAGE_ORDER[activeIndex]] : null;
+  const pct = isComplete ? 100 : Math.round((completedCount / 4) * 100);
+
+  return (
+    <Card variant="raised" style={{ marginBottom: 16 }}>
+      <div style={{ padding: "14px 16px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 12,
+          }}
+        >
+          <div
+            style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}
+          >
+            <span
+              style={{
+                fontWeight: 800,
+                fontSize: 13,
+                color: "var(--bru-black)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {isComplete ? "Complete" : `Step ${stepNum} / 4`}
+            </span>
+            {activeMeta && !isComplete && (
+              <>
+                <span style={{ color: "#ccc", fontSize: 12 }}>·</span>
+                <span
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: "var(--bru-purple)",
+                  }}
+                >
+                  {activeMeta.label}
+                </span>
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: "var(--bru-grey)",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {activeMeta.description}
+                </span>
+              </>
+            )}
+            {isComplete && (
+              <span style={{ fontSize: 13, color: "#00A896", fontWeight: 700 }}>
+                All stages complete
+              </span>
+            )}
+          </div>
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 800,
+              color: isComplete ? "#00A896" : "var(--bru-purple)",
+              marginLeft: 12,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {pct}%
+          </span>
+        </div>
+
+        <div style={{ display: "flex", gap: 6 }}>
+          {STAGE_ORDER.map((s) => {
+            const isDone = completedStages.has(s);
+            const isActive = stage === s;
+            return (
+              <div key={s} style={{ flex: 1 }}>
+                <div
+                  style={{
+                    height: 6,
+                    borderRadius: 3,
+                    background: isDone
+                      ? "#00A896"
+                      : isActive
+                        ? "var(--bru-purple)"
+                        : "#e8e8e8",
+                    position: "relative",
+                    overflow: "hidden",
+                    transition: "background 0.4s ease",
+                  }}
+                >
+                  {isActive && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "40%",
+                        height: "100%",
+                        background:
+                          "linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent)",
+                        animation: "bru-shimmer 1.4s ease-in-out infinite",
+                      }}
+                    />
+                  )}
+                </div>
+                <div
+                  style={{
+                    fontSize: 10,
+                    fontWeight: isDone || isActive ? 700 : 400,
+                    color: isDone
+                      ? "#00A896"
+                      : isActive
+                        ? "var(--bru-purple)"
+                        : "#b0b0b0",
+                    marginTop: 5,
+                    textAlign: "center",
+                    letterSpacing: 0.3,
+                    transition: "color 0.3s",
+                  }}
+                >
+                  {STAGE_META[s].label}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function renderStageContent(
+  name: StageName,
+  raw: string,
+  isActive: boolean,
+): React.ReactNode {
+  if (!raw) return null;
+
+  const preStyle: React.CSSProperties = {
+    fontFamily: "inherit",
+    fontSize: 12,
+    lineHeight: 1.6,
+    whiteSpace: "pre-wrap",
+    wordBreak: "break-word",
+    margin: 0,
+    color: "var(--bru-black)",
+    maxHeight: 280,
+    overflow: "auto",
+    background: "#f9f7f3",
+    padding: 12,
+    border: "1px solid #e5e5e5",
+  };
+
+  // Writer: show streaming text as-is
+  if (name === "writer") {
+    return <pre style={preStyle}>{raw}</pre>;
+  }
+
+  // JSON stages: only render once content can be parsed (not while streaming)
+  const clean = stripJsonFences(raw);
+
+  if (name === "strategist") {
+    try {
+      const d = JSON.parse(clean) as {
+        angle?: string;
+        hook_example?: string;
+        key_points?: string[];
+        pillar_name?: string;
+        icp_label?: string;
+      };
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {d.angle && (
+            <p
+              style={{
+                margin: 0,
+                fontSize: 13,
+                fontWeight: 700,
+                color: "var(--bru-black)",
+                lineHeight: 1.4,
+              }}
+            >
+              {d.angle}
+            </p>
+          )}
+          {d.hook_example && (
+            <p
+              style={{
+                margin: 0,
+                fontSize: 12,
+                color: "#555",
+                fontStyle: "italic",
+                borderLeft: "3px solid var(--bru-purple)",
+                paddingLeft: 10,
+                lineHeight: 1.5,
+              }}
+            >
+              "{d.hook_example}"
+            </p>
+          )}
+          {d.key_points && d.key_points.length > 0 && (
+            <ul
+              style={{
+                margin: 0,
+                padding: "0 0 0 16px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 4,
+              }}
+            >
+              {d.key_points.slice(0, 4).map((pt, i) => (
+                <li
+                  key={i}
+                  style={{
+                    fontSize: 12,
+                    color: "var(--bru-black)",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {pt}
+                </li>
+              ))}
+            </ul>
+          )}
+          {(d.pillar_name ?? d.icp_label) && (
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {d.pillar_name && (
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    background: "rgba(100,60,220,0.1)",
+                    color: "var(--bru-purple)",
+                    padding: "2px 7px",
+                    letterSpacing: 0.5,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {d.pillar_name}
+                </span>
+              )}
+              {d.icp_label && (
+                <span
+                  style={{
+                    fontSize: 10,
+                    color: "var(--bru-grey)",
+                    padding: "2px 0",
+                  }}
+                >
+                  {d.icp_label}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      );
+    } catch {
+      return isActive ? null : <pre style={preStyle}>{raw}</pre>;
+    }
+  }
+
+  if (name === "scorer") {
+    try {
+      const d = JSON.parse(clean) as {
+        total?: number;
+        pass?: boolean;
+        breakdown?: {
+          criterion: string;
+          score: number;
+          max: number;
+          status: string;
+          feedback: string;
+        }[];
+        strengths?: string[];
+      };
+      const color =
+        (d.total ?? 0) >= 75
+          ? "#00A896"
+          : (d.total ?? 0) >= 60
+            ? "#FF6C01"
+            : "#E99898";
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                border: `3px solid ${color}`,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <span
+                style={{ fontSize: 20, fontWeight: 800, color, lineHeight: 1 }}
+              >
+                {d.total}
+              </span>
+              <span style={{ fontSize: 9, color: "var(--bru-grey)" }}>
+                /100
+              </span>
+            </div>
+            <div>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 800,
+                  color,
+                  background: `${color}18`,
+                  padding: "2px 8px",
+                  letterSpacing: 0.5,
+                  textTransform: "uppercase" as const,
+                  display: "inline-block",
+                  marginBottom: 4,
+                }}
+              >
+                {d.pass ? "PASS" : "NEEDS WORK"}
+              </span>
+              {d.strengths?.[0] && (
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: 12,
+                    color: "#555",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {d.strengths[0]}
+                </p>
+              )}
+            </div>
+          </div>
+          {d.breakdown && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              {d.breakdown.map((b) => {
+                const pct = Math.round((b.score / b.max) * 100);
+                const bc =
+                  b.status === "excellent"
+                    ? "#00A896"
+                    : b.status === "good"
+                      ? "#FF6C01"
+                      : "#E99898";
+                return (
+                  <div
+                    key={b.criterion}
+                    style={{ display: "flex", alignItems: "center", gap: 8 }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 11,
+                        color: "var(--bru-grey)",
+                        width: 110,
+                        flexShrink: 0,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {b.criterion}
+                    </span>
+                    <div
+                      style={{
+                        flex: 1,
+                        height: 5,
+                        background: "#e8e8e8",
+                        borderRadius: 3,
+                        overflow: "hidden",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: `${pct}%`,
+                          height: "100%",
+                          background: bc,
+                          borderRadius: 3,
+                          transition: "width 0.6s ease",
+                        }}
+                      />
+                    </div>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: bc,
+                        width: 30,
+                        textAlign: "right",
+                      }}
+                    >
+                      {b.score}/{b.max}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
+    } catch {
+      return isActive ? null : <pre style={preStyle}>{raw}</pre>;
+    }
+  }
+
+  if (name === "formatter") {
+    try {
+      const d = JSON.parse(clean) as {
+        post_text?: string;
+        post?: string;
+        character_count?: number;
+        slides?: { number?: number; title?: string; body?: string }[];
+      };
+      const text = d.post_text ?? d.post ?? "";
+      if (d.slides && d.slides.length > 0) {
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {text && (
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 12,
+                  color: "var(--bru-grey)",
+                  fontStyle: "italic",
+                  borderLeft: "3px solid #e5e5e5",
+                  paddingLeft: 8,
+                  lineHeight: 1.4,
+                }}
+              >
+                {text.slice(0, 120)}
+                {text.length > 120 ? "..." : ""}
+              </p>
+            )}
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {d.slides.slice(0, 6).map((s, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    gap: 8,
+                    alignItems: "flex-start",
+                    fontSize: 12,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: 800,
+                      color: "var(--bru-purple)",
+                      fontSize: 11,
+                      whiteSpace: "nowrap",
+                      paddingTop: 1,
+                    }}
+                  >
+                    {i + 1}
+                  </span>
+                  <div>
+                    <span
+                      style={{ fontWeight: 700, color: "var(--bru-black)" }}
+                    >
+                      {s.title}
+                    </span>
+                    {s.body && (
+                      <span style={{ color: "#555", marginLeft: 6 }}>
+                        — {s.body.slice(0, 70)}
+                        {s.body.length > 70 ? "..." : ""}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {d.slides.length > 6 && (
+                <span style={{ fontSize: 11, color: "var(--bru-grey)" }}>
+                  +{d.slides.length - 6} more slides
+                </span>
+              )}
+            </div>
+          </div>
+        );
+      }
+      return <pre style={{ ...preStyle, maxHeight: 200 }}>{text}</pre>;
+    } catch {
+      return isActive ? null : null;
+    }
+  }
+
+  return null;
+}
+
 function StageCard({
   name,
   currentStage,
@@ -109,10 +618,34 @@ function StageCard({
           : isComplete
             ? "4px solid #00A896"
             : "4px solid #e5e5e5",
-        opacity: isPending ? 0.5 : 1,
-        transition: "opacity 0.2s",
+        opacity: isPending ? 0.4 : 1,
+        transition: "opacity 0.3s, border-left-color 0.3s",
       }}
     >
+      {isActive && (
+        <div
+          style={{
+            height: 3,
+            background: "#e8e8e8",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "35%",
+              height: "100%",
+              background:
+                "linear-gradient(90deg, transparent, var(--bru-purple), transparent)",
+              animation: "bru-shimmer 1.2s ease-in-out infinite",
+            }}
+          />
+        </div>
+      )}
+
       <div style={{ padding: 16 }}>
         <div
           style={{
@@ -138,38 +671,164 @@ function StageCard({
             {meta.label}
           </span>
           <span style={{ fontSize: 12, color: "var(--bru-grey)", flex: 1 }}>
-            {meta.description}
+            {isActive ? meta.description : isComplete ? "Done" : "Waiting..."}
           </span>
           {isActive && (
             <Loader
-              size={16}
+              size={15}
+              color="var(--bru-purple)"
               style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
             />
           )}
           {isComplete && (
-            <CheckCircle size={16} color="#00A896" style={{ flexShrink: 0 }} />
+            <CheckCircle size={15} color="#00A896" style={{ flexShrink: 0 }} />
           )}
         </div>
 
-        {content && (
-          <pre
+        {renderStageContent(name, content, isActive)}
+      </div>
+    </Card>
+  );
+}
+
+function VisualStageCard({
+  currentStage,
+  imageUrl,
+  promptUsed,
+  isComplete,
+  error,
+}: {
+  currentStage: PipelineStage;
+  imageUrl: string | null;
+  promptUsed: string | null;
+  isComplete: boolean;
+  error: string | null;
+}) {
+  const isActive = currentStage === "visual";
+  const isPending = !isComplete && !isActive;
+
+  return (
+    <Card
+      variant="raised"
+      style={{
+        marginBottom: 12,
+        borderLeft: isActive
+          ? "4px solid var(--bru-purple)"
+          : isComplete
+            ? "4px solid #00A896"
+            : error
+              ? "4px solid #E99898"
+              : "4px solid #e5e5e5",
+        opacity: isPending ? 0.4 : 1,
+        transition: "opacity 0.3s, border-left-color 0.3s",
+      }}
+    >
+      {isActive && (
+        <div
+          style={{
+            height: 3,
+            background: "#e8e8e8",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <div
             style={{
-              fontFamily: "inherit",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "35%",
+              height: "100%",
+              background:
+                "linear-gradient(90deg, transparent, var(--bru-purple), transparent)",
+              animation: "bru-shimmer 1.2s ease-in-out infinite",
+            }}
+          />
+        </div>
+      )}
+
+      <div style={{ padding: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            marginBottom: isComplete && imageUrl ? 14 : 0,
+          }}
+        >
+          <span
+            style={{
+              fontWeight: 800,
               fontSize: 12,
-              lineHeight: 1.6,
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-word",
-              margin: 0,
-              color: "var(--bru-black)",
-              maxHeight: name === "writer" ? 280 : 160,
-              overflow: "auto",
-              background: "#f9f7f3",
-              padding: 12,
-              border: "1px solid #e5e5e5",
+              textTransform: "uppercase",
+              letterSpacing: 1,
+              color: isActive
+                ? "var(--bru-purple)"
+                : isComplete
+                  ? "#00A896"
+                  : error
+                    ? "#E99898"
+                    : "var(--bru-grey)",
             }}
           >
-            {content}
-          </pre>
+            Visual
+          </span>
+          <span
+            style={{
+              fontSize: 12,
+              color: error ? "#E99898" : "var(--bru-grey)",
+              flex: 1,
+            }}
+          >
+            {isActive
+              ? "Generating image..."
+              : error
+                ? error
+                : isComplete
+                  ? "Done"
+                  : "Waiting..."}
+          </span>
+          {isActive && (
+            <Loader
+              size={15}
+              color="var(--bru-purple)"
+              style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
+            />
+          )}
+          {isComplete && (
+            <CheckCircle size={15} color="#00A896" style={{ flexShrink: 0 }} />
+          )}
+        </div>
+
+        {isComplete && imageUrl && (
+          <div>
+            {/* External AI image — next/image needs remotePatterns for dynamic CDN URLs */}
+            <img
+              src={imageUrl}
+              alt="AI-generated visual"
+              style={{
+                width: "100%",
+                maxHeight: 320,
+                objectFit: "cover",
+                display: "block",
+                border: "1px solid #e5e5e5",
+              }}
+            />
+            {promptUsed && (
+              <p
+                style={{
+                  margin: "10px 0 0",
+                  fontSize: 11,
+                  color: "var(--bru-grey)",
+                  fontStyle: "italic",
+                  lineHeight: 1.4,
+                }}
+              >
+                {promptUsed.slice(0, 140)}
+                {promptUsed.length > 140 ? "…" : ""}
+              </p>
+            )}
+          </div>
         )}
       </div>
     </Card>
@@ -218,6 +877,9 @@ export default function StudioPage() {
   const [savedId, setSavedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [visualPrompt, setVisualPrompt] = useState<string | null>(null);
+  const [visualError, setVisualError] = useState<string | null>(null);
 
   const appendContent = useCallback((stageName: string, text: string) => {
     setStageContent((prev) => ({
@@ -244,6 +906,9 @@ export default function StudioPage() {
     setPostText("");
     setScore(null);
     setSavedId(null);
+    setImageUrl(null);
+    setVisualPrompt(null);
+    setVisualError(null);
 
     // ── Stage 1: Strategist ──────────────────────────────────────────────────
     setStage("strategist");
@@ -273,7 +938,9 @@ export default function StudioPage() {
         }
       }
 
-      const parsedStrategy = JSON.parse(strategistRaw) as StrategyOutput;
+      const parsedStrategy = JSON.parse(
+        stripJsonFences(strategistRaw),
+      ) as StrategyOutput;
       setStrategy(parsedStrategy);
       markComplete("strategist");
     } catch (err) {
@@ -287,7 +954,9 @@ export default function StudioPage() {
     let writerRaw = "";
 
     try {
-      const strategyParsed = JSON.parse(strategistRaw) as StrategyOutput;
+      const strategyParsed = JSON.parse(
+        stripJsonFences(strategistRaw),
+      ) as StrategyOutput;
       const res = await fetch("/api/studio/writer", {
         method: "POST",
         credentials: "include",
@@ -325,7 +994,9 @@ export default function StudioPage() {
     let parsedScore: ScoreOutput | null = null;
 
     try {
-      const strategyParsed = JSON.parse(strategistRaw) as StrategyOutput;
+      const strategyParsed = JSON.parse(
+        stripJsonFences(strategistRaw),
+      ) as StrategyOutput;
       const res = await fetch("/api/studio/scorer", {
         method: "POST",
         credentials: "include",
@@ -353,7 +1024,7 @@ export default function StudioPage() {
         }
       }
 
-      parsedScore = JSON.parse(scorerRaw) as ScoreOutput;
+      parsedScore = JSON.parse(stripJsonFences(scorerRaw)) as ScoreOutput;
       setScore(parsedScore);
       markComplete("scorer");
     } catch (err) {
@@ -401,14 +1072,63 @@ export default function StudioPage() {
       return;
     }
 
+    // ── Stage 5: Visual (only for visual/carousel formats) ───────────────────
+    if (format !== "simple") {
+      setStage("visual");
+      try {
+        const res = await fetch("/api/studio/visual", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ post_text: writerRaw, format }),
+        });
+
+        if (!res.ok) {
+          const err = (await res.json()) as {
+            error?: string;
+            message?: string;
+          };
+          throw new Error(
+            err.message ?? err.error ?? `Visual error (${res.status})`,
+          );
+        }
+
+        for await (const event of parseSSEStream(res)) {
+          if (event.type === "stage_complete" && event.stage === "visual") {
+            const meta = event.metadata as {
+              image_url?: string;
+              prompt_used?: string;
+            };
+            setImageUrl(meta?.image_url ?? null);
+            setVisualPrompt(meta?.prompt_used ?? null);
+          } else if (event.type === "error") {
+            throw new Error(event.message);
+          }
+        }
+
+        markComplete("visual");
+      } catch (err) {
+        // Visual is non-fatal — log error but continue to complete
+        setVisualError(
+          err instanceof Error ? err.message : "Visual generation failed",
+        );
+        markComplete("visual");
+      }
+    }
+
     // ── Complete + Auto-save ─────────────────────────────────────────────────
     setStage("complete");
 
     try {
-      const strategyParsed = JSON.parse(strategistRaw) as StrategyOutput;
+      const strategyParsed = JSON.parse(
+        stripJsonFences(strategistRaw),
+      ) as StrategyOutput;
       let formattedParsed: Record<string, unknown> = {};
       try {
-        formattedParsed = JSON.parse(formatterRaw) as Record<string, unknown>;
+        formattedParsed = JSON.parse(stripJsonFences(formatterRaw)) as Record<
+          string,
+          unknown
+        >;
       } catch {
         // Formatter output not valid JSON — store raw
       }
@@ -457,11 +1177,18 @@ export default function StudioPage() {
     setScore(null);
     setSavedId(null);
     setError(null);
+    setImageUrl(null);
+    setVisualPrompt(null);
+    setVisualError(null);
   };
 
-  const isRunning = ["strategist", "writer", "scorer", "formatter"].includes(
-    stage,
-  );
+  const isRunning = [
+    "strategist",
+    "writer",
+    "scorer",
+    "formatter",
+    "visual",
+  ].includes(stage);
   const isComplete = stage === "complete";
   const hasPost = !!(stageContent.writer ?? postText);
 
@@ -723,6 +1450,10 @@ export default function StudioPage() {
               </Card>
             ) : (
               <>
+                <PipelineProgress
+                  stage={stage}
+                  completedStages={completedStages}
+                />
                 {STAGE_ORDER.map((stageName) => (
                   <StageCard
                     key={stageName}
@@ -732,6 +1463,19 @@ export default function StudioPage() {
                     isComplete={completedStages.has(stageName)}
                   />
                 ))}
+
+                {format !== "simple" &&
+                  (stage === "visual" ||
+                    completedStages.has("visual") ||
+                    visualError !== null) && (
+                    <VisualStageCard
+                      currentStage={stage}
+                      imageUrl={imageUrl}
+                      promptUsed={visualPrompt}
+                      isComplete={completedStages.has("visual")}
+                      error={visualError}
+                    />
+                  )}
 
                 {error && (
                   <Card

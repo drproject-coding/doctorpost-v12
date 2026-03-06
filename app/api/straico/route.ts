@@ -14,10 +14,13 @@ async function handleRequest(req: NextRequest, method: string) {
   const action = req.nextUrl.searchParams.get("action") || "";
 
   if (!action) {
-    return NextResponse.json({ error: "Missing action param" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing action param" },
+      { status: 400 },
+    );
   }
 
-  if (!["prompt", "models", "user", "user-info"].includes(action)) {
+  if (!["prompt", "models", "user", "user-info", "image"].includes(action)) {
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   }
 
@@ -35,6 +38,8 @@ async function handleRequest(req: NextRequest, method: string) {
     url = `${STRAICO_BASE}/v1/prompt/completion`;
   } else if (action === "models") {
     url = `${STRAICO_BASE}/v1/models`;
+  } else if (action === "image") {
+    url = `${STRAICO_BASE}/v1/image/generation`;
   } else {
     // user and user-info both hit the same endpoint
     url = `${STRAICO_BASE}/v0/user`;
@@ -60,13 +65,15 @@ async function handleRequest(req: NextRequest, method: string) {
 
   try {
     const upstream = await fetch(url, {
-      method: action === "prompt" ? "POST" : "GET",
+      method: action === "prompt" || action === "image" ? "POST" : "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
       },
       body:
-        action === "prompt" ? await req.text() : undefined,
+        action === "prompt" || action === "image"
+          ? await req.text()
+          : undefined,
     });
 
     const data = await upstream.text();

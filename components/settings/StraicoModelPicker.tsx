@@ -25,6 +25,7 @@ interface StraicoModelPickerProps {
   onSelectModel: (modelId: string) => void;
   loading?: boolean;
   userInfo?: StraicoUserInfo | null;
+  allowAllTypes?: boolean;
 }
 
 function formatNumber(n: number): string {
@@ -84,6 +85,7 @@ export function StraicoModelPicker({
   onSelectModel,
   loading,
   userInfo,
+  allowAllTypes,
 }: StraicoModelPickerProps) {
   const [search, setSearch] = useState("");
   const [providerFilter, setProviderFilter] = useState<string | null>(null);
@@ -96,7 +98,9 @@ export function StraicoModelPicker({
   }, [models]);
 
   const filteredModels = useMemo(() => {
-    let result = models.filter((m) => !m.modelType || m.modelType === "chat");
+    let result = allowAllTypes
+      ? [...models]
+      : models.filter((m) => !m.modelType || m.modelType === "chat");
 
     if (search.trim()) {
       const q = search.toLowerCase();
@@ -131,7 +135,7 @@ export function StraicoModelPicker({
     });
 
     return result;
-  }, [models, search, providerFilter, sort]);
+  }, [models, search, providerFilter, sort, allowAllTypes]);
 
   const selectedModel = models.find((m) => m.id === selectedModelId);
 

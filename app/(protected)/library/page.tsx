@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Card } from "@bruddle/react";
-import { getScheduledPosts, updatePost } from "@/lib/api";
+import { getScheduledPosts, updatePost, deletePost } from "@/lib/api";
+import { useToast } from "@/components/Toast";
 import { ScheduledPost } from "@/lib/types";
 import { FileText, Save, Edit } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
@@ -9,6 +10,7 @@ import PostEditorModal from "@/components/PostEditorModal";
 
 export default function LibraryPage() {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [posts, setPosts] = useState<ScheduledPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<
@@ -38,6 +40,17 @@ export default function LibraryPage() {
   const handleEditPost = (post: ScheduledPost) => {
     setEditingPost(post);
     setIsModalOpen(true);
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    if (!confirm("Delete this post? This cannot be undone.")) return;
+    try {
+      await deletePost(postId);
+      setPosts(posts.filter((p) => p.id !== postId));
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+      showToast("Failed to delete post. Please try again.", "error");
+    }
   };
 
   const handleSavePost = async (updatedPost: ScheduledPost) => {
@@ -139,6 +152,12 @@ export default function LibraryPage() {
                       className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
                     >
                       View/Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeletePost(post.id)}
+                      className="text-sm bg-red-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-red-200 text-red-700"
+                    >
+                      Delete
                     </button>
                   </div>
                 </div>

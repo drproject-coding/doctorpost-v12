@@ -39,8 +39,10 @@ interface NcbProfileRow {
   claude_api_key?: string | null;
   straico_api_key?: string | null;
   straico_model?: string | null;
+  straico_image_model?: string | null;
   oneforall_api_key?: string | null;
   oneforall_model?: string | null;
+  oneforall_image_model?: string | null;
   perplexity_api_key?: string | null;
   reddit_client_id?: string | null;
   reddit_client_secret?: string | null;
@@ -112,8 +114,10 @@ function mapProfileFromNcb(row: NcbProfileRow): BrandProfile {
     claudeApiKey: row.claude_api_key ?? "",
     straicoApiKey: row.straico_api_key ?? "",
     straicoModel: row.straico_model ?? "openai/gpt-4o-mini",
+    straicoImageModel: row.straico_image_model ?? "flux/1.1",
     oneforallApiKey: row.oneforall_api_key ?? "",
     oneforallModel: row.oneforall_model ?? "anthropic/claude-4-sonnet",
+    oneforallImageModel: row.oneforall_image_model ?? "dall-e",
     industry: row.industry ?? "",
     audience: parseJsonArray(row.audience),
     tones: parseJsonArray(row.tones),
@@ -185,8 +189,10 @@ export const getBrandProfile = async (
       claudeApiKey: "",
       straicoApiKey: "",
       straicoModel: "openai/gpt-4o-mini",
+      straicoImageModel: "flux/1.1",
       oneforallApiKey: "",
       oneforallModel: "anthropic/claude-4-sonnet",
+      oneforallImageModel: "dall-e",
       industry: "",
       audience: [],
       tones: [],
@@ -230,8 +236,10 @@ export const updateBrandProfile = async (
     claude_api_key: profile.claudeApiKey,
     straico_api_key: profile.straicoApiKey,
     straico_model: profile.straicoModel,
+    straico_image_model: profile.straicoImageModel,
     oneforall_api_key: profile.oneforallApiKey,
     oneforall_model: profile.oneforallModel,
+    oneforall_image_model: profile.oneforallImageModel,
     perplexity_api_key: profile.perplexityApiKey || "",
     reddit_client_id: profile.redditClientId || "",
     reddit_client_secret: profile.redditClientSecret || "",

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const ONEFORALL_BASE = "https://api.1forall.ai/v1/external/llm";
+const ONEFORALL_IMAGE_BASE = "https://api.1forall.ai/v1/external/image";
 
 export async function GET(req: NextRequest) {
   return handleRequest(req, "GET");
@@ -20,7 +21,15 @@ async function handleRequest(req: NextRequest, method: string) {
     );
   }
 
-  if (!["send-request", "check-status"].includes(action)) {
+  if (
+    ![
+      "send-request",
+      "check-status",
+      "list-image-models",
+      "generate-image",
+      "check-image-status",
+    ].includes(action)
+  ) {
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   }
 
@@ -35,6 +44,19 @@ async function handleRequest(req: NextRequest, method: string) {
   let url: string;
   if (action === "send-request") {
     url = `${ONEFORALL_BASE}/send-request/`;
+  } else if (action === "list-image-models") {
+    url = `${ONEFORALL_IMAGE_BASE}/models/`;
+  } else if (action === "generate-image") {
+    url = `${ONEFORALL_IMAGE_BASE}/text-to-image/`;
+  } else if (action === "check-image-status") {
+    const codeRef = req.nextUrl.searchParams.get("code_ref");
+    if (!codeRef) {
+      return NextResponse.json(
+        { error: "Missing code_ref for check-image-status" },
+        { status: 400 },
+      );
+    }
+    url = `${ONEFORALL_IMAGE_BASE}/check-status/${codeRef}/`;
   } else {
     const codeRef = req.nextUrl.searchParams.get("code_ref");
     if (!codeRef) {
@@ -69,7 +91,10 @@ async function handleRequest(req: NextRequest, method: string) {
 
   try {
     const upstream = await fetch(url, {
-      method: action === "send-request" ? "POST" : "GET",
+      method:
+        action === "send-request" || action === "generate-image"
+          ? "POST"
+          : "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Api-Key ${apiKey}`,

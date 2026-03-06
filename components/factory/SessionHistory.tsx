@@ -10,6 +10,7 @@ import {
 
 interface SessionHistoryProps {
   onResume: (stateJson: string) => void;
+  onView: (stateJson: string) => void;
   onRetryFromPhase?: (stateJson: string, phase: string) => void;
 }
 
@@ -29,6 +30,7 @@ const PHASE_LABELS: Record<string, string> = {
 
 export function SessionHistory({
   onResume,
+  onView,
   onRetryFromPhase,
 }: SessionHistoryProps) {
   const [sessions, setSessions] = useState<SavedSession[]>([]);
@@ -226,6 +228,14 @@ export function SessionHistory({
                   </Button>
                 );
               })()
+            ) : session.phase === "complete" ? (
+              <Button
+                size="sm"
+                onClick={() => onView(session.stateJson)}
+                style={{ flexShrink: 0 }}
+              >
+                View
+              </Button>
             ) : (
               <Button
                 size="sm"
@@ -234,7 +244,7 @@ export function SessionHistory({
                 style={{ flexShrink: 0 }}
               >
                 <Play size={12} />
-                {session.phase === "complete" ? "View" : "Resume"}
+                Resume
               </Button>
             )}
             <button

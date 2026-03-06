@@ -45,6 +45,8 @@ jest.mock("lucide-react", () => ({
   Megaphone: () => <span data-testid="icon-campaigns">M</span>,
   BookOpen: () => <span data-testid="icon-knowledge">K</span>,
   Brain: () => <span data-testid="icon-learning">Br</span>,
+  Palette: () => <span data-testid="icon-brand">Pa</span>,
+  Clapperboard: () => <span data-testid="icon-studio">Cl</span>,
 }));
 
 describe("Sidebar", () => {

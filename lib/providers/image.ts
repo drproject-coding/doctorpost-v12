@@ -202,6 +202,7 @@ async function generateOneForAllImage(
 
   const submitData = (await submitRes.json()) as {
     code_ref?: string;
+    url_file?: string;
     image_url?: string;
     url?: string;
     images?: string[];
@@ -209,7 +210,10 @@ async function generateOneForAllImage(
 
   // Some models respond immediately (no polling needed)
   const immediate =
-    submitData.image_url ?? submitData.url ?? submitData.images?.[0];
+    submitData.url_file ??
+    submitData.image_url ??
+    submitData.url ??
+    submitData.images?.[0];
   if (immediate) {
     onProgress?.("Image generated!", 95);
     return { imageUrl: immediate, provider: "1forall", modelUsed: model };
@@ -240,6 +244,7 @@ async function generateOneForAllImage(
 
     const statusData = (await statusRes.json()) as {
       status?: string;
+      url_file?: string;
       image_url?: string;
       url?: string;
       images?: string[];
@@ -250,6 +255,7 @@ async function generateOneForAllImage(
 
     if (["completed", "complete", "done", "success"].includes(rawStatus)) {
       const url =
+        statusData.url_file ??
         statusData.image_url ??
         statusData.url ??
         statusData.images?.[0] ??

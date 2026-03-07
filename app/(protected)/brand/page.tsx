@@ -81,9 +81,10 @@ export default function BrandPage() {
     if (!profile) return;
     setSavingSection(section);
     try {
-      const updated = await updateBrandProfile({ ...profile, ...updates });
-      setProfile(updated);
-      setDraft(updated);
+      const merged = { ...profile, ...updates };
+      await updateBrandProfile(merged);
+      setProfile(merged);
+      setDraft(merged);
     } catch (e) {
       console.error("Failed to save:", e);
     } finally {
@@ -118,10 +119,20 @@ export default function BrandPage() {
     }
   };
 
+  const SECTION_FIELD: Record<string, keyof BrandProfile> = {
+    "Brand Positioning": "positioning",
+    "Content Strategy": "contentStrategy",
+    Profile: "definition",
+    "Voice & Guidelines": "copyGuideline",
+  };
+
   const handleAiGenerate = async (section: string): Promise<void> => {
     if (!profile || !aiSettings || !draft) return;
-    await generateBrandSection(section, profile, aiSettings);
-    // Result shown as suggestion — for now just log it (full integration in future)
+    const generated = await generateBrandSection(section, profile, aiSettings);
+    const field = SECTION_FIELD[section];
+    if (field && generated) {
+      setDraft((prev) => (prev ? { ...prev, [field]: generated } : null));
+    }
   };
 
   if (loading) {

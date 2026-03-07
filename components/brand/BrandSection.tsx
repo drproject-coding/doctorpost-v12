@@ -38,6 +38,7 @@ const BrandSection: React.FC<BrandSectionProps> = ({
     setAiLoading(true);
     try {
       await onAiGenerate();
+      setEditing(true);
     } finally {
       setAiLoading(false);
     }

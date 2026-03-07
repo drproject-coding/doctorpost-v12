@@ -1,6 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { BrandProfile } from "@/lib/types";
+
+const TRUNCATE_AT = 200;
 
 interface PositioningSectionProps {
   profile: BrandProfile;
@@ -54,8 +56,13 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
     );
   }
 
-  const hasContent =
-    profile.positioning && profile.positioning.trim().length > 0;
+  const [expanded, setExpanded] = useState(false);
+
+  const text = profile.positioning ?? "";
+  const hasContent = text.trim().length > 0;
+  const isLong = text.length > TRUNCATE_AT;
+  const displayed =
+    isLong && !expanded ? text.slice(0, TRUNCATE_AT).trimEnd() + "…" : text;
 
   return (
     <div
@@ -66,18 +73,40 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
       }}
     >
       {hasContent ? (
-        <p
-          style={{
-            margin: 0,
-            fontFamily: "var(--bru-font-primary)",
-            fontSize: "var(--bru-text-sm)",
-            color: "var(--bru-black)",
-            lineHeight: 1.7,
-            whiteSpace: "pre-wrap",
-          }}
-        >
-          {profile.positioning}
-        </p>
+        <>
+          <p
+            style={{
+              margin: 0,
+              fontFamily: "var(--bru-font-primary)",
+              fontSize: "var(--bru-text-sm)",
+              color: "var(--bru-black)",
+              lineHeight: 1.7,
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {displayed}
+          </p>
+          {isLong && (
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              style={{
+                marginTop: 8,
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+                fontFamily: "var(--bru-font-primary)",
+                fontSize: "var(--bru-text-xs)",
+                fontWeight: 700,
+                color: ACCENT,
+                textDecoration: "underline",
+                letterSpacing: "0.03em",
+              }}
+            >
+              {expanded ? "Show less" : "Read more"}
+            </button>
+          )}
+        </>
       ) : (
         <p
           style={{

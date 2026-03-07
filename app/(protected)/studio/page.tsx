@@ -1119,6 +1119,7 @@ export default function StudioPage() {
     }
 
     // ── Stage 5: Visual (only for visual/carousel formats) ───────────────────
+    let localImageUrl: string | null = null;
     if (format !== "simple") {
       setStage("visual");
       try {
@@ -1145,7 +1146,8 @@ export default function StudioPage() {
               image_url?: string;
               prompt_used?: string;
             };
-            setImageUrl(meta?.image_url ?? null);
+            localImageUrl = meta?.image_url ?? null;
+            setImageUrl(localImageUrl);
             setVisualPrompt(meta?.prompt_used ?? null);
           } else if (event.type === "error") {
             throw new Error(event.message);
@@ -1204,8 +1206,8 @@ export default function StudioPage() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               format,
-              ...(imageUrl ? { image_url: imageUrl } : {}),
-              ...(score ? { score: score.total, score_breakdown: JSON.stringify(score.breakdown), score_suggestions: JSON.stringify(score.suggestions) } : {}),
+              ...(localImageUrl ? { image_url: localImageUrl } : {}),
+              ...(parsedScore ? { score: parsedScore.total, score_breakdown: JSON.stringify(parsedScore.breakdown), score_suggestions: JSON.stringify(parsedScore.suggestions) } : {}),
               strategy_output: JSON.stringify(strategyParsed),
               formatted_output: formatterRaw,
             }),

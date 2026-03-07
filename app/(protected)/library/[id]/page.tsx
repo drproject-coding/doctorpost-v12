@@ -31,12 +31,28 @@ export default function PostDetailPage() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/data/read/posts/${id}`, {
+        // NCB /read/posts/{id} returns 500 — fetch list and filter by id
+        const res = await fetch(`/api/data/read/posts`, {
           credentials: "include",
         });
         if (!res.ok) throw new Error(`Failed to fetch post (${res.status})`);
-        const json = (await res.json()) as Post | Post[];
-        const data: Post | null = Array.isArray(json) ? (json[0] ?? null) : json;
+        const json = (await res.json()) as unknown;
+        let rows: Post[];
+        if (Array.isArray(json)) {
+          rows = json as Post[];
+        } else if (json && typeof json === "object") {
+          const obj = json as Record<string, unknown>;
+          rows = (
+            Array.isArray(obj.data)
+              ? obj.data
+              : Array.isArray(obj.rows)
+                ? obj.rows
+                : []
+          ) as Post[];
+        } else {
+          rows = [];
+        }
+        const data = rows.find((p) => String(p.id) === String(id)) ?? null;
         if (!data) setError("Post not found.");
         else setPost(data);
       } catch (err) {
@@ -66,14 +82,18 @@ export default function PostDetailPage() {
         body: JSON.stringify({ status: "published" }),
       });
       setPost({ ...post, status: "published" });
-    } catch { /* non-fatal */ } finally {
+    } catch {
+      /* non-fatal */
+    } finally {
       setMarkingPublished(false);
     }
   };
 
   if (loading) {
     return (
-      <div style={{ padding: 48, display: "flex", alignItems: "center", gap: 12 }}>
+      <div
+        style={{ padding: 48, display: "flex", alignItems: "center", gap: 12 }}
+      >
         <Loader size={20} style={{ animation: "spin 1s linear infinite" }} />
         <span>Loading…</span>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
@@ -84,56 +104,174 @@ export default function PostDetailPage() {
   if (error || !post) {
     return (
       <div style={{ padding: 24 }}>
-        <button onClick={() => router.push("/library")} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", fontWeight: 700, color: "var(--bru-purple)", marginBottom: 16 }}>
+        <button
+          onClick={() => router.push("/library")}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            fontWeight: 700,
+            color: "var(--bru-purple)",
+            marginBottom: 16,
+          }}
+        >
           <ArrowLeft size={16} /> Library
         </button>
-        <p style={{ color: "#E99898", fontWeight: 700 }}>{error ?? "Post not found"}</p>
+        <p style={{ color: "#E99898", fontWeight: 700 }}>
+          {error ?? "Post not found"}
+        </p>
       </div>
     );
   }
 
   const date = post.scheduled_at
-    ? new Date(post.scheduled_at).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
+    ? new Date(post.scheduled_at).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
     : "";
 
   return (
     <div style={{ padding: "24px 24px 64px" }}>
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         {/* Header */}
-        <button onClick={() => router.push("/library")} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", fontWeight: 700, color: "var(--bru-purple)", marginBottom: 20, fontSize: 14 }}>
+        <button
+          onClick={() => router.push("/library")}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            fontWeight: 700,
+            color: "var(--bru-purple)",
+            marginBottom: 20,
+            fontSize: 14,
+          }}
+        >
           <ArrowLeft size={16} /> Library
         </button>
 
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: 16,
+            marginBottom: 24,
+            flexWrap: "wrap",
+          }}
+        >
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 8px", lineHeight: 1.3 }}>{post.title}</h1>
-            <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+            <h1
+              style={{
+                fontSize: 22,
+                fontWeight: 800,
+                margin: "0 0 8px",
+                lineHeight: 1.3,
+              }}
+            >
+              {post.title}
+            </h1>
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
               {post.pillar && (
-                <span style={{ padding: "2px 10px", border: "2px solid var(--bru-black)", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>
+                <span
+                  style={{
+                    padding: "2px 10px",
+                    border: "2px solid var(--bru-black)",
+                    fontWeight: 700,
+                    fontSize: 11,
+                    textTransform: "uppercase",
+                    letterSpacing: 1,
+                  }}
+                >
                   {post.pillar}
                 </span>
               )}
-              {date && <span style={{ fontSize: 13, color: "var(--bru-grey)" }}>{date}</span>}
+              {date && (
+                <span style={{ fontSize: 13, color: "var(--bru-grey)" }}>
+                  {date}
+                </span>
+              )}
               {post.status === "published" && (
-                <span style={{ padding: "2px 8px", background: "#00A896", color: "#fff", fontWeight: 700, fontSize: 11, textTransform: "uppercase" }}>Published</span>
+                <span
+                  style={{
+                    padding: "2px 8px",
+                    background: "#00A896",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: 11,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Published
+                </span>
               )}
             </div>
           </div>
         </div>
 
         {/* Post content */}
-        <div style={{ border: "var(--bru-border-thin)", background: "var(--bru-white)", marginBottom: 16 }}>
-          <div style={{ padding: "12px 16px", borderBottom: "1px solid rgba(0,0,0,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div
+          style={{
+            border: "var(--bru-border-thin)",
+            background: "var(--bru-white)",
+            marginBottom: 16,
+          }}
+        >
+          <div
+            style={{
+              padding: "12px 16px",
+              borderBottom: "1px solid rgba(0,0,0,0.08)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             <span style={{ fontWeight: 700, fontSize: 13 }}>Post</span>
             <button
               onClick={() => void handleCopy()}
-              style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 14px", border: "2px solid var(--bru-black)", background: copied ? "#00A896" : "var(--bru-cream)", color: copied ? "#fff" : "var(--bru-black)", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "6px 14px",
+                border: "2px solid var(--bru-black)",
+                background: copied ? "#00A896" : "var(--bru-cream)",
+                color: copied ? "#fff" : "var(--bru-black)",
+                fontWeight: 700,
+                fontSize: 13,
+                cursor: "pointer",
+              }}
             >
               {copied ? <Check size={14} /> : <Copy size={14} />}
               {copied ? "Copied!" : "Copy"}
             </button>
           </div>
-          <pre style={{ fontFamily: "inherit", fontSize: 14, lineHeight: 1.7, whiteSpace: "pre-wrap", wordBreak: "break-word", margin: 0, color: "var(--bru-black)", padding: 20 }}>
+          <pre
+            style={{
+              fontFamily: "inherit",
+              fontSize: 14,
+              lineHeight: 1.7,
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+              margin: 0,
+              color: "var(--bru-black)",
+              padding: 20,
+            }}
+          >
             {post.content}
           </pre>
         </div>
@@ -147,7 +285,14 @@ export default function PostDetailPage() {
               className="bru-btn bru-btn--outline"
               style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
             >
-              {markingPublished ? <Loader size={14} style={{ animation: "spin 1s linear infinite" }} /> : <CheckCircle size={14} />}
+              {markingPublished ? (
+                <Loader
+                  size={14}
+                  style={{ animation: "spin 1s linear infinite" }}
+                />
+              ) : (
+                <CheckCircle size={14} />
+              )}
               {markingPublished ? "Saving…" : "Mark as Published"}
             </button>
           )}

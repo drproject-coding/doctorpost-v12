@@ -130,7 +130,13 @@ function PipelineProgress({
           }}
         >
           <div
-            style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 0 }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              flex: 1,
+              minWidth: 0,
+            }}
           >
             <span
               style={{
@@ -145,7 +151,9 @@ function PipelineProgress({
             </span>
             {activeMeta && !isComplete && (
               <>
-                <span style={{ color: "#ccc", fontSize: 12, flexShrink: 0 }}>·</span>
+                <span style={{ color: "#ccc", fontSize: 12, flexShrink: 0 }}>
+                  ·
+                </span>
                 <span
                   style={{
                     fontSize: 13,
@@ -195,8 +203,22 @@ function PipelineProgress({
             const isDone = completedStages.has(s);
             const isActive = stage === s;
             return (
-              <div key={s} style={{ flex: 1, cursor: onStepClick && (isDone || isActive || stage === "complete") ? "pointer" : "default" }}
-                onClick={() => { if (onStepClick && (isDone || isActive || stage === "complete")) onStepClick(s); }}
+              <div
+                key={s}
+                style={{
+                  flex: 1,
+                  cursor:
+                    onStepClick && (isDone || isActive || stage === "complete")
+                      ? "pointer"
+                      : "default",
+                }}
+                onClick={() => {
+                  if (
+                    onStepClick &&
+                    (isDone || isActive || stage === "complete")
+                  )
+                    onStepClick(s);
+                }}
               >
                 <div
                   style={{
@@ -230,7 +252,8 @@ function PipelineProgress({
                 <div
                   style={{
                     fontSize: 10,
-                    fontWeight: isDone || isActive || activeStep === s ? 700 : 400,
+                    fontWeight:
+                      isDone || isActive || activeStep === s ? 700 : 400,
                     color: isDone
                       ? "#00A896"
                       : isActive
@@ -242,7 +265,10 @@ function PipelineProgress({
                     textAlign: "center",
                     letterSpacing: 0.3,
                     transition: "color 0.3s",
-                    textDecoration: stage === "complete" && onStepClick ? "underline" : "none",
+                    textDecoration:
+                      stage === "complete" && onStepClick
+                        ? "underline"
+                        : "none",
                     textDecorationColor: "var(--bru-purple)",
                   }}
                 >
@@ -708,7 +734,15 @@ function StageCard({
             <button
               onClick={onCopy}
               title={copiedProp ? "Copied!" : "Copy post"}
-              style={{ background: "none", border: "none", cursor: "pointer", padding: 2, display: "flex", alignItems: "center", color: copiedProp ? "#00A896" : "var(--bru-grey)" }}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 2,
+                display: "flex",
+                alignItems: "center",
+                color: copiedProp ? "#00A896" : "var(--bru-grey)",
+              }}
             >
               {copiedProp ? <Check size={14} /> : <Copy size={14} />}
             </button>
@@ -1196,10 +1230,10 @@ export default function StudioPage() {
       });
 
       if (saveRes.ok) {
-        setSavedId(postUuid);
         // Step 2: patch with extra fields (requires new DB columns)
         const created = (await saveRes.json()) as { id?: number };
         if (created.id) {
+          setSavedId(String(created.id));
           void fetch(`/api/data/update/posts/${created.id}`, {
             method: "PUT",
             credentials: "include",
@@ -1207,7 +1241,13 @@ export default function StudioPage() {
             body: JSON.stringify({
               format,
               ...(localImageUrl ? { image_url: localImageUrl } : {}),
-              ...(parsedScore ? { score: parsedScore.total, score_breakdown: JSON.stringify(parsedScore.breakdown), score_suggestions: JSON.stringify(parsedScore.suggestions) } : {}),
+              ...(parsedScore
+                ? {
+                    score: parsedScore.total,
+                    score_breakdown: JSON.stringify(parsedScore.breakdown),
+                    score_suggestions: JSON.stringify(parsedScore.suggestions),
+                  }
+                : {}),
               strategy_output: JSON.stringify(strategyParsed),
               formatted_output: formatterRaw,
             }),
@@ -1247,10 +1287,10 @@ export default function StudioPage() {
         }),
       });
       if (saveRes.ok) {
-        setSavedId(postUuid);
         // Step 2: patch with extra fields
         const created = (await saveRes.json()) as { id?: number };
         if (created.id) {
+          setSavedId(String(created.id));
           void fetch(`/api/data/update/posts/${created.id}`, {
             method: "PUT",
             credentials: "include",
@@ -1258,8 +1298,16 @@ export default function StudioPage() {
             body: JSON.stringify({
               format,
               ...(imageUrl ? { image_url: imageUrl } : {}),
-              ...(score ? { score: score.total, score_breakdown: JSON.stringify(score.breakdown), score_suggestions: JSON.stringify(score.suggestions) } : {}),
-              ...(strategy ? { strategy_output: JSON.stringify(strategy) } : {}),
+              ...(score
+                ? {
+                    score: score.total,
+                    score_breakdown: JSON.stringify(score.breakdown),
+                    score_suggestions: JSON.stringify(score.suggestions),
+                  }
+                : {}),
+              ...(strategy
+                ? { strategy_output: JSON.stringify(strategy) }
+                : {}),
               formatted_output: formatterContent,
             }),
           });
@@ -1688,7 +1736,6 @@ export default function StudioPage() {
                 </div>
               </Card>
             )}
-
           </div>
 
           {/* ── RIGHT: Main content area ──────────────────────────────────── */}
@@ -2199,40 +2246,100 @@ export default function StudioPage() {
                   )}
 
                 {/* Stage navigator — when not carousel */}
-                {resultTab === "preview" && !(format === "carousel" && totalSlides > 0) && (
-                  <div style={{ marginBottom: 12 }}>
-                    <StageCard
-                      name={activeStep}
-                      currentStage="complete"
-                      content={stageContent[activeStep] ?? ""}
-                      isComplete={completedStages.has(activeStep)}
-                      onCopy={activeStep === "formatter" ? () => void handleCopy() : undefined}
-                      copied={activeStep === "formatter" ? copied : undefined}
-                    />
-                  </div>
-                )}
+                {resultTab === "preview" &&
+                  !(format === "carousel" && totalSlides > 0) && (
+                    <div style={{ marginBottom: 12 }}>
+                      <StageCard
+                        name={activeStep}
+                        currentStage="complete"
+                        content={stageContent[activeStep] ?? ""}
+                        isComplete={completedStages.has(activeStep)}
+                        onCopy={
+                          activeStep === "formatter"
+                            ? () => void handleCopy()
+                            : undefined
+                        }
+                        copied={activeStep === "formatter" ? copied : undefined}
+                      />
+                    </div>
+                  )}
 
                 {/* Strategy block — shown in preview tab */}
                 {resultTab === "preview" && strategy && (
                   <Card variant="raised" style={{ marginBottom: 12 }}>
                     <div style={{ padding: 16 }}>
-                      <h3 style={{ fontWeight: 800, fontSize: 12, textTransform: "uppercase", letterSpacing: 0.5, margin: "0 0 12px", color: "var(--bru-black)" }}>
+                      <h3
+                        style={{
+                          fontWeight: 800,
+                          fontSize: 12,
+                          textTransform: "uppercase",
+                          letterSpacing: 0.5,
+                          margin: "0 0 12px",
+                          color: "var(--bru-black)",
+                        }}
+                      >
                         Strategy
                       </h3>
                       {[
-                        { label: "Angle", value: strategy.angle, color: "#631DED" },
-                        { label: "Pillar", value: strategy.pillar_name ?? strategy.pillar, color: "#00A896" },
-                        { label: "ICP", value: strategy.icp_label, color: "#FF6C01" },
-                        { label: "Hook", value: strategy.hook_type?.replace(/_/g, " "), color: "#D4A800" },
-                        { label: "Word Target", value: strategy.word_count_target ? `~${strategy.word_count_target} words` : undefined, color: "var(--bru-black)" },
+                        {
+                          label: "Angle",
+                          value: strategy.angle,
+                          color: "#631DED",
+                        },
+                        {
+                          label: "Pillar",
+                          value: strategy.pillar_name ?? strategy.pillar,
+                          color: "#00A896",
+                        },
+                        {
+                          label: "ICP",
+                          value: strategy.icp_label,
+                          color: "#FF6C01",
+                        },
+                        {
+                          label: "Hook",
+                          value: strategy.hook_type?.replace(/_/g, " "),
+                          color: "#D4A800",
+                        },
+                        {
+                          label: "Word Target",
+                          value: strategy.word_count_target
+                            ? `~${strategy.word_count_target} words`
+                            : undefined,
+                          color: "var(--bru-black)",
+                        },
                       ]
                         .filter((f) => f.value)
                         .map((field) => (
-                          <div key={field.label} style={{ marginBottom: 8, display: "flex", gap: 8, alignItems: "baseline" }}>
-                            <span style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.5, color: field.color, minWidth: 60, flexShrink: 0 }}>
+                          <div
+                            key={field.label}
+                            style={{
+                              marginBottom: 8,
+                              display: "flex",
+                              gap: 8,
+                              alignItems: "baseline",
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontSize: 10,
+                                fontWeight: 800,
+                                textTransform: "uppercase",
+                                letterSpacing: 0.5,
+                                color: field.color,
+                                minWidth: 60,
+                                flexShrink: 0,
+                              }}
+                            >
                               {field.label}
                             </span>
-                            <span style={{ fontSize: 13, fontWeight: 600, color: "var(--bru-black)" }}>
+                            <span
+                              style={{
+                                fontSize: 13,
+                                fontWeight: 600,
+                                color: "var(--bru-black)",
+                              }}
+                            >
                               {field.value}
                             </span>
                           </div>

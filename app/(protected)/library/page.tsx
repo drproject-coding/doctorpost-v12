@@ -8,6 +8,24 @@ import { FileText, Save, Edit } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import PostEditorModal from "@/components/PostEditorModal";
 
+function getSource(post: ScheduledPost): "Studio" | "Factory" | "Create" {
+  if (post.strategyOutput ?? post.format) return "Studio";
+  if (post.status === "scheduled") return "Factory";
+  return "Create";
+}
+
+const SOURCE_STYLE: Record<string, { bg: string; color: string }> = {
+  Studio: { bg: "#631DED1A", color: "#631DED" },
+  Factory: { bg: "#00A8961A", color: "#00A896" },
+  Create: { bg: "#FF6C011A", color: "#FF6C01" },
+};
+
+const FORMAT_STYLE: Record<string, { bg: string; color: string }> = {
+  carousel: { bg: "#631DED1A", color: "#631DED" },
+  visual: { bg: "#D4A8001A", color: "#D4A800" },
+  simple: { bg: "#1212120D", color: "#666" },
+};
+
 export default function LibraryPage() {
   const { user } = useAuth();
   const { showToast } = useToast();
@@ -136,10 +154,66 @@ export default function LibraryPage() {
                   className="flex items-center justify-between p-4 border-b border-gray-200 last:border-b-0"
                 >
                   <div>
-                    <p className="font-bold">{post.title}</p>
+                    <p className="font-bold" style={{ marginBottom: 4 }}>
+                      {post.title}
+                    </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 6,
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                        marginBottom: 4,
+                      }}
+                    >
+                      {/* Source tag */}
+                      {(() => {
+                        const src = getSource(post);
+                        const s = SOURCE_STYLE[src];
+                        return (
+                          <span
+                            style={{
+                              background: s.bg,
+                              color: s.color,
+                              padding: "1px 7px",
+                              fontSize: 10,
+                              fontWeight: 800,
+                              textTransform: "uppercase",
+                              letterSpacing: 0.8,
+                            }}
+                          >
+                            {src}
+                          </span>
+                        );
+                      })()}
+                      {/* Format tag */}
+                      {post.format &&
+                        (() => {
+                          const s =
+                            FORMAT_STYLE[post.format] ?? FORMAT_STYLE.simple;
+                          return (
+                            <span
+                              style={{
+                                background: s.bg,
+                                color: s.color,
+                                padding: "1px 7px",
+                                fontSize: 10,
+                                fontWeight: 800,
+                                textTransform: "uppercase",
+                                letterSpacing: 0.8,
+                              }}
+                            >
+                              {post.format}
+                            </span>
+                          );
+                        })()}
+                    </div>
                     <p className="text-sm text-gray-600">
-                      Pillar: {post.pillar} | Scheduled:{" "}
-                      {new Date(post.scheduledAt).toLocaleDateString()}
+                      {post.pillar && <>Pillar: {post.pillar} · </>}
+                      {post.scheduledAt &&
+                      new Date(post.scheduledAt).getFullYear() > 2000
+                        ? new Date(post.scheduledAt).toLocaleDateString()
+                        : ""}
                     </p>
                   </div>
                   <div className="flex items-center space-x-4">

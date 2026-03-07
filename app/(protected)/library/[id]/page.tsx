@@ -21,6 +21,265 @@ interface Post {
   formatted_output?: string | null;
 }
 
+interface ViewProps {
+  post: Post;
+  copied: boolean;
+  onCopy: () => void;
+}
+
+interface CarouselSlide {
+  number: number;
+  title: string;
+  body: string;
+}
+
+interface CarouselData {
+  slides: CarouselSlide[];
+  post_text: string;
+}
+
+function CopyButton({
+  copied,
+  onCopy,
+}: {
+  copied: boolean;
+  onCopy: () => void;
+}) {
+  return (
+    <button
+      onClick={onCopy}
+      className="bru-btn bru-btn--outline bru-btn--sm"
+      style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+    >
+      {copied ? <Check size={13} /> : <Copy size={13} />}
+      {copied ? "Copied!" : "Copy"}
+    </button>
+  );
+}
+
+function SimpleView({ post, copied, onCopy }: ViewProps) {
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 10,
+        }}
+      >
+        <span
+          style={{
+            fontWeight: 700,
+            fontSize: 13,
+            textTransform: "uppercase",
+            letterSpacing: 1,
+          }}
+        >
+          Post
+        </span>
+        <CopyButton copied={copied} onCopy={onCopy} />
+      </div>
+      <div
+        style={{
+          background: "#F9F9F9",
+          border: "1px solid rgba(0,0,0,0.1)",
+          padding: "16px 20px",
+          whiteSpace: "pre-wrap",
+          lineHeight: 1.7,
+          fontSize: 15,
+        }}
+      >
+        {post.content}
+      </div>
+    </div>
+  );
+}
+
+function VisualView({ post, copied, onCopy }: ViewProps) {
+  let postText = post.content;
+  if (post.formatted_output) {
+    try {
+      const parsed = JSON.parse(post.formatted_output) as {
+        post_text?: string;
+      };
+      if (parsed.post_text) postText = parsed.post_text;
+    } catch {
+      /* use content fallback */
+    }
+  }
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      {post.image_url && (
+        <div style={{ marginBottom: 16 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={post.image_url}
+            alt="Generated visual"
+            style={{
+              width: "100%",
+              maxHeight: 420,
+              objectFit: "cover",
+              display: "block",
+              border: "1px solid rgba(0,0,0,0.1)",
+            }}
+          />
+        </div>
+      )}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 10,
+        }}
+      >
+        <span
+          style={{
+            fontWeight: 700,
+            fontSize: 13,
+            textTransform: "uppercase",
+            letterSpacing: 1,
+          }}
+        >
+          Caption
+        </span>
+        <CopyButton copied={copied} onCopy={onCopy} />
+      </div>
+      <div
+        style={{
+          background: "#F9F9F9",
+          border: "1px solid rgba(0,0,0,0.1)",
+          padding: "16px 20px",
+          whiteSpace: "pre-wrap",
+          lineHeight: 1.7,
+          fontSize: 15,
+        }}
+      >
+        {postText}
+      </div>
+    </div>
+  );
+}
+
+function CarouselView({ post, copied, onCopy }: ViewProps) {
+  let slides: CarouselSlide[] = [];
+  let postText = post.content;
+
+  if (post.formatted_output) {
+    try {
+      const parsed = JSON.parse(post.formatted_output) as CarouselData;
+      if (Array.isArray(parsed.slides)) slides = parsed.slides;
+      if (parsed.post_text) postText = parsed.post_text;
+    } catch {
+      /* use content fallback */
+    }
+  }
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      {slides.length > 0 && (
+        <div style={{ marginBottom: 20 }}>
+          <span
+            style={{
+              fontWeight: 700,
+              fontSize: 13,
+              textTransform: "uppercase",
+              letterSpacing: 1,
+              display: "block",
+              marginBottom: 12,
+            }}
+          >
+            Slides ({slides.length})
+          </span>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {slides.map((slide) => (
+              <div
+                key={slide.number}
+                style={{
+                  border: "1px solid rgba(0,0,0,0.1)",
+                  borderLeft: "3px solid #631DED",
+                  padding: "12px 16px",
+                  background: "#F9F9F9",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "baseline",
+                    gap: 10,
+                    marginBottom: 4,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 800,
+                      color: "#631DED",
+                      textTransform: "uppercase",
+                      letterSpacing: 1,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {slide.number}
+                  </span>
+                  <span style={{ fontWeight: 700, fontSize: 14 }}>
+                    {slide.title}
+                  </span>
+                </div>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: 14,
+                    lineHeight: 1.6,
+                    color: "#444",
+                  }}
+                >
+                  {slide.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 10,
+        }}
+      >
+        <span
+          style={{
+            fontWeight: 700,
+            fontSize: 13,
+            textTransform: "uppercase",
+            letterSpacing: 1,
+          }}
+        >
+          Post Text
+        </span>
+        <CopyButton copied={copied} onCopy={onCopy} />
+      </div>
+      <div
+        style={{
+          background: "#F9F9F9",
+          border: "1px solid rgba(0,0,0,0.1)",
+          padding: "16px 20px",
+          whiteSpace: "pre-wrap",
+          lineHeight: 1.7,
+          fontSize: 15,
+        }}
+      >
+        {postText}
+      </div>
+    </div>
+  );
+}
+
 export default function PostDetailPage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
@@ -137,6 +396,19 @@ export default function PostDetailPage() {
     );
   }
 
+  const source: "Studio" | "Factory" | "Create" =
+    (post.strategy_output ?? post.format)
+      ? "Studio"
+      : post.status === "scheduled"
+        ? "Factory"
+        : "Create";
+
+  const sourceStyle = {
+    Studio: { bg: "#631DED1A", color: "#631DED" },
+    Factory: { bg: "#00A8961A", color: "#00A896" },
+    Create: { bg: "#FF6C011A", color: "#FF6C01" },
+  }[source];
+
   const date = post.scheduled_at
     ? new Date(post.scheduled_at).toLocaleDateString("en-US", {
         year: "numeric",
@@ -196,6 +468,46 @@ export default function PostDetailPage() {
                 flexWrap: "wrap",
               }}
             >
+              {/* Source tag */}
+              <span
+                style={{
+                  padding: "2px 10px",
+                  background: sourceStyle.bg,
+                  color: sourceStyle.color,
+                  fontWeight: 800,
+                  fontSize: 10,
+                  textTransform: "uppercase",
+                  letterSpacing: 1,
+                }}
+              >
+                {source}
+              </span>
+              {/* Format tag */}
+              {post.format && (
+                <span
+                  style={{
+                    padding: "2px 10px",
+                    background:
+                      post.format === "carousel"
+                        ? "#631DED1A"
+                        : post.format === "visual"
+                          ? "#D4A8001A"
+                          : "#1212120D",
+                    color:
+                      post.format === "carousel"
+                        ? "#631DED"
+                        : post.format === "visual"
+                          ? "#D4A800"
+                          : "#666",
+                    fontWeight: 800,
+                    fontSize: 10,
+                    textTransform: "uppercase",
+                    letterSpacing: 1,
+                  }}
+                >
+                  {post.format}
+                </span>
+              )}
               {post.pillar && (
                 <span
                   style={{
@@ -213,21 +525,6 @@ export default function PostDetailPage() {
               {date && (
                 <span style={{ fontSize: 13, color: "var(--bru-grey)" }}>
                   {date}
-                </span>
-              )}
-              {post.format && (
-                <span
-                  style={{
-                    padding: "2px 10px",
-                    border: "2px solid #631DED",
-                    color: "#631DED",
-                    fontWeight: 700,
-                    fontSize: 11,
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                  }}
-                >
-                  {post.format}
                 </span>
               )}
               {post.score != null && (
@@ -261,74 +558,26 @@ export default function PostDetailPage() {
           </div>
         </div>
 
-        {/* Image (visual / carousel) */}
-        {post.image_url && (
-          <div style={{ marginBottom: 16 }}>
-            <img
-              src={post.image_url}
-              alt="Post visual"
-              style={{
-                width: "100%",
-                maxWidth: 600,
-                display: "block",
-                border: "var(--bru-border-thin)",
-              }}
-            />
-          </div>
+        {/* Format-aware content rendering */}
+        {post.format === "carousel" ? (
+          <CarouselView
+            post={post}
+            copied={copied}
+            onCopy={() => void handleCopy()}
+          />
+        ) : post.format === "visual" ? (
+          <VisualView
+            post={post}
+            copied={copied}
+            onCopy={() => void handleCopy()}
+          />
+        ) : (
+          <SimpleView
+            post={post}
+            copied={copied}
+            onCopy={() => void handleCopy()}
+          />
         )}
-
-        {/* Post content */}
-        <div
-          style={{
-            border: "var(--bru-border-thin)",
-            background: "var(--bru-white)",
-            marginBottom: 16,
-          }}
-        >
-          <div
-            style={{
-              padding: "12px 16px",
-              borderBottom: "1px solid rgba(0,0,0,0.08)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <span style={{ fontWeight: 700, fontSize: 13 }}>Post</span>
-            <button
-              onClick={() => void handleCopy()}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "6px 14px",
-                border: "2px solid var(--bru-black)",
-                background: copied ? "#00A896" : "var(--bru-cream)",
-                color: copied ? "#fff" : "var(--bru-black)",
-                fontWeight: 700,
-                fontSize: 13,
-                cursor: "pointer",
-              }}
-            >
-              {copied ? <Check size={14} /> : <Copy size={14} />}
-              {copied ? "Copied!" : "Copy"}
-            </button>
-          </div>
-          <pre
-            style={{
-              fontFamily: "inherit",
-              fontSize: 14,
-              lineHeight: 1.7,
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-word",
-              margin: 0,
-              color: "var(--bru-black)",
-              padding: 20,
-            }}
-          >
-            {post.content}
-          </pre>
-        </div>
 
         {/* Actions */}
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>

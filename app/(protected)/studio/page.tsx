@@ -102,9 +102,13 @@ const STAGE_META: Record<StageName, { label: string; description: string }> = {
 function PipelineProgress({
   stage,
   completedStages,
+  onStepClick,
+  activeStep,
 }: {
   stage: PipelineStage;
   completedStages: Set<string>;
+  onStepClick?: (step: StageName) => void;
+  activeStep?: string;
 }) {
   const isComplete = stage === "complete";
   const activeIndex = STAGE_ORDER.indexOf(stage as StageName);
@@ -187,7 +191,9 @@ function PipelineProgress({
             const isDone = completedStages.has(s);
             const isActive = stage === s;
             return (
-              <div key={s} style={{ flex: 1 }}>
+              <div key={s} style={{ flex: 1, cursor: onStepClick && (isDone || isActive || stage === "complete") ? "pointer" : "default" }}
+                onClick={() => { if (onStepClick && (isDone || isActive || stage === "complete")) onStepClick(s); }}
+              >
                 <div
                   style={{
                     height: 6,
@@ -220,16 +226,20 @@ function PipelineProgress({
                 <div
                   style={{
                     fontSize: 10,
-                    fontWeight: isDone || isActive ? 700 : 400,
+                    fontWeight: isDone || isActive || activeStep === s ? 700 : 400,
                     color: isDone
                       ? "#00A896"
                       : isActive
                         ? "var(--bru-purple)"
-                        : "#b0b0b0",
+                        : activeStep === s
+                          ? "var(--bru-purple)"
+                          : "#b0b0b0",
                     marginTop: 5,
                     textAlign: "center",
                     letterSpacing: 0.3,
                     transition: "color 0.3s",
+                    textDecoration: stage === "complete" && onStepClick ? "underline" : "none",
+                    textDecorationColor: "var(--bru-purple)",
                   }}
                 >
                   {STAGE_META[s].label}
@@ -604,11 +614,15 @@ function StageCard({
   currentStage,
   content,
   isComplete,
+  onCopy,
+  copied: copiedProp,
 }: {
   name: StageName;
   currentStage: PipelineStage;
   content: string;
   isComplete: boolean;
+  onCopy?: () => void;
+  copied?: boolean;
 }) {
   const isActive = currentStage === name;
   const isPending = !isComplete && !isActive;
@@ -685,6 +699,15 @@ function StageCard({
               color="var(--bru-purple)"
               style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
             />
+          )}
+          {isComplete && onCopy && (
+            <button
+              onClick={onCopy}
+              title={copiedProp ? "Copied!" : "Copy post"}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 2, display: "flex", alignItems: "center", color: copiedProp ? "#00A896" : "var(--bru-grey)" }}
+            >
+              {copiedProp ? <Check size={14} /> : <Copy size={14} />}
+            </button>
           )}
           {isComplete && (
             <CheckCircle size={15} color="#00A896" style={{ flexShrink: 0 }} />
@@ -886,9 +909,8 @@ export default function StudioPage() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [visualPrompt, setVisualPrompt] = useState<string | null>(null);
   const [visualError, setVisualError] = useState<string | null>(null);
-  const [resultTab, setResultTab] = useState<"preview" | "score" | "details">(
-    "preview",
-  );
+  const [resultTab, setResultTab] = useState<"preview" | "score">("preview");
+  const [activeStep, setActiveStep] = useState<StageName>("formatter");
   const [previewMode, setPreviewMode] = useState<"mobile" | "desktop">(
     "mobile",
   );
@@ -928,6 +950,7 @@ export default function StudioPage() {
     setVisualError(null);
     setResultTab("preview");
     setShowMore(false);
+    setActiveStep("formatter");
 
     // ── Stage 1: Strategist ──────────────────────────────────────────────────
     setStage("strategist");
@@ -1281,6 +1304,7 @@ export default function StudioPage() {
     setVisualError(null);
     setResultTab("preview");
     setShowMore(false);
+    setActiveStep("formatter");
   };
 
   const isRunning = [
@@ -1567,6 +1591,8 @@ export default function StudioPage() {
               <PipelineProgress
                 stage={stage}
                 completedStages={completedStages}
+                onStepClick={isComplete ? setActiveStep : undefined}
+                activeStep={activeStep}
               />
             )}
 
@@ -1621,34 +1647,13 @@ export default function StudioPage() {
               </Card>
             )}
 
-            {/* Action buttons — copy + save */}
+            {/* Action buttons — save only (copy icon is in formatter block) */}
             {isComplete && hasPost && (
               <Card variant="raised">
                 <div style={{ padding: 16 }}>
                   <div
                     style={{ display: "flex", flexDirection: "column", gap: 8 }}
                   >
-                    <button
-                      onClick={() => void handleCopy()}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: 8,
-                        padding: "12px 0",
-                        border: "2px solid var(--bru-black)",
-                        background: copied ? "#00A896" : "var(--bru-cream)",
-                        color: copied ? "#fff" : "var(--bru-black)",
-                        fontWeight: 700,
-                        fontSize: 13,
-                        cursor: "pointer",
-                        transition: "background 0.2s",
-                        width: "100%",
-                      }}
-                    >
-                      {copied ? <Check size={14} /> : <Copy size={14} />}
-                      {copied ? "Copied!" : "Copy Post"}
-                    </button>
 
                     {savedId ? (
                       <a
@@ -1775,7 +1780,7 @@ export default function StudioPage() {
             {/* Complete state — tabbed results */}
             {isComplete && (
               <div>
-                {/* Tab bar */}
+                {/* Tab bar — Preview | Score */}
                 <div
                   style={{
                     display: "flex",
@@ -1783,7 +1788,7 @@ export default function StudioPage() {
                     marginBottom: 16,
                   }}
                 >
-                  {(["preview", "score", "details"] as const).map((tab) => (
+                  {(["preview", "score"] as const).map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setResultTab(tab)}
@@ -1805,9 +1810,7 @@ export default function StudioPage() {
                         cursor: "pointer",
                       }}
                     >
-                      {tab === "preview"
-                        ? "LinkedIn Preview"
-                        : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      {tab === "preview" ? "Post" : "Score"}
                     </button>
                   ))}
                 </div>
@@ -2218,6 +2221,49 @@ export default function StudioPage() {
                       </div>
                     </Card>
                   )}
+
+                {/* Stage navigator — when not carousel */}
+                {resultTab === "preview" && !(format === "carousel" && totalSlides > 0) && (
+                  <div style={{ marginBottom: 12 }}>
+                    <StageCard
+                      name={activeStep}
+                      currentStage="complete"
+                      content={stageContent[activeStep] ?? ""}
+                      isComplete={completedStages.has(activeStep)}
+                      onCopy={activeStep === "formatter" ? () => void handleCopy() : undefined}
+                      copied={activeStep === "formatter" ? copied : undefined}
+                    />
+                  </div>
+                )}
+
+                {/* Strategy block — shown in preview tab */}
+                {resultTab === "preview" && strategy && (
+                  <Card variant="raised" style={{ marginBottom: 12 }}>
+                    <div style={{ padding: 16 }}>
+                      <h3 style={{ fontWeight: 800, fontSize: 12, textTransform: "uppercase", letterSpacing: 0.5, margin: "0 0 12px", color: "var(--bru-black)" }}>
+                        Strategy
+                      </h3>
+                      {[
+                        { label: "Angle", value: strategy.angle, color: "#631DED" },
+                        { label: "Pillar", value: strategy.pillar_name ?? strategy.pillar, color: "#00A896" },
+                        { label: "ICP", value: strategy.icp_label, color: "#FF6C01" },
+                        { label: "Hook", value: strategy.hook_type?.replace(/_/g, " "), color: "#D4A800" },
+                        { label: "Word Target", value: strategy.word_count_target ? `~${strategy.word_count_target} words` : undefined, color: "var(--bru-black)" },
+                      ]
+                        .filter((f) => f.value)
+                        .map((field) => (
+                          <div key={field.label} style={{ marginBottom: 8, display: "flex", gap: 8, alignItems: "baseline" }}>
+                            <span style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.5, color: field.color, minWidth: 60, flexShrink: 0 }}>
+                              {field.label}
+                            </span>
+                            <span style={{ fontSize: 13, fontWeight: 600, color: "var(--bru-black)" }}>
+                              {field.value}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  </Card>
+                )}
 
                 {/* Preview tab — LinkedIn post */}
                 {resultTab === "preview" &&
@@ -2782,105 +2828,6 @@ export default function StudioPage() {
                       )}
                     </div>
                   </Card>
-                )}
-
-                {/* Details tab */}
-                {resultTab === "details" && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 12,
-                    }}
-                  >
-                    {/* Strategy summary */}
-                    {strategy && (
-                      <Card variant="raised">
-                        <div style={{ padding: 16 }}>
-                          <h3
-                            style={{
-                              fontWeight: 800,
-                              fontSize: 12,
-                              textTransform: "uppercase",
-                              letterSpacing: 0.5,
-                              margin: "0 0 12px",
-                            }}
-                          >
-                            Strategy
-                          </h3>
-                          {[
-                            { label: "Angle", value: strategy.angle },
-                            {
-                              label: "Pillar",
-                              value: strategy.pillar_name ?? strategy.pillar,
-                            },
-                            { label: "ICP", value: strategy.icp_label },
-                            {
-                              label: "Hook",
-                              value: strategy.hook_type?.replace(/_/g, " "),
-                            },
-                            {
-                              label: "Word Target",
-                              value: strategy.word_count_target
-                                ? `~${strategy.word_count_target} words`
-                                : undefined,
-                            },
-                          ]
-                            .filter((f) => f.value)
-                            .map((field) => (
-                              <div
-                                key={field.label}
-                                style={{ marginBottom: 10 }}
-                              >
-                                <p
-                                  style={{
-                                    margin: "0 0 2px",
-                                    fontSize: 10,
-                                    fontWeight: 800,
-                                    textTransform: "uppercase",
-                                    letterSpacing: 0.5,
-                                    color: "var(--bru-grey)",
-                                  }}
-                                >
-                                  {field.label}
-                                </p>
-                                <p
-                                  style={{
-                                    margin: 0,
-                                    fontSize: 13,
-                                    fontWeight: 600,
-                                    color: "var(--bru-black)",
-                                  }}
-                                >
-                                  {field.value}
-                                </p>
-                              </div>
-                            ))}
-                        </div>
-                      </Card>
-                    )}
-
-                    {/* Pipeline stage outputs */}
-                    {STAGE_ORDER.map((stageName) => (
-                      <StageCard
-                        key={stageName}
-                        name={stageName}
-                        currentStage="complete"
-                        content={stageContent[stageName] ?? ""}
-                        isComplete={completedStages.has(stageName)}
-                      />
-                    ))}
-
-                    {format !== "simple" && completedStages.has("visual") && (
-                      <VisualStageCard
-                        currentStage="complete"
-                        imageUrl={imageUrl}
-                        promptUsed={visualPrompt}
-                        isComplete={true}
-                        error={visualError}
-                      />
-                    )}
-                  </div>
                 )}
 
                 {/* Saved notice */}

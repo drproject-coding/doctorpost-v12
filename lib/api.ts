@@ -333,8 +333,8 @@ export const savePostDraft = async (post: ScheduledPost): Promise<void> => {
     body: JSON.stringify({
       title: post.title,
       content: post.content,
-      scheduled_at: post.scheduledAt,
-      pillar: post.pillar,
+      ...(post.scheduledAt ? { scheduled_at: post.scheduledAt } : {}),
+      ...(post.pillar ? { pillar: post.pillar } : {}),
       status: "draft",
     }),
   });

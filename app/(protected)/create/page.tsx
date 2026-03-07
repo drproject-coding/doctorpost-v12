@@ -270,6 +270,19 @@ export default function CreatePage() {
 
   const handleContentGenerated = (content: string) => {
     setGeneratedContent(content);
+    // Auto-save to library
+    if (content && profile) {
+      const newPost: ScheduledPost = {
+        id: "",
+        userId: profile.id,
+        title: topic.substring(0, 100),
+        content,
+        scheduledAt: "",
+        pillar: contentPillar,
+        status: "draft",
+      };
+      void savePostDraft(newPost).catch(() => {/* non-fatal */});
+    }
   };
 
   const handleSaveDraft = async () => {
@@ -291,7 +304,7 @@ export default function CreatePage() {
         status: "draft",
       };
       await savePostDraft(newPost);
-      setSaveFeedback("Post saved as draft successfully!");
+      setSaveFeedback("Saved to Library!");
     } catch (error) {
       console.error("Failed to save draft:", error);
       setSaveFeedback("Failed to save draft. Please try again.");
@@ -789,8 +802,8 @@ export default function CreatePage() {
                   style={{ flex: 1 }}
                   disabled={saving}
                 >
-                  {saving && <Loader size={16} className="animate-spin" />}
-                  Save as Draft
+                  {saving ? <Loader size={16} className="animate-spin" /> : null}
+                  {saving ? "Saving…" : "Save to Library"}
                 </Button>
                 <Button
                   onClick={handleOpenScheduleModal}

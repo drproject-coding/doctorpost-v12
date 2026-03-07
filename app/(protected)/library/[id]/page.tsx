@@ -13,6 +13,12 @@ interface Post {
   pillar?: string | null;
   status?: string | null;
   user_id: string;
+  format?: string | null;
+  image_url?: string | null;
+  score?: number | null;
+  score_breakdown?: string | null;
+  strategy_output?: string | null;
+  formatted_output?: string | null;
 }
 
 export default function PostDetailPage() {
@@ -206,6 +212,34 @@ export default function PostDetailPage() {
                   {date}
                 </span>
               )}
+              {post.format && (
+                <span
+                  style={{
+                    padding: "2px 10px",
+                    border: "2px solid #631DED",
+                    color: "#631DED",
+                    fontWeight: 700,
+                    fontSize: 11,
+                    textTransform: "uppercase",
+                    letterSpacing: 1,
+                  }}
+                >
+                  {post.format}
+                </span>
+              )}
+              {post.score != null && (
+                <span
+                  style={{
+                    padding: "2px 10px",
+                    background: post.score >= 75 ? "#00A896" : "#FF6C01",
+                    color: "#fff",
+                    fontWeight: 800,
+                    fontSize: 11,
+                  }}
+                >
+                  {post.score}/100
+                </span>
+              )}
               {post.status === "published" && (
                 <span
                   style={{
@@ -223,6 +257,17 @@ export default function PostDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Image (visual / carousel) */}
+        {post.image_url && (
+          <div style={{ marginBottom: 16 }}>
+            <img
+              src={post.image_url}
+              alt="Post visual"
+              style={{ width: "100%", maxWidth: 600, display: "block", border: "var(--bru-border-thin)" }}
+            />
+          </div>
+        )}
 
         {/* Post content */}
         <div

@@ -130,6 +130,13 @@ export interface ScheduledPost {
   pillar: string;
   status: PostStatus;
   userId?: string;
+  format?: "simple" | "visual" | "carousel";
+  imageUrl?: string;
+  score?: number;
+  scoreBreakdown?: string;
+  scoreSuggestions?: string;
+  strategyOutput?: string;
+  formattedOutput?: string;
   /** Score from the Content Factory scoring agent (0-100) */
   factoryScore?: number;
 }

@@ -57,6 +57,13 @@ interface NcbPostRow {
   scheduled_at?: string | null;
   pillar?: string | null;
   status?: string | null;
+  format?: string | null;
+  image_url?: string | null;
+  score?: number | null;
+  score_breakdown?: string | null;
+  score_suggestions?: string | null;
+  strategy_output?: string | null;
+  formatted_output?: string | null;
 }
 
 interface BrandContextForRecommendation {
@@ -148,6 +155,13 @@ function mapPostFromNcb(row: NcbPostRow): ScheduledPost {
     pillar: row.pillar ?? "",
     status: (row.status ?? "draft") as ScheduledPost["status"],
     userId: row.user_id,
+    format: (row.format ?? undefined) as ScheduledPost["format"],
+    imageUrl: row.image_url ?? undefined,
+    score: row.score ?? undefined,
+    scoreBreakdown: row.score_breakdown ?? undefined,
+    scoreSuggestions: row.score_suggestions ?? undefined,
+    strategyOutput: row.strategy_output ?? undefined,
+    formattedOutput: row.formatted_output ?? undefined,
   };
 }
 

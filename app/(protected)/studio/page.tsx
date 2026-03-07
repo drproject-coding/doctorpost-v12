@@ -1189,6 +1189,11 @@ export default function StudioPage() {
           content: writerRaw,
           status: "draft",
           uuid: postUuid,
+          format,
+          ...(imageUrl ? { image_url: imageUrl } : {}),
+          ...(score ? { score: score.total, score_breakdown: JSON.stringify(score.breakdown), score_suggestions: JSON.stringify(score.suggestions) } : {}),
+          strategy_output: JSON.stringify(strategyParsed),
+          formatted_output: formatterRaw,
         }),
       });
 
@@ -1224,6 +1229,11 @@ export default function StudioPage() {
           content: text,
           status: "draft",
           uuid: postUuid,
+          format,
+          ...(imageUrl ? { image_url: imageUrl } : {}),
+          ...(score ? { score: score.total, score_breakdown: JSON.stringify(score.breakdown), score_suggestions: JSON.stringify(score.suggestions) } : {}),
+          ...(strategy ? { strategy_output: JSON.stringify(strategy) } : {}),
+          formatted_output: formatterContent,
         }),
       });
       if (saveRes.ok) {

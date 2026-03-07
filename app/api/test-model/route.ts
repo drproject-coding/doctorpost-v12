@@ -16,9 +16,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/ncb-utils";
-import { generateWithAi } from "@/lib/ai/aiService";
+import { callAgentClaude } from "@/lib/agents/callClaude";
 import { generateImage } from "@/lib/providers/image";
-import type { AiSettings } from "@/lib/types";
 
 const TEXT_PROMPT =
   "Respond with exactly this sentence and nothing else: 'Text model working correctly!'";
@@ -54,30 +53,30 @@ export async function POST(req: NextRequest) {
   }
 
   if (type === "text") {
-    const settings: AiSettings = {
-      activeProvider: provider,
-      claudeApiKey: provider === "claude" ? apiKey : "",
-      straicoApiKey: provider === "straico" ? apiKey : "",
-      straicoModel: provider === "straico" ? (model ?? "openai/gpt-4o-mini") : "",
-      straicoImageModel: "",
-      oneforallApiKey: provider === "1forall" ? apiKey : "",
-      oneforallModel: provider === "1forall" ? (model ?? "anthropic/claude-4-sonnet") : "",
-      oneforallImageModel: "",
-    };
-
     try {
-      const result = await generateWithAi(
-        {
-          systemPrompt: "You are a helpful assistant. Follow the user's instruction exactly.",
-          userMessage: TEXT_PROMPT,
-          maxTokens: 60,
-        },
-        settings,
-      );
-      return NextResponse.json({ type: "text", result: result.content.trim() });
+      const providerModel =
+        provider === "straico"
+          ? (model ?? "openai/gpt-4o-mini")
+          : provider === "1forall"
+            ? (model ?? "openai/gpt-4o-mini")
+            : undefined;
+
+      const { text } = await callAgentClaude({
+        apiKey,
+        model: "sonnet",
+        maxTokens: 60,
+        systemPrompt:
+          "You are a helpful assistant. Follow the user's instruction exactly.",
+        userMessage: TEXT_PROMPT,
+        provider,
+        providerModel,
+      });
+      return NextResponse.json({ type: "text", result: text.trim() });
     } catch (err) {
       return NextResponse.json(
-        { error: err instanceof Error ? err.message : "Text generation failed" },
+        {
+          error: err instanceof Error ? err.message : "Text generation failed",
+        },
         { status: 500 },
       );
     }
@@ -94,8 +93,7 @@ export async function POST(req: NextRequest) {
 
     const imgProvider = provider === "straico" ? "straico" : "1forall";
     const imgModel =
-      imageModel?.trim() ||
-      (provider === "straico" ? "flux/1.1" : "dall-e");
+      imageModel?.trim() || (provider === "straico" ? "flux/1.1" : "dall-e");
 
     try {
       const result = await generateImage(imgProvider, apiKey, imgModel, {
@@ -106,7 +104,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ type: "image", imageUrl: result.imageUrl });
     } catch (err) {
       return NextResponse.json(
-        { error: err instanceof Error ? err.message : "Image generation failed" },
+        {
+          error: err instanceof Error ? err.message : "Image generation failed",
+        },
         { status: 500 },
       );
     }

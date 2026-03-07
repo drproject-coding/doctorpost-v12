@@ -179,20 +179,34 @@ function TestResultBlock({ test }: { test: TestState }) {
   }
   if (test.state === "success" && test.testType === "text") {
     return (
-      <div
-        style={{
-          background: "rgba(22, 163, 74, 0.06)",
-          border: "1px solid rgba(22, 163, 74, 0.2)",
-          padding: "8px 12px",
-          fontSize: 12,
-          color: "#166534",
-          display: "flex",
-          alignItems: "flex-start",
-          gap: 6,
-        }}
-      >
-        <CheckCircle size={14} style={{ flexShrink: 0, marginTop: 1 }} />
-        {test.text}
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <div
+          style={{
+            background: "rgba(22, 163, 74, 0.06)",
+            border: "1px solid rgba(22, 163, 74, 0.2)",
+            padding: "6px 12px",
+            fontSize: 12,
+            color: "#166534",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
+          <CheckCircle size={14} />
+          Text model working correctly!
+        </div>
+        <div
+          style={{
+            background: "var(--bru-bg-2, #f5f5f5)",
+            border: "1px solid rgba(0,0,0,0.1)",
+            padding: "10px 14px",
+            fontSize: 13,
+            color: "var(--bru-text, #111)",
+            fontStyle: "italic",
+          }}
+        >
+          &ldquo;{test.text}&rdquo;
+        </div>
       </div>
     );
   }

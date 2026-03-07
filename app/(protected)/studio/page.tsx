@@ -1048,7 +1048,7 @@ export default function StudioPage() {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          content: writerRaw,
+          post_text: writerRaw,
           strategy: strategyParsed,
           format,
         }),
@@ -1089,7 +1089,7 @@ export default function StudioPage() {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          content: writerRaw,
+          post_text: writerRaw,
           format,
           score: parsedScore,
         }),

@@ -59,7 +59,10 @@ export default function PostDetailPage() {
         } else {
           rows = [];
         }
-        const data = rows.find((p) => (p.uuid && p.uuid === id) || String(p.id) === String(id)) ?? null;
+        const data =
+          rows.find(
+            (p) => (p.uuid && p.uuid === id) || String(p.id) === String(id),
+          ) ?? null;
         if (!data) setError("Post not found.");
         else setPost(data);
       } catch (err) {
@@ -264,7 +267,12 @@ export default function PostDetailPage() {
             <img
               src={post.image_url}
               alt="Post visual"
-              style={{ width: "100%", maxWidth: 600, display: "block", border: "var(--bru-border-thin)" }}
+              style={{
+                width: "100%",
+                maxWidth: 600,
+                display: "block",
+                border: "var(--bru-border-thin)",
+              }}
             />
           </div>
         )}

@@ -1180,6 +1180,7 @@ export default function StudioPage() {
       }
 
       const postUuid = crypto.randomUUID();
+      // Step 1: create with core fields + uuid (always works)
       const saveRes = await fetch("/api/data/create/posts", {
         method: "POST",
         credentials: "include",
@@ -1189,16 +1190,27 @@ export default function StudioPage() {
           content: writerRaw,
           status: "draft",
           uuid: postUuid,
-          format,
-          ...(imageUrl ? { image_url: imageUrl } : {}),
-          ...(score ? { score: score.total, score_breakdown: JSON.stringify(score.breakdown), score_suggestions: JSON.stringify(score.suggestions) } : {}),
-          strategy_output: JSON.stringify(strategyParsed),
-          formatted_output: formatterRaw,
         }),
       });
 
       if (saveRes.ok) {
         setSavedId(postUuid);
+        // Step 2: patch with extra fields (requires new DB columns)
+        const created = (await saveRes.json()) as { id?: number };
+        if (created.id) {
+          void fetch(`/api/data/update/posts/${created.id}`, {
+            method: "PUT",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              format,
+              ...(imageUrl ? { image_url: imageUrl } : {}),
+              ...(score ? { score: score.total, score_breakdown: JSON.stringify(score.breakdown), score_suggestions: JSON.stringify(score.suggestions) } : {}),
+              strategy_output: JSON.stringify(strategyParsed),
+              formatted_output: formatterRaw,
+            }),
+          });
+        }
       }
     } catch {
       // Auto-save is non-fatal — user can still copy the post
@@ -1220,6 +1232,7 @@ export default function StudioPage() {
         // not JSON
       }
       const postUuid = crypto.randomUUID();
+      // Step 1: create with core fields + uuid
       const saveRes = await fetch("/api/data/create/posts", {
         method: "POST",
         credentials: "include",
@@ -1229,15 +1242,26 @@ export default function StudioPage() {
           content: text,
           status: "draft",
           uuid: postUuid,
-          format,
-          ...(imageUrl ? { image_url: imageUrl } : {}),
-          ...(score ? { score: score.total, score_breakdown: JSON.stringify(score.breakdown), score_suggestions: JSON.stringify(score.suggestions) } : {}),
-          ...(strategy ? { strategy_output: JSON.stringify(strategy) } : {}),
-          formatted_output: formatterContent,
         }),
       });
       if (saveRes.ok) {
         setSavedId(postUuid);
+        // Step 2: patch with extra fields
+        const created = (await saveRes.json()) as { id?: number };
+        if (created.id) {
+          void fetch(`/api/data/update/posts/${created.id}`, {
+            method: "PUT",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              format,
+              ...(imageUrl ? { image_url: imageUrl } : {}),
+              ...(score ? { score: score.total, score_breakdown: JSON.stringify(score.breakdown), score_suggestions: JSON.stringify(score.suggestions) } : {}),
+              ...(strategy ? { strategy_output: JSON.stringify(strategy) } : {}),
+              formatted_output: formatterContent,
+            }),
+          });
+        }
       }
     } catch {
       // silently fail — user can retry

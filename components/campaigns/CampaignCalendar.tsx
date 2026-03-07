@@ -6,6 +6,7 @@ import type { CampaignPostStatus } from "@/lib/knowledge/types";
 import { IdeaStatusBadge } from "./IdeaStatusBadge";
 import { CampaignSummaryRow } from "./CampaignSummaryRow";
 import { CampaignFilters } from "./CampaignFilters";
+import { CampaignAnalytics } from "./CampaignAnalytics";
 
 export interface CalendarSlot {
   id?: string;
@@ -143,7 +144,15 @@ export function CampaignCalendar({
         onPillarClick={setPillarFilter}
       />
 
-      <div style={{ display: "grid", gap: "var(--bru-space-3)" }}>
+      <CampaignAnalytics counts={statusCounts} total={slots.length} />
+
+      <div
+        style={{
+          display: "grid",
+          gap: "var(--bru-space-3)",
+          marginTop: "var(--bru-space-4)",
+        }}
+      >
         {weeks.map((weekSlots, wi) => {
           const visibleSlots = weekSlots.filter((s) => filteredSet.has(s));
           if (visibleSlots.length === 0 && (statusFilter || pillarFilter))

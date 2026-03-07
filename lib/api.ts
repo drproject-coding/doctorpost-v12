@@ -50,6 +50,7 @@ interface NcbProfileRow {
 
 interface NcbPostRow {
   id: string;
+  uuid?: string | null;
   user_id: string;
   title: string;
   content: string;
@@ -140,6 +141,7 @@ function mapProfileFromNcb(row: NcbProfileRow): BrandProfile {
 function mapPostFromNcb(row: NcbPostRow): ScheduledPost {
   return {
     id: row.id,
+    uuid: row.uuid ?? undefined,
     title: row.title,
     content: row.content,
     scheduledAt: row.scheduled_at ?? "",

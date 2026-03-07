@@ -123,6 +123,7 @@ export type PostStatus =
 
 export interface ScheduledPost {
   id: string;
+  uuid?: string;
   title: string;
   content: string;
   scheduledAt: string;

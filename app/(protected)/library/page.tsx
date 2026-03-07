@@ -147,11 +147,18 @@ export default function LibraryPage() {
                       {post.status.charAt(0).toUpperCase() +
                         post.status.slice(1)}
                     </span>
+                    <a
+                      href={`/library/${post.uuid ?? post.id}`}
+                      className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
+                      style={{ textDecoration: "none" }}
+                    >
+                      View
+                    </a>
                     <button
                       onClick={() => handleEditPost(post)}
                       className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
                     >
-                      View/Edit
+                      Edit
                     </button>
                     <button
                       onClick={() => handleDeletePost(post.id)}

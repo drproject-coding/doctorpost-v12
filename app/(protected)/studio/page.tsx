@@ -1179,6 +1179,7 @@ export default function StudioPage() {
         // Formatter output not valid JSON — store raw
       }
 
+      const postUuid = crypto.randomUUID();
       const saveRes = await fetch("/api/data/create/posts", {
         method: "POST",
         credentials: "include",
@@ -1187,12 +1188,12 @@ export default function StudioPage() {
           title: trimmedTopic,
           content: writerRaw,
           status: "draft",
+          uuid: postUuid,
         }),
       });
 
       if (saveRes.ok) {
-        const saved = (await saveRes.json()) as { id?: string };
-        if (saved.id) setSavedId(saved.id);
+        setSavedId(postUuid);
       }
     } catch {
       // Auto-save is non-fatal — user can still copy the post
@@ -1213,6 +1214,7 @@ export default function StudioPage() {
       } catch {
         // not JSON
       }
+      const postUuid = crypto.randomUUID();
       const saveRes = await fetch("/api/data/create/posts", {
         method: "POST",
         credentials: "include",
@@ -1221,11 +1223,11 @@ export default function StudioPage() {
           title: topic.trim(),
           content: text,
           status: "draft",
+          uuid: postUuid,
         }),
       });
       if (saveRes.ok) {
-        const saved = (await saveRes.json()) as { id?: string };
-        if (saved.id) setSavedId(saved.id);
+        setSavedId(postUuid);
       }
     } catch {
       // silently fail — user can retry

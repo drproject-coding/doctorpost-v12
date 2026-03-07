@@ -6,6 +6,7 @@ import { ArrowLeft, Copy, Check, CheckCircle, Loader } from "lucide-react";
 
 interface Post {
   id: string;
+  uuid?: string | null;
   title: string;
   content: string;
   scheduled_at?: string | null;
@@ -52,7 +53,7 @@ export default function PostDetailPage() {
         } else {
           rows = [];
         }
-        const data = rows.find((p) => String(p.id) === String(id)) ?? null;
+        const data = rows.find((p) => (p.uuid && p.uuid === id) || String(p.id) === String(id)) ?? null;
         if (!data) setError("Post not found.");
         else setPost(data);
       } catch (err) {

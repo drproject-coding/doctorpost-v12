@@ -130,7 +130,7 @@ function PipelineProgress({
           }}
         >
           <div
-            style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}
+            style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 0 }}
           >
             <span
               style={{
@@ -138,18 +138,21 @@ function PipelineProgress({
                 fontSize: 13,
                 color: "var(--bru-black)",
                 whiteSpace: "nowrap",
+                flexShrink: 0,
               }}
             >
               {isComplete ? "Complete" : `Step ${stepNum} / 4`}
             </span>
             {activeMeta && !isComplete && (
               <>
-                <span style={{ color: "#ccc", fontSize: 12 }}>·</span>
+                <span style={{ color: "#ccc", fontSize: 12, flexShrink: 0 }}>·</span>
                 <span
                   style={{
                     fontSize: 13,
                     fontWeight: 700,
                     color: "var(--bru-purple)",
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
                   }}
                 >
                   {activeMeta.label}
@@ -161,6 +164,7 @@ function PipelineProgress({
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
+                    minWidth: 0,
                   }}
                 >
                   {activeMeta.description}

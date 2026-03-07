@@ -5,7 +5,7 @@
       "command": "npx",
       "args": ["@nocodebackend/mcp"],
       "env": {
-        "NCB_TOKEN": "ncb_6ca267d92d7bbacc332fb89601a103498a3cadbac600b48c"
+        "NCB_TOKEN": "ncb_41b1541134e1e2da0cd3fde652efbfc5a12d5852b230306d"
       }
     },
     "t0ggles": {

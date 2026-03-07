@@ -1021,7 +1021,7 @@ export default function StudioPage() {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          post_text: writerRaw,
+          content: writerRaw,
           strategy: strategyParsed,
           format,
         }),
@@ -1062,7 +1062,7 @@ export default function StudioPage() {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          post_text: writerRaw,
+          content: writerRaw,
           format,
           score: parsedScore,
         }),
@@ -1157,9 +1157,9 @@ export default function StudioPage() {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          topic: trimmedTopic,
+          title: trimmedTopic,
           format,
-          post_text: writerRaw,
+          content: writerRaw,
           score: parsedScore?.total ?? 0,
           score_breakdown: JSON.stringify(parsedScore?.breakdown ?? []),
           score_suggestions: JSON.stringify(parsedScore?.suggestions ?? []),
@@ -1198,9 +1198,9 @@ export default function StudioPage() {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          topic: topic.trim(),
+          title: topic.trim(),
           format,
-          post_text: text,
+          content: text,
           score: score?.total ?? 0,
           score_breakdown: JSON.stringify(score?.breakdown ?? []),
           score_suggestions: JSON.stringify(score?.suggestions ?? []),

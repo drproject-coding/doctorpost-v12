@@ -1,37 +1,30 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { CampaignCalendar } from "../../components/campaigns/CampaignCalendar";
-import type { CampaignSlot } from "../../lib/agents/campaignPlanner";
-import type { TopicProposal } from "../../lib/knowledge/types";
+import {
+  CampaignCalendar,
+  type CalendarSlot,
+} from "../../components/campaigns/CampaignCalendar";
 
 describe("CampaignCalendar", () => {
-  const defaultTopicCard: TopicProposal = {
+  const defaultTopicCard = {
     headline: "Test Topic",
     pillar: "Authority",
     templateRecommendation: "Insight Post",
-    angle: "informative",
-    decisionMistake: "Avoiding this topic",
-    reasoning: "Strong engagement potential",
-    hookCategoryRecommendation: "question",
   };
 
   const mockSlot = (
-    overrides: Omit<Partial<CampaignSlot>, "topicCard"> & {
-      topicCard?: Partial<TopicProposal>;
+    overrides: Partial<Omit<CalendarSlot, "topicCard">> & {
+      topicCard?: Partial<CalendarSlot["topicCard"]>;
     } = {},
-  ): CampaignSlot =>
-    ({
-      weekNumber: 1,
-      slotOrder: 1,
-      slotDate: "2026-03-10",
-      topicCard: { ...defaultTopicCard, ...overrides.topicCard },
-      ...Object.fromEntries(
-        Object.entries(overrides).filter(([k]) => k !== "topicCard"),
-      ),
-    }) as CampaignSlot;
+  ): CalendarSlot => ({
+    weekNumber: overrides.weekNumber ?? 1,
+    slotOrder: overrides.slotOrder ?? 1,
+    slotDate: overrides.slotDate ?? "2026-03-10",
+    topicCard: { ...defaultTopicCard, ...overrides.topicCard },
+  });
 
   it("renders the campaign calendar heading", () => {
-    const slots: CampaignSlot[] = [];
+    const slots: CalendarSlot[] = [];
     render(
       <CampaignCalendar slots={slots} durationWeeks={2} postsPerWeek={3} />,
     );
@@ -40,7 +33,7 @@ describe("CampaignCalendar", () => {
   });
 
   it("displays week headings for each week", () => {
-    const slots: CampaignSlot[] = [
+    const slots: CalendarSlot[] = [
       mockSlot({ weekNumber: 1, slotOrder: 1 }),
       mockSlot({ weekNumber: 2, slotOrder: 1 }),
       mockSlot({ weekNumber: 3, slotOrder: 1 }),
@@ -56,7 +49,7 @@ describe("CampaignCalendar", () => {
   });
 
   it("displays slot content with headline, pillar, and date", () => {
-    const slots: CampaignSlot[] = [
+    const slots: CalendarSlot[] = [
       mockSlot({
         weekNumber: 1,
         slotOrder: 1,
@@ -79,7 +72,7 @@ describe("CampaignCalendar", () => {
   });
 
   it("shows template recommendation when available", () => {
-    const slots: CampaignSlot[] = [
+    const slots: CalendarSlot[] = [
       mockSlot({
         weekNumber: 1,
         slotOrder: 1,
@@ -99,7 +92,7 @@ describe("CampaignCalendar", () => {
   });
 
   it("handles slots without template recommendation", () => {
-    const slots: CampaignSlot[] = [
+    const slots: CalendarSlot[] = [
       mockSlot({
         weekNumber: 1,
         slotOrder: 1,
@@ -119,7 +112,7 @@ describe("CampaignCalendar", () => {
   });
 
   it("correctly groups slots by week", () => {
-    const slots: CampaignSlot[] = [
+    const slots: CalendarSlot[] = [
       mockSlot({
         weekNumber: 1,
         slotOrder: 1,
@@ -149,7 +142,7 @@ describe("CampaignCalendar", () => {
   });
 
   it("renders multiple slots with different pillars", () => {
-    const slots: CampaignSlot[] = [
+    const slots: CalendarSlot[] = [
       mockSlot({
         weekNumber: 1,
         slotOrder: 1,

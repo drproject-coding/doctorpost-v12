@@ -889,6 +889,7 @@ export default function StudioPage() {
     "mobile",
   );
   const [showMore, setShowMore] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const appendContent = useCallback((stageName: string, text: string) => {
     setStageContent((prev) => ({
@@ -1171,6 +1172,48 @@ export default function StudioPage() {
     }
   }, [topic, format, appendContent, markComplete]);
 
+  const handleManualSave = async () => {
+    const text = stageContent.writer ?? postText;
+    if (!text) return;
+    setIsSaving(true);
+    try {
+      const formatterContent = stageContent.formatter ?? "";
+      let formattedParsed: Record<string, unknown> = {};
+      try {
+        formattedParsed = JSON.parse(
+          stripJsonFences(formatterContent),
+        ) as Record<string, unknown>;
+      } catch {
+        // not JSON
+      }
+      const saveRes = await fetch("/api/data/create/posts", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          topic: topic.trim(),
+          format,
+          post_text: text,
+          score: score?.total ?? 0,
+          score_breakdown: JSON.stringify(score?.breakdown ?? []),
+          score_suggestions: JSON.stringify(score?.suggestions ?? []),
+          formatted_output: JSON.stringify(formattedParsed),
+          strategy_output: JSON.stringify(strategy ?? {}),
+          status: "draft",
+          is_favorite: false,
+        }),
+      });
+      if (saveRes.ok) {
+        const saved = (await saveRes.json()) as { id?: string };
+        if (saved.id) setSavedId(saved.id);
+      }
+    } catch {
+      // silently fail — user can retry
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleCopy = async () => {
     const text = stageContent.writer ?? postText;
     if (!text) return;
@@ -1227,7 +1270,6 @@ export default function StudioPage() {
   const displayContent =
     isTruncated && !showMore ? finalPostText.slice(0, foldAt) : finalPostText;
   const containerWidth = previewMode === "mobile" ? 375 : 550;
-
 
   return (
     <div
@@ -1515,7 +1557,7 @@ export default function StudioPage() {
               </Card>
             )}
 
-            {/* Action buttons — copy + library */}
+            {/* Action buttons — copy + save */}
             {isComplete && hasPost && (
               <Card variant="raised">
                 <div style={{ padding: 16 }}>
@@ -1544,7 +1586,7 @@ export default function StudioPage() {
                       {copied ? "Copied!" : "Copy Post"}
                     </button>
 
-                    {savedId && (
+                    {savedId ? (
                       <a
                         href={`/library/${savedId}`}
                         style={{
@@ -1553,16 +1595,50 @@ export default function StudioPage() {
                           justifyContent: "center",
                           gap: 8,
                           padding: "12px 0",
-                          background: "var(--bru-purple)",
+                          background: "#00A896",
                           color: "#fff",
                           fontWeight: 700,
                           fontSize: 13,
                           textDecoration: "none",
                         }}
                       >
-                        <ExternalLink size={14} />
-                        View in Library
+                        <CheckCircle size={14} />
+                        Saved — View in Library
                       </a>
+                    ) : (
+                      <button
+                        onClick={() => void handleManualSave()}
+                        disabled={isSaving}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: 8,
+                          padding: "12px 0",
+                          background: isSaving ? "#aaa" : "var(--bru-purple)",
+                          color: "#fff",
+                          border: "none",
+                          fontWeight: 700,
+                          fontSize: 13,
+                          cursor: isSaving ? "not-allowed" : "pointer",
+                          width: "100%",
+                        }}
+                      >
+                        {isSaving ? (
+                          <>
+                            <Loader
+                              size={14}
+                              style={{ animation: "spin 1s linear infinite" }}
+                            />
+                            Saving…
+                          </>
+                        ) : (
+                          <>
+                            <ExternalLink size={14} />
+                            Save to Library
+                          </>
+                        )}
+                      </button>
                     )}
                   </div>
                 </div>
@@ -1582,10 +1658,7 @@ export default function StudioPage() {
                     color: "var(--bru-grey)",
                   }}
                 >
-                  <Zap
-                    size={48}
-                    style={{ marginBottom: 16, opacity: 0.25 }}
-                  />
+                  <Zap size={48} style={{ marginBottom: 16, opacity: 0.25 }} />
                   <p
                     style={{
                       fontWeight: 700,
@@ -1690,7 +1763,9 @@ export default function StudioPage() {
                           gap: 8,
                         }}
                       >
-                        <h3 style={{ fontSize: 15, fontWeight: 700, margin: 0 }}>
+                        <h3
+                          style={{ fontSize: 15, fontWeight: 700, margin: 0 }}
+                        >
                           LinkedIn Preview
                         </h3>
                         <div
@@ -1783,8 +1858,8 @@ export default function StudioPage() {
                             {copied ? "Copied!" : "Copy"}
                           </button>
 
-                          {/* Library link */}
-                          {savedId && (
+                          {/* Save / Library */}
+                          {savedId ? (
                             <a
                               href={`/library/${savedId}`}
                               style={{
@@ -1792,16 +1867,52 @@ export default function StudioPage() {
                                 alignItems: "center",
                                 gap: 6,
                                 padding: "6px 14px",
-                                background: "var(--bru-purple)",
+                                background: "#00A896",
                                 color: "white",
                                 fontWeight: 700,
                                 fontSize: 13,
                                 textDecoration: "none",
                               }}
                             >
-                              <ExternalLink size={14} />
-                              View in Library
+                              <CheckCircle size={14} />
+                              Saved
                             </a>
+                          ) : (
+                            <button
+                              onClick={() => void handleManualSave()}
+                              disabled={isSaving}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 6,
+                                padding: "6px 14px",
+                                background: isSaving
+                                  ? "#aaa"
+                                  : "var(--bru-purple)",
+                                color: "white",
+                                border: "none",
+                                fontWeight: 700,
+                                fontSize: 13,
+                                cursor: isSaving ? "not-allowed" : "pointer",
+                              }}
+                            >
+                              {isSaving ? (
+                                <>
+                                  <Loader
+                                    size={13}
+                                    style={{
+                                      animation: "spin 1s linear infinite",
+                                    }}
+                                  />
+                                  Saving…
+                                </>
+                              ) : (
+                                <>
+                                  <ExternalLink size={13} />
+                                  Save to Library
+                                </>
+                              )}
+                            </button>
                           )}
                         </div>
                       </div>
@@ -2200,7 +2311,11 @@ export default function StudioPage() {
                 {/* Details tab */}
                 {resultTab === "details" && (
                   <div
-                    style={{ display: "flex", flexDirection: "column", gap: 12 }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 12,
+                    }}
                   >
                     {/* Strategy summary */}
                     {strategy && (
@@ -2237,7 +2352,10 @@ export default function StudioPage() {
                           ]
                             .filter((f) => f.value)
                             .map((field) => (
-                              <div key={field.label} style={{ marginBottom: 10 }}>
+                              <div
+                                key={field.label}
+                                style={{ marginBottom: 10 }}
+                              >
                                 <p
                                   style={{
                                     margin: "0 0 2px",
@@ -2289,7 +2407,7 @@ export default function StudioPage() {
                   </div>
                 )}
 
-                {/* Auto-saved notice */}
+                {/* Saved notice */}
                 {savedId && (
                   <div
                     style={{
@@ -2311,7 +2429,7 @@ export default function StudioPage() {
                         color: "#00A896",
                       }}
                     >
-                      Auto-saved to Library
+                      Saved to Library
                     </span>
                     <a
                       href={`/library/${savedId}`}

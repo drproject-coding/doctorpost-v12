@@ -1158,15 +1158,8 @@ export default function StudioPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: trimmedTopic,
-          format,
           content: writerRaw,
-          score: parsedScore?.total ?? 0,
-          score_breakdown: JSON.stringify(parsedScore?.breakdown ?? []),
-          score_suggestions: JSON.stringify(parsedScore?.suggestions ?? []),
-          formatted_output: JSON.stringify(formattedParsed),
-          strategy_output: JSON.stringify(strategyParsed),
           status: "draft",
-          is_favorite: false,
         }),
       });
 
@@ -1199,15 +1192,8 @@ export default function StudioPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: topic.trim(),
-          format,
           content: text,
-          score: score?.total ?? 0,
-          score_breakdown: JSON.stringify(score?.breakdown ?? []),
-          score_suggestions: JSON.stringify(score?.suggestions ?? []),
-          formatted_output: JSON.stringify(formattedParsed),
-          strategy_output: JSON.stringify(strategy ?? {}),
           status: "draft",
-          is_favorite: false,
         }),
       });
       if (saveRes.ok) {

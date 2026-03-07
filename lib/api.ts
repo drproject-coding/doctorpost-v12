@@ -56,9 +56,6 @@ interface NcbPostRow {
   scheduled_at?: string | null;
   pillar?: string | null;
   status?: string | null;
-  factory_score?: number | null;
-  created_at?: string;
-  updated_at?: string;
 }
 
 interface BrandContextForRecommendation {
@@ -149,7 +146,6 @@ function mapPostFromNcb(row: NcbPostRow): ScheduledPost {
     pillar: row.pillar ?? "",
     status: (row.status ?? "draft") as ScheduledPost["status"],
     userId: row.user_id,
-    factoryScore: row.factory_score ?? undefined,
   };
 }
 

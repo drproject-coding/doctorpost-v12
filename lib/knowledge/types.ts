@@ -163,16 +163,17 @@ export interface NcbCampaignRow {
 }
 
 export type CampaignPostStatus =
-  | "pending"
-  | "generating"
-  | "generated"
-  | "reviewed"
-  | "approved";
+  | "waiting_review"
+  | "validated"
+  | "rejected"
+  | "in_progress"
+  | "published";
 
 export interface CampaignPost {
   id: string;
   campaignId: string;
   postId: string;
+  postUuid: string;
   slotDate: string;
   slotOrder: number;
   topicCard: Record<string, unknown>;
@@ -183,6 +184,7 @@ export interface NcbCampaignPostRow {
   id: string;
   campaign_id: string;
   post_id: string;
+  post_uuid: string;
   slot_date: string;
   slot_order: number;
   topic_card: string;
@@ -379,6 +381,7 @@ export function mapCampaignPostFromNcb(row: NcbCampaignPostRow): CampaignPost {
     id: row.id,
     campaignId: row.campaign_id,
     postId: row.post_id,
+    postUuid: row.post_uuid || "",
     slotDate: row.slot_date,
     slotOrder: row.slot_order,
     topicCard,

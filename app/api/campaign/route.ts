@@ -59,7 +59,7 @@ async function saveCampaignPost(
   campaignId: string,
   slot: CampaignSlot,
   cookieHeader: string,
-): Promise<void> {
+): Promise<{ ncbId: string }> {
   const url = `${CONFIG.dataApiUrl}/create/campaign_posts?instance=${CONFIG.instance}`;
   const res = await fetch(url, {
     method: "POST",
@@ -70,16 +70,20 @@ async function saveCampaignPost(
     },
     body: JSON.stringify({
       campaign_id: campaignId,
-      post_id: "",
       slot_date: slot.slotDate,
       slot_order: slot.slotOrder,
       topic_card: JSON.stringify(slot.topicCard),
-      generation_status: "pending",
+      generation_status: "waiting_review",
     }),
   });
   if (!res.ok) {
-    throw new Error(`Failed to save campaign post: ${res.statusText}`);
+    const body = await res.text().catch(() => "");
+    throw new Error(
+      `Failed to save campaign post: ${res.status} ${res.statusText} — ${body}`,
+    );
   }
+  const data = (await res.json()) as { id: string };
+  return { ncbId: String(data.id) };
 }
 
 export async function POST(req: NextRequest) {
@@ -207,8 +211,12 @@ export async function POST(req: NextRequest) {
         // Save slots to DB
         send("status", { phase: "saving", slotsCount: plan.slots.length });
         for (const slot of plan.slots) {
-          await saveCampaignPost(campaignId, slot, cookie);
-          send("slot", slot);
+          const { ncbId } = await saveCampaignPost(campaignId, slot, cookie);
+          send("slot", {
+            ...slot,
+            id: ncbId,
+            generationStatus: "waiting_review",
+          });
         }
 
         send("complete", {

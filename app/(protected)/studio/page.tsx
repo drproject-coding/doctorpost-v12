@@ -11,6 +11,8 @@ import {
   AlertCircle,
   Loader,
   ExternalLink,
+  Smartphone,
+  Monitor,
 } from "lucide-react";
 import Link from "next/link";
 import { parseSSEStream } from "@/lib/sse";
@@ -880,6 +882,13 @@ export default function StudioPage() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [visualPrompt, setVisualPrompt] = useState<string | null>(null);
   const [visualError, setVisualError] = useState<string | null>(null);
+  const [resultTab, setResultTab] = useState<"preview" | "score" | "details">(
+    "preview",
+  );
+  const [previewMode, setPreviewMode] = useState<"mobile" | "desktop">(
+    "mobile",
+  );
+  const [showMore, setShowMore] = useState(false);
 
   const appendContent = useCallback((stageName: string, text: string) => {
     setStageContent((prev) => ({
@@ -909,6 +918,8 @@ export default function StudioPage() {
     setImageUrl(null);
     setVisualPrompt(null);
     setVisualError(null);
+    setResultTab("preview");
+    setShowMore(false);
 
     // ── Stage 1: Strategist ──────────────────────────────────────────────────
     setStage("strategist");
@@ -1180,6 +1191,8 @@ export default function StudioPage() {
     setImageUrl(null);
     setVisualPrompt(null);
     setVisualError(null);
+    setResultTab("preview");
+    setShowMore(false);
   };
 
   const isRunning = [
@@ -1192,6 +1205,30 @@ export default function StudioPage() {
   const isComplete = stage === "complete";
   const hasPost = !!(stageContent.writer ?? postText);
 
+  // Derive final post text — formatter output when available, fall back to writer
+  const formatterContent = stageContent.formatter ?? "";
+  let finalPostText = stageContent.writer ?? postText;
+  if (formatterContent) {
+    try {
+      const d = JSON.parse(stripJsonFences(formatterContent)) as {
+        post_text?: string;
+        post?: string;
+      };
+      finalPostText = d.post_text ?? d.post ?? finalPostText;
+    } catch {
+      // formatter still streaming or not JSON
+    }
+  }
+
+  // LinkedIn preview fold
+  const FOLD_CHARS = { mobile: 210, desktop: 280 };
+  const foldAt = FOLD_CHARS[previewMode];
+  const isTruncated = finalPostText.length > foldAt;
+  const displayContent =
+    isTruncated && !showMore ? finalPostText.slice(0, foldAt) : finalPostText;
+  const containerWidth = previewMode === "mobile" ? 375 : 550;
+
+
   return (
     <div
       style={{
@@ -1200,7 +1237,7 @@ export default function StudioPage() {
         padding: 24,
       }}
     >
-      <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ marginBottom: 24 }}>
           <h1
@@ -1218,18 +1255,19 @@ export default function StudioPage() {
           </p>
         </div>
 
-        {/* 3-column layout */}
+        {/* 2-column layout */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "280px 1fr 280px",
+            gridTemplateColumns: "320px 1fr",
             gap: 20,
             alignItems: "start",
           }}
         >
-          {/* ── LEFT: Inputs ────────────────────────────────────────────────── */}
-          <div>
-            <Card variant="raised">
+          {/* ── LEFT: Sticky sidebar ─────────────────────────────────────── */}
+          <div style={{ position: "sticky", top: 24 }}>
+            {/* Post Brief */}
+            <Card variant="raised" style={{ marginBottom: 12 }}>
               <div style={{ padding: 20 }}>
                 <h2
                   style={{
@@ -1264,12 +1302,12 @@ export default function StudioPage() {
                     placeholder="What do you want to write about? Be specific — include your angle, context, or key insight."
                     style={{
                       width: "100%",
-                      minHeight: 120,
+                      minHeight: 100,
                       padding: "10px 12px",
                       border: "2px solid var(--bru-black)",
                       background: "var(--bru-cream)",
                       fontFamily: "inherit",
-                      fontSize: 14,
+                      fontSize: 13,
                       lineHeight: 1.5,
                       resize: "vertical",
                       outline: "none",
@@ -1295,7 +1333,7 @@ export default function StudioPage() {
                     Format
                   </label>
                   <div
-                    style={{ display: "flex", flexDirection: "column", gap: 8 }}
+                    style={{ display: "flex", flexDirection: "column", gap: 6 }}
                   >
                     {(["simple", "visual", "carousel"] as PostFormat[]).map(
                       (f) => (
@@ -1306,7 +1344,7 @@ export default function StudioPage() {
                             alignItems: "flex-start",
                             gap: 10,
                             cursor: isRunning ? "default" : "pointer",
-                            padding: "10px 12px",
+                            padding: "8px 10px",
                             border: `2px solid ${format === f ? "var(--bru-purple)" : "#ccc"}`,
                             background:
                               format === f
@@ -1330,7 +1368,7 @@ export default function StudioPage() {
                             <div
                               style={{
                                 fontWeight: 700,
-                                fontSize: 13,
+                                fontSize: 12,
                                 textTransform: "capitalize",
                               }}
                             >
@@ -1339,11 +1377,9 @@ export default function StudioPage() {
                             <div
                               style={{ fontSize: 11, color: "var(--bru-grey)" }}
                             >
-                              {f === "simple" &&
-                                "Single text post, max 3000 chars"}
-                              {f === "visual" && "Post + visual design brief"}
-                              {f === "carousel" &&
-                                "Multi-slide LinkedIn carousel"}
+                              {f === "simple" && "Single text post"}
+                              {f === "visual" && "Post + visual brief"}
+                              {f === "carousel" && "Multi-slide carousel"}
                             </div>
                           </div>
                         </label>
@@ -1352,13 +1388,13 @@ export default function StudioPage() {
                   </div>
                 </div>
 
-                {/* Generate */}
+                {/* Generate button */}
                 <button
                   onClick={() => void runPipeline()}
                   disabled={isRunning || topic.trim().length < 10}
                   style={{
                     width: "100%",
-                    padding: "13px 0",
+                    padding: "12px 0",
                     background:
                       isRunning || topic.trim().length < 10
                         ? "#aaa"
@@ -1419,190 +1455,24 @@ export default function StudioPage() {
                 )}
               </div>
             </Card>
-          </div>
 
-          {/* ── CENTER: Pipeline stages ──────────────────────────────────────── */}
-          <div>
-            {stage === "idle" ? (
-              <Card variant="flat">
-                <div
-                  style={{
-                    padding: 64,
-                    textAlign: "center",
-                    color: "var(--bru-grey)",
-                  }}
-                >
-                  <Zap size={48} style={{ marginBottom: 16, opacity: 0.25 }} />
-                  <p
-                    style={{
-                      fontWeight: 700,
-                      fontSize: 16,
-                      margin: "0 0 8px",
-                      color: "var(--bru-black)",
-                    }}
-                  >
-                    Ready to create
-                  </p>
-                  <p style={{ fontSize: 14, margin: 0 }}>
-                    Enter a topic and click Generate to run the 4-agent pipeline
-                  </p>
-                </div>
-              </Card>
-            ) : (
-              <>
-                <PipelineProgress
-                  stage={stage}
-                  completedStages={completedStages}
-                />
-                {STAGE_ORDER.map((stageName) => (
-                  <StageCard
-                    key={stageName}
-                    name={stageName}
-                    currentStage={stage}
-                    content={stageContent[stageName] ?? ""}
-                    isComplete={completedStages.has(stageName)}
-                  />
-                ))}
-
-                {format !== "simple" &&
-                  (stage === "visual" ||
-                    completedStages.has("visual") ||
-                    visualError !== null) && (
-                    <VisualStageCard
-                      currentStage={stage}
-                      imageUrl={imageUrl}
-                      promptUsed={visualPrompt}
-                      isComplete={completedStages.has("visual")}
-                      error={visualError}
-                    />
-                  )}
-
-                {error && (
-                  <Card
-                    variant="raised"
-                    style={{ borderLeft: "4px solid #E99898" }}
-                  >
-                    <div
-                      style={{
-                        padding: 16,
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 10,
-                      }}
-                    >
-                      <AlertCircle
-                        size={16}
-                        color="#E99898"
-                        style={{ marginTop: 2, flexShrink: 0 }}
-                      />
-                      <div>
-                        <p
-                          style={{
-                            fontWeight: 700,
-                            fontSize: 14,
-                            margin: "0 0 4px",
-                            color: "#E99898",
-                          }}
-                        >
-                          Pipeline Error
-                        </p>
-                        <p
-                          style={{
-                            fontSize: 13,
-                            margin: 0,
-                            color: "var(--bru-black)",
-                          }}
-                        >
-                          {error}
-                        </p>
-                        {(error.includes("API key") ||
-                          error.includes("api key")) && (
-                          <Link
-                            href="/settings"
-                            style={{
-                              display: "inline-block",
-                              marginTop: 8,
-                              fontSize: 13,
-                              fontWeight: 700,
-                              color: "var(--bru-purple)",
-                            }}
-                          >
-                            Go to Settings →
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  </Card>
-                )}
-
-                {isComplete && savedId && (
-                  <Card
-                    variant="flat"
-                    style={{ borderLeft: "4px solid #00A896" }}
-                  >
-                    <div
-                      style={{
-                        padding: 12,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 10,
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      <CheckCircle size={15} color="#00A896" />
-                      <span
-                        style={{
-                          fontSize: 13,
-                          fontWeight: 700,
-                          color: "#00A896",
-                        }}
-                      >
-                        Saved to Library
-                      </span>
-                      <Link
-                        href={`/library/${savedId}`}
-                        style={{
-                          fontSize: 13,
-                          fontWeight: 700,
-                          color: "var(--bru-purple)",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 4,
-                        }}
-                      >
-                        View post <ExternalLink size={12} />
-                      </Link>
-                    </div>
-                  </Card>
-                )}
-              </>
+            {/* Pipeline progress — compact, only when not idle */}
+            {stage !== "idle" && (
+              <PipelineProgress
+                stage={stage}
+                completedStages={completedStages}
+              />
             )}
-          </div>
 
-          {/* ── RIGHT: Score + Actions ───────────────────────────────────────── */}
-          <div>
-            {/* Score card */}
-            {score && (
+            {/* Score summary — only when complete */}
+            {isComplete && score && (
               <Card variant="raised" style={{ marginBottom: 12 }}>
-                <div style={{ padding: 20 }}>
-                  <h3
-                    style={{
-                      fontWeight: 800,
-                      fontSize: 12,
-                      textTransform: "uppercase",
-                      letterSpacing: 0.5,
-                      margin: "0 0 16px",
-                    }}
-                  >
-                    Score
-                  </h3>
-
+                <div style={{ padding: 16 }}>
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
                       gap: 14,
-                      marginBottom: 16,
                     }}
                   >
                     <ScoreCircle score={score.total} />
@@ -1641,119 +1511,14 @@ export default function StudioPage() {
                       </p>
                     </div>
                   </div>
-
-                  {/* Breakdown bars */}
-                  <div
-                    style={{ display: "flex", flexDirection: "column", gap: 8 }}
-                  >
-                    {score.breakdown.map((item, i) => {
-                      const ratio = item.score / item.max;
-                      const barColor =
-                        ratio >= 0.75
-                          ? "#00A896"
-                          : ratio >= 0.6
-                            ? "#FF6C01"
-                            : "#E99898";
-                      return (
-                        <div key={i}>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              marginBottom: 3,
-                            }}
-                          >
-                            <span style={{ fontSize: 11, fontWeight: 700 }}>
-                              {item.criterion}
-                            </span>
-                            <span
-                              style={{
-                                fontSize: 11,
-                                fontWeight: 700,
-                                color: barColor,
-                              }}
-                            >
-                              {item.score}/{item.max}
-                            </span>
-                          </div>
-                          <div
-                            style={{
-                              height: 4,
-                              background: "#eee",
-                              position: "relative",
-                            }}
-                          >
-                            <div
-                              style={{
-                                height: "100%",
-                                width: `${Math.min(100, ratio * 100)}%`,
-                                background: barColor,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* Suggestions */}
-                  {score.suggestions.length > 0 && (
-                    <div style={{ marginTop: 14 }}>
-                      <p
-                        style={{
-                          margin: "0 0 8px",
-                          fontSize: 11,
-                          fontWeight: 800,
-                          textTransform: "uppercase",
-                          letterSpacing: 0.5,
-                          color: "#FF6C01",
-                        }}
-                      >
-                        Suggestions
-                      </p>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 6,
-                        }}
-                      >
-                        {score.suggestions.map((s, i) => (
-                          <p
-                            key={i}
-                            style={{
-                              margin: 0,
-                              fontSize: 12,
-                              color: "var(--bru-black)",
-                              paddingLeft: 10,
-                              borderLeft: "2px solid #FF6C01",
-                            }}
-                          >
-                            {s}
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               </Card>
             )}
 
-            {/* Actions */}
-            {hasPost && (
-              <Card variant="raised" style={{ marginBottom: 12 }}>
+            {/* Action buttons — copy + library */}
+            {isComplete && hasPost && (
+              <Card variant="raised">
                 <div style={{ padding: 16 }}>
-                  <h3
-                    style={{
-                      fontWeight: 800,
-                      fontSize: 12,
-                      textTransform: "uppercase",
-                      letterSpacing: 0.5,
-                      margin: "0 0 12px",
-                    }}
-                  >
-                    Actions
-                  </h3>
                   <div
                     style={{ display: "flex", flexDirection: "column", gap: 8 }}
                   >
@@ -1764,7 +1529,7 @@ export default function StudioPage() {
                         alignItems: "center",
                         justifyContent: "center",
                         gap: 8,
-                        padding: "10px 0",
+                        padding: "12px 0",
                         border: "2px solid var(--bru-black)",
                         background: copied ? "#00A896" : "var(--bru-cream)",
                         color: copied ? "#fff" : "var(--bru-black)",
@@ -1780,14 +1545,14 @@ export default function StudioPage() {
                     </button>
 
                     {savedId && (
-                      <Link
+                      <a
                         href={`/library/${savedId}`}
                         style={{
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           gap: 8,
-                          padding: "10px 0",
+                          padding: "12px 0",
                           background: "var(--bru-purple)",
                           color: "#fff",
                           fontWeight: 700,
@@ -1797,73 +1562,832 @@ export default function StudioPage() {
                       >
                         <ExternalLink size={14} />
                         View in Library
-                      </Link>
+                      </a>
                     )}
                   </div>
                 </div>
               </Card>
             )}
+          </div>
 
-            {/* Strategy summary */}
-            {strategy && (
-              <Card variant="raised">
-                <div style={{ padding: 16 }}>
-                  <h3
+          {/* ── RIGHT: Main content area ──────────────────────────────────── */}
+          <div>
+            {/* Idle state */}
+            {stage === "idle" && (
+              <Card variant="flat">
+                <div
+                  style={{
+                    padding: 64,
+                    textAlign: "center",
+                    color: "var(--bru-grey)",
+                  }}
+                >
+                  <Zap
+                    size={48}
+                    style={{ marginBottom: 16, opacity: 0.25 }}
+                  />
+                  <p
                     style={{
-                      fontWeight: 800,
-                      fontSize: 12,
-                      textTransform: "uppercase",
-                      letterSpacing: 0.5,
-                      margin: "0 0 12px",
+                      fontWeight: 700,
+                      fontSize: 16,
+                      margin: "0 0 8px",
+                      color: "var(--bru-black)",
                     }}
                   >
-                    Strategy
-                  </h3>
-                  {[
-                    { label: "Angle", value: strategy.angle },
-                    {
-                      label: "Pillar",
-                      value: strategy.pillar_name ?? strategy.pillar,
-                    },
-                    { label: "ICP", value: strategy.icp_label },
-                    {
-                      label: "Hook",
-                      value: strategy.hook_type?.replace(/_/g, " "),
-                    },
-                    {
-                      label: "Word Target",
-                      value: strategy.word_count_target
-                        ? `~${strategy.word_count_target} words`
-                        : undefined,
-                    },
-                  ]
-                    .filter((f) => f.value)
-                    .map((field) => (
-                      <div key={field.label} style={{ marginBottom: 10 }}>
-                        <p
+                    Ready to create
+                  </p>
+                  <p style={{ fontSize: 14, margin: 0 }}>
+                    Enter a topic and click Generate to run the 4-agent pipeline
+                  </p>
+                </div>
+              </Card>
+            )}
+
+            {/* Running state — show completed stages + active stage only */}
+            {isRunning && (
+              <>
+                {STAGE_ORDER.map((stageName) => {
+                  const isActive = stage === stageName;
+                  const isDone = completedStages.has(stageName);
+                  if (!isActive && !isDone) return null;
+                  return (
+                    <StageCard
+                      key={stageName}
+                      name={stageName}
+                      currentStage={stage}
+                      content={stageContent[stageName] ?? ""}
+                      isComplete={isDone}
+                    />
+                  );
+                })}
+                {format !== "simple" &&
+                  (stage === "visual" ||
+                    completedStages.has("visual") ||
+                    visualError !== null) && (
+                    <VisualStageCard
+                      currentStage={stage}
+                      imageUrl={imageUrl}
+                      promptUsed={visualPrompt}
+                      isComplete={completedStages.has("visual")}
+                      error={visualError}
+                    />
+                  )}
+              </>
+            )}
+
+            {/* Complete state — tabbed results */}
+            {isComplete && (
+              <div>
+                {/* Tab bar */}
+                <div
+                  style={{
+                    display: "flex",
+                    borderBottom: "2px solid #e0e0e0",
+                    marginBottom: 16,
+                  }}
+                >
+                  {(["preview", "score", "details"] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setResultTab(tab)}
+                      style={{
+                        padding: "10px 20px",
+                        fontWeight: 700,
+                        fontSize: 13,
+                        border: "none",
+                        borderBottom:
+                          resultTab === tab
+                            ? "2px solid var(--bru-purple)"
+                            : "2px solid transparent",
+                        marginBottom: -2,
+                        background: "transparent",
+                        color:
+                          resultTab === tab
+                            ? "var(--bru-purple)"
+                            : "var(--bru-grey)",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {tab === "preview"
+                        ? "LinkedIn Preview"
+                        : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Preview tab */}
+                {resultTab === "preview" && (
+                  <Card variant="raised">
+                    <div style={{ padding: 20 }}>
+                      {/* Header */}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: 16,
+                          flexWrap: "wrap",
+                          gap: 8,
+                        }}
+                      >
+                        <h3 style={{ fontSize: 15, fontWeight: 700, margin: 0 }}>
+                          LinkedIn Preview
+                        </h3>
+                        <div
                           style={{
-                            margin: "0 0 2px",
-                            fontSize: 10,
-                            fontWeight: 800,
-                            textTransform: "uppercase",
-                            letterSpacing: 0.5,
-                            color: "var(--bru-grey)",
+                            display: "flex",
+                            gap: 8,
+                            alignItems: "center",
                           }}
                         >
-                          {field.label}
-                        </p>
-                        <p
+                          {/* Mobile / Desktop toggle */}
+                          <div
+                            style={{
+                              display: "flex",
+                              border: "1px solid #e0e0e0",
+                              overflow: "hidden",
+                            }}
+                          >
+                            <button
+                              onClick={() => {
+                                setPreviewMode("mobile");
+                                setShowMore(false);
+                              }}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 4,
+                                padding: "5px 10px",
+                                fontSize: 12,
+                                background:
+                                  previewMode === "mobile"
+                                    ? "var(--bru-purple)"
+                                    : "transparent",
+                                color:
+                                  previewMode === "mobile"
+                                    ? "white"
+                                    : "var(--bru-grey)",
+                                border: "none",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <Smartphone size={12} />
+                              Mobile
+                            </button>
+                            <button
+                              onClick={() => {
+                                setPreviewMode("desktop");
+                                setShowMore(false);
+                              }}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 4,
+                                padding: "5px 10px",
+                                fontSize: 12,
+                                background:
+                                  previewMode === "desktop"
+                                    ? "var(--bru-purple)"
+                                    : "transparent",
+                                color:
+                                  previewMode === "desktop"
+                                    ? "white"
+                                    : "var(--bru-grey)",
+                                border: "none",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <Monitor size={12} />
+                              Desktop
+                            </button>
+                          </div>
+
+                          {/* Copy */}
+                          <button
+                            onClick={() => void handleCopy()}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
+                              padding: "6px 14px",
+                              border: "2px solid var(--bru-black)",
+                              background: copied ? "#00A896" : "transparent",
+                              color: copied ? "white" : "var(--bru-black)",
+                              fontWeight: 700,
+                              fontSize: 13,
+                              cursor: "pointer",
+                              transition: "background 0.2s",
+                            }}
+                          >
+                            {copied ? <Check size={14} /> : <Copy size={14} />}
+                            {copied ? "Copied!" : "Copy"}
+                          </button>
+
+                          {/* Library link */}
+                          {savedId && (
+                            <a
+                              href={`/library/${savedId}`}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 6,
+                                padding: "6px 14px",
+                                background: "var(--bru-purple)",
+                                color: "white",
+                                fontWeight: 700,
+                                fontSize: 13,
+                                textDecoration: "none",
+                              }}
+                            >
+                              <ExternalLink size={14} />
+                              View in Library
+                            </a>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* LinkedIn card */}
+                      <div
+                        style={{
+                          maxWidth: containerWidth,
+                          margin: "0 auto",
+                          background: "white",
+                          borderRadius: 8,
+                          boxShadow:
+                            "0 0 0 1px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.1)",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {/* Post header */}
+                        <div
                           style={{
-                            margin: 0,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            padding: "12px 16px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: 48,
+                              height: 48,
+                              borderRadius: "50%",
+                              background: "var(--bru-purple)",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: "white",
+                              fontWeight: 700,
+                              fontSize: 18,
+                              flexShrink: 0,
+                            }}
+                          >
+                            Y
+                          </div>
+                          <div>
+                            <div
+                              style={{
+                                fontWeight: 600,
+                                fontSize: 14,
+                                color: "#191919",
+                              }}
+                            >
+                              Your Name
+                            </div>
+                            <div
+                              style={{
+                                fontSize: 12,
+                                color: "#666666",
+                                lineHeight: 1.3,
+                              }}
+                            >
+                              Your headline here
+                            </div>
+                            <div style={{ fontSize: 12, color: "#666666" }}>
+                              Just now
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Post content */}
+                        <div style={{ padding: "0 16px 12px" }}>
+                          <pre
+                            style={{
+                              fontSize: 14,
+                              lineHeight: 1.5,
+                              whiteSpace: "pre-wrap",
+                              wordWrap: "break-word",
+                              fontFamily:
+                                '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                              margin: 0,
+                              color: "#191919",
+                            }}
+                          >
+                            {displayContent || "(No content)"}
+                            {isTruncated && !showMore && "..."}
+                          </pre>
+                          {isTruncated && !showMore && (
+                            <button
+                              onClick={() => setShowMore(true)}
+                              style={{
+                                background: "none",
+                                border: "none",
+                                color: "#666666",
+                                cursor: "pointer",
+                                fontSize: 14,
+                                fontWeight: 600,
+                                padding: "4px 0",
+                                display: "block",
+                              }}
+                            >
+                              ...see more
+                            </button>
+                          )}
+                          {showMore && isTruncated && (
+                            <button
+                              onClick={() => setShowMore(false)}
+                              style={{
+                                background: "none",
+                                border: "none",
+                                color: "#666666",
+                                cursor: "pointer",
+                                fontSize: 14,
+                                fontWeight: 600,
+                                padding: "4px 0",
+                                display: "block",
+                              }}
+                            >
+                              show less
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Engagement bar */}
+                        <div
+                          style={{
+                            padding: "8px 16px",
+                            borderTop: "1px solid #e0e0e0",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            fontSize: 12,
+                            color: "#666666",
+                          }}
+                        >
+                          <span>0 reactions</span>
+                          <span>0 comments</span>
+                        </div>
+
+                        {/* Action bar */}
+                        <div
+                          style={{
+                            padding: "4px 16px 8px",
+                            borderTop: "1px solid #e0e0e0",
+                            display: "flex",
+                            justifyContent: "space-around",
                             fontSize: 13,
                             fontWeight: 600,
-                            color: "var(--bru-black)",
+                            color: "#666666",
                           }}
                         >
-                          {field.value}
-                        </p>
+                          <span>Like</span>
+                          <span>Comment</span>
+                          <span>Repost</span>
+                          <span>Send</span>
+                        </div>
                       </div>
+
+                      {/* Fold indicator */}
+                      <div
+                        style={{
+                          marginTop: 12,
+                          textAlign: "center",
+                          fontSize: 12,
+                          color: "var(--bru-grey)",
+                        }}
+                      >
+                        Hook is{" "}
+                        <strong
+                          style={{
+                            color:
+                              finalPostText.length <= foldAt
+                                ? "var(--bru-success-dark, #2d7a3a)"
+                                : "var(--bru-error-dark, #c0392b)",
+                          }}
+                        >
+                          {finalPostText.length <= foldAt ? "above" : "below"}
+                        </strong>{" "}
+                        the fold on {previewMode}
+                      </div>
+                      <div
+                        style={{
+                          marginTop: 4,
+                          textAlign: "center",
+                          fontSize: 11,
+                          color: "var(--bru-grey)",
+                        }}
+                      >
+                        {finalPostText.length} characters
+                      </div>
+                    </div>
+                  </Card>
+                )}
+
+                {/* Score tab */}
+                {resultTab === "score" && score && (
+                  <Card variant="raised">
+                    <div style={{ padding: 20 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 14,
+                          marginBottom: 20,
+                        }}
+                      >
+                        <ScoreCircle score={score.total} />
+                        <div>
+                          <div
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 4,
+                              padding: "2px 10px",
+                              background: score.pass ? "#00A896" : "#FF6C01",
+                              color: "#fff",
+                              fontWeight: 800,
+                              fontSize: 11,
+                              marginBottom: 6,
+                            }}
+                          >
+                            {score.pass ? (
+                              <>
+                                <CheckCircle size={11} /> PASS
+                              </>
+                            ) : (
+                              <>
+                                <AlertCircle size={11} /> NEEDS WORK
+                              </>
+                            )}
+                          </div>
+                          <p
+                            style={{
+                              margin: 0,
+                              fontSize: 11,
+                              color: "var(--bru-grey)",
+                            }}
+                          >
+                            Threshold: 75/100
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Breakdown */}
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 12,
+                          marginBottom: 20,
+                        }}
+                      >
+                        {score.breakdown.map((item, i) => {
+                          const ratio = item.score / item.max;
+                          const barColor =
+                            ratio >= 0.75
+                              ? "#00A896"
+                              : ratio >= 0.6
+                                ? "#FF6C01"
+                                : "#E99898";
+                          return (
+                            <div key={i}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  marginBottom: 4,
+                                }}
+                              >
+                                <span style={{ fontSize: 13, fontWeight: 700 }}>
+                                  {item.criterion}
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: 13,
+                                    fontWeight: 700,
+                                    color: barColor,
+                                  }}
+                                >
+                                  {item.score}/{item.max}
+                                </span>
+                              </div>
+                              <div
+                                style={{
+                                  height: 5,
+                                  background: "#eee",
+                                  borderRadius: 3,
+                                  overflow: "hidden",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    width: `${Math.min(100, ratio * 100)}%`,
+                                    height: "100%",
+                                    background: barColor,
+                                    transition: "width 0.6s ease",
+                                  }}
+                                />
+                              </div>
+                              {item.feedback && (
+                                <p
+                                  style={{
+                                    margin: "4px 0 0",
+                                    fontSize: 12,
+                                    color: "var(--bru-grey)",
+                                    lineHeight: 1.4,
+                                  }}
+                                >
+                                  {item.feedback}
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Strengths */}
+                      {score.strengths.length > 0 && (
+                        <div style={{ marginBottom: 16 }}>
+                          <p
+                            style={{
+                              margin: "0 0 8px",
+                              fontSize: 11,
+                              fontWeight: 800,
+                              textTransform: "uppercase",
+                              letterSpacing: 0.5,
+                              color: "#00A896",
+                            }}
+                          >
+                            Strengths
+                          </p>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: 6,
+                            }}
+                          >
+                            {score.strengths.map((s, i) => (
+                              <p
+                                key={i}
+                                style={{
+                                  margin: 0,
+                                  fontSize: 13,
+                                  color: "var(--bru-black)",
+                                  paddingLeft: 10,
+                                  borderLeft: "2px solid #00A896",
+                                }}
+                              >
+                                {s}
+                              </p>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Suggestions */}
+                      {score.suggestions.length > 0 && (
+                        <div>
+                          <p
+                            style={{
+                              margin: "0 0 8px",
+                              fontSize: 11,
+                              fontWeight: 800,
+                              textTransform: "uppercase",
+                              letterSpacing: 0.5,
+                              color: "#FF6C01",
+                            }}
+                          >
+                            Suggestions
+                          </p>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: 6,
+                            }}
+                          >
+                            {score.suggestions.map((s, i) => (
+                              <p
+                                key={i}
+                                style={{
+                                  margin: 0,
+                                  fontSize: 13,
+                                  color: "var(--bru-black)",
+                                  paddingLeft: 10,
+                                  borderLeft: "2px solid #FF6C01",
+                                }}
+                              >
+                                {s}
+                              </p>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                )}
+
+                {/* Details tab */}
+                {resultTab === "details" && (
+                  <div
+                    style={{ display: "flex", flexDirection: "column", gap: 12 }}
+                  >
+                    {/* Strategy summary */}
+                    {strategy && (
+                      <Card variant="raised">
+                        <div style={{ padding: 16 }}>
+                          <h3
+                            style={{
+                              fontWeight: 800,
+                              fontSize: 12,
+                              textTransform: "uppercase",
+                              letterSpacing: 0.5,
+                              margin: "0 0 12px",
+                            }}
+                          >
+                            Strategy
+                          </h3>
+                          {[
+                            { label: "Angle", value: strategy.angle },
+                            {
+                              label: "Pillar",
+                              value: strategy.pillar_name ?? strategy.pillar,
+                            },
+                            { label: "ICP", value: strategy.icp_label },
+                            {
+                              label: "Hook",
+                              value: strategy.hook_type?.replace(/_/g, " "),
+                            },
+                            {
+                              label: "Word Target",
+                              value: strategy.word_count_target
+                                ? `~${strategy.word_count_target} words`
+                                : undefined,
+                            },
+                          ]
+                            .filter((f) => f.value)
+                            .map((field) => (
+                              <div key={field.label} style={{ marginBottom: 10 }}>
+                                <p
+                                  style={{
+                                    margin: "0 0 2px",
+                                    fontSize: 10,
+                                    fontWeight: 800,
+                                    textTransform: "uppercase",
+                                    letterSpacing: 0.5,
+                                    color: "var(--bru-grey)",
+                                  }}
+                                >
+                                  {field.label}
+                                </p>
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontSize: 13,
+                                    fontWeight: 600,
+                                    color: "var(--bru-black)",
+                                  }}
+                                >
+                                  {field.value}
+                                </p>
+                              </div>
+                            ))}
+                        </div>
+                      </Card>
+                    )}
+
+                    {/* Pipeline stage outputs */}
+                    {STAGE_ORDER.map((stageName) => (
+                      <StageCard
+                        key={stageName}
+                        name={stageName}
+                        currentStage="complete"
+                        content={stageContent[stageName] ?? ""}
+                        isComplete={completedStages.has(stageName)}
+                      />
                     ))}
+
+                    {format !== "simple" && completedStages.has("visual") && (
+                      <VisualStageCard
+                        currentStage="complete"
+                        imageUrl={imageUrl}
+                        promptUsed={visualPrompt}
+                        isComplete={true}
+                        error={visualError}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {/* Auto-saved notice */}
+                {savedId && (
+                  <div
+                    style={{
+                      marginTop: 12,
+                      padding: "10px 14px",
+                      background: "rgba(0,168,150,0.06)",
+                      border: "1px solid rgba(0,168,150,0.25)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <CheckCircle size={14} color="#00A896" />
+                    <span
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: "#00A896",
+                      }}
+                    >
+                      Auto-saved to Library
+                    </span>
+                    <a
+                      href={`/library/${savedId}`}
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: "var(--bru-purple)",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 4,
+                        textDecoration: "none",
+                      }}
+                    >
+                      View post <ExternalLink size={12} />
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Error */}
+            {error && (
+              <Card
+                variant="raised"
+                style={{ marginTop: 12, borderLeft: "4px solid #E99898" }}
+              >
+                <div
+                  style={{
+                    padding: 16,
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 10,
+                  }}
+                >
+                  <AlertCircle
+                    size={16}
+                    color="#E99898"
+                    style={{ marginTop: 2, flexShrink: 0 }}
+                  />
+                  <div>
+                    <p
+                      style={{
+                        fontWeight: 700,
+                        fontSize: 14,
+                        margin: "0 0 4px",
+                        color: "#E99898",
+                      }}
+                    >
+                      Pipeline Error
+                    </p>
+                    <p
+                      style={{
+                        fontSize: 13,
+                        margin: 0,
+                        color: "var(--bru-black)",
+                      }}
+                    >
+                      {error}
+                    </p>
+                    {(error.includes("API key") ||
+                      error.includes("api key")) && (
+                      <a
+                        href="/settings"
+                        style={{
+                          display: "inline-block",
+                          marginTop: 8,
+                          fontSize: 13,
+                          fontWeight: 700,
+                          color: "var(--bru-purple)",
+                          textDecoration: "none",
+                        }}
+                      >
+                        Go to Settings →
+                      </a>
+                    )}
+                  </div>
                 </div>
               </Card>
             )}

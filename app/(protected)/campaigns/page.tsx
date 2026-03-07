@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import { Button } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
+import { useRouter } from "next/navigation";
 import {
   CampaignSetup,
   type CampaignConfig,
@@ -26,6 +27,7 @@ type CampaignPhase =
 
 export default function CampaignsPage() {
   const { user } = useAuth();
+  const router = useRouter();
   const [view, setView] = useState<PageView>("list");
   const [phase, setPhase] = useState<CampaignPhase>("idle");
   const [slots, setSlots] = useState<CalendarSlot[]>([]);
@@ -40,6 +42,7 @@ export default function CampaignsPage() {
     null,
   );
   const abortRef = useRef<AbortController | null>(null);
+  const campaignIdRef = useRef<string | undefined>();
 
   React.useEffect(() => {
     return () => {
@@ -182,7 +185,11 @@ export default function CampaignsPage() {
               case "status":
                 if (parsed.phase) setPhase(parsed.phase as CampaignPhase);
                 if (parsed.slotsCount) setTotalSlots(parsed.slotsCount);
-                if (parsed.campaignId) setCampaignId(String(parsed.campaignId));
+                if (parsed.campaignId) {
+                  const cid = String(parsed.campaignId);
+                  setCampaignId(cid);
+                  campaignIdRef.current = cid;
+                }
                 break;
               case "slot":
                 setSlots((prev) => [
@@ -202,6 +209,10 @@ export default function CampaignsPage() {
                 setPhase("complete");
                 if (parsed.pillarDistribution)
                   setPillarDistribution(parsed.pillarDistribution);
+                // Redirect to persistent campaign URL so DB is source of truth
+                if (campaignIdRef.current) {
+                  router.push(`/campaigns/${campaignIdRef.current}`);
+                }
                 break;
               case "error":
                 setPhase("error");

@@ -193,6 +193,36 @@ export async function POST(req: NextRequest) {
         const campaignId = await createCampaignInDb(body, user.id, cookie);
         send("status", { phase: "planning", campaignId });
 
+        // Fetch all existing topic headlines for this user to avoid repeats
+        let usedHeadlines: string[] = [];
+        try {
+          const existingRes = await fetch(
+            `${CONFIG.dataApiUrl}/read/campaign_posts?instance=${CONFIG.instance}&user_id=${user.id}&_limit=500`,
+            { headers: { Cookie: cookie } },
+          );
+          if (existingRes.ok) {
+            const existingData = (await existingRes.json()) as {
+              rows?: Record<string, string>[];
+              data?: Record<string, string>[];
+            };
+            const rows = existingData?.rows || existingData?.data || [];
+            usedHeadlines = rows
+              .map((r) => {
+                try {
+                  return (
+                    (JSON.parse(r.topic_card) as { headline?: string })
+                      .headline || ""
+                  );
+                } catch {
+                  return "";
+                }
+              })
+              .filter(Boolean);
+          }
+        } catch {
+          // Non-fatal — planning continues without dedup
+        }
+
         // Plan topics
         const plan = await planCampaign({
           apiKey,
@@ -205,6 +235,7 @@ export async function POST(req: NextRequest) {
           goals: body.goals,
           pillarWeights: body.pillarWeights,
           startDate: body.startDate,
+          usedHeadlines,
           signal: req.signal,
         } satisfies CampaignPlanInput);
 

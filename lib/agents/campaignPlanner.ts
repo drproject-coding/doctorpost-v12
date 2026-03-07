@@ -33,6 +33,8 @@ export interface CampaignPlanInput {
   pillarWeights: Record<string, number>;
   startDate: string; // ISO date
   recentPosts?: { pillar: string; date: string }[];
+  /** Headlines from past campaigns — AI won't repeat them */
+  usedHeadlines?: string[];
   signal?: AbortSignal;
 }
 
@@ -69,6 +71,10 @@ export async function planCampaign(
           pillar: s.topicCard.pillar,
           date: s.slotDate,
         })),
+      ],
+      usedHeadlines: [
+        ...(input.usedHeadlines || []),
+        ...slots.map((s) => s.topicCard.headline),
       ],
       signal: input.signal,
     });

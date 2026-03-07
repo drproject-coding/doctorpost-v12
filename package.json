@@ -23,6 +23,8 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
     "@bruddle/react": "github:drproject-coding/bruddle-react",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.0",
     "lucide-react": "^0.263.1",
     "next": "^16.1.6",
     "react": "^18.2.0",

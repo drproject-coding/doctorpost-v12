@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { Card } from "@bruddle/react";
 import {
   Zap,
@@ -13,6 +13,10 @@ import {
   ExternalLink,
   Smartphone,
   Monitor,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  FileImage,
 } from "lucide-react";
 import Link from "next/link";
 import { parseSSEStream } from "@/lib/sse";
@@ -890,6 +894,9 @@ export default function StudioPage() {
   );
   const [showMore, setShowMore] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isExporting, setIsExporting] = useState(false);
+  const slideRef = useRef<HTMLDivElement>(null);
 
   const appendContent = useCallback((stageName: string, text: string) => {
     setStageContent((prev) => ({
@@ -1214,6 +1221,58 @@ export default function StudioPage() {
     }
   };
 
+  const handleDownloadSlideImage = async () => {
+    if (!slideRef.current) return;
+    setIsExporting(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(slideRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null,
+      });
+      const link = document.createElement("a");
+      link.download = `carousel-slide-${currentSlide + 1}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleDownloadAllPdf = async () => {
+    if (carouselSlides.length === 0) return;
+    setIsExporting(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const { jsPDF } = await import("jspdf");
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: [600, 600],
+      });
+
+      for (let i = 0; i < carouselSlides.length; i++) {
+        setCurrentSlide(i);
+        // wait for DOM update
+        await new Promise((r) => setTimeout(r, 120));
+        if (!slideRef.current) continue;
+        const canvas = await html2canvas(slideRef.current, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: null,
+        });
+        const imgData = canvas.toDataURL("image/png");
+        if (i > 0) pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, 0, 600, 600);
+      }
+
+      pdf.save(`carousel-${topic.trim().slice(0, 30) || "post"}.pdf`);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   const handleCopy = async () => {
     const text = stageContent.writer ?? postText;
     if (!text) return;
@@ -1262,6 +1321,25 @@ export default function StudioPage() {
       // formatter still streaming or not JSON
     }
   }
+
+  // Parse carousel slides from formatter output
+  interface CarouselSlide {
+    number?: number;
+    title?: string;
+    body?: string;
+  }
+  let carouselSlides: CarouselSlide[] = [];
+  if (format === "carousel" && formatterContent) {
+    try {
+      const d = JSON.parse(stripJsonFences(formatterContent)) as {
+        slides?: CarouselSlide[];
+      };
+      carouselSlides = d.slides ?? [];
+    } catch {
+      // not ready yet
+    }
+  }
+  const totalSlides = carouselSlides.length;
 
   // LinkedIn preview fold
   const FOLD_CHARS = { mobile: 210, desktop: 280 };
@@ -1748,155 +1826,139 @@ export default function StudioPage() {
                   ))}
                 </div>
 
-                {/* Preview tab */}
-                {resultTab === "preview" && (
-                  <Card variant="raised">
-                    <div style={{ padding: 20 }}>
-                      {/* Header */}
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          marginBottom: 16,
-                          flexWrap: "wrap",
-                          gap: 8,
-                        }}
-                      >
-                        <h3
-                          style={{ fontSize: 15, fontWeight: 700, margin: 0 }}
-                        >
-                          LinkedIn Preview
-                        </h3>
+                {/* Preview tab — carousel viewport */}
+                {resultTab === "preview" &&
+                  format === "carousel" &&
+                  totalSlides > 0 && (
+                    <Card variant="raised">
+                      <div style={{ padding: 20 }}>
+                        {/* Carousel header */}
                         <div
                           style={{
                             display: "flex",
-                            gap: 8,
+                            justifyContent: "space-between",
                             alignItems: "center",
+                            marginBottom: 20,
+                            flexWrap: "wrap",
+                            gap: 8,
                           }}
                         >
-                          {/* Mobile / Desktop toggle */}
+                          <h3
+                            style={{ fontSize: 15, fontWeight: 700, margin: 0 }}
+                          >
+                            Carousel Preview{" "}
+                            <span
+                              style={{
+                                fontSize: 12,
+                                fontWeight: 400,
+                                color: "var(--bru-grey)",
+                              }}
+                            >
+                              {currentSlide + 1} / {totalSlides}
+                            </span>
+                          </h3>
                           <div
                             style={{
                               display: "flex",
-                              border: "1px solid #e0e0e0",
-                              overflow: "hidden",
-                            }}
-                          >
-                            <button
-                              onClick={() => {
-                                setPreviewMode("mobile");
-                                setShowMore(false);
-                              }}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 4,
-                                padding: "5px 10px",
-                                fontSize: 12,
-                                background:
-                                  previewMode === "mobile"
-                                    ? "var(--bru-purple)"
-                                    : "transparent",
-                                color:
-                                  previewMode === "mobile"
-                                    ? "white"
-                                    : "var(--bru-grey)",
-                                border: "none",
-                                cursor: "pointer",
-                              }}
-                            >
-                              <Smartphone size={12} />
-                              Mobile
-                            </button>
-                            <button
-                              onClick={() => {
-                                setPreviewMode("desktop");
-                                setShowMore(false);
-                              }}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 4,
-                                padding: "5px 10px",
-                                fontSize: 12,
-                                background:
-                                  previewMode === "desktop"
-                                    ? "var(--bru-purple)"
-                                    : "transparent",
-                                color:
-                                  previewMode === "desktop"
-                                    ? "white"
-                                    : "var(--bru-grey)",
-                                border: "none",
-                                cursor: "pointer",
-                              }}
-                            >
-                              <Monitor size={12} />
-                              Desktop
-                            </button>
-                          </div>
-
-                          {/* Copy */}
-                          <button
-                            onClick={() => void handleCopy()}
-                            style={{
-                              display: "flex",
+                              gap: 8,
                               alignItems: "center",
-                              gap: 6,
-                              padding: "6px 14px",
-                              border: "2px solid var(--bru-black)",
-                              background: copied ? "#00A896" : "transparent",
-                              color: copied ? "white" : "var(--bru-black)",
-                              fontWeight: 700,
-                              fontSize: 13,
-                              cursor: "pointer",
-                              transition: "background 0.2s",
                             }}
                           >
-                            {copied ? <Check size={14} /> : <Copy size={14} />}
-                            {copied ? "Copied!" : "Copy"}
-                          </button>
-
-                          {/* Save / Library */}
-                          {savedId ? (
-                            <a
-                              href={`/library/${savedId}`}
+                            {savedId ? (
+                              <a
+                                href={`/library/${savedId}`}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                  padding: "6px 14px",
+                                  background: "#00A896",
+                                  color: "white",
+                                  fontWeight: 700,
+                                  fontSize: 13,
+                                  textDecoration: "none",
+                                }}
+                              >
+                                <CheckCircle size={14} />
+                                Saved
+                              </a>
+                            ) : (
+                              <button
+                                onClick={() => void handleManualSave()}
+                                disabled={isSaving}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                  padding: "6px 14px",
+                                  background: isSaving
+                                    ? "#aaa"
+                                    : "var(--bru-purple)",
+                                  color: "white",
+                                  border: "none",
+                                  fontWeight: 700,
+                                  fontSize: 13,
+                                  cursor: isSaving ? "not-allowed" : "pointer",
+                                }}
+                              >
+                                {isSaving ? (
+                                  <>
+                                    <Loader
+                                      size={13}
+                                      style={{
+                                        animation: "spin 1s linear infinite",
+                                      }}
+                                    />
+                                    Saving…
+                                  </>
+                                ) : (
+                                  <>
+                                    <ExternalLink size={13} />
+                                    Save to Library
+                                  </>
+                                )}
+                              </button>
+                            )}
+                            <button
+                              onClick={() => void handleDownloadSlideImage()}
+                              disabled={isExporting}
+                              title="Download current slide as PNG"
                               style={{
                                 display: "flex",
                                 alignItems: "center",
                                 gap: 6,
                                 padding: "6px 14px",
-                                background: "#00A896",
-                                color: "white",
+                                border: "2px solid var(--bru-black)",
+                                background: "transparent",
+                                color: "var(--bru-black)",
                                 fontWeight: 700,
                                 fontSize: 13,
-                                textDecoration: "none",
+                                cursor: isExporting ? "not-allowed" : "pointer",
                               }}
                             >
-                              <CheckCircle size={14} />
-                              Saved
-                            </a>
-                          ) : (
+                              <FileImage size={13} />
+                              PNG
+                            </button>
                             <button
-                              onClick={() => void handleManualSave()}
-                              disabled={isSaving}
+                              onClick={() => void handleDownloadAllPdf()}
+                              disabled={isExporting}
+                              title="Download all slides as PDF"
                               style={{
                                 display: "flex",
                                 alignItems: "center",
                                 gap: 6,
                                 padding: "6px 14px",
-                                background: isSaving
+                                background: isExporting
                                   ? "#aaa"
-                                  : "var(--bru-purple)",
+                                  : "var(--bru-black)",
                                 color: "white",
                                 border: "none",
                                 fontWeight: 700,
                                 fontSize: 13,
-                                cursor: isSaving ? "not-allowed" : "pointer",
+                                cursor: isExporting ? "not-allowed" : "pointer",
                               }}
                             >
-                              {isSaving ? (
+                              {isExporting ? (
                                 <>
                                   <Loader
                                     size={13}
@@ -1904,204 +1966,632 @@ export default function StudioPage() {
                                       animation: "spin 1s linear infinite",
                                     }}
                                   />
-                                  Saving…
+                                  Exporting…
                                 </>
                               ) : (
                                 <>
-                                  <ExternalLink size={13} />
-                                  Save to Library
+                                  <Download size={13} />
+                                  PDF
                                 </>
                               )}
                             </button>
-                          )}
+                          </div>
                         </div>
-                      </div>
 
-                      {/* LinkedIn card */}
-                      <div
-                        style={{
-                          maxWidth: containerWidth,
-                          margin: "0 auto",
-                          background: "white",
-                          borderRadius: 8,
-                          boxShadow:
-                            "0 0 0 1px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.1)",
-                          overflow: "hidden",
-                        }}
-                      >
-                        {/* Post header */}
+                        {/* Slide viewport */}
                         <div
+                          ref={slideRef}
                           style={{
+                            width: 520,
+                            height: 520,
+                            margin: "0 auto",
+                            background:
+                              "linear-gradient(135deg, #631DED 0%, #9B59F5 100%)",
                             display: "flex",
-                            alignItems: "center",
-                            gap: 8,
-                            padding: "12px 16px",
+                            flexDirection: "column",
+                            justifyContent: "space-between",
+                            padding: 48,
+                            boxSizing: "border-box",
+                            position: "relative",
+                            overflow: "hidden",
                           }}
                         >
+                          {/* Slide number badge */}
                           <div
                             style={{
-                              width: 48,
-                              height: 48,
+                              position: "absolute",
+                              top: 20,
+                              right: 20,
+                              width: 36,
+                              height: 36,
                               borderRadius: "50%",
-                              background: "var(--bru-purple)",
+                              background: "rgba(255,255,255,0.2)",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
+                              fontSize: 13,
+                              fontWeight: 800,
                               color: "white",
-                              fontWeight: 700,
-                              fontSize: 18,
-                              flexShrink: 0,
                             }}
                           >
-                            Y
+                            {currentSlide + 1}
                           </div>
-                          <div>
+
+                          {/* Content */}
+                          <div
+                            style={{
+                              flex: 1,
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "center",
+                            }}
+                          >
+                            {carouselSlides[currentSlide]?.title && (
+                              <h2
+                                style={{
+                                  margin: "0 0 20px",
+                                  fontSize:
+                                    (carouselSlides[currentSlide].title
+                                      ?.length ?? 0) > 40
+                                      ? 26
+                                      : 32,
+                                  fontWeight: 800,
+                                  color: "white",
+                                  lineHeight: 1.2,
+                                  letterSpacing: -0.5,
+                                }}
+                              >
+                                {carouselSlides[currentSlide].title}
+                              </h2>
+                            )}
+                            {carouselSlides[currentSlide]?.body && (
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontSize: 16,
+                                  color: "rgba(255,255,255,0.85)",
+                                  lineHeight: 1.6,
+                                }}
+                              >
+                                {carouselSlides[currentSlide].body}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Bottom bar */}
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              paddingTop: 20,
+                              borderTop: "1px solid rgba(255,255,255,0.2)",
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontSize: 11,
+                                color: "rgba(255,255,255,0.6)",
+                                fontWeight: 700,
+                                textTransform: "uppercase",
+                                letterSpacing: 1,
+                              }}
+                            >
+                              {topic.trim().slice(0, 28) || "LinkedIn Carousel"}
+                            </span>
+                            <div style={{ display: "flex", gap: 4 }}>
+                              {carouselSlides.map((_, i) => (
+                                <div
+                                  key={i}
+                                  style={{
+                                    width: i === currentSlide ? 20 : 6,
+                                    height: 6,
+                                    borderRadius: 3,
+                                    background:
+                                      i === currentSlide
+                                        ? "white"
+                                        : "rgba(255,255,255,0.3)",
+                                    transition: "width 0.3s",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Navigation */}
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: 16,
+                            marginTop: 16,
+                          }}
+                        >
+                          <button
+                            onClick={() =>
+                              setCurrentSlide((s) => Math.max(0, s - 1))
+                            }
+                            disabled={currentSlide === 0}
+                            style={{
+                              width: 40,
+                              height: 40,
+                              border: "2px solid var(--bru-black)",
+                              background: "var(--bru-cream)",
+                              cursor:
+                                currentSlide === 0 ? "not-allowed" : "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              opacity: currentSlide === 0 ? 0.35 : 1,
+                            }}
+                          >
+                            <ChevronLeft size={20} />
+                          </button>
+                          <span
+                            style={{
+                              fontSize: 13,
+                              fontWeight: 700,
+                              color: "var(--bru-grey)",
+                              minWidth: 60,
+                              textAlign: "center",
+                            }}
+                          >
+                            {currentSlide + 1} / {totalSlides}
+                          </span>
+                          <button
+                            onClick={() =>
+                              setCurrentSlide((s) =>
+                                Math.min(totalSlides - 1, s + 1),
+                              )
+                            }
+                            disabled={currentSlide === totalSlides - 1}
+                            style={{
+                              width: 40,
+                              height: 40,
+                              border: "2px solid var(--bru-black)",
+                              background: "var(--bru-cream)",
+                              cursor:
+                                currentSlide === totalSlides - 1
+                                  ? "not-allowed"
+                                  : "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              opacity:
+                                currentSlide === totalSlides - 1 ? 0.35 : 1,
+                            }}
+                          >
+                            <ChevronRight size={20} />
+                          </button>
+                        </div>
+
+                        {/* Thumbnail strip */}
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: 8,
+                            marginTop: 16,
+                            overflowX: "auto",
+                            paddingBottom: 4,
+                          }}
+                        >
+                          {carouselSlides.map((slide, i) => (
+                            <button
+                              key={i}
+                              onClick={() => setCurrentSlide(i)}
+                              style={{
+                                flexShrink: 0,
+                                width: 72,
+                                height: 72,
+                                background:
+                                  "linear-gradient(135deg, #631DED 0%, #9B59F5 100%)",
+                                border:
+                                  i === currentSlide
+                                    ? "3px solid var(--bru-black)"
+                                    : "3px solid transparent",
+                                cursor: "pointer",
+                                padding: 8,
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "flex-end",
+                                overflow: "hidden",
+                                position: "relative",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  position: "absolute",
+                                  top: 4,
+                                  left: 5,
+                                  fontSize: 9,
+                                  fontWeight: 800,
+                                  color: "rgba(255,255,255,0.7)",
+                                }}
+                              >
+                                {i + 1}
+                              </span>
+                              <span
+                                style={{
+                                  fontSize: 9,
+                                  fontWeight: 700,
+                                  color: "white",
+                                  lineHeight: 1.2,
+                                  overflow: "hidden",
+                                  display: "-webkit-box",
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: "vertical" as const,
+                                }}
+                              >
+                                {slide.title}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </Card>
+                  )}
+
+                {/* Preview tab — LinkedIn post */}
+                {resultTab === "preview" &&
+                  !(format === "carousel" && totalSlides > 0) && (
+                    <Card variant="raised">
+                      <div style={{ padding: 20 }}>
+                        {/* Header */}
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: 16,
+                            flexWrap: "wrap",
+                            gap: 8,
+                          }}
+                        >
+                          <h3
+                            style={{ fontSize: 15, fontWeight: 700, margin: 0 }}
+                          >
+                            LinkedIn Preview
+                          </h3>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: 8,
+                              alignItems: "center",
+                            }}
+                          >
+                            {/* Mobile / Desktop toggle */}
                             <div
                               style={{
-                                fontWeight: 600,
+                                display: "flex",
+                                border: "1px solid #e0e0e0",
+                                overflow: "hidden",
+                              }}
+                            >
+                              <button
+                                onClick={() => {
+                                  setPreviewMode("mobile");
+                                  setShowMore(false);
+                                }}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 4,
+                                  padding: "5px 10px",
+                                  fontSize: 12,
+                                  background:
+                                    previewMode === "mobile"
+                                      ? "var(--bru-purple)"
+                                      : "transparent",
+                                  color:
+                                    previewMode === "mobile"
+                                      ? "white"
+                                      : "var(--bru-grey)",
+                                  border: "none",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <Smartphone size={12} />
+                                Mobile
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setPreviewMode("desktop");
+                                  setShowMore(false);
+                                }}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 4,
+                                  padding: "5px 10px",
+                                  fontSize: 12,
+                                  background:
+                                    previewMode === "desktop"
+                                      ? "var(--bru-purple)"
+                                      : "transparent",
+                                  color:
+                                    previewMode === "desktop"
+                                      ? "white"
+                                      : "var(--bru-grey)",
+                                  border: "none",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <Monitor size={12} />
+                                Desktop
+                              </button>
+                            </div>
+
+                            {/* Copy */}
+                            <button
+                              onClick={() => void handleCopy()}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 6,
+                                padding: "6px 14px",
+                                border: "2px solid var(--bru-black)",
+                                background: copied ? "#00A896" : "transparent",
+                                color: copied ? "white" : "var(--bru-black)",
+                                fontWeight: 700,
+                                fontSize: 13,
+                                cursor: "pointer",
+                                transition: "background 0.2s",
+                              }}
+                            >
+                              {copied ? (
+                                <Check size={14} />
+                              ) : (
+                                <Copy size={14} />
+                              )}
+                              {copied ? "Copied!" : "Copy"}
+                            </button>
+
+                            {/* Save / Library */}
+                            {savedId ? (
+                              <a
+                                href={`/library/${savedId}`}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                  padding: "6px 14px",
+                                  background: "#00A896",
+                                  color: "white",
+                                  fontWeight: 700,
+                                  fontSize: 13,
+                                  textDecoration: "none",
+                                }}
+                              >
+                                <CheckCircle size={14} />
+                                Saved
+                              </a>
+                            ) : (
+                              <button
+                                onClick={() => void handleManualSave()}
+                                disabled={isSaving}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                  padding: "6px 14px",
+                                  background: isSaving
+                                    ? "#aaa"
+                                    : "var(--bru-purple)",
+                                  color: "white",
+                                  border: "none",
+                                  fontWeight: 700,
+                                  fontSize: 13,
+                                  cursor: isSaving ? "not-allowed" : "pointer",
+                                }}
+                              >
+                                {isSaving ? (
+                                  <>
+                                    <Loader
+                                      size={13}
+                                      style={{
+                                        animation: "spin 1s linear infinite",
+                                      }}
+                                    />
+                                    Saving…
+                                  </>
+                                ) : (
+                                  <>
+                                    <ExternalLink size={13} />
+                                    Save to Library
+                                  </>
+                                )}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* LinkedIn card */}
+                        <div
+                          style={{
+                            maxWidth: containerWidth,
+                            margin: "0 auto",
+                            background: "white",
+                            borderRadius: 8,
+                            boxShadow:
+                              "0 0 0 1px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.1)",
+                            overflow: "hidden",
+                          }}
+                        >
+                          {/* Post header */}
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 8,
+                              padding: "12px 16px",
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: 48,
+                                height: 48,
+                                borderRadius: "50%",
+                                background: "var(--bru-purple)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "white",
+                                fontWeight: 700,
+                                fontSize: 18,
+                                flexShrink: 0,
+                              }}
+                            >
+                              Y
+                            </div>
+                            <div>
+                              <div
+                                style={{
+                                  fontWeight: 600,
+                                  fontSize: 14,
+                                  color: "#191919",
+                                }}
+                              >
+                                Your Name
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: 12,
+                                  color: "#666666",
+                                  lineHeight: 1.3,
+                                }}
+                              >
+                                Your headline here
+                              </div>
+                              <div style={{ fontSize: 12, color: "#666666" }}>
+                                Just now
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Post content */}
+                          <div style={{ padding: "0 16px 12px" }}>
+                            <pre
+                              style={{
                                 fontSize: 14,
+                                lineHeight: 1.5,
+                                whiteSpace: "pre-wrap",
+                                wordWrap: "break-word",
+                                fontFamily:
+                                  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                                margin: 0,
                                 color: "#191919",
                               }}
                             >
-                              Your Name
-                            </div>
-                            <div
-                              style={{
-                                fontSize: 12,
-                                color: "#666666",
-                                lineHeight: 1.3,
-                              }}
-                            >
-                              Your headline here
-                            </div>
-                            <div style={{ fontSize: 12, color: "#666666" }}>
-                              Just now
-                            </div>
+                              {displayContent || "(No content)"}
+                              {isTruncated && !showMore && "..."}
+                            </pre>
+                            {isTruncated && !showMore && (
+                              <button
+                                onClick={() => setShowMore(true)}
+                                style={{
+                                  background: "none",
+                                  border: "none",
+                                  color: "#666666",
+                                  cursor: "pointer",
+                                  fontSize: 14,
+                                  fontWeight: 600,
+                                  padding: "4px 0",
+                                  display: "block",
+                                }}
+                              >
+                                ...see more
+                              </button>
+                            )}
+                            {showMore && isTruncated && (
+                              <button
+                                onClick={() => setShowMore(false)}
+                                style={{
+                                  background: "none",
+                                  border: "none",
+                                  color: "#666666",
+                                  cursor: "pointer",
+                                  fontSize: 14,
+                                  fontWeight: 600,
+                                  padding: "4px 0",
+                                  display: "block",
+                                }}
+                              >
+                                show less
+                              </button>
+                            )}
+                          </div>
+
+                          {/* Engagement bar */}
+                          <div
+                            style={{
+                              padding: "8px 16px",
+                              borderTop: "1px solid #e0e0e0",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              fontSize: 12,
+                              color: "#666666",
+                            }}
+                          >
+                            <span>0 reactions</span>
+                            <span>0 comments</span>
+                          </div>
+
+                          {/* Action bar */}
+                          <div
+                            style={{
+                              padding: "4px 16px 8px",
+                              borderTop: "1px solid #e0e0e0",
+                              display: "flex",
+                              justifyContent: "space-around",
+                              fontSize: 13,
+                              fontWeight: 600,
+                              color: "#666666",
+                            }}
+                          >
+                            <span>Like</span>
+                            <span>Comment</span>
+                            <span>Repost</span>
+                            <span>Send</span>
                           </div>
                         </div>
 
-                        {/* Post content */}
-                        <div style={{ padding: "0 16px 12px" }}>
-                          <pre
+                        {/* Fold indicator */}
+                        <div
+                          style={{
+                            marginTop: 12,
+                            textAlign: "center",
+                            fontSize: 12,
+                            color: "var(--bru-grey)",
+                          }}
+                        >
+                          Hook is{" "}
+                          <strong
                             style={{
-                              fontSize: 14,
-                              lineHeight: 1.5,
-                              whiteSpace: "pre-wrap",
-                              wordWrap: "break-word",
-                              fontFamily:
-                                '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                              margin: 0,
-                              color: "#191919",
+                              color:
+                                finalPostText.length <= foldAt
+                                  ? "var(--bru-success-dark, #2d7a3a)"
+                                  : "var(--bru-error-dark, #c0392b)",
                             }}
                           >
-                            {displayContent || "(No content)"}
-                            {isTruncated && !showMore && "..."}
-                          </pre>
-                          {isTruncated && !showMore && (
-                            <button
-                              onClick={() => setShowMore(true)}
-                              style={{
-                                background: "none",
-                                border: "none",
-                                color: "#666666",
-                                cursor: "pointer",
-                                fontSize: 14,
-                                fontWeight: 600,
-                                padding: "4px 0",
-                                display: "block",
-                              }}
-                            >
-                              ...see more
-                            </button>
-                          )}
-                          {showMore && isTruncated && (
-                            <button
-                              onClick={() => setShowMore(false)}
-                              style={{
-                                background: "none",
-                                border: "none",
-                                color: "#666666",
-                                cursor: "pointer",
-                                fontSize: 14,
-                                fontWeight: 600,
-                                padding: "4px 0",
-                                display: "block",
-                              }}
-                            >
-                              show less
-                            </button>
-                          )}
+                            {finalPostText.length <= foldAt ? "above" : "below"}
+                          </strong>{" "}
+                          the fold on {previewMode}
                         </div>
-
-                        {/* Engagement bar */}
                         <div
                           style={{
-                            padding: "8px 16px",
-                            borderTop: "1px solid #e0e0e0",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            fontSize: 12,
-                            color: "#666666",
+                            marginTop: 4,
+                            textAlign: "center",
+                            fontSize: 11,
+                            color: "var(--bru-grey)",
                           }}
                         >
-                          <span>0 reactions</span>
-                          <span>0 comments</span>
-                        </div>
-
-                        {/* Action bar */}
-                        <div
-                          style={{
-                            padding: "4px 16px 8px",
-                            borderTop: "1px solid #e0e0e0",
-                            display: "flex",
-                            justifyContent: "space-around",
-                            fontSize: 13,
-                            fontWeight: 600,
-                            color: "#666666",
-                          }}
-                        >
-                          <span>Like</span>
-                          <span>Comment</span>
-                          <span>Repost</span>
-                          <span>Send</span>
+                          {finalPostText.length} characters
                         </div>
                       </div>
-
-                      {/* Fold indicator */}
-                      <div
-                        style={{
-                          marginTop: 12,
-                          textAlign: "center",
-                          fontSize: 12,
-                          color: "var(--bru-grey)",
-                        }}
-                      >
-                        Hook is{" "}
-                        <strong
-                          style={{
-                            color:
-                              finalPostText.length <= foldAt
-                                ? "var(--bru-success-dark, #2d7a3a)"
-                                : "var(--bru-error-dark, #c0392b)",
-                          }}
-                        >
-                          {finalPostText.length <= foldAt ? "above" : "below"}
-                        </strong>{" "}
-                        the fold on {previewMode}
-                      </div>
-                      <div
-                        style={{
-                          marginTop: 4,
-                          textAlign: "center",
-                          fontSize: 11,
-                          color: "var(--bru-grey)",
-                        }}
-                      >
-                        {finalPostText.length} characters
-                      </div>
-                    </div>
-                  </Card>
-                )}
+                    </Card>
+                  )}
 
                 {/* Score tab */}
                 {resultTab === "score" && score && (

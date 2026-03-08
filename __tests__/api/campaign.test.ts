@@ -39,6 +39,10 @@ jest.mock("@/lib/agents/campaignPlanner", () => ({
   planCampaign: jest.fn(),
 }));
 
+jest.mock("@/lib/agents/getUsedTopics", () => ({
+  getUsedTopics: jest.fn().mockResolvedValue([]),
+}));
+
 // ---------------------------------------------------------------------------
 // Imports after mocks
 // ---------------------------------------------------------------------------

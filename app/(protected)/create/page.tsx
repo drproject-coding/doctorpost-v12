@@ -251,8 +251,27 @@ export default function CreatePage() {
     setTriggerPostGeneration(0);
     setGeneratedContent("");
     try {
-      const results = await findSubtopics(topic, 5, aiSettings ?? undefined);
-      setSubtopics(results);
+      const [results, usedRes] = await Promise.all([
+        findSubtopics(topic, 8, aiSettings ?? undefined),
+        fetch("/api/used-topics").then((r) =>
+          r.ok
+            ? (r.json() as Promise<{ headlines: string[] }>)
+            : { headlines: [] as string[] },
+        ),
+      ]);
+      const usedHeadlines = usedRes.headlines ?? [];
+      if (usedHeadlines.length > 0) {
+        const { filterNewProposals } = await import("@/lib/agents/topicDedup");
+        const withHeadline = results.map((r) => ({ ...r, headline: r.text }));
+        const filtered = filterNewProposals(withHeadline, usedHeadlines);
+        setSubtopics(
+          filtered
+            .slice(0, 5)
+            .map(({ headline: _h, ...r }) => r as SubtopicSuggestion),
+        );
+      } else {
+        setSubtopics(results.slice(0, 5));
+      }
     } catch (error) {
       console.error("Failed to find subtopics:", error);
     } finally {

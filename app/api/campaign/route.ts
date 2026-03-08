@@ -7,7 +7,8 @@
  */
 
 import { NextRequest } from "next/server";
-import { getSessionUser, CONFIG, fetchUserProfile } from "@/lib/ncb-utils";
+import { getSessionUser, fetchUserProfile, CONFIG } from "@/lib/ncb-utils";
+import { getUsedTopics } from "@/lib/agents/getUsedTopics";
 import { fetchKnowledgeForUser } from "@/lib/knowledge/fetch";
 import {
   planCampaign,
@@ -193,35 +194,8 @@ export async function POST(req: NextRequest) {
         const campaignId = await createCampaignInDb(body, user.id, cookie);
         send("status", { phase: "planning", campaignId });
 
-        // Fetch all existing topic headlines for this user to avoid repeats
-        let usedHeadlines: string[] = [];
-        try {
-          const existingRes = await fetch(
-            `${CONFIG.dataApiUrl}/read/campaign_posts?instance=${CONFIG.instance}&user_id=${user.id}&_limit=500`,
-            { headers: { Cookie: cookie } },
-          );
-          if (existingRes.ok) {
-            const existingData = (await existingRes.json()) as {
-              rows?: Record<string, string>[];
-              data?: Record<string, string>[];
-            };
-            const rows = existingData?.rows || existingData?.data || [];
-            usedHeadlines = rows
-              .map((r) => {
-                try {
-                  return (
-                    (JSON.parse(r.topic_card) as { headline?: string })
-                      .headline || ""
-                  );
-                } catch {
-                  return "";
-                }
-              })
-              .filter(Boolean);
-          }
-        } catch {
-          // Non-fatal — planning continues without dedup
-        }
+        // Fetch used topics across all features (campaigns + library posts)
+        const usedHeadlines = await getUsedTopics(user.id, cookie);
 
         // Plan topics
         const plan = await planCampaign({

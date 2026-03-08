@@ -314,16 +314,29 @@ export default function CreatePage() {
     }
   };
 
-  const postGenerationParams: PostGenerationParameters = {
-    topic: selectedSubtopic?.text ?? topic,
-    audience: profile?.audience ?? [],
-    coreTakeaway: coreTakeaway,
-    ctaGoal: ctaGoal,
-    contentPillar: contentPillar,
-    contentAngle: contentAngle,
-    postStructure: postStructure,
-    triggerGeneration: triggerPostGeneration,
-  };
+  const postGenerationParams: PostGenerationParameters = useMemo(
+    () => ({
+      topic: selectedSubtopic?.text ?? topic,
+      audience: profile?.audience ?? [],
+      coreTakeaway: coreTakeaway,
+      ctaGoal: ctaGoal,
+      contentPillar: contentPillar,
+      contentAngle: contentAngle,
+      postStructure: postStructure,
+      triggerGeneration: triggerPostGeneration,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      selectedSubtopic?.text,
+      topic,
+      coreTakeaway,
+      ctaGoal,
+      contentPillar,
+      contentAngle,
+      postStructure,
+      triggerPostGeneration,
+    ],
+  );
 
   if (loading) {
     return (

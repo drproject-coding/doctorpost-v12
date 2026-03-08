@@ -25,10 +25,9 @@ export default function CampaignDetailPage({ params }: Props) {
         fetch(`/api/data/read/campaigns/${id}`, {
           credentials: "include",
         }).then((r) => r.json()),
-        fetch(
-          `/api/data/read/campaign_posts?campaign_id=${id}&_sort=slot_order&_order=asc`,
-          { credentials: "include" },
-        ).then((r) => r.json()),
+        fetch(`/api/data/read/campaign_posts?campaign_id=${id}`, {
+          credentials: "include",
+        }).then((r) => r.json()),
       ])
         .then(([campaignData, postsData]) => {
           const c = campaignData?.data || campaignData;
@@ -54,20 +53,25 @@ export default function CampaignDetailPage({ params }: Props) {
 
             const rows = postsData?.rows || postsData?.data || [];
             setSlots(
-              rows.map((r: Record<string, string>) => ({
-                id: r.id,
-                weekNumber: Math.ceil(Number(r.slot_order) / postsPerWeek),
-                slotOrder: Number(r.slot_order),
-                slotDate: r.slot_date,
-                generationStatus: r.generation_status || "waiting_review",
-                topicCard: (() => {
-                  try {
-                    return JSON.parse(r.topic_card);
-                  } catch {
-                    return { headline: "Untitled", pillar: "General" };
-                  }
-                })(),
-              })),
+              rows
+                .map((r: Record<string, string>) => ({
+                  id: r.id,
+                  weekNumber: Math.ceil(Number(r.slot_order) / postsPerWeek),
+                  slotOrder: Number(r.slot_order),
+                  slotDate: r.slot_date,
+                  generationStatus: r.generation_status || "waiting_review",
+                  topicCard: (() => {
+                    try {
+                      return JSON.parse(r.topic_card);
+                    } catch {
+                      return { headline: "Untitled", pillar: "General" };
+                    }
+                  })(),
+                }))
+                .sort(
+                  (a: { slotOrder: number }, b: { slotOrder: number }) =>
+                    a.slotOrder - b.slotOrder,
+                ),
             );
           }
         })

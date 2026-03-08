@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@bruddle/react";
 import { ScheduledPost, PostStatus, DropdownOption } from "@/lib/types";
-import { X, Save, Loader } from "lucide-react";
+import { X, Save, Loader, Calendar } from "lucide-react";
 
 interface PostEditorModalProps {
   isOpen: boolean;
@@ -68,6 +68,38 @@ const statusOptions: DropdownOption[] = [
   },
 ];
 
+const DATED_STATUSES = new Set([
+  "to-plan",
+  "to-publish",
+  "scheduled",
+  "published",
+]);
+
+/** Convert ISO string to YYYY-MM-DD for <input type="date"> */
+function toDateInputValue(iso: string | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  return d.toISOString().slice(0, 10);
+}
+
+/** Convert YYYY-MM-DD back to ISO midnight UTC */
+function fromDateInputValue(val: string): string {
+  if (!val) return "";
+  return new Date(val + "T00:00:00").toISOString();
+}
+
+function formatDateTime(iso: string | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 const PostEditorModal: React.FC<PostEditorModalProps> = ({
   isOpen,
   onClose,
@@ -77,6 +109,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
   const [editedStatus, setEditedStatus] = useState<PostStatus>("draft");
+  const [editedDate, setEditedDate] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
@@ -86,12 +119,17 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
       setEditedTitle(post.title);
       setEditedContent(post.content);
       setEditedStatus(post.status);
+      setEditedDate(toDateInputValue(post.scheduledAt));
       setSaveError(null);
       setSaveSuccess(null);
     }
   }, [isOpen, post]);
 
   if (!isOpen || !post) return null;
+
+  const showDatePicker = DATED_STATUSES.has(editedStatus);
+  const dateLabel =
+    editedStatus === "published" ? "Published Date" : "Planned Date";
 
   const handleSave = async () => {
     if (!post) return;
@@ -105,6 +143,10 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
       title: editedTitle,
       content: editedContent,
       status: editedStatus,
+      scheduledAt:
+        showDatePicker && editedDate
+          ? fromDateInputValue(editedDate)
+          : post.scheduledAt,
     };
 
     try {
@@ -112,7 +154,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
       setSaveSuccess("Post saved successfully!");
       setTimeout(() => {
         setSaveSuccess(null);
-        onClose(); // Close modal on successful save
+        onClose();
       }, 1500);
     } catch (error) {
       console.error("Failed to save post:", error);
@@ -144,6 +186,29 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
             </div>
           )}
 
+          {/* Read-only metadata */}
+          {(post.createdAt ?? post.updatedAt) && (
+            <div
+              style={{
+                display: "flex",
+                gap: 16,
+                fontSize: 11,
+                color: "#888",
+                marginBottom: 16,
+                padding: "6px 10px",
+                background: "#f8f8f8",
+                border: "1px solid #e0e0e0",
+              }}
+            >
+              {post.createdAt && (
+                <span>Created {formatDateTime(post.createdAt)}</span>
+              )}
+              {post.updatedAt && post.updatedAt !== post.createdAt && (
+                <span>Updated {formatDateTime(post.updatedAt)}</span>
+              )}
+            </div>
+          )}
+
           <div className="mb-4 flex flex-col gap-2">
             <label htmlFor="edit-title" className="bru-field__label block">
               Title
@@ -171,7 +236,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
             ></textarea>
           </div>
 
-          <div className="mb-6 flex flex-col gap-2">
+          <div className="mb-4 flex flex-col gap-2">
             <label htmlFor="edit-status" className="bru-field__label block">
               Status
             </label>
@@ -189,6 +254,27 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
               ))}
             </select>
           </div>
+
+          {showDatePicker && (
+            <div className="mb-4 flex flex-col gap-2">
+              <label
+                htmlFor="edit-date"
+                className="bru-field__label block"
+                style={{ display: "flex", alignItems: "center", gap: 6 }}
+              >
+                <Calendar size={14} />
+                {dateLabel}
+              </label>
+              <input
+                type="date"
+                id="edit-date"
+                className="bru-input w-full"
+                value={editedDate}
+                onChange={(e) => setEditedDate(e.target.value)}
+                disabled={isSaving}
+              />
+            </div>
+          )}
         </div>
 
         <div className="bru-modal__footer">

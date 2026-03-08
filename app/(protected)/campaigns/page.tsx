@@ -65,10 +65,9 @@ export default function CampaignsPage() {
     setView("detail");
     setCampaignId(String(campaign.id));
     // Load campaign posts from DB
-    fetch(
-      `/api/data/read/campaign_posts?campaign_id=${campaign.id}&_sort=slot_order&_order=asc`,
-      { credentials: "include" },
-    )
+    fetch(`/api/data/read/campaign_posts?campaign_id=${campaign.id}`, {
+      credentials: "include",
+    })
       .then((r) => r.json())
       .then((data) => {
         const rows = data?.rows || data?.data || [];
@@ -90,6 +89,7 @@ export default function CampaignsPage() {
             })(),
           }),
         );
+        mapped.sort((a, b) => a.slotOrder - b.slotOrder);
         setSlots(mapped);
         setConfig({
           name: campaign.name,

@@ -6,7 +6,6 @@ import {
   BrandProfile,
   SubtopicSuggestion,
   PostRecommendation,
-  CompatibilityMap,
   PostGenerationParameters,
   PostStatus,
   ScheduledPost,
@@ -15,17 +14,23 @@ import {
 import {
   getBrandProfile,
   findSubtopics,
-  getPostRecommendations,
-  enhancedPostTypes,
-  enhancedHookPatterns,
   enhancedContentPillars,
-  enhancedToneOptions,
   savePostDraft,
   schedulePost,
 } from "@/lib/api";
+import { postStructureOptions, contentAngleOptions } from "@/lib/dropdownData";
 import { getSmartDefaults } from "@/lib/post-creation/smartDefaults";
-import { Search, TrendingUp, ArrowRight, Loader } from "lucide-react";
+import {
+  Search,
+  TrendingUp,
+  ArrowRight,
+  Loader,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import EnhancedDropdown from "@/components/EnhancedDropdown";
+import ContentAngleChips from "@/components/create/ContentAngleChips";
+import PostStructureCards from "@/components/create/PostStructureCards";
 import PostGenerator, { PostGeneratorRef } from "@/components/PostGenerator";
 import SchedulePostModal from "@/components/SchedulePostModal";
 import { useAuth } from "@/lib/auth-context";
@@ -37,10 +42,9 @@ export default function CreatePage() {
   const [activeSubNav, setActiveSubNav] = useState("generate-post");
 
   // Form values
-  const [postType, setPostType] = useState("");
-  const [hookPattern, setHookPattern] = useState("");
+  const [postStructure, setPostStructure] = useState("");
+  const [contentAngle, setContentAngle] = useState("");
   const [contentPillar, setContentPillar] = useState("");
-  const [selectedToneId, setSelectedToneId] = useState("");
 
   // Subtopic feature
   const [topic, setTopic] = useState("");
@@ -53,6 +57,8 @@ export default function CreatePage() {
   const [recommendation, setRecommendation] =
     useState<PostRecommendation | null>(null);
   const [loadingRecommendation, setLoadingRecommendation] = useState(false);
+  const [showRecommendationReasoning, setShowRecommendationReasoning] =
+    useState(false);
 
   // Additional parameters
   const [coreTakeaway, setCoreTakeaway] = useState<string>("");
@@ -77,26 +83,20 @@ export default function CreatePage() {
         const data = await getBrandProfile(user.id);
         setProfile(data);
 
-        // Use smart defaults based on profile
+        // Apply smart defaults
         const defaults = getSmartDefaults(data);
-
-        // Map IDs to values
-        const toneOpt = enhancedToneOptions.find(
-          (o) => o.id === defaults.selectedTone,
-        );
-        const ptOpt = enhancedPostTypes.find(
+        const psOpt = postStructureOptions.find(
           (o) => o.id === defaults.selectedPostStructure,
         );
-        const hpOpt = enhancedHookPatterns.find(
+        const caOpt = contentAngleOptions.find(
           (o) => o.id === defaults.selectedContentAngle,
         );
         const cpOpt = enhancedContentPillars.find(
           (o) => o.id === defaults.selectedPillar,
         );
 
-        if (toneOpt) setSelectedToneId(toneOpt.value);
-        if (ptOpt) setPostType(ptOpt.value);
-        if (hpOpt) setHookPattern(hpOpt.value);
+        if (psOpt) setPostStructure(psOpt.value);
+        if (caOpt) setContentAngle(caOpt.value);
         if (cpOpt) setContentPillar(cpOpt.value);
       } catch (error) {
         console.error("Failed to load profile:", error);
@@ -121,23 +121,12 @@ export default function CreatePage() {
     };
   }, [profile]);
 
-  const brandContext = useMemo(() => {
-    if (!profile) return undefined;
-    return {
-      industry: profile.industry,
-      role: profile.role,
-      audience: profile.audience,
-      tones: profile.tones,
-      contentStrategy: profile.contentStrategy,
-      definition: profile.definition,
-    };
-  }, [profile]);
-
   const handleTopicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTopic(e.target.value);
     setSubtopics([]);
     setSelectedSubtopic(null);
     setRecommendation(null);
+    setShowRecommendationReasoning(false);
     setTriggerPostGeneration(0);
     setGeneratedContent("");
   };
@@ -148,6 +137,7 @@ export default function CreatePage() {
     setSubtopics([]);
     setSelectedSubtopic(null);
     setRecommendation(null);
+    setShowRecommendationReasoning(false);
     setTriggerPostGeneration(0);
     setGeneratedContent("");
     try {
@@ -160,28 +150,36 @@ export default function CreatePage() {
     }
   };
 
-  const handleSelectSubtopic = async (subtopic: SubtopicSuggestion) => {
-    setSelectedSubtopic(subtopic);
-    setTopic(subtopic.text);
-    setTriggerPostGeneration(0);
-    setGeneratedContent("");
+  const fetchRecommendation = async (
+    topicText: string,
+    subtopicText: string,
+  ) => {
     setLoadingRecommendation(true);
     try {
-      const result = await getPostRecommendations(
-        topic,
-        subtopic.text,
-        aiSettings ?? undefined,
-        brandContext,
-      );
+      const res = await fetch("/api/create/recommend-params", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: topicText, subtopic: subtopicText }),
+      });
+      if (!res.ok) return;
+      const result = (await res.json()) as PostRecommendation;
       setRecommendation(result);
-      if (result.postStructure) setPostType(result.postStructure);
-      if (result.contentAngle) setHookPattern(result.contentAngle);
+      if (result.postStructure) setPostStructure(result.postStructure);
+      if (result.contentAngle) setContentAngle(result.contentAngle);
       if (result.contentPillar) setContentPillar(result.contentPillar);
     } catch (error) {
       console.error("Failed to get recommendations:", error);
     } finally {
       setLoadingRecommendation(false);
     }
+  };
+
+  const handleSelectSubtopic = async (subtopic: SubtopicSuggestion) => {
+    setSelectedSubtopic(subtopic);
+    setTriggerPostGeneration(0);
+    setGeneratedContent("");
+    await fetchRecommendation(topic, subtopic.text);
   };
 
   const getSourceBadgeLabel = (source: string) => {
@@ -206,32 +204,15 @@ export default function CreatePage() {
 
     setSaveFeedback(null);
 
-    // If no AI recommendation yet, fetch one now using the topic directly
+    // If no AI recommendation yet, fetch one using the topic directly
     if (!recommendation && aiSettings) {
-      setLoadingRecommendation(true);
-      try {
-        const result = await getPostRecommendations(
-          topic,
-          topic, // use topic as subtopic when no subtopic selected
-          aiSettings,
-          brandContext,
-        );
-        setRecommendation(result);
-        if (result.postStructure) setPostType(result.postStructure);
-        if (result.contentAngle) setHookPattern(result.contentAngle);
-        if (result.contentPillar) setContentPillar(result.contentPillar);
-      } catch (error) {
-        console.error("Failed to get recommendations:", error);
-        // Non-fatal: proceed with current dropdown values
-      } finally {
-        setLoadingRecommendation(false);
-      }
+      await fetchRecommendation(topic, topic);
     }
 
     // Require form completeness before generating
-    if (!postType || !hookPattern || !contentPillar || !selectedToneId) {
+    if (!postStructure || !contentAngle || !contentPillar) {
       setSaveFeedback(
-        "Please fill in all required fields (Post Type, Hook Pattern, Content Pillar, Tone) before generating.",
+        "Please select a Post Structure, Content Angle, and Content Pillar before generating.",
       );
       setTimeout(() => setSaveFeedback(null), 3000);
       return;
@@ -243,7 +224,6 @@ export default function CreatePage() {
 
   const handleContentGenerated = (content: string) => {
     setGeneratedContent(content);
-    // Auto-save to library
     if (content && profile) {
       const newPost: ScheduledPost = {
         id: "",
@@ -252,6 +232,8 @@ export default function CreatePage() {
         content,
         scheduledAt: "",
         pillar: contentPillar,
+        contentAngle,
+        postStructure,
         status: "draft",
       };
       void savePostDraft(newPost).catch(() => {
@@ -276,6 +258,8 @@ export default function CreatePage() {
         content: generatedContent,
         scheduledAt: new Date().toISOString(),
         pillar: contentPillar,
+        contentAngle,
+        postStructure,
         status: "draft",
       };
       await savePostDraft(newPost);
@@ -314,6 +298,8 @@ export default function CreatePage() {
         content: generatedContent,
         scheduledAt: new Date(date).toISOString(),
         pillar: contentPillar,
+        contentAngle,
+        postStructure,
         status: status,
       };
       await schedulePost(newPost);
@@ -334,48 +320,10 @@ export default function CreatePage() {
     coreTakeaway: coreTakeaway,
     ctaGoal: ctaGoal,
     contentPillar: contentPillar,
-    contentAngle: hookPattern,
-    postStructure: postType,
+    contentAngle: contentAngle,
+    postStructure: postStructure,
     triggerGeneration: triggerPostGeneration,
   };
-
-  const getCompatibilityMap = (rec: PostRecommendation | null) => {
-    if (!rec) return {};
-    const map: CompatibilityMap = {};
-
-    // Content angle recommendation
-    if (rec.contentAngle) {
-      map[rec.contentAngle] = {
-        status: "recommended",
-        reason: rec.reasoning.contentAngle,
-      };
-    }
-
-    // Post structure recommendation
-    if (rec.postStructure) {
-      map[rec.postStructure] = {
-        status: "recommended",
-        reason: rec.reasoning.postStructure,
-      };
-    }
-
-    // Content pillar recommendation
-    enhancedContentPillars.forEach((opt) => {
-      if (opt.value === rec.contentPillar) {
-        map[opt.id] = {
-          status: "recommended",
-          reason: rec.reasoning.contentPillar,
-        };
-      }
-    });
-
-    return map;
-  };
-
-  const compatibilityMap = useMemo(
-    () => getCompatibilityMap(recommendation),
-    [recommendation],
-  );
 
   if (loading) {
     return (
@@ -596,96 +544,133 @@ export default function CreatePage() {
                 />
               </div>
 
-              {/* Dropdown grid: 2 columns */}
-              <div className="bru-form-row">
-                <div style={{ position: "relative" }}>
-                  <EnhancedDropdown
-                    label="Post Type"
-                    options={enhancedPostTypes}
-                    value={postType}
-                    onChange={setPostType}
-                    placeholder="Select a post type"
-                    compatibilityMap={compatibilityMap}
-                    loading={loadingRecommendation}
-                  />
-                  {recommendation &&
-                    postType === recommendation.postStructure && (
-                      <span
-                        className="smart-choice-badge"
-                        style={{ marginTop: "var(--bru-space-1)" }}
-                      >
-                        <TrendingUp size={12} /> Smart Choice
-                      </span>
-                    )}
-                </div>
-
-                <div style={{ position: "relative" }}>
-                  <EnhancedDropdown
-                    label="Hook Pattern"
-                    options={enhancedHookPatterns}
-                    value={hookPattern}
-                    onChange={setHookPattern}
-                    placeholder="Select a hook pattern"
-                    compatibilityMap={compatibilityMap}
-                    loading={loadingRecommendation}
-                  />
-                  {recommendation &&
-                    hookPattern === recommendation.contentAngle && (
-                      <span
-                        className="smart-choice-badge"
-                        style={{ marginTop: "var(--bru-space-1)" }}
-                      >
-                        <TrendingUp size={12} /> Smart Choice
-                      </span>
-                    )}
-                </div>
-
-                <div style={{ position: "relative" }}>
-                  <EnhancedDropdown
-                    label="Content Pillar"
-                    options={enhancedContentPillars}
-                    value={contentPillar}
-                    onChange={setContentPillar}
-                    placeholder="Select a content pillar"
-                    compatibilityMap={compatibilityMap}
-                    loading={loadingRecommendation}
-                  />
-                  {recommendation &&
-                    contentPillar === recommendation.contentPillar && (
-                      <span
-                        className="smart-choice-badge"
-                        style={{ marginTop: "var(--bru-space-1)" }}
-                      >
-                        <TrendingUp size={12} /> Smart Choice
-                      </span>
-                    )}
-                </div>
-
-                <div style={{ position: "relative" }}>
-                  <EnhancedDropdown
-                    label="Tone"
-                    options={enhancedToneOptions}
-                    value={selectedToneId}
-                    onChange={setSelectedToneId}
-                    placeholder="Select a tone"
-                    compatibilityMap={compatibilityMap}
-                    loading={loadingRecommendation}
-                  />
-                </div>
+              {/* Post Structure */}
+              <div className="bru-field">
+                <label className="bru-field__label">Post Structure</label>
+                <PostStructureCards
+                  selected={postStructure}
+                  onChange={setPostStructure}
+                />
               </div>
+
+              {/* Content Angle */}
+              <div className="bru-field">
+                <label className="bru-field__label">Content Angle</label>
+                <ContentAngleChips
+                  selected={contentAngle}
+                  suggested={
+                    loadingRecommendation ? null : recommendation?.contentAngle
+                  }
+                  onChange={setContentAngle}
+                />
+              </div>
+
+              {/* Content Pillar */}
+              <EnhancedDropdown
+                label="Content Pillar"
+                options={enhancedContentPillars}
+                value={contentPillar}
+                onChange={setContentPillar}
+                placeholder="Select a content pillar"
+                loading={loadingRecommendation}
+              />
+              {recommendation &&
+                contentPillar === recommendation.contentPillar && (
+                  <span
+                    className="smart-choice-badge"
+                    style={{ marginTop: "calc(var(--bru-space-1) * -1)" }}
+                  >
+                    <TrendingUp size={12} /> Smart Choice
+                  </span>
+                )}
+
+              {/* AI Recommendation reasoning — collapsible */}
+              {recommendation && recommendation.confidence > 0 && (
+                <div
+                  style={{
+                    border: "1px solid rgba(99,29,237,0.2)",
+                    background: "rgba(99,29,237,0.03)",
+                    padding: "var(--bru-space-3)",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setShowRecommendationReasoning((v) => !v)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 0,
+                      fontFamily: "var(--bru-font-primary)",
+                      fontSize: "var(--bru-text-sm)",
+                      fontWeight: 600,
+                      color: "var(--bru-purple)",
+                    }}
+                  >
+                    <span>
+                      <TrendingUp
+                        size={14}
+                        style={{ verticalAlign: "middle", marginRight: 4 }}
+                      />
+                      AI Recommendations (
+                      {Math.round(recommendation.confidence * 100)}% confidence)
+                    </span>
+                    {showRecommendationReasoning ? (
+                      <ChevronUp size={16} />
+                    ) : (
+                      <ChevronDown size={16} />
+                    )}
+                  </button>
+
+                  {showRecommendationReasoning && (
+                    <div
+                      style={{
+                        marginTop: "var(--bru-space-3)",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "var(--bru-space-2)",
+                        fontSize: "var(--bru-text-sm)",
+                        color: "var(--bru-grey)",
+                      }}
+                    >
+                      {recommendation.reasoning.contentAngle && (
+                        <p>
+                          <strong>Content Angle:</strong>{" "}
+                          {recommendation.reasoning.contentAngle}
+                        </p>
+                      )}
+                      {recommendation.reasoning.postStructure && (
+                        <p>
+                          <strong>Post Structure:</strong>{" "}
+                          {recommendation.reasoning.postStructure}
+                        </p>
+                      )}
+                      {recommendation.reasoning.contentPillar && (
+                        <p>
+                          <strong>Content Pillar:</strong>{" "}
+                          {recommendation.reasoning.contentPillar}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Generate button */}
               <Button
-                onClick={handleGeneratePostClick}
+                onClick={() => void handleGeneratePostClick()}
                 variant="primary"
                 block
                 disabled={
                   loadingRecommendation ||
                   !topic ||
-                  !postType ||
-                  !hookPattern ||
-                  !contentPillar ||
-                  !selectedToneId
+                  !postStructure ||
+                  !contentAngle ||
+                  !contentPillar
                 }
               >
                 {loadingRecommendation ? (
@@ -704,7 +689,10 @@ export default function CreatePage() {
               {saveFeedback && (
                 <Alert
                   variant={
-                    saveFeedback.includes("successfully") ? "success" : "error"
+                    saveFeedback.includes("successfully") ||
+                    saveFeedback.includes("Saved")
+                      ? "success"
+                      : "error"
                   }
                 >
                   {saveFeedback}

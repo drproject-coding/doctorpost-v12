@@ -355,6 +355,8 @@ export const savePostDraft = async (post: ScheduledPost): Promise<void> => {
       content: post.content,
       ...(post.scheduledAt ? { scheduled_at: post.scheduledAt } : {}),
       ...(post.pillar ? { pillar: post.pillar } : {}),
+      ...(post.contentAngle ? { content_angle: post.contentAngle } : {}),
+      ...(post.postStructure ? { post_structure: post.postStructure } : {}),
       status: "draft",
     }),
   });

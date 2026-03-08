@@ -1,5 +1,7 @@
-import { TonePrompt, AiSettings, OnProgress } from "./types";
+import { TonePrompt, AiSettings, OnProgress, BrandProfile } from "./types";
 import { generateWithAi } from "./ai/aiService";
+import { resolvePromptTemplate } from "./knowledge/resolvePromptTemplate";
+import { interpolateTemplate } from "./knowledge/interpolateTemplate";
 
 // Collection of tone prompts for different writing styles
 export const tonePrompts: TonePrompt[] = [
@@ -183,19 +185,33 @@ export const preparePromptTemplate = (
   return preparedPrompt;
 };
 
-// Generate a post using the client-side AI service
+const DEFAULT_SYSTEM_PROMPT =
+  "You are an expert LinkedIn content strategist and copywriter specializing in high-engagement posts. Your role is to create compelling, authentic LinkedIn content that resonates with professional audiences. Focus on clarity, impact, and driving meaningful engagement.";
+
+// Generate a post using the client-side AI service.
+// When toneId + profile are provided, resolves a tone-specific system prompt
+// from Knowledge (user fork → seed → legacy fallback).
 export const generatePost = async (
   prompt: string,
   settings: AiSettings,
   onProgress?: OnProgress,
   signal?: AbortSignal,
+  toneId?: string,
+  profile?: BrandProfile,
 ): Promise<string> => {
+  let systemPrompt = DEFAULT_SYSTEM_PROMPT;
+
+  if (toneId) {
+    const template = await resolvePromptTemplate(toneId);
+    if (template) {
+      systemPrompt = profile
+        ? interpolateTemplate(template, profile)
+        : template;
+    }
+  }
+
   const response = await generateWithAi(
-    {
-      systemPrompt:
-        "You are an expert LinkedIn content strategist and copywriter specializing in high-engagement posts. Your role is to create compelling, authentic LinkedIn content that resonates with professional audiences. Focus on clarity, impact, and driving meaningful engagement.",
-      userMessage: prompt,
-    },
+    { systemPrompt, userMessage: prompt },
     settings,
     onProgress,
     signal,

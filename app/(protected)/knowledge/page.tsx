@@ -2,7 +2,16 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Alert, Button, Card } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
-import { FileText, Plus, Upload, Scissors, Search, Loader } from "lucide-react";
+import {
+  FileText,
+  Plus,
+  Upload,
+  Scissors,
+  Search,
+  Loader,
+  Lock,
+  GitFork,
+} from "lucide-react";
 import type {
   KnowledgeDocument,
   DocumentCategory,
@@ -94,6 +103,31 @@ export default function KnowledgePage() {
     setView("editor");
   };
 
+  const handleFork = async (doc: KnowledgeDocument) => {
+    try {
+      const res = await fetch("/api/knowledge/create/documents", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category: doc.category,
+          subcategory: doc.subcategory,
+          name: `${doc.name} (Custom)`,
+          content: doc.content,
+          version: 1,
+          is_active: true,
+          source: "user-edit",
+          updated_by: user?.name || "user",
+        }),
+      });
+      if (!res.ok) throw new Error("Fork failed");
+      await fetchDocs();
+      setView("list");
+    } catch {
+      setError("Failed to fork template.");
+    }
+  };
+
   const handleSave = async (content: string, reason: string) => {
     if (!selectedDoc) return;
     const res = await fetch(
@@ -179,6 +213,12 @@ export default function KnowledgePage() {
           onSave={handleSave}
           onClose={() => setView("list")}
           onShowHistory={() => setView("history")}
+          readOnly={selectedDoc.source === "seed"}
+          onFork={
+            selectedDoc.source === "seed"
+              ? () => handleFork(selectedDoc)
+              : undefined
+          }
         />
       </div>
     );
@@ -353,6 +393,24 @@ export default function KnowledgePage() {
                     >
                       {doc.category}
                     </span>
+                    {doc.source === "seed" && (
+                      <span
+                        style={{
+                          fontSize: "var(--bru-text-xs)",
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          padding: "1px 6px",
+                          background: "#0066FF15",
+                          color: "#0066FF",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 3,
+                        }}
+                      >
+                        <Lock size={9} /> System
+                      </span>
+                    )}
                     {doc.subcategory && (
                       <span
                         style={{

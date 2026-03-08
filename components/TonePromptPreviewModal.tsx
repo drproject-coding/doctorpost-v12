@@ -1,0 +1,141 @@
+"use client";
+import React, { useState, useEffect } from "react";
+import { Button, Card } from "@bruddle/react";
+import { X, Eye, Loader } from "lucide-react";
+import { resolvePromptTemplate } from "@/lib/knowledge/resolvePromptTemplate";
+
+interface TonePromptPreviewModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  toneId: string;
+  toneName: string;
+}
+
+export function TonePromptPreviewModal({
+  isOpen,
+  onClose,
+  toneId,
+  toneName,
+}: TonePromptPreviewModalProps) {
+  const [template, setTemplate] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen || !toneId) return;
+    setLoading(true);
+    resolvePromptTemplate(toneId)
+      .then((t) => setTemplate(t))
+      .catch(() => setTemplate(null))
+      .finally(() => setLoading(false));
+  }, [isOpen, toneId]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <Card
+        variant="raised"
+        style={{
+          width: "90%",
+          maxWidth: 700,
+          maxHeight: "80vh",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "var(--bru-space-4)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Eye size={18} />
+            <h3
+              style={{
+                fontSize: "var(--bru-text-h5)",
+                fontWeight: 700,
+                margin: 0,
+              }}
+            >
+              {toneName} — System Prompt
+            </h3>
+          </div>
+          <Button variant="ghost" onClick={onClose}>
+            <X size={16} />
+          </Button>
+        </div>
+
+        {/* Content */}
+        <div style={{ flex: 1, overflow: "auto" }}>
+          {loading ? (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "var(--bru-space-8)",
+                color: "var(--bru-grey)",
+              }}
+            >
+              <Loader size={24} className="animate-spin" />
+            </div>
+          ) : template ? (
+            <pre
+              style={{
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+                fontFamily: "monospace",
+                fontSize: "var(--bru-text-sm)",
+                lineHeight: 1.6,
+                padding: "var(--bru-space-4)",
+                background: "#f5f5f5",
+                border: "var(--bru-border)",
+                margin: 0,
+              }}
+            >
+              {template}
+            </pre>
+          ) : (
+            <p
+              style={{
+                textAlign: "center",
+                padding: "var(--bru-space-6)",
+                color: "var(--bru-grey)",
+              }}
+            >
+              No system prompt template found for this tone. Visit Knowledge
+              &gt; Templates to seed tone templates.
+            </p>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div
+          style={{
+            marginTop: "var(--bru-space-4)",
+            fontSize: "var(--bru-text-xs)",
+            color: "var(--bru-grey)",
+          }}
+        >
+          Variables like {"{{brand.name}}"} are replaced with your brand profile
+          at generation time.
+        </div>
+      </Card>
+    </div>
+  );
+}

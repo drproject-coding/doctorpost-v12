@@ -27,12 +27,15 @@ import {
   Loader,
   ChevronDown,
   ChevronUp,
+  Eye,
 } from "lucide-react";
 import EnhancedDropdown from "@/components/EnhancedDropdown";
 import ContentAngleChips from "@/components/create/ContentAngleChips";
 import PostStructureCards from "@/components/create/PostStructureCards";
 import PostGenerator, { PostGeneratorRef } from "@/components/PostGenerator";
 import SchedulePostModal from "@/components/SchedulePostModal";
+import { TonePromptPreviewModal } from "@/components/TonePromptPreviewModal";
+import { enhancedToneOptions } from "@/lib/dropdownData";
 import { useAuth } from "@/lib/auth-context";
 
 export default function CreatePage() {
@@ -71,6 +74,12 @@ export default function CreatePage() {
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+
+  // Tone prompt preview
+  const [previewToneId, setPreviewToneId] = useState<string | null>(null);
+  const previewTone = previewToneId
+    ? enhancedToneOptions.find((t) => t.id === previewToneId)
+    : null;
 
   useEffect(() => {
     if (loadingAuth) return;
@@ -720,6 +729,48 @@ export default function CreatePage() {
                 )}
               </Button>
 
+              {/* Tone prompt preview */}
+              {profile.tones.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "var(--bru-space-2)",
+                    flexWrap: "wrap",
+                    fontSize: "var(--bru-text-sm)",
+                    color: "var(--bru-grey)",
+                  }}
+                >
+                  <Eye size={14} />
+                  <span>Preview tone prompt:</span>
+                  {profile.tones.map((toneId) => {
+                    const tone = enhancedToneOptions.find(
+                      (t) => t.id === toneId,
+                    );
+                    return (
+                      <button
+                        key={toneId}
+                        type="button"
+                        onClick={() => setPreviewToneId(toneId)}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontFamily: "var(--bru-font-primary)",
+                          fontSize: "var(--bru-text-sm)",
+                          color: "var(--bru-purple)",
+                          fontWeight: 600,
+                          textDecoration: "underline",
+                          padding: 0,
+                        }}
+                      >
+                        {tone?.label ?? toneId}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
               {saveFeedback && (
                 <Alert
                   variant={
@@ -853,6 +904,13 @@ export default function CreatePage() {
         onSchedule={handleSchedulePost}
         initialDate={new Date().toISOString().split("T")[0]}
         initialStatus="scheduled"
+      />
+
+      <TonePromptPreviewModal
+        isOpen={!!previewToneId}
+        onClose={() => setPreviewToneId(null)}
+        toneId={previewToneId ?? ""}
+        toneName={previewTone?.label ?? previewToneId ?? ""}
       />
     </>
   );

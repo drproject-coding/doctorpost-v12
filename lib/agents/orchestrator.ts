@@ -31,6 +31,7 @@ import { runScorer } from "./scorer";
 import { runFormatter } from "./formatter";
 import { runLearner, type LearnerOutput } from "./learner";
 import { runGuardrails, quickKillCheck } from "./guardrails";
+import { filterNewProposals } from "./topicDedup";
 
 // ── Response Validation ──
 /**
@@ -225,6 +226,8 @@ export interface PipelineState {
   brandContext?: BrandContext;
   /** Session-level tone override (overrides brand tones for this run) */
   toneOverride?: string;
+  /** Headlines already used across all features — prevents topic cannibalism */
+  usedHeadlines?: string[];
 
   // Phase outputs (populated as pipeline progresses)
   strategistOutput?: StrategistOutput;
@@ -262,6 +265,7 @@ export function createPipelineState(params: {
   keys: PipelineState["keys"];
   recentPosts?: PipelineState["recentPosts"];
   brandContext?: BrandContext;
+  usedHeadlines?: string[];
 }): PipelineState {
   return {
     phase: "idle",
@@ -270,6 +274,7 @@ export function createPipelineState(params: {
     keys: params.keys,
     recentPosts: params.recentPosts,
     brandContext: params.brandContext,
+    usedHeadlines: params.usedHeadlines,
     rewriteCount: 0,
   };
 }
@@ -358,8 +363,16 @@ export async function runDirection(
       recentPosts: state.recentPosts,
       brandContext: state.brandContext,
       toneOverride: state.toneOverride,
+      usedHeadlines: state.usedHeadlines,
       signal,
     });
+    // Post-generation dedup: remove proposals too similar to already-used headlines
+    if (state.usedHeadlines && state.usedHeadlines.length > 0) {
+      output.proposals = filterNewProposals(
+        output.proposals,
+        state.usedHeadlines,
+      );
+    }
     state.strategistOutput = output;
     emit({
       step: "direction",

@@ -3,6 +3,17 @@ import React from "react";
 import { Alert, Card } from "@bruddle/react";
 import { Loader, Check, AlertCircle } from "lucide-react";
 
+const PILLAR_COLORS = [
+  { bg: "#6B4FFF", text: "#fff" },
+  { bg: "#0066CC", text: "#fff" },
+  { bg: "#00AA66", text: "#fff" },
+  { bg: "#E85D04", text: "#fff" },
+  { bg: "#CC0044", text: "#fff" },
+  { bg: "#008899", text: "#fff" },
+  { bg: "#7700BB", text: "#fff" },
+  { bg: "#AA5500", text: "#fff" },
+];
+
 interface BatchProgressProps {
   phase: "idle" | "creating" | "planning" | "saving" | "complete" | "error";
   slotsPlanned: number;
@@ -118,16 +129,43 @@ export function BatchProgress({
               flexWrap: "wrap",
             }}
           >
-            {Object.entries(pillarDistribution).map(([pillar, count]) => (
+            {Object.entries(pillarDistribution).map(([pillar, count], i) => (
               <div
                 key={pillar}
                 style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
                   padding: "var(--bru-space-1) var(--bru-space-2)",
-                  border: "var(--bru-border)",
+                  background: PILLAR_COLORS[i % PILLAR_COLORS.length].bg,
+                  color: PILLAR_COLORS[i % PILLAR_COLORS.length].text,
                   fontSize: "var(--bru-text-xs)",
+                  fontWeight: 600,
+                  borderRadius: 2,
                 }}
               >
-                <strong>{pillar}</strong>: {count}
+                <span
+                  style={{
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  {pillar}
+                </span>
+                <span
+                  style={{
+                    background: "rgba(0,0,0,0.2)",
+                    borderRadius: "50%",
+                    width: 18,
+                    height: 18,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: 700,
+                  }}
+                >
+                  {count}
+                </span>
               </div>
             ))}
           </div>

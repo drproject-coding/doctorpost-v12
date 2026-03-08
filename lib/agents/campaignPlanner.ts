@@ -7,6 +7,7 @@
 
 import type { KnowledgeDocument, TopicProposal } from "../knowledge/types";
 import { runStrategist } from "./strategist";
+import { filterNewProposals } from "./topicDedup";
 
 export interface CampaignPlan {
   campaignId: string;
@@ -33,6 +34,8 @@ export interface CampaignPlanInput {
   pillarWeights: Record<string, number>;
   startDate: string; // ISO date
   recentPosts?: { pillar: string; date: string }[];
+  /** Headlines from past campaigns — AI won't repeat them */
+  usedHeadlines?: string[];
   signal?: AbortSignal;
 }
 
@@ -70,11 +73,19 @@ export async function planCampaign(
           date: s.slotDate,
         })),
       ],
+      usedHeadlines: [
+        ...(input.usedHeadlines || []),
+        ...slots.map((s) => s.topicCard.headline),
+      ],
       signal: input.signal,
     });
 
-    // Pick best topics from proposals, balancing pillars
-    const available = [...output.proposals];
+    // Filter out proposals too similar to existing or already-picked topics
+    const allUsed = [
+      ...(input.usedHeadlines || []),
+      ...slots.map((s) => s.topicCard.headline),
+    ];
+    const available = filterNewProposals(output.proposals, allUsed);
     for (let slot = 0; slot < input.postsPerWeek; slot++) {
       const slotDate = new Date(startDate);
       slotDate.setDate(startDate.getDate() + week * 7 + slot * 2); // Spread posts across the week

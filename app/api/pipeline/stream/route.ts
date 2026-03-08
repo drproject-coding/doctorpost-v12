@@ -37,6 +37,7 @@ import {
   savePipelinePatterns,
 } from "@/lib/pipeline/savePipelineData";
 import { fetchKnowledgeForUser } from "@/lib/knowledge/fetch";
+import { getUsedTopics } from "@/lib/agents/getUsedTopics";
 import {
   createPipelineState,
   runDirection,
@@ -162,8 +163,11 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Fetch knowledge docs
-  const knowledge = await fetchKnowledgeForUser(user.id, cookie);
+  // Fetch knowledge docs + used headlines (for cross-feature topic dedup)
+  const [knowledge, usedHeadlines] = await Promise.all([
+    fetchKnowledgeForUser(user.id, cookie),
+    getUsedTopics(user.id, cookie),
+  ]);
   const brandContext = profile
     ? {
         industry: profile.industry || "",
@@ -198,6 +202,7 @@ export async function POST(req: NextRequest) {
       providerModel,
     },
     brandContext,
+    usedHeadlines,
   });
 
   // Restore state from client-provided data

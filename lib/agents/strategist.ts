@@ -4,6 +4,7 @@ import { buildSystemPrompt, resolveKnowledge } from "./promptBuilder";
 import { extractJson } from "./structuredOutput";
 import { callAgentClaude } from "./callClaude";
 import { AGENT_CONFIGS } from "./types";
+import { summarizeCoveredTopics } from "./topicDedup";
 
 const config = AGENT_CONFIGS.strategist;
 
@@ -27,6 +28,8 @@ export interface StrategistInput {
   };
   /** Optional: session-level tone override */
   toneOverride?: string;
+  /** Headlines already used — AI must not repeat these */
+  usedHeadlines?: string[];
   signal?: AbortSignal;
 }
 
@@ -50,6 +53,10 @@ export async function runStrategist(
   }
   if (input.recentPosts && input.recentPosts.length > 0) {
     extraContext += `\n## Recent Posts for Pillar Balance\n${JSON.stringify(input.recentPosts)}`;
+  }
+  if (input.usedHeadlines && input.usedHeadlines.length > 0) {
+    const covered = summarizeCoveredTopics(input.usedHeadlines);
+    extraContext += `\n## Already Covered Territory — Explore Different Ground\nThese topic areas have already been covered in past posts. Do NOT revisit them. Find fresh angles, different problems, or unexplored territory instead:\n${covered}`;
   }
   if (input.discoveryBrief) {
     extraContext += `\n## Discovery Brief (from Research)\n${input.discoveryBrief}\n\nUse this discovery data to sharpen your topic proposal. Return a single refined TopicProposal.`;

@@ -320,7 +320,7 @@ export async function createCampaignPost(post: {
       slot_date: post.slotDate,
       slot_order: post.slotOrder,
       topic_card: JSON.stringify(post.topicCard),
-      generation_status: "pending",
+      generation_status: "waiting_review",
     }),
   });
   const row = (await res.json()) as NcbCampaignPostRow;
@@ -334,6 +334,50 @@ export async function updateCampaignPostStatus(
   const res = await ncbFetch(`update/campaign_posts/${id}`, {
     method: "PUT",
     body: JSON.stringify({ generation_status: status }),
+  });
+  const row = (await res.json()) as NcbCampaignPostRow;
+  return mapCampaignPostFromNcb(row);
+}
+
+export async function getValidatedIdeas(): Promise<CampaignPost[]> {
+  const res = await ncbFetch("search/campaign_posts", {
+    method: "POST",
+    body: JSON.stringify({ generation_status: "validated" }),
+  });
+  const rows = extractRows<NcbCampaignPostRow>(await res.json());
+  return rows.map(mapCampaignPostFromNcb);
+}
+
+export async function getCampaignsForUser(): Promise<Campaign[]> {
+  const res = await ncbFetch("read/campaigns");
+  const rows = extractRows<NcbCampaignRow>(await res.json());
+  return rows.map(mapCampaignFromNcb);
+}
+
+export async function linkPostToCampaignSlot(
+  campaignPostId: string,
+  postUuid: string,
+): Promise<CampaignPost> {
+  const res = await ncbFetch(`update/campaign_posts/${campaignPostId}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      post_uuid: postUuid,
+      generation_status: "in_progress",
+    }),
+  });
+  const row = (await res.json()) as NcbCampaignPostRow;
+  return mapCampaignPostFromNcb(row);
+}
+
+export async function updateCampaignPostTopicCard(
+  campaignPostId: string,
+  topicCard: Record<string, unknown>,
+): Promise<CampaignPost> {
+  const res = await ncbFetch(`update/campaign_posts/${campaignPostId}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      topic_card: JSON.stringify(topicCard),
+    }),
   });
   const row = (await res.json()) as NcbCampaignPostRow;
   return mapCampaignPostFromNcb(row);

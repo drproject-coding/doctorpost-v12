@@ -2,13 +2,20 @@
 import React, { useState, useRef } from "react";
 import { Button } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
+import { useRouter } from "next/navigation";
 import {
   CampaignSetup,
   type CampaignConfig,
 } from "@/components/campaigns/CampaignSetup";
-import { CampaignCalendar } from "@/components/campaigns/CampaignCalendar";
+import {
+  CampaignCalendar,
+  type CalendarSlot,
+} from "@/components/campaigns/CampaignCalendar";
 import { BatchProgress } from "@/components/campaigns/BatchProgress";
-import type { CampaignSlot } from "@/lib/agents/campaignPlanner";
+import { CampaignList } from "@/components/campaigns/CampaignList";
+import type { Campaign } from "@/lib/knowledge/types";
+
+type PageView = "list" | "new" | "detail";
 
 type CampaignPhase =
   | "idle"
@@ -20,22 +27,95 @@ type CampaignPhase =
 
 export default function CampaignsPage() {
   const { user } = useAuth();
+  const router = useRouter();
+  const [view, setView] = useState<PageView>("list");
   const [phase, setPhase] = useState<CampaignPhase>("idle");
-  const [slots, setSlots] = useState<CampaignSlot[]>([]);
+  const [slots, setSlots] = useState<CalendarSlot[]>([]);
   const [totalSlots, setTotalSlots] = useState(0);
   const [error, setError] = useState<string | undefined>();
   const [pillarDistribution, setPillarDistribution] = useState<
     Record<string, number> | undefined
   >();
   const [config, setConfig] = useState<CampaignConfig | null>(null);
+  const [campaignId, setCampaignId] = useState<string | undefined>();
+  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(
+    null,
+  );
   const abortRef = useRef<AbortController | null>(null);
+  const campaignIdRef = useRef<string | undefined>();
 
-  // Abort SSE stream on unmount
   React.useEffect(() => {
     return () => {
       abortRef.current?.abort();
     };
   }, []);
+
+  const handleNewCampaign = () => {
+    setView("new");
+    setPhase("idle");
+    setSlots([]);
+    setConfig(null);
+    setCampaignId(undefined);
+    setError(undefined);
+    setPillarDistribution(undefined);
+  };
+
+  const handleSelectCampaign = (campaign: Campaign) => {
+    setSelectedCampaign(campaign);
+    setView("detail");
+    setCampaignId(String(campaign.id));
+    // Load campaign posts from DB
+    fetch(
+      `/api/data/read/campaign_posts?campaign_id=${campaign.id}&_sort=slot_order&_order=asc`,
+      { credentials: "include" },
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        const rows = data?.rows || data?.data || [];
+        const mapped: CalendarSlot[] = rows.map(
+          (r: Record<string, string>) => ({
+            id: r.id,
+            weekNumber: Math.ceil(
+              Number(r.slot_order) / (campaign.postsPerWeek || 3),
+            ),
+            slotOrder: Number(r.slot_order),
+            slotDate: r.slot_date,
+            generationStatus: r.generation_status || "waiting_review",
+            topicCard: (() => {
+              try {
+                return JSON.parse(r.topic_card);
+              } catch {
+                return { headline: "Untitled", pillar: "General" };
+              }
+            })(),
+          }),
+        );
+        setSlots(mapped);
+        setConfig({
+          name: campaign.name,
+          durationWeeks: campaign.durationWeeks,
+          postsPerWeek: campaign.postsPerWeek,
+          goals: campaign.goals,
+          pillarWeights: campaign.pillarWeights,
+        } as CampaignConfig);
+        setPhase("complete");
+      })
+      .catch(() => {
+        setSlots([]);
+        setPhase("complete");
+      });
+  };
+
+  const handleBackToList = () => {
+    setView("list");
+    setPhase("idle");
+    setSlots([]);
+    setConfig(null);
+    setCampaignId(undefined);
+    setSelectedCampaign(null);
+    setError(undefined);
+    setPillarDistribution(undefined);
+  };
 
   const handleSubmit = async (cfg: CampaignConfig) => {
     setConfig(cfg);
@@ -105,14 +185,34 @@ export default function CampaignsPage() {
               case "status":
                 if (parsed.phase) setPhase(parsed.phase as CampaignPhase);
                 if (parsed.slotsCount) setTotalSlots(parsed.slotsCount);
+                if (parsed.campaignId) {
+                  const cid = String(parsed.campaignId);
+                  setCampaignId(cid);
+                  campaignIdRef.current = cid;
+                }
                 break;
               case "slot":
-                setSlots((prev) => [...prev, parsed as CampaignSlot]);
+                setSlots((prev) => [
+                  ...prev,
+                  {
+                    id: parsed.id,
+                    weekNumber: parsed.weekNumber,
+                    slotOrder: parsed.slotOrder,
+                    slotDate: parsed.slotDate,
+                    generationStatus:
+                      parsed.generationStatus || "waiting_review",
+                    topicCard: parsed.topicCard,
+                  } as CalendarSlot,
+                ]);
                 break;
               case "complete":
                 setPhase("complete");
                 if (parsed.pillarDistribution)
                   setPillarDistribution(parsed.pillarDistribution);
+                // Redirect to persistent campaign URL so DB is source of truth
+                if (campaignIdRef.current) {
+                  router.push(`/campaigns/${campaignIdRef.current}`);
+                }
                 break;
               case "error":
                 setPhase("error");
@@ -132,9 +232,106 @@ export default function CampaignsPage() {
     }
   };
 
+  // List view — show existing campaigns
+  if (view === "list") {
+    return (
+      <div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "var(--bru-space-6)",
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "var(--bru-text-h3)",
+              fontWeight: 700,
+              margin: 0,
+            }}
+          >
+            Campaigns
+          </h1>
+          <Button onClick={handleNewCampaign}>New Campaign</Button>
+        </div>
+        <CampaignList
+          onSelect={handleSelectCampaign}
+          onNewCampaign={handleNewCampaign}
+        />
+      </div>
+    );
+  }
+
+  // Detail view — viewing an existing campaign
+  if (view === "detail" && selectedCampaign) {
+    return (
+      <div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "var(--bru-space-6)",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--bru-space-3)",
+            }}
+          >
+            <button
+              onClick={handleBackToList}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "var(--bru-text-md)",
+                color: "var(--bru-grey)",
+                padding: 0,
+              }}
+            >
+              &larr;
+            </button>
+            <h1
+              style={{
+                fontSize: "var(--bru-text-h3)",
+                fontWeight: 700,
+                margin: 0,
+              }}
+            >
+              {selectedCampaign.name}
+            </h1>
+          </div>
+        </div>
+        {slots.length > 0 && config && (
+          <CampaignCalendar
+            slots={slots}
+            durationWeeks={config.durationWeeks}
+            postsPerWeek={config.postsPerWeek}
+            campaignId={campaignId}
+          />
+        )}
+        {slots.length === 0 && phase === "complete" && (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "var(--bru-space-8)",
+              color: "var(--bru-grey)",
+            }}
+          >
+            No ideas found for this campaign.
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // New campaign view — setup + progress + calendar
   return (
     <div>
-      {/* Header */}
       <div
         style={{
           display: "flex",
@@ -143,33 +340,40 @@ export default function CampaignsPage() {
           marginBottom: "var(--bru-space-6)",
         }}
       >
-        <h1
+        <div
           style={{
-            fontSize: "var(--bru-text-h3)",
-            fontWeight: 700,
-            margin: 0,
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--bru-space-3)",
           }}
         >
-          Campaigns
-        </h1>
-        {phase !== "idle" && (
-          <Button
-            onClick={() => {
-              setPhase("idle");
-              setSlots([]);
-              setConfig(null);
-              setError(undefined);
+          <button
+            onClick={handleBackToList}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "var(--bru-text-md)",
+              color: "var(--bru-grey)",
+              padding: 0,
+            }}
+          >
+            &larr;
+          </button>
+          <h1
+            style={{
+              fontSize: "var(--bru-text-h3)",
+              fontWeight: 700,
+              margin: 0,
             }}
           >
             New Campaign
-          </Button>
-        )}
+          </h1>
+        </div>
       </div>
 
-      {/* Setup form */}
       {phase === "idle" && <CampaignSetup onSubmit={handleSubmit} />}
 
-      {/* Progress */}
       {phase !== "idle" && (
         <div style={{ marginBottom: "var(--bru-space-4)" }}>
           <BatchProgress
@@ -182,12 +386,12 @@ export default function CampaignsPage() {
         </div>
       )}
 
-      {/* Calendar */}
       {slots.length > 0 && config && (
         <CampaignCalendar
           slots={slots}
           durationWeeks={config.durationWeeks}
           postsPerWeek={config.postsPerWeek}
+          campaignId={campaignId}
         />
       )}
     </div>

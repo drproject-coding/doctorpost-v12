@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Alert, Button, Card } from "@bruddle/react";
 import {
   BrandProfile,
@@ -29,9 +30,11 @@ import EnhancedDropdown from "@/components/EnhancedDropdown";
 import PostGenerator, { PostGeneratorRef } from "@/components/PostGenerator";
 import SchedulePostModal from "@/components/SchedulePostModal";
 import { useAuth } from "@/lib/auth-context";
+import { IdeaInbox, type InboxIdea } from "@/components/campaigns/IdeaInbox";
 
 export default function CreatePage() {
   const { user, loadingAuth } = useAuth();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<BrandProfile | null>(null);
   const [activeSubNav, setActiveSubNav] = useState("generate-post");
@@ -60,6 +63,7 @@ export default function CreatePage() {
   const [triggerPostGeneration, setTriggerPostGeneration] = useState(0);
   const [generatedContent, setGeneratedContent] = useState<string>("");
   const postGeneratorRef = useRef<PostGeneratorRef>(null);
+  const [campaignPostId, setCampaignPostId] = useState<string | null>(null);
 
   // Schedule Post Modal
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
@@ -107,6 +111,102 @@ export default function CreatePage() {
     void fetchProfile();
   }, [user?.id, loadingAuth]);
 
+  // Pre-fill from ?topicCard=... URL param (set by "Write this post" button)
+  useEffect(() => {
+    const raw = searchParams.get("topicCard");
+    const postId = searchParams.get("campaignPostId");
+    if (postId) setCampaignPostId(postId);
+    if (!raw) return;
+    try {
+      const card = JSON.parse(decodeURIComponent(raw)) as Record<
+        string,
+        string
+      >;
+      if (card.headline) setTopic(card.headline);
+      if (card.angle) setCoreTakeaway(card.angle);
+      // Map pillar → contentPillar if exact match exists in options
+      if (card.pillar) {
+        const match = enhancedContentPillars.find(
+          (o) =>
+            o.value.toLowerCase() === card.pillar.toLowerCase() ||
+            o.label?.toLowerCase() === card.pillar.toLowerCase(),
+        );
+        if (match) setContentPillar(match.value);
+      }
+      // Map templateRecommendation → postType
+      if (card.templateRecommendation) {
+        const match = enhancedPostTypes.find(
+          (o) =>
+            o.value
+              .toLowerCase()
+              .includes(card.templateRecommendation.toLowerCase()) ||
+            card.templateRecommendation
+              .toLowerCase()
+              .includes(o.value.toLowerCase()),
+        );
+        if (match) setPostType(match.value);
+      }
+      // Map hookCategoryRecommendation → hookPattern
+      if (card.hookCategoryRecommendation) {
+        const match = enhancedHookPatterns.find(
+          (o) =>
+            o.value
+              .toLowerCase()
+              .includes(card.hookCategoryRecommendation.toLowerCase()) ||
+            card.hookCategoryRecommendation
+              .toLowerCase()
+              .includes(o.value.toLowerCase()),
+        );
+        if (match) setHookPattern(match.value);
+      }
+    } catch {
+      // ignore parse errors
+    }
+  }, [searchParams]);
+
+  const handleIdeaSelect = (idea: InboxIdea) => {
+    const card = idea.topicCard;
+    if (card.headline) setTopic(card.headline as string);
+    if (card.angle) setCoreTakeaway(card.angle as string);
+    setCampaignPostId(idea.id);
+    if (card.pillar) {
+      const match = enhancedContentPillars.find(
+        (o) =>
+          o.value.toLowerCase() === (card.pillar as string).toLowerCase() ||
+          o.label?.toLowerCase() === (card.pillar as string).toLowerCase(),
+      );
+      if (match) setContentPillar(match.value);
+    }
+    if (card.templateRecommendation) {
+      const match = enhancedPostTypes.find(
+        (o) =>
+          o.value
+            .toLowerCase()
+            .includes((card.templateRecommendation as string).toLowerCase()) ||
+          (card.templateRecommendation as string)
+            .toLowerCase()
+            .includes(o.value.toLowerCase()),
+      );
+      if (match) setPostType(match.value);
+    }
+    if (card.hookCategoryRecommendation) {
+      const match = enhancedHookPatterns.find(
+        (o) =>
+          o.value
+            .toLowerCase()
+            .includes(
+              (card.hookCategoryRecommendation as string).toLowerCase(),
+            ) ||
+          (card.hookCategoryRecommendation as string)
+            .toLowerCase()
+            .includes(o.value.toLowerCase()),
+      );
+      if (match) setHookPattern(match.value);
+    }
+    // scroll to form
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const aiSettings: AiSettings | null = useMemo(() => {
     if (!profile) return null;
     return {
@@ -151,8 +251,27 @@ export default function CreatePage() {
     setTriggerPostGeneration(0);
     setGeneratedContent("");
     try {
-      const results = await findSubtopics(topic, 5, aiSettings ?? undefined);
-      setSubtopics(results);
+      const [results, usedRes] = await Promise.all([
+        findSubtopics(topic, 8, aiSettings ?? undefined),
+        fetch("/api/used-topics").then((r) =>
+          r.ok
+            ? (r.json() as Promise<{ headlines: string[] }>)
+            : { headlines: [] as string[] },
+        ),
+      ]);
+      const usedHeadlines = usedRes.headlines ?? [];
+      if (usedHeadlines.length > 0) {
+        const { filterNewProposals } = await import("@/lib/agents/topicDedup");
+        const withHeadline = results.map((r) => ({ ...r, headline: r.text }));
+        const filtered = filterNewProposals(withHeadline, usedHeadlines);
+        setSubtopics(
+          filtered
+            .slice(0, 5)
+            .map(({ headline: _h, ...r }) => r as SubtopicSuggestion),
+        );
+      } else {
+        setSubtopics(results.slice(0, 5));
+      }
     } catch (error) {
       console.error("Failed to find subtopics:", error);
     } finally {
@@ -281,7 +400,9 @@ export default function CreatePage() {
         pillar: contentPillar,
         status: "draft",
       };
-      void savePostDraft(newPost).catch(() => {/* non-fatal */});
+      void savePostDraft(newPost).catch(() => {
+        /* non-fatal */
+      });
     }
   };
 
@@ -501,193 +622,177 @@ export default function CreatePage() {
       </div>
 
       {activeSubNav === "generate-post" && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "var(--bru-space-6)",
-          }}
-          className="create-grid"
-        >
-          {/* Left Column: Input Form */}
-          <Card variant="raised">
-            <h2
-              style={{
-                fontSize: "var(--bru-text-h5)",
-                fontWeight: 700,
-                marginBottom: "var(--bru-space-4)",
-              }}
-            >
-              Post Details
-            </h2>
+        <>
+          <IdeaInbox onSelect={handleIdeaSelect} />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "var(--bru-space-6)",
+            }}
+            className="create-grid"
+          >
+            {/* Left Column: Input Form */}
+            <Card variant="raised">
+              <h2
+                style={{
+                  fontSize: "var(--bru-text-h5)",
+                  fontWeight: 700,
+                  marginBottom: "var(--bru-space-4)",
+                }}
+              >
+                Post Details
+              </h2>
 
-            <div className="bru-form-stack">
-              {/* Topic field */}
-              <div className="bru-field bru-field--has-icon">
-                <label htmlFor="topic-input" className="bru-field__label">
-                  Topic
-                </label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type="text"
-                    id="topic-input"
-                    className="bru-input"
-                    style={{ width: "100%", paddingRight: 40 }}
-                    value={topic}
-                    onChange={handleTopicChange}
-                    placeholder="e.g., 'AI in healthcare'"
-                  />
-                  <button
-                    onClick={() => void handleFindSubtopics()}
-                    disabled={loadingSubtopics || !topic.trim()}
-                    aria-label="Find Subtopics"
-                    style={{
-                      position: "absolute",
-                      right: 8,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: 4,
-                    }}
-                  >
-                    {loadingSubtopics ? (
-                      <Loader
-                        size={20}
-                        className="animate-spin"
-                        style={{ color: "var(--bru-purple)" }}
-                      />
-                    ) : (
-                      <Search size={20} style={{ color: "var(--bru-grey)" }} />
-                    )}
-                  </button>
-                </div>
+              <div className="bru-form-stack">
+                {/* Topic field */}
+                <div className="bru-field bru-field--has-icon">
+                  <label htmlFor="topic-input" className="bru-field__label">
+                    Topic
+                  </label>
+                  <div style={{ position: "relative" }}>
+                    <input
+                      type="text"
+                      id="topic-input"
+                      className="bru-input"
+                      style={{ width: "100%", paddingRight: 40 }}
+                      value={topic}
+                      onChange={handleTopicChange}
+                      placeholder="e.g., 'AI in healthcare'"
+                    />
+                    <button
+                      onClick={() => void handleFindSubtopics()}
+                      disabled={loadingSubtopics || !topic.trim()}
+                      aria-label="Find Subtopics"
+                      style={{
+                        position: "absolute",
+                        right: 8,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: 4,
+                      }}
+                    >
+                      {loadingSubtopics ? (
+                        <Loader
+                          size={20}
+                          className="animate-spin"
+                          style={{ color: "var(--bru-purple)" }}
+                        />
+                      ) : (
+                        <Search
+                          size={20}
+                          style={{ color: "var(--bru-grey)" }}
+                        />
+                      )}
+                    </button>
+                  </div>
 
-                {subtopics.length > 0 && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "var(--bru-space-2)",
-                      marginTop: "var(--bru-space-3)",
-                    }}
-                  >
-                    <span className="bru-field__label">
-                      Subtopic Suggestions
-                    </span>
-                    {subtopics.map((sub) => (
-                      <button
-                        key={sub.id}
-                        type="button"
-                        onClick={() => void handleSelectSubtopic(sub)}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          padding: "var(--bru-space-2) var(--bru-space-3)",
-                          border:
-                            selectedSubtopic?.id === sub.id
-                              ? "2px solid var(--bru-purple)"
-                              : "var(--bru-border)",
-                          background:
-                            selectedSubtopic?.id === sub.id
-                              ? "var(--bru-purple-20)"
-                              : "var(--bru-cream)",
-                          cursor: "pointer",
-                          textAlign: "left",
-                          width: "100%",
-                          fontFamily: "var(--bru-font-primary)",
-                          fontSize: "var(--bru-text-md)",
-                        }}
-                      >
-                        <span style={{ fontWeight: 500 }}>{sub.text}</span>
-                        <span
-                          className="bru-tag bru-tag--filled"
+                  {subtopics.length > 0 && (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "var(--bru-space-2)",
+                        marginTop: "var(--bru-space-3)",
+                      }}
+                    >
+                      <span className="bru-field__label">
+                        Subtopic Suggestions
+                      </span>
+                      {subtopics.map((sub) => (
+                        <button
+                          key={sub.id}
+                          type="button"
+                          onClick={() => void handleSelectSubtopic(sub)}
                           style={{
-                            fontSize: 11,
-                            padding: "2px 8px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            padding: "var(--bru-space-2) var(--bru-space-3)",
+                            border:
+                              selectedSubtopic?.id === sub.id
+                                ? "2px solid var(--bru-purple)"
+                                : "var(--bru-border)",
                             background:
-                              sub.source === "google_trends"
+                              selectedSubtopic?.id === sub.id
                                 ? "var(--bru-purple-20)"
-                                : sub.source === "google_questions"
-                                  ? "rgba(0, 170, 0, 0.12)"
-                                  : "rgba(255, 170, 0, 0.15)",
+                                : "var(--bru-cream)",
+                            cursor: "pointer",
+                            textAlign: "left",
+                            width: "100%",
+                            fontFamily: "var(--bru-font-primary)",
+                            fontSize: "var(--bru-text-md)",
                           }}
                         >
-                          {getSourceBadgeLabel(sub.source)}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Core Takeaway */}
-              <div className="bru-field">
-                <label htmlFor="coreTakeaway" className="bru-field__label">
-                  Core Takeaway (Optional)
-                </label>
-                <textarea
-                  id="coreTakeaway"
-                  className="bru-input"
-                  style={{ width: "100%", minHeight: 80, resize: "vertical" }}
-                  value={coreTakeaway}
-                  onChange={(e) => setCoreTakeaway(e.target.value)}
-                  placeholder="What's the single most important thing readers should remember?"
-                />
-              </div>
-
-              {/* CTA Goal */}
-              <div className="bru-field">
-                <label htmlFor="ctaGoal" className="bru-field__label">
-                  Call to Action Goal (Optional)
-                </label>
-                <input
-                  type="text"
-                  id="ctaGoal"
-                  className="bru-input"
-                  style={{ width: "100%" }}
-                  value={ctaGoal}
-                  onChange={(e) => setCtaGoal(e.target.value)}
-                  placeholder="e.g., 'Visit my website', 'Share your thoughts'"
-                />
-              </div>
-
-              {/* Dropdown grid: 2 columns */}
-              <div className="bru-form-row">
-                <div style={{ position: "relative" }}>
-                  <EnhancedDropdown
-                    label="Post Type"
-                    options={enhancedPostTypes}
-                    value={postType}
-                    onChange={setPostType}
-                    placeholder="Select a post type"
-                    compatibilityMap={compatibilityMap}
-                    loading={loadingRecommendation}
-                  />
-                  {recommendation && postType === recommendation.postType && (
-                    <span
-                      className="smart-choice-badge"
-                      style={{ marginTop: "var(--bru-space-1)" }}
-                    >
-                      <TrendingUp size={12} /> Smart Choice
-                    </span>
+                          <span style={{ fontWeight: 500 }}>{sub.text}</span>
+                          <span
+                            className="bru-tag bru-tag--filled"
+                            style={{
+                              fontSize: 11,
+                              padding: "2px 8px",
+                              background:
+                                sub.source === "google_trends"
+                                  ? "var(--bru-purple-20)"
+                                  : sub.source === "google_questions"
+                                    ? "rgba(0, 170, 0, 0.12)"
+                                    : "rgba(255, 170, 0, 0.15)",
+                            }}
+                          >
+                            {getSourceBadgeLabel(sub.source)}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   )}
                 </div>
 
-                <div style={{ position: "relative" }}>
-                  <EnhancedDropdown
-                    label="Hook Pattern"
-                    options={enhancedHookPatterns}
-                    value={hookPattern}
-                    onChange={setHookPattern}
-                    placeholder="Select a hook pattern"
-                    compatibilityMap={compatibilityMap}
-                    loading={loadingRecommendation}
+                {/* Core Takeaway */}
+                <div className="bru-field">
+                  <label htmlFor="coreTakeaway" className="bru-field__label">
+                    Core Takeaway (Optional)
+                  </label>
+                  <textarea
+                    id="coreTakeaway"
+                    className="bru-input"
+                    style={{ width: "100%", minHeight: 80, resize: "vertical" }}
+                    value={coreTakeaway}
+                    onChange={(e) => setCoreTakeaway(e.target.value)}
+                    placeholder="What's the single most important thing readers should remember?"
                   />
-                  {recommendation &&
-                    hookPattern === recommendation.hookPattern && (
+                </div>
+
+                {/* CTA Goal */}
+                <div className="bru-field">
+                  <label htmlFor="ctaGoal" className="bru-field__label">
+                    Call to Action Goal (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    id="ctaGoal"
+                    className="bru-input"
+                    style={{ width: "100%" }}
+                    value={ctaGoal}
+                    onChange={(e) => setCtaGoal(e.target.value)}
+                    placeholder="e.g., 'Visit my website', 'Share your thoughts'"
+                  />
+                </div>
+
+                {/* Dropdown grid: 2 columns */}
+                <div className="bru-form-row">
+                  <div style={{ position: "relative" }}>
+                    <EnhancedDropdown
+                      label="Post Type"
+                      options={enhancedPostTypes}
+                      value={postType}
+                      onChange={setPostType}
+                      placeholder="Select a post type"
+                      compatibilityMap={compatibilityMap}
+                      loading={loadingRecommendation}
+                    />
+                    {recommendation && postType === recommendation.postType && (
                       <span
                         className="smart-choice-badge"
                         style={{ marginTop: "var(--bru-space-1)" }}
@@ -695,128 +800,154 @@ export default function CreatePage() {
                         <TrendingUp size={12} /> Smart Choice
                       </span>
                     )}
+                  </div>
+
+                  <div style={{ position: "relative" }}>
+                    <EnhancedDropdown
+                      label="Hook Pattern"
+                      options={enhancedHookPatterns}
+                      value={hookPattern}
+                      onChange={setHookPattern}
+                      placeholder="Select a hook pattern"
+                      compatibilityMap={compatibilityMap}
+                      loading={loadingRecommendation}
+                    />
+                    {recommendation &&
+                      hookPattern === recommendation.hookPattern && (
+                        <span
+                          className="smart-choice-badge"
+                          style={{ marginTop: "var(--bru-space-1)" }}
+                        >
+                          <TrendingUp size={12} /> Smart Choice
+                        </span>
+                      )}
+                  </div>
+
+                  <div style={{ position: "relative" }}>
+                    <EnhancedDropdown
+                      label="Content Pillar"
+                      options={enhancedContentPillars}
+                      value={contentPillar}
+                      onChange={setContentPillar}
+                      placeholder="Select a content pillar"
+                      compatibilityMap={compatibilityMap}
+                      loading={loadingRecommendation}
+                    />
+                    {recommendation &&
+                      contentPillar === recommendation.contentPillar && (
+                        <span
+                          className="smart-choice-badge"
+                          style={{ marginTop: "var(--bru-space-1)" }}
+                        >
+                          <TrendingUp size={12} /> Smart Choice
+                        </span>
+                      )}
+                  </div>
+
+                  <div style={{ position: "relative" }}>
+                    <EnhancedDropdown
+                      label="Tone"
+                      options={enhancedToneOptions}
+                      value={selectedToneId}
+                      onChange={setSelectedToneId}
+                      placeholder="Select a tone"
+                      compatibilityMap={compatibilityMap}
+                      loading={loadingRecommendation}
+                    />
+                    {recommendation &&
+                      selectedToneId === recommendation.toneId && (
+                        <span
+                          className="smart-choice-badge"
+                          style={{ marginTop: "var(--bru-space-1)" }}
+                        >
+                          <TrendingUp size={12} /> Smart Choice
+                        </span>
+                      )}
+                  </div>
                 </div>
 
-                <div style={{ position: "relative" }}>
-                  <EnhancedDropdown
-                    label="Content Pillar"
-                    options={enhancedContentPillars}
-                    value={contentPillar}
-                    onChange={setContentPillar}
-                    placeholder="Select a content pillar"
-                    compatibilityMap={compatibilityMap}
-                    loading={loadingRecommendation}
-                  />
-                  {recommendation &&
-                    contentPillar === recommendation.contentPillar && (
-                      <span
-                        className="smart-choice-badge"
-                        style={{ marginTop: "var(--bru-space-1)" }}
-                      >
-                        <TrendingUp size={12} /> Smart Choice
-                      </span>
-                    )}
-                </div>
-
-                <div style={{ position: "relative" }}>
-                  <EnhancedDropdown
-                    label="Tone"
-                    options={enhancedToneOptions}
-                    value={selectedToneId}
-                    onChange={setSelectedToneId}
-                    placeholder="Select a tone"
-                    compatibilityMap={compatibilityMap}
-                    loading={loadingRecommendation}
-                  />
-                  {recommendation &&
-                    selectedToneId === recommendation.toneId && (
-                      <span
-                        className="smart-choice-badge"
-                        style={{ marginTop: "var(--bru-space-1)" }}
-                      >
-                        <TrendingUp size={12} /> Smart Choice
-                      </span>
-                    )}
-                </div>
-              </div>
-
-              {/* Generate button */}
-              <Button
-                onClick={handleGeneratePostClick}
-                variant="primary"
-                block
-                disabled={
-                  loadingRecommendation ||
-                  !topic ||
-                  !postType ||
-                  !hookPattern ||
-                  !contentPillar ||
-                  !selectedToneId
-                }
-              >
-                {loadingRecommendation ? (
-                  <>
-                    <Loader size={18} className="animate-spin" />
-                    Getting Recommendations...
-                  </>
-                ) : (
-                  <>
-                    <ArrowRight size={18} />
-                    Generate Post
-                  </>
-                )}
-              </Button>
-
-              {saveFeedback && (
-                <Alert
-                  variant={
-                    saveFeedback.includes("successfully") ? "success" : "error"
+                {/* Generate button */}
+                <Button
+                  onClick={handleGeneratePostClick}
+                  variant="primary"
+                  block
+                  disabled={
+                    loadingRecommendation ||
+                    !topic ||
+                    !postType ||
+                    !hookPattern ||
+                    !contentPillar ||
+                    !selectedToneId
                   }
                 >
-                  {saveFeedback}
-                </Alert>
+                  {loadingRecommendation ? (
+                    <>
+                      <Loader size={18} className="animate-spin" />
+                      Getting Recommendations...
+                    </>
+                  ) : (
+                    <>
+                      <ArrowRight size={18} />
+                      Generate Post
+                    </>
+                  )}
+                </Button>
+
+                {saveFeedback && (
+                  <Alert
+                    variant={
+                      saveFeedback.includes("successfully")
+                        ? "success"
+                        : "error"
+                    }
+                  >
+                    {saveFeedback}
+                  </Alert>
+                )}
+              </div>
+            </Card>
+
+            {/* Right Column: Generated Post */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--bru-space-4)",
+              }}
+            >
+              <PostGenerator
+                ref={postGeneratorRef}
+                parameters={postGenerationParams}
+                profile={profile}
+                aiSettings={aiSettings!}
+                triggerGeneration={triggerPostGeneration}
+                onContentGenerated={handleContentGenerated}
+              />
+              {generatedContent && (
+                <div className="bru-form-actions">
+                  <Button
+                    onClick={() => void handleSaveDraft()}
+                    style={{ flex: 1 }}
+                    disabled={saving}
+                  >
+                    {saving ? (
+                      <Loader size={16} className="animate-spin" />
+                    ) : null}
+                    {saving ? "Saving…" : "Save to Library"}
+                  </Button>
+                  <Button
+                    onClick={handleOpenScheduleModal}
+                    variant="primary"
+                    style={{ flex: 1 }}
+                    disabled={saving}
+                  >
+                    Schedule Post
+                  </Button>
+                </div>
               )}
             </div>
-          </Card>
-
-          {/* Right Column: Generated Post */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "var(--bru-space-4)",
-            }}
-          >
-            <PostGenerator
-              ref={postGeneratorRef}
-              parameters={postGenerationParams}
-              profile={profile}
-              aiSettings={aiSettings!}
-              triggerGeneration={triggerPostGeneration}
-              onContentGenerated={handleContentGenerated}
-            />
-            {generatedContent && (
-              <div className="bru-form-actions">
-                <Button
-                  onClick={() => void handleSaveDraft()}
-                  style={{ flex: 1 }}
-                  disabled={saving}
-                >
-                  {saving ? <Loader size={16} className="animate-spin" /> : null}
-                  {saving ? "Saving…" : "Save to Library"}
-                </Button>
-                <Button
-                  onClick={handleOpenScheduleModal}
-                  variant="primary"
-                  style={{ flex: 1 }}
-                  disabled={saving}
-                >
-                  Schedule Post
-                </Button>
-              </div>
-            )}
           </div>
-        </div>
+        </>
       )}
 
       {activeSubNav === "content-strategy" && (

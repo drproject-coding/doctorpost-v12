@@ -66,6 +66,8 @@ interface NcbPostRow {
   formatted_output?: string | null;
   content_angle?: string | null;
   post_structure?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 }
 
 interface BrandContextForRecommendation {
@@ -166,6 +168,8 @@ function mapPostFromNcb(row: NcbPostRow): ScheduledPost {
     formattedOutput: row.formatted_output ?? undefined,
     contentAngle: row.content_angle ?? undefined,
     postStructure: row.post_structure ?? undefined,
+    createdAt: row.created_at ?? undefined,
+    updatedAt: row.updated_at ?? undefined,
   };
 }
 

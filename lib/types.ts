@@ -141,6 +141,8 @@ export interface ScheduledPost {
   factoryScore?: number;
   contentAngle?: string;
   postStructure?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface AnalyticsData {

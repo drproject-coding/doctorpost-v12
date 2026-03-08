@@ -13,30 +13,32 @@ export function CampaignList({ onSelect, onNewCampaign }: CampaignListProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/data/read/campaigns?_sort=id&_order=desc", {
+    fetch("/api/data/read/campaigns", {
       credentials: "include",
     })
       .then((r) => r.json())
       .then((data) => {
         const rows = data?.rows || data?.data || [];
         setCampaigns(
-          rows.map((r: Record<string, string>) => ({
-            id: r.id,
-            userId: r.user_id,
-            name: r.name,
-            durationWeeks: Number(r.duration_weeks),
-            postsPerWeek: Number(r.posts_per_week),
-            goals: r.goals,
-            pillarWeights: (() => {
-              try {
-                return JSON.parse(r.pillar_weights);
-              } catch {
-                return {};
-              }
-            })(),
-            status: r.status,
-            createdAt: r.created_at,
-          })),
+          rows
+            .map((r: Record<string, string>) => ({
+              id: r.id,
+              userId: r.user_id,
+              name: r.name,
+              durationWeeks: Number(r.duration_weeks),
+              postsPerWeek: Number(r.posts_per_week),
+              goals: r.goals,
+              pillarWeights: (() => {
+                try {
+                  return JSON.parse(r.pillar_weights);
+                } catch {
+                  return {};
+                }
+              })(),
+              status: r.status,
+              createdAt: r.created_at,
+            }))
+            .sort((a: Campaign, b: Campaign) => Number(b.id) - Number(a.id)),
         );
       })
       .catch(() => setCampaigns([]))

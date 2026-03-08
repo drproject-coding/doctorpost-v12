@@ -1262,6 +1262,37 @@ export default function StudioPage() {
   const handleManualSave = async () => {
     const text = stageContent.writer ?? postText;
     if (!text) return;
+    // If already saved, patch the existing post instead of creating a duplicate
+    if (savedId) {
+      setIsSaving(true);
+      try {
+        const formatterContent = stageContent.formatter ?? "";
+        await fetch(`/api/data/update/posts/${savedId}`, {
+          method: "PUT",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content: text,
+            format,
+            ...(imageUrl ? { image_url: imageUrl } : {}),
+            ...(score
+              ? {
+                  score: score.total,
+                  score_breakdown: JSON.stringify(score.breakdown),
+                  score_suggestions: JSON.stringify(score.suggestions),
+                }
+              : {}),
+            ...(strategy ? { strategy_output: JSON.stringify(strategy) } : {}),
+            formatted_output: formatterContent,
+          }),
+        });
+      } catch {
+        // silently fail
+      } finally {
+        setIsSaving(false);
+      }
+      return;
+    }
     setIsSaving(true);
     try {
       const formatterContent = stageContent.formatter ?? "";

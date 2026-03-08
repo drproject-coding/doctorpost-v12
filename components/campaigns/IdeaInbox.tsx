@@ -31,29 +31,34 @@ export function IdeaInbox({ onSelect }: IdeaInboxProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    fetch(
-      `/api/data/read/campaign_posts?generation_status=validated&_sort=slot_date&_order=asc`,
-      { credentials: "include" },
-    )
+    fetch(`/api/data/read/campaign_posts?generation_status=validated`, {
+      credentials: "include",
+    })
       .then((r) => r.json())
       .then((data) => {
         const rows = data?.rows || data?.data || [];
         setIdeas(
-          rows.map((r: Record<string, string>) => ({
-            id: String(r.id),
-            campaignId: String(r.campaign_id),
-            slotOrder: Number(r.slot_order),
-            slotDate: r.slot_date,
-            generationStatus:
-              (r.generation_status as CampaignPostStatus) || "validated",
-            topicCard: (() => {
-              try {
-                return JSON.parse(r.topic_card);
-              } catch {
-                return { headline: "Untitled", pillar: "General" };
-              }
-            })(),
-          })),
+          rows
+            .map((r: Record<string, string>) => ({
+              id: String(r.id),
+              campaignId: String(r.campaign_id),
+              slotOrder: Number(r.slot_order),
+              slotDate: r.slot_date,
+              generationStatus:
+                (r.generation_status as CampaignPostStatus) || "validated",
+              topicCard: (() => {
+                try {
+                  return JSON.parse(r.topic_card);
+                } catch {
+                  return { headline: "Untitled", pillar: "General" };
+                }
+              })(),
+            }))
+            .sort(
+              (a: InboxIdea, b: InboxIdea) =>
+                (a.slotDate || "").localeCompare(b.slotDate || "") ||
+                a.slotOrder - b.slotOrder,
+            ),
         );
       })
       .catch(() => setIdeas([]))

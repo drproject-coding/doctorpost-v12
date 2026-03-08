@@ -113,6 +113,7 @@ export default function FactoryPage() {
   const [incompleteSession, setIncompleteSession] =
     useState<SavedSession | null>(null);
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
+  const [hasSavedPost, setHasSavedPost] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -128,13 +129,14 @@ export default function FactoryPage() {
     }
   }, []);
 
-  // Save post when pipeline completes
+  // Save post when pipeline completes (once per pipeline run)
   useEffect(() => {
     if (
       state.phase === "complete" &&
       state.formattedPost &&
       state.selectedTopic &&
-      !running
+      !running &&
+      !hasSavedPost
     ) {
       const saveCompletedPost = async () => {
         try {
@@ -152,6 +154,7 @@ export default function FactoryPage() {
             userId: user?.id || "",
             factoryScore: state.scoreResult?.totalScore,
           });
+          setHasSavedPost(true);
           console.log("[Auto-save] Post saved successfully to library");
         } catch (error) {
           const errorMsg =
@@ -167,12 +170,17 @@ export default function FactoryPage() {
     state.selectedTopic,
     state.scoreResult,
     running,
+    hasSavedPost,
     user?.id,
   ]);
 
   const handleManualSave = useCallback(async () => {
     if (!state.formattedPost || !state.selectedTopic || !user?.id) {
       showToast("Cannot save: missing post data", "error");
+      return;
+    }
+    if (hasSavedPost) {
+      showToast("Post already saved to library", "success");
       return;
     }
 
@@ -212,7 +220,14 @@ export default function FactoryPage() {
     } finally {
       setIsSaving(false);
     }
-  }, [state.formattedPost, state.selectedTopic, state.scoreResult, user?.id]);
+  }, [
+    state.formattedPost,
+    state.selectedTopic,
+    state.scoreResult,
+    hasSavedPost,
+    user?.id,
+    showToast,
+  ]);
 
   const callPipeline = useCallback(
     async (action: string, extraBody: Record<string, unknown> = {}) => {
@@ -537,6 +552,7 @@ export default function FactoryPage() {
     });
     setIncompleteSession(null);
     setLastSavedAt(null);
+    setHasSavedPost(false);
   };
 
   /** Map a pipeline phase to the API action needed to retry it */

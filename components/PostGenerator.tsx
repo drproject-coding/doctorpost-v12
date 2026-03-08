@@ -14,11 +14,6 @@ import {
   AiSettings,
   AiProgress,
 } from "@/lib/types";
-import {
-  getPromptById,
-  preparePromptTemplate,
-  generatePost,
-} from "@/lib/prompts";
 import { Loader, Clock, Copy, Download } from "lucide-react";
 
 interface PostGeneratorProps {
@@ -71,35 +66,71 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
       setAiProgress(null);
 
       try {
-        // Use first available tone prompt as fallback until server-side generation (Task 8)
-        const promptTemplate = getPromptById("casual-witty");
-        if (!promptTemplate) {
-          throw new Error("No prompt template found");
+        setAiProgress({ step: "Generating your post...", percent: 10 });
+
+        const res = await fetch("/api/create/generate", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            topic: parameters.topic,
+            subtopic: parameters.coreTakeaway,
+            pillar: parameters.contentPillar,
+            contentAngle: parameters.contentAngle,
+            postStructure: parameters.postStructure,
+          }),
+          signal: controller.signal,
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: "Server error" }));
+          throw new Error(
+            (err as { message?: string; error?: string }).message ??
+              (err as { error?: string }).error ??
+              `Generation failed (${res.status})`,
+          );
         }
 
-        const preparedPrompt = preparePromptTemplate(
-          promptTemplate.promptTemplate,
-          {
-            topic: parameters.topic,
-            audience: profile.audience,
-            coreTakeaway: parameters.coreTakeaway,
-            ctaGoal: parameters.ctaGoal,
-            contentPillar: parameters.contentPillar,
-            hookPattern: parameters.contentAngle,
-            postType: parameters.postStructure,
-          },
-        );
+        // Read SSE stream
+        const reader = res.body?.getReader();
+        if (!reader) throw new Error("No response stream");
 
-        const content = await generatePost(
-          preparedPrompt,
-          aiSettings,
-          (progress) => setAiProgress(progress),
-          controller.signal,
-        );
-        setGeneratedContent(content);
-        onContentGeneratedRef.current(content);
+        const decoder = new TextDecoder();
+        let accumulated = "";
+        let buffer = "";
 
-        const wordCount = content.split(/\s+/).length;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() ?? "";
+
+          for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            const data = line.slice(6);
+            if (data === "[DONE]") continue;
+            try {
+              const event = JSON.parse(data) as {
+                type: string;
+                content?: string;
+              };
+              if (event.type === "token" && event.content) {
+                accumulated += event.content;
+                setGeneratedContent(accumulated);
+                setAiProgress({ step: "Writing...", percent: 50 });
+              }
+            } catch {
+              // skip unparseable SSE lines
+            }
+          }
+        }
+
+        setGeneratedContent(accumulated);
+        onContentGeneratedRef.current(accumulated);
+
+        const wordCount = accumulated.split(/\s+/).length;
         setEstimatedReadTime(Math.max(1, Math.ceil(wordCount / 225)));
       } catch (err) {
         if (controller.signal.aborted) return;

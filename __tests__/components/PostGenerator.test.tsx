@@ -1,6 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { jest } from "@jest/globals";
+import { TextEncoder, TextDecoder } from "util";
+
+// Polyfill for jsdom
+Object.assign(global, { TextEncoder, TextDecoder });
+
 import PostGenerator from "@/components/PostGenerator";
 import type {
   PostGenerationParameters,
@@ -35,24 +40,62 @@ jest.mock("lucide-react", () => ({
   Download: () => <span data-testid="icon-download">D</span>,
 }));
 
-// Mock lib/prompts
-jest.mock("@/lib/prompts", () => ({
-  getPromptById: jest.fn((id: string) => ({
-    id,
-    name: `Tone ${id}`,
-    description: "Test prompt",
-    promptTemplate: "Test template: {{topic}}",
-  })),
-  preparePromptTemplate: jest.fn((template: string, vars: any) =>
-    template.replace(/\{\{(\w+)\}\}/g, (_, key) => vars[key] || ""),
-  ),
-  generatePost: jest.fn(
-    async (prompt: string, settings: any, onProgress: any, signal: any) => {
-      onProgress({ step: "Generating...", percent: 50 });
-      return "This is a generated post content about the topic with engaging hooks and professional tone.";
+// --- Helpers for mocking fetch with SSE ---
+
+const GENERATED_CONTENT =
+  "This is a generated post content about the topic with engaging hooks and professional tone.";
+
+/**
+ * Build a fake ReadableStream body whose getReader() returns chunks of SSE data.
+ * Works even when the global ReadableStream constructor is missing (jsdom).
+ */
+function createFakeSSEBody(content: string) {
+  const encoder = new TextEncoder();
+  // Build one big SSE payload with individual token events
+  const tokens = content.split(" ");
+  let ssePayload = "";
+  tokens.forEach((tok, i) => {
+    const piece = (i === 0 ? "" : " ") + tok;
+    ssePayload += `data: ${JSON.stringify({ type: "token", content: piece })}\n\n`;
+  });
+  ssePayload += "data: [DONE]\n\n";
+
+  const encoded = encoder.encode(ssePayload);
+  let read = false;
+
+  return {
+    getReader() {
+      return {
+        read() {
+          if (!read) {
+            read = true;
+            return Promise.resolve({ done: false, value: encoded });
+          }
+          return Promise.resolve({ done: true, value: undefined });
+        },
+      };
     },
-  ),
-}));
+  };
+}
+
+function mockFetchSuccess() {
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+      ok: true,
+      body: createFakeSSEBody(GENERATED_CONTENT),
+    }),
+  ) as any;
+}
+
+function mockFetchError(status = 500, message = "Server error") {
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+      ok: false,
+      status,
+      json: () => Promise.resolve({ error: message }),
+    }),
+  ) as any;
+}
 
 describe("PostGenerator", () => {
   const mockParameters: PostGenerationParameters = {
@@ -111,6 +154,11 @@ describe("PostGenerator", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockFetchSuccess();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   test("renders without crashing initially", () => {
@@ -176,6 +224,14 @@ describe("PostGenerator", () => {
   });
 
   test("displays generating state with loader", async () => {
+    // Use a stream that never completes to keep the loading state visible
+    global.fetch = jest.fn(
+      () =>
+        new Promise(() => {
+          /* never resolves */
+        }),
+    ) as any;
+
     const { rerender } = render(
       <PostGenerator
         parameters={mockParameters}
@@ -196,10 +252,10 @@ describe("PostGenerator", () => {
       />,
     );
 
-    expect(screen.getByTestId("icon-loader")).toBeInTheDocument();
-    expect(
-      screen.getByText(/Generating your post|Generating.../i),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId("icon-loader")).toBeInTheDocument();
+      expect(screen.getByText(/Generating your post/i)).toBeInTheDocument();
+    });
   });
 
   test("displays generated content in textarea", async () => {
@@ -312,8 +368,7 @@ describe("PostGenerator", () => {
   });
 
   test("handles generation error state", async () => {
-    const { getPromptById } = require("@/lib/prompts");
-    getPromptById.mockReturnValueOnce(null);
+    mockFetchError(500, "Generation failed");
 
     const { rerender } = render(
       <PostGenerator
@@ -362,14 +417,11 @@ describe("PostGenerator", () => {
       />,
     );
 
-    // Content should not be generated
-    expect(
-      screen.queryByText(/generated post content/),
-    ).not.toBeInTheDocument();
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 
-  test("does not trigger generation when postType is missing", async () => {
-    const incompleteParams = { ...mockParameters, postType: "" };
+  test("does not trigger generation when postStructure is missing", async () => {
+    const incompleteParams = { ...mockParameters, postStructure: "" };
     const { rerender } = render(
       <PostGenerator
         parameters={incompleteParams}
@@ -390,9 +442,7 @@ describe("PostGenerator", () => {
       />,
     );
 
-    expect(
-      screen.queryByText(/generated post content/),
-    ).not.toBeInTheDocument();
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 
   test("calls onContentGenerated callback when content is generated", async () => {
@@ -421,7 +471,7 @@ describe("PostGenerator", () => {
     });
   });
 
-  test("displays progress information during generation", async () => {
+  test("sends correct payload to generate endpoint", async () => {
     const { rerender } = render(
       <PostGenerator
         parameters={mockParameters}
@@ -442,12 +492,20 @@ describe("PostGenerator", () => {
       />,
     );
 
-    // Progress bar should be visible during generation
     await waitFor(() => {
-      const progressBar = document.querySelector('div[style*="width: 50%"]');
-      expect(
-        progressBar || screen.getByTestId("icon-loader"),
-      ).toBeInTheDocument();
+      expect(global.fetch).toHaveBeenCalledWith(
+        "/api/create/generate",
+        expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify({
+            topic: "AI in Healthcare",
+            subtopic: "AI improves diagnostic accuracy",
+            pillar: "education",
+            contentAngle: "contrarian",
+            postStructure: "opinionTake",
+          }),
+        }),
+      );
     });
   });
 

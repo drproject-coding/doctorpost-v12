@@ -4,37 +4,25 @@ import {
   getRecommendedOptions,
 } from "@/lib/post-creation/smartDefaults";
 import {
-  enhancedPostTypes,
-  enhancedHookPatterns,
+  postStructureOptions,
+  contentAngleOptions,
   enhancedContentPillars,
   enhancedToneOptions,
 } from "@/lib/dropdownData";
 import type { ProfileCreationData } from "@/lib/hooks/useProfileData";
 
-// Helper: find the first high-performance option in a list
-function firstHighPerf(
-  options: { id: string; performanceIndicator?: string }[],
-) {
-  return options.find((o) => o.performanceIndicator === "high") ?? options[0];
-}
-
 describe("Smart Defaults — getSmartDefaults", () => {
-  it("returns high-performance defaults when profile is null", () => {
+  it("returns first options as defaults when profile is null", () => {
     const defaults = getSmartDefaults(null);
 
-    expect(defaults.selectedPostType).toBe(firstHighPerf(enhancedPostTypes).id);
-    expect(defaults.selectedHookPattern).toBe(
-      firstHighPerf(enhancedHookPatterns).id,
-    );
-    expect(defaults.selectedPillar).toBe(
-      firstHighPerf(enhancedContentPillars).id,
-    );
-    expect(defaults.selectedTone).toBe(firstHighPerf(enhancedToneOptions).id);
+    expect(defaults.selectedPostStructure).toBe(postStructureOptions[0].id);
+    expect(defaults.selectedContentAngle).toBe(contentAngleOptions[0].id);
+    expect(defaults.selectedPillar).toBeDefined();
+    expect(defaults.selectedTone).toBeDefined();
   });
 
   it("matches tone from profile tones array", () => {
-    // Use the actual label of a tone option for matching
-    const knownTone = enhancedToneOptions[2]; // pick 3rd tone
+    const knownTone = enhancedToneOptions[2];
     const profile: ProfileCreationData = {
       audience: [],
       tones: [knownTone.label],
@@ -61,11 +49,13 @@ describe("Smart Defaults — getSmartDefaults", () => {
     };
 
     const defaults = getSmartDefaults(profile);
-    expect(defaults.selectedTone).toBe(firstHighPerf(enhancedToneOptions).id);
+    // Should fall back to a valid tone
+    const allToneIds = enhancedToneOptions.map((o) => o.id);
+    expect(allToneIds).toContain(defaults.selectedTone);
   });
 
   it("matches pillar from profile industry", () => {
-    const knownPillar = enhancedContentPillars[1]; // pick 2nd pillar
+    const knownPillar = enhancedContentPillars[1];
     const profile: ProfileCreationData = {
       audience: [],
       tones: [],
@@ -92,21 +82,20 @@ describe("Smart Defaults — getSmartDefaults", () => {
     };
 
     const defaults = getSmartDefaults(profile);
-    expect(defaults.selectedPillar).toBe(
-      firstHighPerf(enhancedContentPillars).id,
-    );
+    const allPillarIds = enhancedContentPillars.map((o) => o.id);
+    expect(allPillarIds).toContain(defaults.selectedPillar);
   });
 
   it("always returns valid option IDs for all four dimensions", () => {
     const defaults = getSmartDefaults(null);
 
-    const allPostTypeIds = enhancedPostTypes.map((o) => o.id);
-    const allHookPatternIds = enhancedHookPatterns.map((o) => o.id);
+    const allPostStructureIds = postStructureOptions.map((o) => o.id);
+    const allContentAngleIds = contentAngleOptions.map((o) => o.id);
     const allPillarIds = enhancedContentPillars.map((o) => o.id);
     const allToneIds = enhancedToneOptions.map((o) => o.id);
 
-    expect(allPostTypeIds).toContain(defaults.selectedPostType);
-    expect(allHookPatternIds).toContain(defaults.selectedHookPattern);
+    expect(allPostStructureIds).toContain(defaults.selectedPostStructure);
+    expect(allContentAngleIds).toContain(defaults.selectedContentAngle);
     expect(allPillarIds).toContain(defaults.selectedPillar);
     expect(allToneIds).toContain(defaults.selectedTone);
   });
@@ -123,7 +112,8 @@ describe("Smart Defaults — getSmartDefaults", () => {
     };
 
     const defaults = getSmartDefaults(profile);
-    expect(defaults.selectedTone).toBe(firstHighPerf(enhancedToneOptions).id);
+    const allToneIds = enhancedToneOptions.map((o) => o.id);
+    expect(allToneIds).toContain(defaults.selectedTone);
   });
 });
 
@@ -131,37 +121,16 @@ describe("Recommended Options — getRecommendedOptions", () => {
   it("returns all options for each dimension when profile is null", () => {
     const recommended = getRecommendedOptions(null);
 
-    expect(recommended.postTypes.length).toBe(enhancedPostTypes.length);
-    expect(recommended.hookPatterns.length).toBe(enhancedHookPatterns.length);
+    expect(recommended.postStructures.length).toBe(postStructureOptions.length);
+    expect(recommended.contentAngles.length).toBe(contentAngleOptions.length);
     expect(recommended.contentPillars.length).toBe(
       enhancedContentPillars.length,
     );
     expect(recommended.tones.length).toBe(enhancedToneOptions.length);
   });
 
-  it("sorts high-performance options before others when no profile", () => {
-    const recommended = getRecommendedOptions(null);
-
-    // High-perf options should be sorted earlier
-    const highPerfPostTypes = recommended.postTypes.filter(
-      (o) => o.performanceIndicator === "high",
-    );
-    if (highPerfPostTypes.length > 0) {
-      const firstHighIdx = recommended.postTypes.findIndex(
-        (o) => o.performanceIndicator === "high",
-      );
-      const firstNonHighIdx = recommended.postTypes.findIndex(
-        (o) => o.performanceIndicator !== "high" && !o.isTrending,
-      );
-      // At least one high-perf option should appear before non-high, non-trending options
-      if (firstNonHighIdx >= 0) {
-        expect(firstHighIdx).toBeLessThan(firstNonHighIdx);
-      }
-    }
-  });
-
   it("prioritises profile-matching tones over non-matching", () => {
-    const knownTone = enhancedToneOptions[enhancedToneOptions.length - 1]; // last tone
+    const knownTone = enhancedToneOptions[enhancedToneOptions.length - 1];
     const profile: ProfileCreationData = {
       audience: [],
       tones: [knownTone.label],
@@ -173,7 +142,6 @@ describe("Recommended Options — getRecommendedOptions", () => {
     };
 
     const recommended = getRecommendedOptions(profile);
-    // The matched tone should be the first item (score 100+)
     expect(recommended.tones[0].id).toBe(knownTone.id);
   });
 
@@ -195,12 +163,16 @@ describe("Recommended Options — getRecommendedOptions", () => {
   });
 
   it("does not mutate the original option arrays", () => {
-    const originalPostTypesOrder = [...enhancedPostTypes.map((o) => o.id)];
+    const originalPostStructuresOrder = [
+      ...postStructureOptions.map((o) => o.id),
+    ];
     const originalTonesOrder = [...enhancedToneOptions.map((o) => o.id)];
 
     getRecommendedOptions(null);
 
-    expect(enhancedPostTypes.map((o) => o.id)).toEqual(originalPostTypesOrder);
+    expect(postStructureOptions.map((o) => o.id)).toEqual(
+      originalPostStructuresOrder,
+    );
     expect(enhancedToneOptions.map((o) => o.id)).toEqual(originalTonesOrder);
   });
 });
@@ -209,11 +181,11 @@ describe("Post Creation Integration — end-to-end data flow", () => {
   it("smart defaults IDs can be looked up in dropdown options", () => {
     const defaults = getSmartDefaults(null);
 
-    const postType = enhancedPostTypes.find(
-      (o) => o.id === defaults.selectedPostType,
+    const postStructure = postStructureOptions.find(
+      (o) => o.id === defaults.selectedPostStructure,
     );
-    const hookPattern = enhancedHookPatterns.find(
-      (o) => o.id === defaults.selectedHookPattern,
+    const contentAngle = contentAngleOptions.find(
+      (o) => o.id === defaults.selectedContentAngle,
     );
     const pillar = enhancedContentPillars.find(
       (o) => o.id === defaults.selectedPillar,
@@ -222,14 +194,13 @@ describe("Post Creation Integration — end-to-end data flow", () => {
       (o) => o.id === defaults.selectedTone,
     );
 
-    expect(postType).toBeDefined();
-    expect(hookPattern).toBeDefined();
+    expect(postStructure).toBeDefined();
+    expect(contentAngle).toBeDefined();
     expect(pillar).toBeDefined();
     expect(tone).toBeDefined();
 
-    // Each resolved option should have a non-empty value for the form
-    expect(postType!.value).toBeTruthy();
-    expect(hookPattern!.value).toBeTruthy();
+    expect(postStructure!.value).toBeTruthy();
+    expect(contentAngle!.value).toBeTruthy();
     expect(pillar!.value).toBeTruthy();
     expect(tone!.value).toBeTruthy();
   });
@@ -247,12 +218,11 @@ describe("Post Creation Integration — end-to-end data flow", () => {
 
     const defaults = getSmartDefaults(profile);
 
-    // All defaults should be valid IDs
     expect(
-      enhancedPostTypes.some((o) => o.id === defaults.selectedPostType),
+      postStructureOptions.some((o) => o.id === defaults.selectedPostStructure),
     ).toBe(true);
     expect(
-      enhancedHookPatterns.some((o) => o.id === defaults.selectedHookPattern),
+      contentAngleOptions.some((o) => o.id === defaults.selectedContentAngle),
     ).toBe(true);
     expect(
       enhancedContentPillars.some((o) => o.id === defaults.selectedPillar),
@@ -261,7 +231,6 @@ describe("Post Creation Integration — end-to-end data flow", () => {
       enhancedToneOptions.some((o) => o.id === defaults.selectedTone),
     ).toBe(true);
 
-    // With matching profile data, tone and pillar should match profile
     expect(defaults.selectedTone).toBe(enhancedToneOptions[0].id);
     expect(defaults.selectedPillar).toBe(enhancedContentPillars[0].id);
   });

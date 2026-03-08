@@ -14,11 +14,11 @@ export type PostCreationSource = "profile" | "preset" | "custom";
  * so they never import dropdown data directly.
  */
 export interface PostCreationConfig {
-  /** All available post-type options (e.g. carousel, story, poll). */
-  postTypes: DropdownOption[];
+  /** All available post-structure options (e.g. Opinion/Take, How-To, Story). */
+  postStructures: DropdownOption[];
 
-  /** All available hook-pattern options (e.g. question, bold claim). */
-  hookPatterns: DropdownOption[];
+  /** All available content-angle options (e.g. Contrarian, Analytical, Listicle). */
+  contentAngles: DropdownOption[];
 
   /** All available content-pillar options (e.g. education, inspiration). */
   contentPillars: DropdownOption[];
@@ -36,11 +36,11 @@ export interface PostCreationConfig {
  * data.
  */
 export interface PostCreationDefaults {
-  /** Id of the selected post type. */
-  selectedPostType: string;
+  /** Id of the selected post structure. */
+  selectedPostStructure: string;
 
-  /** Id of the selected hook pattern. */
-  selectedHookPattern: string;
+  /** Id of the selected content angle. */
+  selectedContentAngle: string;
 
   /** Id of the selected content pillar. */
   selectedPillar: string;

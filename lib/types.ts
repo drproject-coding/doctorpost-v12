@@ -139,6 +139,8 @@ export interface ScheduledPost {
   formattedOutput?: string;
   /** Score from the Content Factory scoring agent (0-100) */
   factoryScore?: number;
+  contentAngle?: string;
+  postStructure?: string;
 }
 
 export interface AnalyticsData {
@@ -166,21 +168,15 @@ export interface SubtopicSuggestion {
 }
 
 export interface PostRecommendation {
-  postType: string;
-  hookPattern: string;
+  contentAngle: string;
+  postStructure: string;
   contentPillar: string;
-  toneId: string;
   confidence: number;
   reasoning: {
-    postType: string;
-    hookPattern: string;
+    contentAngle: string;
+    postStructure: string;
     contentPillar: string;
-    tone: string;
   };
-  compatiblePostTypes: string[];
-  compatibleHookPatterns: string[];
-  compatibleContentPillars: string[];
-  compatibleTones: string[];
 }
 
 export interface DropdownOption {
@@ -189,8 +185,8 @@ export interface DropdownOption {
   label: string;
   category: string;
   description: string;
-  exampleSnippet: string;
-  useCases: string[];
+  exampleSnippet?: string;
+  useCases?: string[];
   performanceIndicator?: "high" | "medium" | "experimental";
   isTrending?: boolean;
 }
@@ -222,9 +218,8 @@ export interface PostGenerationParameters {
   coreTakeaway?: string;
   ctaGoal?: string;
   contentPillar: string;
-  hookPattern: string;
-  postType: string;
-  toneId: string;
+  contentAngle: string;
+  postStructure: string;
   triggerGeneration: number;
 }
 

@@ -1,13 +1,11 @@
 "use client";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { Alert, Button, Card } from "@bruddle/react";
 import {
   BrandProfile,
   SubtopicSuggestion,
   PostRecommendation,
-  CompatibilityMap,
   PostGenerationParameters,
   PostStatus,
   ScheduledPost,
@@ -16,34 +14,37 @@ import {
 import {
   getBrandProfile,
   findSubtopics,
-  getPostRecommendations,
-  enhancedPostTypes,
-  enhancedHookPatterns,
   enhancedContentPillars,
-  enhancedToneOptions,
   savePostDraft,
   schedulePost,
 } from "@/lib/api";
+import { postStructureOptions, contentAngleOptions } from "@/lib/dropdownData";
 import { getSmartDefaults } from "@/lib/post-creation/smartDefaults";
-import { Search, TrendingUp, ArrowRight, Loader } from "lucide-react";
+import {
+  Search,
+  TrendingUp,
+  ArrowRight,
+  Loader,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import EnhancedDropdown from "@/components/EnhancedDropdown";
+import ContentAngleChips from "@/components/create/ContentAngleChips";
+import PostStructureCards from "@/components/create/PostStructureCards";
 import PostGenerator, { PostGeneratorRef } from "@/components/PostGenerator";
 import SchedulePostModal from "@/components/SchedulePostModal";
 import { useAuth } from "@/lib/auth-context";
-import { IdeaInbox, type InboxIdea } from "@/components/campaigns/IdeaInbox";
 
 export default function CreatePage() {
   const { user, loadingAuth } = useAuth();
-  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<BrandProfile | null>(null);
   const [activeSubNav, setActiveSubNav] = useState("generate-post");
 
   // Form values
-  const [postType, setPostType] = useState("");
-  const [hookPattern, setHookPattern] = useState("");
+  const [postStructure, setPostStructure] = useState("");
+  const [contentAngle, setContentAngle] = useState("");
   const [contentPillar, setContentPillar] = useState("");
-  const [selectedToneId, setSelectedToneId] = useState("");
 
   // Subtopic feature
   const [topic, setTopic] = useState("");
@@ -56,6 +57,8 @@ export default function CreatePage() {
   const [recommendation, setRecommendation] =
     useState<PostRecommendation | null>(null);
   const [loadingRecommendation, setLoadingRecommendation] = useState(false);
+  const [showRecommendationReasoning, setShowRecommendationReasoning] =
+    useState(false);
 
   // Additional parameters
   const [coreTakeaway, setCoreTakeaway] = useState<string>("");
@@ -63,7 +66,6 @@ export default function CreatePage() {
   const [triggerPostGeneration, setTriggerPostGeneration] = useState(0);
   const [generatedContent, setGeneratedContent] = useState<string>("");
   const postGeneratorRef = useRef<PostGeneratorRef>(null);
-  const [campaignPostId, setCampaignPostId] = useState<string | null>(null);
 
   // Schedule Post Modal
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
@@ -81,26 +83,20 @@ export default function CreatePage() {
         const data = await getBrandProfile(user.id);
         setProfile(data);
 
-        // Use smart defaults based on profile
+        // Apply smart defaults
         const defaults = getSmartDefaults(data);
-
-        // Map IDs to values
-        const toneOpt = enhancedToneOptions.find(
-          (o) => o.id === defaults.selectedTone,
+        const psOpt = postStructureOptions.find(
+          (o) => o.id === defaults.selectedPostStructure,
         );
-        const ptOpt = enhancedPostTypes.find(
-          (o) => o.id === defaults.selectedPostType,
-        );
-        const hpOpt = enhancedHookPatterns.find(
-          (o) => o.id === defaults.selectedHookPattern,
+        const caOpt = contentAngleOptions.find(
+          (o) => o.id === defaults.selectedContentAngle,
         );
         const cpOpt = enhancedContentPillars.find(
           (o) => o.id === defaults.selectedPillar,
         );
 
-        if (toneOpt) setSelectedToneId(toneOpt.value);
-        if (ptOpt) setPostType(ptOpt.value);
-        if (hpOpt) setHookPattern(hpOpt.value);
+        if (psOpt) setPostStructure(psOpt.value);
+        if (caOpt) setContentAngle(caOpt.value);
         if (cpOpt) setContentPillar(cpOpt.value);
       } catch (error) {
         console.error("Failed to load profile:", error);
@@ -110,102 +106,6 @@ export default function CreatePage() {
     };
     void fetchProfile();
   }, [user?.id, loadingAuth]);
-
-  // Pre-fill from ?topicCard=... URL param (set by "Write this post" button)
-  useEffect(() => {
-    const raw = searchParams.get("topicCard");
-    const postId = searchParams.get("campaignPostId");
-    if (postId) setCampaignPostId(postId);
-    if (!raw) return;
-    try {
-      const card = JSON.parse(decodeURIComponent(raw)) as Record<
-        string,
-        string
-      >;
-      if (card.headline) setTopic(card.headline);
-      if (card.angle) setCoreTakeaway(card.angle);
-      // Map pillar → contentPillar if exact match exists in options
-      if (card.pillar) {
-        const match = enhancedContentPillars.find(
-          (o) =>
-            o.value.toLowerCase() === card.pillar.toLowerCase() ||
-            o.label?.toLowerCase() === card.pillar.toLowerCase(),
-        );
-        if (match) setContentPillar(match.value);
-      }
-      // Map templateRecommendation → postType
-      if (card.templateRecommendation) {
-        const match = enhancedPostTypes.find(
-          (o) =>
-            o.value
-              .toLowerCase()
-              .includes(card.templateRecommendation.toLowerCase()) ||
-            card.templateRecommendation
-              .toLowerCase()
-              .includes(o.value.toLowerCase()),
-        );
-        if (match) setPostType(match.value);
-      }
-      // Map hookCategoryRecommendation → hookPattern
-      if (card.hookCategoryRecommendation) {
-        const match = enhancedHookPatterns.find(
-          (o) =>
-            o.value
-              .toLowerCase()
-              .includes(card.hookCategoryRecommendation.toLowerCase()) ||
-            card.hookCategoryRecommendation
-              .toLowerCase()
-              .includes(o.value.toLowerCase()),
-        );
-        if (match) setHookPattern(match.value);
-      }
-    } catch {
-      // ignore parse errors
-    }
-  }, [searchParams]);
-
-  const handleIdeaSelect = (idea: InboxIdea) => {
-    const card = idea.topicCard;
-    if (card.headline) setTopic(card.headline as string);
-    if (card.angle) setCoreTakeaway(card.angle as string);
-    setCampaignPostId(idea.id);
-    if (card.pillar) {
-      const match = enhancedContentPillars.find(
-        (o) =>
-          o.value.toLowerCase() === (card.pillar as string).toLowerCase() ||
-          o.label?.toLowerCase() === (card.pillar as string).toLowerCase(),
-      );
-      if (match) setContentPillar(match.value);
-    }
-    if (card.templateRecommendation) {
-      const match = enhancedPostTypes.find(
-        (o) =>
-          o.value
-            .toLowerCase()
-            .includes((card.templateRecommendation as string).toLowerCase()) ||
-          (card.templateRecommendation as string)
-            .toLowerCase()
-            .includes(o.value.toLowerCase()),
-      );
-      if (match) setPostType(match.value);
-    }
-    if (card.hookCategoryRecommendation) {
-      const match = enhancedHookPatterns.find(
-        (o) =>
-          o.value
-            .toLowerCase()
-            .includes(
-              (card.hookCategoryRecommendation as string).toLowerCase(),
-            ) ||
-          (card.hookCategoryRecommendation as string)
-            .toLowerCase()
-            .includes(o.value.toLowerCase()),
-      );
-      if (match) setHookPattern(match.value);
-    }
-    // scroll to form
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   const aiSettings: AiSettings | null = useMemo(() => {
     if (!profile) return null;
@@ -221,23 +121,12 @@ export default function CreatePage() {
     };
   }, [profile]);
 
-  const brandContext = useMemo(() => {
-    if (!profile) return undefined;
-    return {
-      industry: profile.industry,
-      role: profile.role,
-      audience: profile.audience,
-      tones: profile.tones,
-      contentStrategy: profile.contentStrategy,
-      definition: profile.definition,
-    };
-  }, [profile]);
-
   const handleTopicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTopic(e.target.value);
     setSubtopics([]);
     setSelectedSubtopic(null);
     setRecommendation(null);
+    setShowRecommendationReasoning(false);
     setTriggerPostGeneration(0);
     setGeneratedContent("");
   };
@@ -248,30 +137,12 @@ export default function CreatePage() {
     setSubtopics([]);
     setSelectedSubtopic(null);
     setRecommendation(null);
+    setShowRecommendationReasoning(false);
     setTriggerPostGeneration(0);
     setGeneratedContent("");
     try {
-      const [results, usedRes] = await Promise.all([
-        findSubtopics(topic, 8, aiSettings ?? undefined),
-        fetch("/api/used-topics").then((r) =>
-          r.ok
-            ? (r.json() as Promise<{ headlines: string[] }>)
-            : { headlines: [] as string[] },
-        ),
-      ]);
-      const usedHeadlines = usedRes.headlines ?? [];
-      if (usedHeadlines.length > 0) {
-        const { filterNewProposals } = await import("@/lib/agents/topicDedup");
-        const withHeadline = results.map((r) => ({ ...r, headline: r.text }));
-        const filtered = filterNewProposals(withHeadline, usedHeadlines);
-        setSubtopics(
-          filtered
-            .slice(0, 5)
-            .map(({ headline: _h, ...r }) => r as SubtopicSuggestion),
-        );
-      } else {
-        setSubtopics(results.slice(0, 5));
-      }
+      const results = await findSubtopics(topic, 5, aiSettings ?? undefined);
+      setSubtopics(results);
     } catch (error) {
       console.error("Failed to find subtopics:", error);
     } finally {
@@ -279,40 +150,36 @@ export default function CreatePage() {
     }
   };
 
-  const handleSelectSubtopic = async (subtopic: SubtopicSuggestion) => {
-    setSelectedSubtopic(subtopic);
-    setTopic(subtopic.text);
-    setTriggerPostGeneration(0);
-    setGeneratedContent("");
+  const fetchRecommendation = async (
+    topicText: string,
+    subtopicText: string,
+  ) => {
     setLoadingRecommendation(true);
     try {
-      const result = await getPostRecommendations(
-        topic,
-        subtopic.text,
-        aiSettings ?? undefined,
-        brandContext,
-      );
+      const res = await fetch("/api/create/recommend-params", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: topicText, subtopic: subtopicText }),
+      });
+      if (!res.ok) return;
+      const result = (await res.json()) as PostRecommendation;
       setRecommendation(result);
-      setPostType(
-        enhancedPostTypes.some((opt) => opt.value === result.postType)
-          ? result.postType
-          : "",
-      );
-      setHookPattern(
-        enhancedHookPatterns.some((opt) => opt.value === result.hookPattern)
-          ? result.hookPattern
-          : "",
-      );
-      setContentPillar(
-        enhancedContentPillars.some((opt) => opt.value === result.contentPillar)
-          ? result.contentPillar
-          : "",
-      );
+      if (result.postStructure) setPostStructure(result.postStructure);
+      if (result.contentAngle) setContentAngle(result.contentAngle);
+      if (result.contentPillar) setContentPillar(result.contentPillar);
     } catch (error) {
       console.error("Failed to get recommendations:", error);
     } finally {
       setLoadingRecommendation(false);
     }
+  };
+
+  const handleSelectSubtopic = async (subtopic: SubtopicSuggestion) => {
+    setSelectedSubtopic(subtopic);
+    setTriggerPostGeneration(0);
+    setGeneratedContent("");
+    await fetchRecommendation(topic, subtopic.text);
   };
 
   const getSourceBadgeLabel = (source: string) => {
@@ -337,47 +204,15 @@ export default function CreatePage() {
 
     setSaveFeedback(null);
 
-    // If no AI recommendation yet, fetch one now using the topic directly
+    // If no AI recommendation yet, fetch one using the topic directly
     if (!recommendation && aiSettings) {
-      setLoadingRecommendation(true);
-      try {
-        const result = await getPostRecommendations(
-          topic,
-          topic, // use topic as subtopic when no subtopic selected
-          aiSettings,
-          brandContext,
-        );
-        setRecommendation(result);
-        if (enhancedPostTypes.some((opt) => opt.value === result.postType)) {
-          setPostType(result.postType);
-        }
-        if (
-          enhancedHookPatterns.some((opt) => opt.value === result.hookPattern)
-        ) {
-          setHookPattern(result.hookPattern);
-        }
-        if (
-          enhancedContentPillars.some(
-            (opt) => opt.value === result.contentPillar,
-          )
-        ) {
-          setContentPillar(result.contentPillar);
-        }
-        if (result.toneId) {
-          setSelectedToneId(result.toneId);
-        }
-      } catch (error) {
-        console.error("Failed to get recommendations:", error);
-        // Non-fatal: proceed with current dropdown values
-      } finally {
-        setLoadingRecommendation(false);
-      }
+      await fetchRecommendation(topic, topic);
     }
 
     // Require form completeness before generating
-    if (!postType || !hookPattern || !contentPillar || !selectedToneId) {
+    if (!postStructure || !contentAngle || !contentPillar) {
       setSaveFeedback(
-        "Please fill in all required fields (Post Type, Hook Pattern, Content Pillar, Tone) before generating.",
+        "Please select a Post Structure, Content Angle, and Content Pillar before generating.",
       );
       setTimeout(() => setSaveFeedback(null), 3000);
       return;
@@ -389,7 +224,6 @@ export default function CreatePage() {
 
   const handleContentGenerated = (content: string) => {
     setGeneratedContent(content);
-    // Auto-save to library
     if (content && profile) {
       const newPost: ScheduledPost = {
         id: "",
@@ -398,6 +232,8 @@ export default function CreatePage() {
         content,
         scheduledAt: "",
         pillar: contentPillar,
+        contentAngle,
+        postStructure,
         status: "draft",
       };
       void savePostDraft(newPost).catch(() => {
@@ -422,6 +258,8 @@ export default function CreatePage() {
         content: generatedContent,
         scheduledAt: new Date().toISOString(),
         pillar: contentPillar,
+        contentAngle,
+        postStructure,
         status: "draft",
       };
       await savePostDraft(newPost);
@@ -460,6 +298,8 @@ export default function CreatePage() {
         content: generatedContent,
         scheduledAt: new Date(date).toISOString(),
         pillar: contentPillar,
+        contentAngle,
+        postStructure,
         status: status,
       };
       await schedulePost(newPost);
@@ -480,81 +320,10 @@ export default function CreatePage() {
     coreTakeaway: coreTakeaway,
     ctaGoal: ctaGoal,
     contentPillar: contentPillar,
-    hookPattern: hookPattern,
-    postType: postType,
-    toneId: selectedToneId,
+    contentAngle: contentAngle,
+    postStructure: postStructure,
     triggerGeneration: triggerPostGeneration,
   };
-
-  const getCompatibilityMap = (rec: PostRecommendation | null) => {
-    if (!rec) return {};
-    const map: CompatibilityMap = {};
-
-    enhancedPostTypes.forEach((opt) => {
-      if (opt.value === rec.postType) {
-        map[opt.id] = { status: "recommended", reason: rec.reasoning.postType };
-      } else if (rec.compatiblePostTypes.includes(opt.value)) {
-        map[opt.id] = {
-          status: "caution",
-          reason: "Compatible option, but not the primary recommendation.",
-        };
-      } else {
-        map[opt.id] = { status: "neutral" };
-      }
-    });
-
-    enhancedHookPatterns.forEach((opt) => {
-      if (opt.value === rec.hookPattern) {
-        map[opt.id] = {
-          status: "recommended",
-          reason: rec.reasoning.hookPattern,
-        };
-      } else if (rec.compatibleHookPatterns.includes(opt.value)) {
-        map[opt.id] = {
-          status: "caution",
-          reason: "Compatible option, but not the primary recommendation.",
-        };
-      } else {
-        map[opt.id] = { status: "neutral" };
-      }
-    });
-
-    enhancedContentPillars.forEach((opt) => {
-      if (opt.value === rec.contentPillar) {
-        map[opt.id] = {
-          status: "recommended",
-          reason: rec.reasoning.contentPillar,
-        };
-      } else if (rec.compatibleContentPillars.includes(opt.value)) {
-        map[opt.id] = {
-          status: "caution",
-          reason: "Compatible option, but not the primary recommendation.",
-        };
-      } else {
-        map[opt.id] = { status: "neutral" };
-      }
-    });
-
-    enhancedToneOptions.forEach((opt) => {
-      if (opt.id === rec.toneId) {
-        map[opt.id] = { status: "recommended", reason: rec.reasoning.tone };
-      } else if (rec.compatibleTones.includes(opt.id)) {
-        map[opt.id] = {
-          status: "caution",
-          reason: "Compatible option, but not the primary recommendation.",
-        };
-      } else {
-        map[opt.id] = { status: "neutral" };
-      }
-    });
-
-    return map;
-  };
-
-  const compatibilityMap = useMemo(
-    () => getCompatibilityMap(recommendation),
-    [recommendation],
-  );
 
   if (loading) {
     return (
@@ -622,332 +391,377 @@ export default function CreatePage() {
       </div>
 
       {activeSubNav === "generate-post" && (
-        <>
-          <IdeaInbox onSelect={handleIdeaSelect} />
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "var(--bru-space-6)",
-            }}
-            className="create-grid"
-          >
-            {/* Left Column: Input Form */}
-            <Card variant="raised">
-              <h2
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "var(--bru-space-6)",
+          }}
+          className="create-grid"
+        >
+          {/* Left Column: Input Form */}
+          <Card variant="raised">
+            <h2
+              style={{
+                fontSize: "var(--bru-text-h5)",
+                fontWeight: 700,
+                marginBottom: "var(--bru-space-4)",
+              }}
+            >
+              Post Details
+            </h2>
+
+            <div className="bru-form-stack">
+              {/* Topic field */}
+              <div className="bru-field bru-field--has-icon">
+                <label htmlFor="topic-input" className="bru-field__label">
+                  Topic
+                </label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    type="text"
+                    id="topic-input"
+                    className="bru-input"
+                    style={{ width: "100%", paddingRight: 40 }}
+                    value={topic}
+                    onChange={handleTopicChange}
+                    placeholder="e.g., 'AI in healthcare'"
+                  />
+                  <button
+                    onClick={() => void handleFindSubtopics()}
+                    disabled={loadingSubtopics || !topic.trim()}
+                    aria-label="Find Subtopics"
+                    style={{
+                      position: "absolute",
+                      right: 8,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 4,
+                    }}
+                  >
+                    {loadingSubtopics ? (
+                      <Loader
+                        size={20}
+                        className="animate-spin"
+                        style={{ color: "var(--bru-purple)" }}
+                      />
+                    ) : (
+                      <Search size={20} style={{ color: "var(--bru-grey)" }} />
+                    )}
+                  </button>
+                </div>
+
+                {subtopics.length > 0 && (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "var(--bru-space-2)",
+                      marginTop: "var(--bru-space-3)",
+                    }}
+                  >
+                    <span className="bru-field__label">
+                      Subtopic Suggestions
+                    </span>
+                    {subtopics.map((sub) => (
+                      <button
+                        key={sub.id}
+                        type="button"
+                        onClick={() => void handleSelectSubtopic(sub)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "var(--bru-space-2) var(--bru-space-3)",
+                          border:
+                            selectedSubtopic?.id === sub.id
+                              ? "2px solid var(--bru-purple)"
+                              : "var(--bru-border)",
+                          background:
+                            selectedSubtopic?.id === sub.id
+                              ? "var(--bru-purple-20)"
+                              : "var(--bru-cream)",
+                          cursor: "pointer",
+                          textAlign: "left",
+                          width: "100%",
+                          fontFamily: "var(--bru-font-primary)",
+                          fontSize: "var(--bru-text-md)",
+                        }}
+                      >
+                        <span style={{ fontWeight: 500 }}>{sub.text}</span>
+                        <span
+                          className="bru-tag bru-tag--filled"
+                          style={{
+                            fontSize: 11,
+                            padding: "2px 8px",
+                            background:
+                              sub.source === "google_trends"
+                                ? "var(--bru-purple-20)"
+                                : sub.source === "google_questions"
+                                  ? "rgba(0, 170, 0, 0.12)"
+                                  : "rgba(255, 170, 0, 0.15)",
+                          }}
+                        >
+                          {getSourceBadgeLabel(sub.source)}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Core Takeaway */}
+              <div className="bru-field">
+                <label htmlFor="coreTakeaway" className="bru-field__label">
+                  Core Takeaway (Optional)
+                </label>
+                <textarea
+                  id="coreTakeaway"
+                  className="bru-input"
+                  style={{ width: "100%", minHeight: 80, resize: "vertical" }}
+                  value={coreTakeaway}
+                  onChange={(e) => setCoreTakeaway(e.target.value)}
+                  placeholder="What's the single most important thing readers should remember?"
+                />
+              </div>
+
+              {/* CTA Goal */}
+              <div className="bru-field">
+                <label htmlFor="ctaGoal" className="bru-field__label">
+                  Call to Action Goal (Optional)
+                </label>
+                <input
+                  type="text"
+                  id="ctaGoal"
+                  className="bru-input"
+                  style={{ width: "100%" }}
+                  value={ctaGoal}
+                  onChange={(e) => setCtaGoal(e.target.value)}
+                  placeholder="e.g., 'Visit my website', 'Share your thoughts'"
+                />
+              </div>
+
+              {/* Post Structure */}
+              <div
+                className="bru-field"
                 style={{
-                  fontSize: "var(--bru-text-h5)",
-                  fontWeight: 700,
-                  marginBottom: "var(--bru-space-4)",
+                  borderLeft: "3px solid #631DED",
+                  paddingLeft: "var(--bru-space-3)",
                 }}
               >
-                Post Details
-              </h2>
+                <label
+                  className="bru-field__label"
+                  style={{ color: "#631DED" }}
+                >
+                  Post Structure
+                </label>
+                <PostStructureCards
+                  selected={postStructure}
+                  onChange={setPostStructure}
+                />
+              </div>
 
-              <div className="bru-form-stack">
-                {/* Topic field */}
-                <div className="bru-field bru-field--has-icon">
-                  <label htmlFor="topic-input" className="bru-field__label">
-                    Topic
-                  </label>
-                  <div style={{ position: "relative" }}>
-                    <input
-                      type="text"
-                      id="topic-input"
-                      className="bru-input"
-                      style={{ width: "100%", paddingRight: 40 }}
-                      value={topic}
-                      onChange={handleTopicChange}
-                      placeholder="e.g., 'AI in healthcare'"
-                    />
-                    <button
-                      onClick={() => void handleFindSubtopics()}
-                      disabled={loadingSubtopics || !topic.trim()}
-                      aria-label="Find Subtopics"
-                      style={{
-                        position: "absolute",
-                        right: 8,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        padding: 4,
-                      }}
-                    >
-                      {loadingSubtopics ? (
-                        <Loader
-                          size={20}
-                          className="animate-spin"
-                          style={{ color: "var(--bru-purple)" }}
-                        />
-                      ) : (
-                        <Search
-                          size={20}
-                          style={{ color: "var(--bru-grey)" }}
-                        />
-                      )}
-                    </button>
-                  </div>
+              {/* Content Angle */}
+              <div
+                className="bru-field"
+                style={{
+                  borderLeft: "3px solid #00A896",
+                  paddingLeft: "var(--bru-space-3)",
+                }}
+              >
+                <label
+                  className="bru-field__label"
+                  style={{ color: "#00A896" }}
+                >
+                  Content Angle
+                </label>
+                <ContentAngleChips
+                  selected={contentAngle}
+                  suggested={
+                    loadingRecommendation ? null : recommendation?.contentAngle
+                  }
+                  onChange={setContentAngle}
+                />
+              </div>
 
-                  {subtopics.length > 0 && (
+              {/* Content Pillar */}
+              <div
+                className="bru-field"
+                style={{
+                  borderLeft: "3px solid #059669",
+                  paddingLeft: "var(--bru-space-3)",
+                }}
+              >
+                <EnhancedDropdown
+                  label="Content Pillar"
+                  options={enhancedContentPillars}
+                  value={contentPillar}
+                  onChange={setContentPillar}
+                  placeholder="Select a content pillar"
+                  loading={loadingRecommendation}
+                />
+              </div>
+
+              {/* AI Recommendation reasoning — collapsible */}
+              {recommendation && recommendation.confidence > 0 && (
+                <div
+                  style={{
+                    border: "1px solid rgba(99,29,237,0.2)",
+                    background: "rgba(99,29,237,0.03)",
+                    padding: "var(--bru-space-3)",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setShowRecommendationReasoning((v) => !v)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 0,
+                      fontFamily: "var(--bru-font-primary)",
+                      fontSize: "var(--bru-text-sm)",
+                      fontWeight: 600,
+                      color: "var(--bru-purple)",
+                    }}
+                  >
+                    <span>
+                      <TrendingUp
+                        size={14}
+                        style={{ verticalAlign: "middle", marginRight: 4 }}
+                      />
+                      AI Recommendations (
+                      {Math.round(recommendation.confidence * 100)}% confidence)
+                    </span>
+                    {showRecommendationReasoning ? (
+                      <ChevronUp size={16} />
+                    ) : (
+                      <ChevronDown size={16} />
+                    )}
+                  </button>
+
+                  {showRecommendationReasoning && (
                     <div
                       style={{
+                        marginTop: "var(--bru-space-3)",
                         display: "flex",
                         flexDirection: "column",
                         gap: "var(--bru-space-2)",
-                        marginTop: "var(--bru-space-3)",
+                        fontSize: "var(--bru-text-sm)",
+                        color: "var(--bru-grey)",
                       }}
                     >
-                      <span className="bru-field__label">
-                        Subtopic Suggestions
-                      </span>
-                      {subtopics.map((sub) => (
-                        <button
-                          key={sub.id}
-                          type="button"
-                          onClick={() => void handleSelectSubtopic(sub)}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            padding: "var(--bru-space-2) var(--bru-space-3)",
-                            border:
-                              selectedSubtopic?.id === sub.id
-                                ? "2px solid var(--bru-purple)"
-                                : "var(--bru-border)",
-                            background:
-                              selectedSubtopic?.id === sub.id
-                                ? "var(--bru-purple-20)"
-                                : "var(--bru-cream)",
-                            cursor: "pointer",
-                            textAlign: "left",
-                            width: "100%",
-                            fontFamily: "var(--bru-font-primary)",
-                            fontSize: "var(--bru-text-md)",
-                          }}
-                        >
-                          <span style={{ fontWeight: 500 }}>{sub.text}</span>
-                          <span
-                            className="bru-tag bru-tag--filled"
-                            style={{
-                              fontSize: 11,
-                              padding: "2px 8px",
-                              background:
-                                sub.source === "google_trends"
-                                  ? "var(--bru-purple-20)"
-                                  : sub.source === "google_questions"
-                                    ? "rgba(0, 170, 0, 0.12)"
-                                    : "rgba(255, 170, 0, 0.15)",
-                            }}
-                          >
-                            {getSourceBadgeLabel(sub.source)}
-                          </span>
-                        </button>
-                      ))}
+                      {recommendation.reasoning.contentAngle && (
+                        <p>
+                          <strong>Content Angle:</strong>{" "}
+                          {recommendation.reasoning.contentAngle}
+                        </p>
+                      )}
+                      {recommendation.reasoning.postStructure && (
+                        <p>
+                          <strong>Post Structure:</strong>{" "}
+                          {recommendation.reasoning.postStructure}
+                        </p>
+                      )}
+                      {recommendation.reasoning.contentPillar && (
+                        <p>
+                          <strong>Content Pillar:</strong>{" "}
+                          {recommendation.reasoning.contentPillar}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
+              )}
 
-                {/* Core Takeaway */}
-                <div className="bru-field">
-                  <label htmlFor="coreTakeaway" className="bru-field__label">
-                    Core Takeaway (Optional)
-                  </label>
-                  <textarea
-                    id="coreTakeaway"
-                    className="bru-input"
-                    style={{ width: "100%", minHeight: 80, resize: "vertical" }}
-                    value={coreTakeaway}
-                    onChange={(e) => setCoreTakeaway(e.target.value)}
-                    placeholder="What's the single most important thing readers should remember?"
-                  />
-                </div>
+              {/* Generate button */}
+              <Button
+                onClick={() => void handleGeneratePostClick()}
+                variant="primary"
+                block
+                disabled={
+                  loadingRecommendation ||
+                  !topic ||
+                  !postStructure ||
+                  !contentAngle ||
+                  !contentPillar
+                }
+              >
+                {loadingRecommendation ? (
+                  <>
+                    <Loader size={18} className="animate-spin" />
+                    Getting Recommendations...
+                  </>
+                ) : (
+                  <>
+                    <ArrowRight size={18} />
+                    Generate Post
+                  </>
+                )}
+              </Button>
 
-                {/* CTA Goal */}
-                <div className="bru-field">
-                  <label htmlFor="ctaGoal" className="bru-field__label">
-                    Call to Action Goal (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    id="ctaGoal"
-                    className="bru-input"
-                    style={{ width: "100%" }}
-                    value={ctaGoal}
-                    onChange={(e) => setCtaGoal(e.target.value)}
-                    placeholder="e.g., 'Visit my website', 'Share your thoughts'"
-                  />
-                </div>
-
-                {/* Dropdown grid: 2 columns */}
-                <div className="bru-form-row">
-                  <div style={{ position: "relative" }}>
-                    <EnhancedDropdown
-                      label="Post Type"
-                      options={enhancedPostTypes}
-                      value={postType}
-                      onChange={setPostType}
-                      placeholder="Select a post type"
-                      compatibilityMap={compatibilityMap}
-                      loading={loadingRecommendation}
-                    />
-                    {recommendation && postType === recommendation.postType && (
-                      <span
-                        className="smart-choice-badge"
-                        style={{ marginTop: "var(--bru-space-1)" }}
-                      >
-                        <TrendingUp size={12} /> Smart Choice
-                      </span>
-                    )}
-                  </div>
-
-                  <div style={{ position: "relative" }}>
-                    <EnhancedDropdown
-                      label="Hook Pattern"
-                      options={enhancedHookPatterns}
-                      value={hookPattern}
-                      onChange={setHookPattern}
-                      placeholder="Select a hook pattern"
-                      compatibilityMap={compatibilityMap}
-                      loading={loadingRecommendation}
-                    />
-                    {recommendation &&
-                      hookPattern === recommendation.hookPattern && (
-                        <span
-                          className="smart-choice-badge"
-                          style={{ marginTop: "var(--bru-space-1)" }}
-                        >
-                          <TrendingUp size={12} /> Smart Choice
-                        </span>
-                      )}
-                  </div>
-
-                  <div style={{ position: "relative" }}>
-                    <EnhancedDropdown
-                      label="Content Pillar"
-                      options={enhancedContentPillars}
-                      value={contentPillar}
-                      onChange={setContentPillar}
-                      placeholder="Select a content pillar"
-                      compatibilityMap={compatibilityMap}
-                      loading={loadingRecommendation}
-                    />
-                    {recommendation &&
-                      contentPillar === recommendation.contentPillar && (
-                        <span
-                          className="smart-choice-badge"
-                          style={{ marginTop: "var(--bru-space-1)" }}
-                        >
-                          <TrendingUp size={12} /> Smart Choice
-                        </span>
-                      )}
-                  </div>
-
-                  <div style={{ position: "relative" }}>
-                    <EnhancedDropdown
-                      label="Tone"
-                      options={enhancedToneOptions}
-                      value={selectedToneId}
-                      onChange={setSelectedToneId}
-                      placeholder="Select a tone"
-                      compatibilityMap={compatibilityMap}
-                      loading={loadingRecommendation}
-                    />
-                    {recommendation &&
-                      selectedToneId === recommendation.toneId && (
-                        <span
-                          className="smart-choice-badge"
-                          style={{ marginTop: "var(--bru-space-1)" }}
-                        >
-                          <TrendingUp size={12} /> Smart Choice
-                        </span>
-                      )}
-                  </div>
-                </div>
-
-                {/* Generate button */}
-                <Button
-                  onClick={handleGeneratePostClick}
-                  variant="primary"
-                  block
-                  disabled={
-                    loadingRecommendation ||
-                    !topic ||
-                    !postType ||
-                    !hookPattern ||
-                    !contentPillar ||
-                    !selectedToneId
+              {saveFeedback && (
+                <Alert
+                  variant={
+                    saveFeedback.includes("successfully") ||
+                    saveFeedback.includes("Saved")
+                      ? "success"
+                      : "error"
                   }
                 >
-                  {loadingRecommendation ? (
-                    <>
-                      <Loader size={18} className="animate-spin" />
-                      Getting Recommendations...
-                    </>
-                  ) : (
-                    <>
-                      <ArrowRight size={18} />
-                      Generate Post
-                    </>
-                  )}
-                </Button>
-
-                {saveFeedback && (
-                  <Alert
-                    variant={
-                      saveFeedback.includes("successfully")
-                        ? "success"
-                        : "error"
-                    }
-                  >
-                    {saveFeedback}
-                  </Alert>
-                )}
-              </div>
-            </Card>
-
-            {/* Right Column: Generated Post */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "var(--bru-space-4)",
-              }}
-            >
-              <PostGenerator
-                ref={postGeneratorRef}
-                parameters={postGenerationParams}
-                profile={profile}
-                aiSettings={aiSettings!}
-                triggerGeneration={triggerPostGeneration}
-                onContentGenerated={handleContentGenerated}
-              />
-              {generatedContent && (
-                <div className="bru-form-actions">
-                  <Button
-                    onClick={() => void handleSaveDraft()}
-                    style={{ flex: 1 }}
-                    disabled={saving}
-                  >
-                    {saving ? (
-                      <Loader size={16} className="animate-spin" />
-                    ) : null}
-                    {saving ? "Saving…" : "Save to Library"}
-                  </Button>
-                  <Button
-                    onClick={handleOpenScheduleModal}
-                    variant="primary"
-                    style={{ flex: 1 }}
-                    disabled={saving}
-                  >
-                    Schedule Post
-                  </Button>
-                </div>
+                  {saveFeedback}
+                </Alert>
               )}
             </div>
+          </Card>
+
+          {/* Right Column: Generated Post */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--bru-space-4)",
+            }}
+          >
+            <PostGenerator
+              ref={postGeneratorRef}
+              parameters={postGenerationParams}
+              profile={profile}
+              aiSettings={aiSettings!}
+              triggerGeneration={triggerPostGeneration}
+              onContentGenerated={handleContentGenerated}
+            />
+            {generatedContent && (
+              <div className="bru-form-actions">
+                <Button
+                  onClick={() => void handleSaveDraft()}
+                  style={{ flex: 1 }}
+                  disabled={saving}
+                >
+                  {saving ? (
+                    <Loader size={16} className="animate-spin" />
+                  ) : null}
+                  {saving ? "Saving…" : "Save to Library"}
+                </Button>
+                <Button
+                  onClick={handleOpenScheduleModal}
+                  variant="primary"
+                  style={{ flex: 1 }}
+                  disabled={saving}
+                >
+                  Schedule Post
+                </Button>
+              </div>
+            )}
           </div>
-        </>
+        </div>
       )}
 
       {activeSubNav === "content-strategy" && (

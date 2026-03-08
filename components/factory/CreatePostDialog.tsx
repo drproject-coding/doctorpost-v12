@@ -88,26 +88,28 @@ export default function CreatePostDialog({
   useEffect(() => {
     if (!recommendation) return;
     if (
-      enhancedPostTypes.some((opt) => opt.value === recommendation.postType)
-    ) {
-      setPostType(recommendation.postType);
-    }
-    if (
-      enhancedHookPatterns.some(
-        (opt) => opt.value === recommendation.hookPattern,
+      recommendation.postStructure &&
+      enhancedPostTypes.some(
+        (opt) => opt.value === recommendation.postStructure,
       )
     ) {
-      setHookPattern(recommendation.hookPattern);
+      setPostType(recommendation.postStructure);
     }
     if (
+      recommendation.contentAngle &&
+      enhancedHookPatterns.some(
+        (opt) => opt.value === recommendation.contentAngle,
+      )
+    ) {
+      setHookPattern(recommendation.contentAngle);
+    }
+    if (
+      recommendation.contentPillar &&
       enhancedContentPillars.some(
         (opt) => opt.value === recommendation.contentPillar,
       )
     ) {
       setContentPillar(recommendation.contentPillar);
-    }
-    if (recommendation.toneId) {
-      setToneId(recommendation.toneId);
     }
   }, [recommendation]);
 
@@ -165,7 +167,7 @@ export default function CreatePostDialog({
             onChange={setPostType}
             loading={loadingRecommendation}
           />
-          {recommendation && postType === recommendation.postType && (
+          {recommendation && postType === recommendation.postStructure && (
             <span
               className="smart-choice-badge"
               style={{ marginTop: "var(--bru-space-1)" }}
@@ -181,7 +183,7 @@ export default function CreatePostDialog({
             onChange={setHookPattern}
             loading={loadingRecommendation}
           />
-          {recommendation && hookPattern === recommendation.hookPattern && (
+          {recommendation && hookPattern === recommendation.contentAngle && (
             <span
               className="smart-choice-badge"
               style={{ marginTop: "var(--bru-space-1)" }}
@@ -213,14 +215,7 @@ export default function CreatePostDialog({
             onChange={setToneId}
             loading={loadingRecommendation}
           />
-          {recommendation && toneId === recommendation.toneId && (
-            <span
-              className="smart-choice-badge"
-              style={{ marginTop: "var(--bru-space-1)" }}
-            >
-              <TrendingUp size={12} /> Smart Choice
-            </span>
-          )}
+          {/* Tone recommendations removed — tone is now server-side */}
         </div>
       </div>
 

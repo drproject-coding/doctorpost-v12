@@ -168,21 +168,15 @@ export interface SubtopicSuggestion {
 }
 
 export interface PostRecommendation {
-  postType: string;
-  hookPattern: string;
+  contentAngle: string;
+  postStructure: string;
   contentPillar: string;
-  toneId: string;
   confidence: number;
   reasoning: {
-    postType: string;
-    hookPattern: string;
+    contentAngle: string;
+    postStructure: string;
     contentPillar: string;
-    tone: string;
   };
-  compatiblePostTypes: string[];
-  compatibleHookPatterns: string[];
-  compatibleContentPillars: string[];
-  compatibleTones: string[];
 }
 
 export interface DropdownOption {

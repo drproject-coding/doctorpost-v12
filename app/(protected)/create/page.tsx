@@ -174,21 +174,9 @@ export default function CreatePage() {
         brandContext,
       );
       setRecommendation(result);
-      setPostType(
-        enhancedPostTypes.some((opt) => opt.value === result.postType)
-          ? result.postType
-          : "",
-      );
-      setHookPattern(
-        enhancedHookPatterns.some((opt) => opt.value === result.hookPattern)
-          ? result.hookPattern
-          : "",
-      );
-      setContentPillar(
-        enhancedContentPillars.some((opt) => opt.value === result.contentPillar)
-          ? result.contentPillar
-          : "",
-      );
+      if (result.postStructure) setPostType(result.postStructure);
+      if (result.contentAngle) setHookPattern(result.contentAngle);
+      if (result.contentPillar) setContentPillar(result.contentPillar);
     } catch (error) {
       console.error("Failed to get recommendations:", error);
     } finally {
@@ -229,24 +217,9 @@ export default function CreatePage() {
           brandContext,
         );
         setRecommendation(result);
-        if (enhancedPostTypes.some((opt) => opt.value === result.postType)) {
-          setPostType(result.postType);
-        }
-        if (
-          enhancedHookPatterns.some((opt) => opt.value === result.hookPattern)
-        ) {
-          setHookPattern(result.hookPattern);
-        }
-        if (
-          enhancedContentPillars.some(
-            (opt) => opt.value === result.contentPillar,
-          )
-        ) {
-          setContentPillar(result.contentPillar);
-        }
-        if (result.toneId) {
-          setSelectedToneId(result.toneId);
-        }
+        if (result.postStructure) setPostType(result.postStructure);
+        if (result.contentAngle) setHookPattern(result.contentAngle);
+        if (result.contentPillar) setContentPillar(result.contentPillar);
       } catch (error) {
         console.error("Failed to get recommendations:", error);
         // Non-fatal: proceed with current dropdown values
@@ -370,61 +343,29 @@ export default function CreatePage() {
     if (!rec) return {};
     const map: CompatibilityMap = {};
 
-    enhancedPostTypes.forEach((opt) => {
-      if (opt.value === rec.postType) {
-        map[opt.id] = { status: "recommended", reason: rec.reasoning.postType };
-      } else if (rec.compatiblePostTypes.includes(opt.value)) {
-        map[opt.id] = {
-          status: "caution",
-          reason: "Compatible option, but not the primary recommendation.",
-        };
-      } else {
-        map[opt.id] = { status: "neutral" };
-      }
-    });
+    // Content angle recommendation
+    if (rec.contentAngle) {
+      map[rec.contentAngle] = {
+        status: "recommended",
+        reason: rec.reasoning.contentAngle,
+      };
+    }
 
-    enhancedHookPatterns.forEach((opt) => {
-      if (opt.value === rec.hookPattern) {
-        map[opt.id] = {
-          status: "recommended",
-          reason: rec.reasoning.hookPattern,
-        };
-      } else if (rec.compatibleHookPatterns.includes(opt.value)) {
-        map[opt.id] = {
-          status: "caution",
-          reason: "Compatible option, but not the primary recommendation.",
-        };
-      } else {
-        map[opt.id] = { status: "neutral" };
-      }
-    });
+    // Post structure recommendation
+    if (rec.postStructure) {
+      map[rec.postStructure] = {
+        status: "recommended",
+        reason: rec.reasoning.postStructure,
+      };
+    }
 
+    // Content pillar recommendation
     enhancedContentPillars.forEach((opt) => {
       if (opt.value === rec.contentPillar) {
         map[opt.id] = {
           status: "recommended",
           reason: rec.reasoning.contentPillar,
         };
-      } else if (rec.compatibleContentPillars.includes(opt.value)) {
-        map[opt.id] = {
-          status: "caution",
-          reason: "Compatible option, but not the primary recommendation.",
-        };
-      } else {
-        map[opt.id] = { status: "neutral" };
-      }
-    });
-
-    enhancedToneOptions.forEach((opt) => {
-      if (opt.id === rec.toneId) {
-        map[opt.id] = { status: "recommended", reason: rec.reasoning.tone };
-      } else if (rec.compatibleTones.includes(opt.id)) {
-        map[opt.id] = {
-          status: "caution",
-          reason: "Compatible option, but not the primary recommendation.",
-        };
-      } else {
-        map[opt.id] = { status: "neutral" };
       }
     });
 
@@ -667,14 +608,15 @@ export default function CreatePage() {
                     compatibilityMap={compatibilityMap}
                     loading={loadingRecommendation}
                   />
-                  {recommendation && postType === recommendation.postType && (
-                    <span
-                      className="smart-choice-badge"
-                      style={{ marginTop: "var(--bru-space-1)" }}
-                    >
-                      <TrendingUp size={12} /> Smart Choice
-                    </span>
-                  )}
+                  {recommendation &&
+                    postType === recommendation.postStructure && (
+                      <span
+                        className="smart-choice-badge"
+                        style={{ marginTop: "var(--bru-space-1)" }}
+                      >
+                        <TrendingUp size={12} /> Smart Choice
+                      </span>
+                    )}
                 </div>
 
                 <div style={{ position: "relative" }}>
@@ -688,7 +630,7 @@ export default function CreatePage() {
                     loading={loadingRecommendation}
                   />
                   {recommendation &&
-                    hookPattern === recommendation.hookPattern && (
+                    hookPattern === recommendation.contentAngle && (
                       <span
                         className="smart-choice-badge"
                         style={{ marginTop: "var(--bru-space-1)" }}
@@ -729,15 +671,6 @@ export default function CreatePage() {
                     compatibilityMap={compatibilityMap}
                     loading={loadingRecommendation}
                   />
-                  {recommendation &&
-                    selectedToneId === recommendation.toneId && (
-                      <span
-                        className="smart-choice-badge"
-                        style={{ marginTop: "var(--bru-space-1)" }}
-                      >
-                        <TrendingUp size={12} /> Smart Choice
-                      </span>
-                    )}
                 </div>
               </div>
 

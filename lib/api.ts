@@ -504,16 +504,11 @@ Choose options that are MOST COHERENT with this brand profile.
     : "";
 
   const systemPrompt = `You are a LinkedIn content strategist.${brandSection} Given a topic and subtopic, recommend the best post configuration. Return a single JSON object with these fields:
-- postType (string): one of "howTo", "list", "toolReview", "processFramework", "caseStudy", "trendAnalysis", "industryInsights", "comparison", "question", "personalStory", "contrarian", "behindScenes", "mythBusting", "prediction", "motivational"
-- hookPattern (string): one of "curiosityGap", "pas", "socialProof", "contrarian", "authority", "educational"
+- contentAngle (string): one of "contrarian", "analytical", "observation", "actionable", "xVsY", "presentVsFuture", "listicle"
+- postStructure (string): one of "opinionTake", "howTo", "observation", "story", "list"
 - contentPillar (string): one of "Technology", "Leadership", "Human Resource", "Industry Trends", "Health Tips", "Case Studies"
-- toneId (string): one of "casual-witty", "professional-authority", "approachable-expert", "snap-snark", "plain-talk-playbook", "anecdote-to-aha", "bias-buster", "open-heart-honest", "future-forward-glow", "money-with-meaning", "conversion-mode", "nerdy-fun-run", "mission-voice"
 - confidence (number 0-1)
-- reasoning (object with fields: postType, hookPattern, contentPillar, tone - each a string explaining the choice)
-- compatiblePostTypes (string array of values from the postType list above)
-- compatibleHookPatterns (string array of values from the hookPattern list above)
-- compatibleContentPillars (string array of values from the contentPillar list above)
-- compatibleTones (string array of values from the toneId list above)
+- reasoning (object with fields: contentAngle, postStructure, contentPillar - each a string explaining the choice)
 Only return the JSON object, no other text.`;
 
   const response = await generateWithAi(

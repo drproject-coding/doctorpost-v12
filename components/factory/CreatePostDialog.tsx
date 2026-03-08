@@ -64,10 +64,10 @@ export default function CreatePostDialog({
 
     // Map ids back to values for the dropdown components
     const ptOpt = enhancedPostTypes.find(
-      (o) => o.id === defaults.selectedPostType,
+      (o) => o.id === defaults.selectedPostStructure,
     );
     const hpOpt = enhancedHookPatterns.find(
-      (o) => o.id === defaults.selectedHookPattern,
+      (o) => o.id === defaults.selectedContentAngle,
     );
     const cpOpt = enhancedContentPillars.find(
       (o) => o.id === defaults.selectedPillar,

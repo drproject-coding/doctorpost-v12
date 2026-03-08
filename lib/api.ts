@@ -64,6 +64,8 @@ interface NcbPostRow {
   score_suggestions?: string | null;
   strategy_output?: string | null;
   formatted_output?: string | null;
+  content_angle?: string | null;
+  post_structure?: string | null;
 }
 
 interface BrandContextForRecommendation {
@@ -162,6 +164,8 @@ function mapPostFromNcb(row: NcbPostRow): ScheduledPost {
     scoreSuggestions: row.score_suggestions ?? undefined,
     strategyOutput: row.strategy_output ?? undefined,
     formattedOutput: row.formatted_output ?? undefined,
+    contentAngle: row.content_angle ?? undefined,
+    postStructure: row.post_structure ?? undefined,
   };
 }
 

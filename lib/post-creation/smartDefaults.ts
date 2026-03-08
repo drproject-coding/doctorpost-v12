@@ -1,6 +1,6 @@
 import {
-  enhancedPostTypes,
-  enhancedHookPatterns,
+  postStructureOptions,
+  contentAngleOptions,
   enhancedContentPillars,
   enhancedToneOptions,
 } from "@/lib/dropdownData";
@@ -72,11 +72,11 @@ export function getSmartDefaults(
   const selectedTone = (toneMatch ?? firstHighPerformance(enhancedToneOptions))
     .id;
 
-  // Post type — no direct profile signal; use first high-performance option
-  const selectedPostType = firstHighPerformance(enhancedPostTypes).id;
+  // Post structure — no direct profile signal; use first option
+  const selectedPostStructure = postStructureOptions[0].id;
 
-  // Hook pattern — no direct profile signal; use first high-performance option
-  const selectedHookPattern = firstHighPerformance(enhancedHookPatterns).id;
+  // Content angle — no direct profile signal; use first option
+  const selectedContentAngle = contentAngleOptions[0].id;
 
   // Pillar — match profile industry as a single-element array for reuse of matchOption
   const industryValues = profile?.industry ? [profile.industry] : [];
@@ -89,8 +89,8 @@ export function getSmartDefaults(
   ).id;
 
   return {
-    selectedPostType,
-    selectedHookPattern,
+    selectedPostStructure,
+    selectedContentAngle,
     selectedPillar,
     selectedTone,
   };
@@ -99,8 +99,8 @@ export function getSmartDefaults(
 // ---------------------------------------------------------------------------
 
 export interface RecommendedOptions {
-  postTypes: DropdownOption[];
-  hookPatterns: DropdownOption[];
+  postStructures: DropdownOption[];
+  contentAngles: DropdownOption[];
   contentPillars: DropdownOption[];
   tones: DropdownOption[];
 }
@@ -157,12 +157,12 @@ export function getRecommendedOptions(
     }
   }
 
-  // postTypes and hookPatterns have no direct profile signal; use empty sets
+  // postStructures and contentAngles have no direct profile signal; use empty sets
   const emptySet = new Set<string>();
 
   return {
-    postTypes: sortOptions(enhancedPostTypes, emptySet),
-    hookPatterns: sortOptions(enhancedHookPatterns, emptySet),
+    postStructures: sortOptions(postStructureOptions, emptySet),
+    contentAngles: sortOptions(contentAngleOptions, emptySet),
     contentPillars: sortOptions(enhancedContentPillars, pillarMatches),
     tones: sortOptions(enhancedToneOptions, toneMatches),
   };

@@ -139,6 +139,8 @@ export interface ScheduledPost {
   formattedOutput?: string;
   /** Score from the Content Factory scoring agent (0-100) */
   factoryScore?: number;
+  contentAngle?: string;
+  postStructure?: string;
 }
 
 export interface AnalyticsData {
@@ -189,8 +191,8 @@ export interface DropdownOption {
   label: string;
   category: string;
   description: string;
-  exampleSnippet: string;
-  useCases: string[];
+  exampleSnippet?: string;
+  useCases?: string[];
   performanceIndicator?: "high" | "medium" | "experimental";
   isTrending?: boolean;
 }
@@ -222,9 +224,8 @@ export interface PostGenerationParameters {
   coreTakeaway?: string;
   ctaGoal?: string;
   contentPillar: string;
-  hookPattern: string;
-  postType: string;
-  toneId: string;
+  contentAngle: string;
+  postStructure: string;
   triggerGeneration: number;
 }
 

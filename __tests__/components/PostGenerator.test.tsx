@@ -61,9 +61,8 @@ describe("PostGenerator", () => {
     coreTakeaway: "AI improves diagnostic accuracy",
     ctaGoal: "Learn more about AI tools",
     contentPillar: "education",
-    hookPattern: "question",
-    postType: "carousel",
-    toneId: "professional",
+    contentAngle: "contrarian",
+    postStructure: "opinionTake",
     triggerGeneration: 0,
   };
 

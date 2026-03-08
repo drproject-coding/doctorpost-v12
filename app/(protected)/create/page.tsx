@@ -85,10 +85,10 @@ export default function CreatePage() {
           (o) => o.id === defaults.selectedTone,
         );
         const ptOpt = enhancedPostTypes.find(
-          (o) => o.id === defaults.selectedPostType,
+          (o) => o.id === defaults.selectedPostStructure,
         );
         const hpOpt = enhancedHookPatterns.find(
-          (o) => o.id === defaults.selectedHookPattern,
+          (o) => o.id === defaults.selectedContentAngle,
         );
         const cpOpt = enhancedContentPillars.find(
           (o) => o.id === defaults.selectedPillar,
@@ -281,7 +281,9 @@ export default function CreatePage() {
         pillar: contentPillar,
         status: "draft",
       };
-      void savePostDraft(newPost).catch(() => {/* non-fatal */});
+      void savePostDraft(newPost).catch(() => {
+        /* non-fatal */
+      });
     }
   };
 
@@ -359,9 +361,8 @@ export default function CreatePage() {
     coreTakeaway: coreTakeaway,
     ctaGoal: ctaGoal,
     contentPillar: contentPillar,
-    hookPattern: hookPattern,
-    postType: postType,
-    toneId: selectedToneId,
+    contentAngle: hookPattern,
+    postStructure: postType,
     triggerGeneration: triggerPostGeneration,
   };
 
@@ -802,7 +803,9 @@ export default function CreatePage() {
                   style={{ flex: 1 }}
                   disabled={saving}
                 >
-                  {saving ? <Loader size={16} className="animate-spin" /> : null}
+                  {saving ? (
+                    <Loader size={16} className="animate-spin" />
+                  ) : null}
                   {saving ? "Saving…" : "Save to Library"}
                 </Button>
                 <Button

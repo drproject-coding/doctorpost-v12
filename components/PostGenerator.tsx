@@ -71,11 +71,10 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
       setAiProgress(null);
 
       try {
-        const promptTemplate = getPromptById(parameters.toneId);
+        // Use first available tone prompt as fallback until server-side generation (Task 8)
+        const promptTemplate = getPromptById("casual-witty");
         if (!promptTemplate) {
-          throw new Error(
-            `No prompt template found for tone: ${parameters.toneId}`,
-          );
+          throw new Error("No prompt template found");
         }
 
         const preparedPrompt = preparePromptTemplate(
@@ -86,8 +85,8 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
             coreTakeaway: parameters.coreTakeaway,
             ctaGoal: parameters.ctaGoal,
             contentPillar: parameters.contentPillar,
-            hookPattern: parameters.hookPattern,
-            postType: parameters.postType,
+            hookPattern: parameters.contentAngle,
+            postType: parameters.postStructure,
           },
         );
 
@@ -120,10 +119,9 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
       if (
         triggerGeneration > 0 &&
         parameters.topic &&
-        parameters.postType &&
-        parameters.hookPattern &&
-        parameters.contentPillar &&
-        parameters.toneId
+        parameters.postStructure &&
+        parameters.contentAngle &&
+        parameters.contentPillar
       ) {
         void generateContentEffect();
       }

@@ -545,8 +545,19 @@ export default function CreatePage() {
               </div>
 
               {/* Post Structure */}
-              <div className="bru-field">
-                <label className="bru-field__label">Post Structure</label>
+              <div
+                className="bru-field"
+                style={{
+                  borderLeft: "3px solid #631DED",
+                  paddingLeft: "var(--bru-space-3)",
+                }}
+              >
+                <label
+                  className="bru-field__label"
+                  style={{ color: "#631DED" }}
+                >
+                  Post Structure
+                </label>
                 <PostStructureCards
                   selected={postStructure}
                   onChange={setPostStructure}
@@ -554,8 +565,19 @@ export default function CreatePage() {
               </div>
 
               {/* Content Angle */}
-              <div className="bru-field">
-                <label className="bru-field__label">Content Angle</label>
+              <div
+                className="bru-field"
+                style={{
+                  borderLeft: "3px solid #00A896",
+                  paddingLeft: "var(--bru-space-3)",
+                }}
+              >
+                <label
+                  className="bru-field__label"
+                  style={{ color: "#00A896" }}
+                >
+                  Content Angle
+                </label>
                 <ContentAngleChips
                   selected={contentAngle}
                   suggested={
@@ -566,23 +588,22 @@ export default function CreatePage() {
               </div>
 
               {/* Content Pillar */}
-              <EnhancedDropdown
-                label="Content Pillar"
-                options={enhancedContentPillars}
-                value={contentPillar}
-                onChange={setContentPillar}
-                placeholder="Select a content pillar"
-                loading={loadingRecommendation}
-              />
-              {recommendation &&
-                contentPillar === recommendation.contentPillar && (
-                  <span
-                    className="smart-choice-badge"
-                    style={{ marginTop: "calc(var(--bru-space-1) * -1)" }}
-                  >
-                    <TrendingUp size={12} /> Smart Choice
-                  </span>
-                )}
+              <div
+                className="bru-field"
+                style={{
+                  borderLeft: "3px solid #059669",
+                  paddingLeft: "var(--bru-space-3)",
+                }}
+              >
+                <EnhancedDropdown
+                  label="Content Pillar"
+                  options={enhancedContentPillars}
+                  value={contentPillar}
+                  onChange={setContentPillar}
+                  placeholder="Select a content pillar"
+                  loading={loadingRecommendation}
+                />
+              </div>
 
               {/* AI Recommendation reasoning — collapsible */}
               {recommendation && recommendation.confidence > 0 && (

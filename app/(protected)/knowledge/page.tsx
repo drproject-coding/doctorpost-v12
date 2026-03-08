@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Alert, Button, Card } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
 import { FileText, Plus, Upload, Scissors, Search, Loader } from "lucide-react";
@@ -14,6 +14,7 @@ import { DocumentEditor } from "@/components/knowledge/DocumentEditor";
 import { VersionHistory } from "@/components/knowledge/VersionHistory";
 import { ImportFlow } from "@/components/knowledge/ImportFlow";
 import { ExtractFlow } from "@/components/knowledge/ExtractFlow";
+import { seedToneTemplates } from "@/lib/knowledge/seedToneTemplates";
 
 const CATEGORIES: { value: DocumentCategory | "all"; label: string }[] = [
   { value: "all", label: "All" },
@@ -39,6 +40,7 @@ export default function KnowledgePage() {
     null,
   );
   const [error, setError] = useState<string | null>(null);
+  const seededRef = useRef(false);
 
   const fetchDocs = useCallback(async () => {
     setLoading(true);
@@ -62,6 +64,16 @@ export default function KnowledgePage() {
   }, [filterCategory]);
 
   useEffect(() => {
+    if (!seededRef.current) {
+      seededRef.current = true;
+      seedToneTemplates()
+        .then((result) => {
+          if (result.seeded > 0) fetchDocs();
+          else fetchDocs();
+        })
+        .catch(() => fetchDocs());
+      return;
+    }
     fetchDocs();
   }, [fetchDocs]);
 

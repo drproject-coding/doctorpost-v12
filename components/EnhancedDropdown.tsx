@@ -203,7 +203,10 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             <>
               {selectedOption.category &&
                 categoryIcons[selectedOption.category] && (
-                  <span className="shrink-0 text-gray-500">
+                  <span
+                    className="shrink-0"
+                    style={{ color: "var(--bru-grey)" }}
+                  >
                     {categoryIcons[selectedOption.category]}
                   </span>
                 )}
@@ -214,7 +217,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
               />
             </>
           ) : (
-            <span className="text-gray-500">{placeholder}</span>
+            <span style={{ color: "var(--bru-grey)" }}>{placeholder}</span>
           )}
         </span>
         <ChevronDown
@@ -251,7 +254,14 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             ))}
           </div>
           {Object.keys(filteredOptions).length === 0 ? (
-            <div className="p-3 text-center text-gray-500 text-sm">
+            <div
+              style={{
+                padding: "var(--bru-space-3)",
+                textAlign: "center",
+                color: "var(--bru-grey)",
+                fontSize: "var(--bru-text-sm)",
+              }}
+            >
               No options found.
             </div>
           ) : (
@@ -259,7 +269,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
               <div key={category}>
                 <div className="enhanced-dropdown-category-header flex items-center gap-1.5">
                   {categoryIcons[category] && (
-                    <span className="text-gray-400">
+                    <span style={{ color: "var(--bru-text-muted)" }}>
                       {categoryIcons[category]}
                     </span>
                   )}

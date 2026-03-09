@@ -67,7 +67,11 @@ export default function CalendarView({
       days.push(
         <div
           key={`empty-${i}`}
-          className="h-24 border-2 border-black bg-gray-50"
+          className="h-24"
+          style={{
+            border: "var(--bru-border)",
+            background: "var(--bru-surface)",
+          }}
         ></div>,
       );
     }

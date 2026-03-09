@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button } from "@bruddle/react";
+import { Button, Alert } from "@bruddle/react";
 import { ScheduledPost, PostStatus, DropdownOption } from "@/lib/types";
 import { X, Save, Loader, Calendar } from "lucide-react";
 
@@ -176,14 +176,20 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
 
         <div className="bru-modal__body">
           {saveError && (
-            <div className="bg-red-100 text-red-800 border-2 border-red-300 rounded-bru-md p-3 mb-4 text-sm font-medium">
+            <Alert
+              variant="error"
+              style={{ marginBottom: "var(--bru-space-4)" }}
+            >
               {saveError}
-            </div>
+            </Alert>
           )}
           {saveSuccess && (
-            <div className="bg-green-100 text-green-800 border-2 border-green-300 rounded-bru-md p-3 mb-4 text-sm font-medium">
+            <Alert
+              variant="success"
+              style={{ marginBottom: "var(--bru-space-4)" }}
+            >
               {saveSuccess}
-            </div>
+            </Alert>
           )}
 
           {/* Read-only metadata */}

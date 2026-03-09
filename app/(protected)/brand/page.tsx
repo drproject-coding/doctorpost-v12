@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Loader } from "lucide-react";
+import { Loader as LucideLoader } from "lucide-react";
+import { Loader, Alert } from "@bruddle/react";
 import {
   getBrandProfile,
   updateBrandProfile,
@@ -137,10 +138,15 @@ export default function BrandPage() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-center py-24">
-          <Loader size={32} className="animate-spin text-bru-purple" />
-        </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: 300,
+        }}
+      >
+        <Loader label="Loading brand profile..." />
       </div>
     );
   }
@@ -149,7 +155,7 @@ export default function BrandPage() {
     return (
       <div className="p-6">
         <div className="max-w-6xl mx-auto">
-          <p className="text-red-600 font-medium">{error}</p>
+          <Alert variant="error">{error}</Alert>
         </div>
       </div>
     );
@@ -162,7 +168,7 @@ export default function BrandPage() {
         <div className="flex items-start justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-1">Brand</h1>
-            <p className="text-gray-600 font-medium">
+            <p style={{ color: "var(--bru-grey)", fontWeight: 500 }}>
               Your brand identity, voice, and strategy in one place.
             </p>
           </div>

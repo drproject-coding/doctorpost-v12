@@ -1,15 +1,41 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Card } from "@bruddle/react";
+import {
+  Button,
+  Card,
+  EmptyState,
+  Loader,
+  Select,
+  Tabs,
+  Tag,
+} from "@bruddle/react";
 import { getScheduledPosts, updatePost } from "@/lib/api";
 import { ScheduledPost, PostStatus } from "@/lib/types";
 import CalendarView from "@/components/calendar/CalendarView";
 import PostEditorModal from "@/components/PostEditorModal";
-import { List, Calendar, Filter } from "lucide-react";
 import { getStatusColorClasses, statusOptions } from "@/lib/calendarUtils";
 import ScoreBadge from "@/components/calendar/ScoreBadge";
 
 type FilterStatus = PostStatus | "all" | "past";
+
+function getStatusTagColor(
+  status: PostStatus,
+): "mint" | "purple" | "yellow" | "pink" | "grey" {
+  switch (status) {
+    case "published":
+      return "mint";
+    case "scheduled":
+      return "purple";
+    case "to-review":
+      return "yellow";
+    case "to-publish":
+      return "pink";
+    case "draft":
+    case "to-plan":
+    default:
+      return "grey";
+  }
+}
 
 const ListView = ({
   posts,
@@ -31,7 +57,13 @@ const ListView = ({
             .map((post) => (
               <div
                 key={post.id}
-                className="flex items-center justify-between p-4 border-b border-gray-200 last:border-b-0"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "var(--bru-space-4)",
+                  borderBottom: "1px solid var(--bru-border)",
+                }}
               >
                 <div>
                   <p className="font-bold">
@@ -40,35 +72,51 @@ const ListView = ({
                     )}
                     {post.title}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p
+                    style={{
+                      fontSize: "var(--bru-text-sm)",
+                      color: "var(--bru-grey)",
+                    }}
+                  >
                     Pillar: {post.pillar} | Scheduled:{" "}
                     {new Date(post.scheduledAt).toLocaleString()}
                   </p>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <span
-                    className={`bru-tag bru-tag--filled ${getStatusColorClasses(post.status)}`}
-                  >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "var(--bru-space-4)",
+                  }}
+                >
+                  <Tag color={getStatusTagColor(post.status)} filled>
                     {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
-                  </span>
-                  <button
-                    className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
+                  </Tag>
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => onPostClick(post)}
                   >
                     View/Edit
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))
         ) : (
-          <p className="text-center py-12 text-gray-600 font-medium">
-            No posts found for this filter.
-          </p>
+          <EmptyState
+            title="No posts found"
+            description="No posts match the selected filter."
+          />
         )}
       </div>
     </Card>
   );
 };
+
+const viewTabItems = [
+  { id: "calendar", label: "Calendar" },
+  { id: "list", label: "List" },
+];
 
 export default function CalendarPage() {
   const [allPosts, setAllPosts] = useState<ScheduledPost[]>([]);
@@ -131,7 +179,7 @@ export default function CalendarPage() {
             variant="raised"
             className="flex items-center justify-center p-12"
           >
-            <p>Loading calendar...</p>
+            <Loader label="Loading calendar..." />
           </Card>
         </div>
       </div>
@@ -145,22 +193,11 @@ export default function CalendarPage() {
 
         {/* View Toggle, Date Picker and Filter */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-          <div className="flex items-center space-x-2 p-1 bg-gray-200 rounded-bru-md border-2 border-black">
-            <button
-              onClick={() => setView("calendar")}
-              className={`flex items-center px-3 py-1 rounded-bru-md text-sm font-bold transition-colors ${view === "calendar" ? "bg-white text-bru-purple shadow" : "text-gray-600 hover:bg-gray-100"}`}
-            >
-              <Calendar className="w-4 h-4 mr-2" />
-              Calendar
-            </button>
-            <button
-              onClick={() => setView("list")}
-              className={`flex items-center px-3 py-1 rounded-bru-md text-sm font-bold transition-colors ${view === "list" ? "bg-white text-bru-purple shadow" : "text-gray-600 hover:bg-gray-100"}`}
-            >
-              <List className="w-4 h-4 mr-2" />
-              List
-            </button>
-          </div>
+          <Tabs
+            items={viewTabItems}
+            activeTab={view}
+            onChange={(id) => setView(id as "calendar" | "list")}
+          />
 
           {/* Date Picker */}
           <div className="relative">
@@ -176,24 +213,24 @@ export default function CalendarPage() {
             />
           </div>
 
-          <div className="relative">
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value as FilterStatus)}
-              className="bru-input !py-2 !pl-3 !pr-8 text-sm font-bold appearance-none bg-white"
-            >
-              <option value="all">All Statuses</option>
-              <option value="past">Past Posts</option>
-              {statusOptions.map((option) => (
-                <option key={option.id} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <Filter size={16} />
-            </div>
-          </div>
+          <Select
+            label=""
+            value={filterStatus}
+            onChange={(e) =>
+              setFilterStatus(
+                (e as React.ChangeEvent<HTMLSelectElement>).target
+                  .value as FilterStatus,
+              )
+            }
+          >
+            <option value="all">All Statuses</option>
+            <option value="past">Past Posts</option>
+            {statusOptions.map((option) => (
+              <option key={option.id} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
         </div>
 
         {/* Color Guide Legend */}
@@ -201,10 +238,7 @@ export default function CalendarPage() {
           <h3 className="text-md font-bold mb-2">Status Color Guide:</h3>
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             {statusOptions.map((option) => (
-              <div
-                key={option.id}
-                className="flex items-center text-sm text-gray-700"
-              >
+              <div key={option.id} className="flex items-center text-sm">
                 <span
                   className={`w-3 h-3 rounded-full border-2 ${getStatusColorClasses(
                     option.value as PostStatus,
@@ -218,12 +252,32 @@ export default function CalendarPage() {
                 {option.label}
               </div>
             ))}
-            <div className="flex items-center text-sm text-gray-700">
-              <span className="w-3 h-3 rounded-full border-2 border-gray-300 bg-purple-50 mr-2"></span>
+            <div className="flex items-center text-sm">
+              <span
+                style={{
+                  width: "0.75rem",
+                  height: "0.75rem",
+                  borderRadius: "9999px",
+                  border: "2px solid var(--bru-border)",
+                  background: "var(--bru-purple-light, #ede9fe)",
+                  marginRight: "var(--bru-space-2)",
+                  display: "inline-block",
+                }}
+              ></span>
               Today&apos;s Date
             </div>
-            <div className="flex items-center text-sm text-gray-700">
-              <span className="w-3 h-3 rounded-full border-2 border-bru-yellow bg-yellow-100 mr-2"></span>
+            <div className="flex items-center text-sm">
+              <span
+                style={{
+                  width: "0.75rem",
+                  height: "0.75rem",
+                  borderRadius: "9999px",
+                  border: "2px solid var(--bru-yellow)",
+                  background: "var(--bru-yellow-light, #fef9c3)",
+                  marginRight: "var(--bru-space-2)",
+                  display: "inline-block",
+                }}
+              ></span>
               Selected Date
             </div>
           </div>

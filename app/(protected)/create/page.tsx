@@ -1,7 +1,14 @@
 "use client";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import { Alert, Button, Card } from "@bruddle/react";
+import {
+  Alert,
+  Button,
+  Card,
+  Input,
+  Textarea,
+  Loader as BruLoader,
+} from "@bruddle/react";
 import {
   BrandProfile,
   SubtopicSuggestion,
@@ -29,6 +36,8 @@ import {
   ChevronUp,
   Eye,
 } from "lucide-react";
+// Loader from lucide-react used only for inline icon buttons (search spinner, generate button)
+// BruLoader from @bruddle/react used for full loading states
 import EnhancedDropdown from "@/components/EnhancedDropdown";
 import ContentAngleChips from "@/components/create/ContentAngleChips";
 import PostStructureCards from "@/components/create/PostStructureCards";
@@ -358,7 +367,7 @@ export default function CreatePage() {
           minHeight: 200,
         }}
       >
-        <p>Loading brand profile...</p>
+        <BruLoader label="Loading brand profile..." />
       </Card>
     );
   }
@@ -400,13 +409,13 @@ export default function CreatePage() {
       >
         <Button
           onClick={() => setActiveSubNav("generate-post")}
-          variant={activeSubNav === "generate-post" ? "primary" : undefined}
+          variant={activeSubNav === "generate-post" ? "primary" : "outline"}
         >
           Generate Post
         </Button>
         <Button
           onClick={() => setActiveSubNav("content-strategy")}
-          variant={activeSubNav === "content-strategy" ? "primary" : undefined}
+          variant={activeSubNav === "content-strategy" ? "primary" : "outline"}
         >
           Content Strategy
         </Button>
@@ -536,35 +545,25 @@ export default function CreatePage() {
               </div>
 
               {/* Core Takeaway */}
-              <div className="bru-field">
-                <label htmlFor="coreTakeaway" className="bru-field__label">
-                  Core Takeaway (Optional)
-                </label>
-                <textarea
-                  id="coreTakeaway"
-                  className="bru-input"
-                  style={{ width: "100%", minHeight: 80, resize: "vertical" }}
-                  value={coreTakeaway}
-                  onChange={(e) => setCoreTakeaway(e.target.value)}
-                  placeholder="What's the single most important thing readers should remember?"
-                />
-              </div>
+              <Textarea
+                label="Core Takeaway (Optional)"
+                id="coreTakeaway"
+                style={{ width: "100%", minHeight: 80, resize: "vertical" }}
+                value={coreTakeaway}
+                onChange={(e) => setCoreTakeaway(e.target.value)}
+                placeholder="What's the single most important thing readers should remember?"
+              />
 
               {/* CTA Goal */}
-              <div className="bru-field">
-                <label htmlFor="ctaGoal" className="bru-field__label">
-                  Call to Action Goal (Optional)
-                </label>
-                <input
-                  type="text"
-                  id="ctaGoal"
-                  className="bru-input"
-                  style={{ width: "100%" }}
-                  value={ctaGoal}
-                  onChange={(e) => setCtaGoal(e.target.value)}
-                  placeholder="e.g., 'Visit my website', 'Share your thoughts'"
-                />
-              </div>
+              <Input
+                label="Call to Action Goal (Optional)"
+                id="ctaGoal"
+                type="text"
+                style={{ width: "100%" }}
+                value={ctaGoal}
+                onChange={(e) => setCtaGoal(e.target.value)}
+                placeholder="e.g., 'Visit my website', 'Share your thoughts'"
+              />
 
               {/* Post Structure */}
               <div
@@ -639,16 +638,13 @@ export default function CreatePage() {
                   <button
                     type="button"
                     onClick={() => setShowRecommendationReasoning((v) => !v)}
+                    className="bru-btn bru-btn--ghost"
                     style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
                       width: "100%",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
                       padding: 0,
-                      fontFamily: "var(--bru-font-primary)",
                       fontSize: "var(--bru-text-sm)",
                       fontWeight: 600,
                       color: "var(--bru-purple)",
@@ -752,11 +748,8 @@ export default function CreatePage() {
                         key={toneId}
                         type="button"
                         onClick={() => setPreviewToneId(toneId)}
+                        className="bru-btn bru-btn--ghost"
                         style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          fontFamily: "var(--bru-font-primary)",
                           fontSize: "var(--bru-text-sm)",
                           color: "var(--bru-purple)",
                           fontWeight: 600,
@@ -806,6 +799,7 @@ export default function CreatePage() {
               <div className="bru-form-actions">
                 <Button
                   onClick={() => void handleSaveDraft()}
+                  variant="outline"
                   style={{ flex: 1 }}
                   disabled={saving}
                 >

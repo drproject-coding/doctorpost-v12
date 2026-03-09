@@ -827,9 +827,8 @@ export default function SettingsPage() {
                 }}
                 placeholder="sk-ant-..."
                 error={
-                  claudeValidation.state === "error"
-                    ? claudeValidation.message
-                    : undefined
+                  claudeValidation.state === "error" &&
+                  !!claudeValidation.message
                 }
               />
               <button
@@ -944,9 +943,8 @@ export default function SettingsPage() {
                 }}
                 placeholder="Your Straico API key"
                 error={
-                  straicoValidation.state === "error"
-                    ? straicoValidation.message
-                    : undefined
+                  straicoValidation.state === "error" &&
+                  !!straicoValidation.message
                 }
               />
               <button
@@ -1196,9 +1194,8 @@ export default function SettingsPage() {
                 }}
                 placeholder="Your 1ForAll API key"
                 error={
-                  oneforallValidation.state === "error"
-                    ? oneforallValidation.message
-                    : undefined
+                  oneforallValidation.state === "error" &&
+                  !!oneforallValidation.message
                 }
               />
               <button

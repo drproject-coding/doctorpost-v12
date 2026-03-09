@@ -1201,7 +1201,9 @@ export default function FactoryPage() {
                 <Alert
                   variant="warning"
                   title="Fix failing guardrails before formatting"
-                />
+                >
+                  {""}
+                </Alert>
               </div>
             )}
             <div style={{ display: "flex", justifyContent: "flex-end" }}>

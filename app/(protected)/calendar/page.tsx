@@ -114,8 +114,8 @@ const ListView = ({
 };
 
 const viewTabItems = [
-  { id: "calendar", label: "Calendar" },
-  { id: "list", label: "List" },
+  { key: "calendar", label: "Calendar" },
+  { key: "list", label: "List" },
 ];
 
 export default function CalendarPage() {
@@ -195,7 +195,7 @@ export default function CalendarPage() {
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
           <Tabs
             items={viewTabItems}
-            activeTab={view}
+            activeKey={view}
             onChange={(id) => setView(id as "calendar" | "list")}
           />
 

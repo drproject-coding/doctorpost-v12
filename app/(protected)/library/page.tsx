@@ -161,7 +161,7 @@ export default function LibraryPage() {
   };
 
   const tabItems = STATUS_FILTERS.map((f) => ({
-    id: f.id,
+    key: f.id,
     label: f.label,
     count: statusCounts[f.id] ?? 0,
   }));
@@ -191,7 +191,7 @@ export default function LibraryPage() {
         <div style={{ marginBottom: "var(--bru-space-4)" }}>
           <Tabs
             items={tabItems}
-            activeTab={filter}
+            activeKey={filter}
             onChange={(id) => setFilter(id as FilterId)}
           />
         </div>
@@ -363,9 +363,9 @@ export default function LibraryPage() {
         {totalPages > 1 && (
           <div style={{ marginTop: "var(--bru-space-6)" }}>
             <Pagination
-              page={page}
+              currentPage={page}
               totalPages={totalPages}
-              onChange={setPage}
+              onPageChange={setPage}
             />
           </div>
         )}

@@ -176,20 +176,14 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
 
         <div className="bru-modal__body">
           {saveError && (
-            <Alert
-              variant="error"
-              style={{ marginBottom: "var(--bru-space-4)" }}
-            >
-              {saveError}
-            </Alert>
+            <div style={{ marginBottom: "var(--bru-space-4)" }}>
+              <Alert variant="error">{saveError}</Alert>
+            </div>
           )}
           {saveSuccess && (
-            <Alert
-              variant="success"
-              style={{ marginBottom: "var(--bru-space-4)" }}
-            >
-              {saveSuccess}
-            </Alert>
+            <div style={{ marginBottom: "var(--bru-space-4)" }}>
+              <Alert variant="success">{saveSuccess}</Alert>
+            </div>
           )}
 
           {/* Read-only metadata */}

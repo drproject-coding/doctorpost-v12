@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Alert, Card } from "@bruddle/react";
+import { Alert, Card, Loader, ProgressBar } from "@bruddle/react";
 import { getAnalytics } from "@/lib/api";
 import { AnalyticsData } from "@/lib/types";
 import { BarChart2, MessageSquare, ThumbsUp, TrendingUp } from "lucide-react";
@@ -17,7 +17,15 @@ const StatCard = ({
 }) => (
   <Card variant="raised" className="flex flex-col items-start">
     <div className="flex items-center mb-2">
-      <div className="p-2 bg-bru-purple rounded-bru-md border-2 border-black mr-2">
+      <div
+        style={{
+          padding: "var(--bru-space-2)",
+          background: "var(--bru-purple)",
+          borderRadius: "var(--bru-radius-md)",
+          border: "2px solid black",
+          marginRight: "var(--bru-space-2)",
+        }}
+      >
         {React.cloneElement(icon as React.ReactElement, {
           size: 20,
           className: "text-white",
@@ -57,7 +65,7 @@ export default function AnalyticsPage() {
             variant="raised"
             className="flex items-center justify-center p-12"
           >
-            <p>Loading analytics dashboard...</p>
+            <Loader label="Loading analytics dashboard..." />
           </Card>
         </div>
       </div>
@@ -116,17 +124,27 @@ export default function AnalyticsPage() {
               Top Performers &amp; Insights
             </h2>
             <div className="space-y-4">
-              <p className="text-gray-700 font-medium">
+              <p style={{ color: "var(--bru-text)", fontWeight: 500 }}>
                 <span className="font-bold">Top Content Pillar:</span>{" "}
                 {data.topPerformingPillar.name} (
                 {data.topPerformingPillar.value.toLocaleString()} impressions)
               </p>
-              <p className="text-gray-700 font-medium">
+              <p style={{ color: "var(--bru-text)", fontWeight: 500 }}>
                 <span className="font-bold">Top Hook Pattern:</span>{" "}
                 {data.topPerformingHook.name} (
                 {data.topPerformingHook.value.toLocaleString()} reactions)
               </p>
-              <div className="mt-4 p-3 bg-blue-50 border-2 border-black rounded-bru-md text-blue-800 font-medium">
+              <div
+                style={{
+                  marginTop: "var(--bru-space-4)",
+                  padding: "var(--bru-space-3)",
+                  background: "var(--bru-purple-light, #ede9fe)",
+                  border: "2px solid black",
+                  borderRadius: "var(--bru-radius-md)",
+                  color: "var(--bru-purple)",
+                  fontWeight: 500,
+                }}
+              >
                 <p className="font-bold">Creator Engagement Insight:</p>
                 <p>
                   Posts with &quot;Educational/Framework&quot; hooks
@@ -143,21 +161,31 @@ export default function AnalyticsPage() {
               {data.performanceByPillar.map((pillar) => (
                 <div key={pillar.name}>
                   <div className="flex justify-between mb-1">
-                    <span className="text-base font-bold text-gray-700">
+                    <span
+                      style={{
+                        fontSize: "var(--bru-text-base)",
+                        fontWeight: 700,
+                        color: "var(--bru-text)",
+                      }}
+                    >
                       {pillar.name}
                     </span>
-                    <span className="text-sm font-bold text-gray-500">
+                    <span
+                      style={{
+                        fontSize: "var(--bru-text-sm)",
+                        fontWeight: 700,
+                        color: "var(--bru-grey)",
+                      }}
+                    >
                       {pillar.impressions.toLocaleString()}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-bru-md border border-black h-3">
-                    <div
-                      className="bg-bru-purple h-3 rounded-bru-md"
-                      style={{
-                        width: `${(pillar.impressions / maxImpressions) * 100}%`,
-                      }}
-                    ></div>
-                  </div>
+                  <ProgressBar
+                    value={Math.round(
+                      (pillar.impressions / maxImpressions) * 100,
+                    )}
+                    color="mint"
+                  />
                 </div>
               ))}
             </div>

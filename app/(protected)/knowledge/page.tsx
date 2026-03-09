@@ -1,17 +1,17 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Alert, Button, Card } from "@bruddle/react";
-import { useAuth } from "@/lib/auth-context";
 import {
-  FileText,
-  Plus,
-  Upload,
-  Scissors,
-  Search,
+  Alert,
+  Badge,
+  Button,
+  Card,
+  EmptyState,
+  Input,
   Loader,
-  Lock,
-  GitFork,
-} from "lucide-react";
+  Tag,
+} from "@bruddle/react";
+import { useAuth } from "@/lib/auth-context";
+import { FileText, Upload, Scissors, Lock, GitFork } from "lucide-react";
 import type {
   KnowledgeDocument,
   DocumentCategory,
@@ -277,33 +277,19 @@ export default function KnowledgePage() {
         {CATEGORIES.map((cat) => (
           <Button
             key={cat.value}
-            variant={filterCategory === cat.value ? "primary" : undefined}
-            style={{ padding: "4px 12px", fontSize: "var(--bru-text-sm)" }}
+            variant={filterCategory === cat.value ? "primary" : "ghost"}
+            size="sm"
             onClick={() => setFilterCategory(cat.value)}
           >
             {cat.label}
           </Button>
         ))}
         <div style={{ flex: 1, minWidth: 200 }}>
-          <div style={{ position: "relative" }}>
-            <Search
-              size={14}
-              style={{
-                position: "absolute",
-                left: 10,
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "var(--bru-grey)",
-              }}
-            />
-            <input
-              className="bru-input"
-              placeholder="Search documents..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{ paddingLeft: 30 }}
-            />
-          </div>
+          <Input
+            placeholder="Search documents..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
       </Card>
 
@@ -318,24 +304,25 @@ export default function KnowledgePage() {
       {loading ? (
         <div
           style={{
-            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
             padding: "var(--bru-space-8)",
-            color: "var(--bru-grey)",
           }}
         >
-          <Loader size={24} className="animate-spin" />
+          <Loader label="Loading documents..." />
         </div>
       ) : filtered.length === 0 ? (
-        <Card
-          variant="raised"
-          style={{
-            textAlign: "center",
-            padding: "var(--bru-space-8)",
-            color: "var(--bru-grey)",
-          }}
-        >
-          No documents found. Import brand files to get started.
-        </Card>
+        <EmptyState
+          icon="📄"
+          title="No documents found"
+          description="Import brand files to get started."
+          action={
+            <Button onClick={() => setView("import")}>
+              <Upload size={14} />
+              Import
+            </Button>
+          }
+        />
       ) : (
         <div
           style={{
@@ -380,36 +367,13 @@ export default function KnowledgePage() {
                       flexWrap: "wrap",
                     }}
                   >
-                    <span
-                      style={{
-                        fontSize: "var(--bru-text-xs)",
-                        fontWeight: 700,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                        padding: "1px 6px",
-                        background: "var(--bru-purple)",
-                        color: "white",
-                      }}
-                    >
+                    <Tag color="purple" filled>
                       {doc.category}
-                    </span>
+                    </Tag>
                     {doc.source === "seed" && (
-                      <span
-                        style={{
-                          fontSize: "var(--bru-text-xs)",
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          padding: "1px 6px",
-                          background: "#0066FF15",
-                          color: "#0066FF",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 3,
-                        }}
-                      >
-                        <Lock size={9} /> System
-                      </span>
+                      <Badge variant="primary">
+                        <Lock size={9} style={{ marginRight: 3 }} /> System
+                      </Badge>
                     )}
                     {doc.subcategory && (
                       <span

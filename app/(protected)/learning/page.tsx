@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { Alert, Button } from "@bruddle/react";
+import { Alert, Button, EmptyState, Loader, Tabs } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
 import { SignalCounts } from "@/components/learning/SignalCounts";
 import { PatternList } from "@/components/learning/PatternList";
@@ -94,16 +94,6 @@ export default function LearningPage() {
   const pendingProposals = proposals.filter((p) => p.status === "pending");
   const resolvedProposals = proposals.filter((p) => p.status !== "pending");
 
-  const tabs: { key: Tab; label: string; count?: number }[] = [
-    { key: "overview", label: "Overview" },
-    {
-      key: "proposals",
-      label: "Rule Proposals",
-      count: pendingProposals.length,
-    },
-    { key: "history", label: "Feedback History" },
-  ];
-
   return (
     <div>
       {/* Header */}
@@ -124,8 +114,8 @@ export default function LearningPage() {
         >
           Learning
         </h1>
-        <Button onClick={fetchData} disabled={loading}>
-          {loading ? "Loading..." : "Refresh"}
+        <Button onClick={fetchData} disabled={loading} variant="outline">
+          {loading ? <Loader size="sm" label="Loading..." /> : "Refresh"}
         </Button>
       </div>
 
@@ -137,39 +127,22 @@ export default function LearningPage() {
       )}
 
       {/* Tabs */}
-      <div
-        style={{
-          display: "flex",
-          gap: "var(--bru-space-2)",
-          marginBottom: "var(--bru-space-4)",
-          borderBottom: "1px solid var(--bru-border-color, #e0e0e0)",
-          paddingBottom: "var(--bru-space-2)",
-        }}
-      >
-        {tabs.map((t) => (
-          <Button
-            key={t.key}
-            variant={tab === t.key ? "primary" : "ghost"}
-            onClick={() => setTab(t.key)}
-            style={{ fontSize: "var(--bru-text-sm)" }}
-          >
-            {t.label}
-            {t.count !== undefined && t.count > 0 && (
-              <span
-                style={{
-                  marginLeft: 4,
-                  padding: "0 6px",
-                  background: tab === t.key ? "white" : "var(--bru-purple)",
-                  color: tab === t.key ? "var(--bru-purple)" : "white",
-                  fontSize: "var(--bru-text-xs)",
-                  fontWeight: 700,
-                }}
-              >
-                {t.count}
-              </span>
-            )}
-          </Button>
-        ))}
+      <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <Tabs
+          items={[
+            { key: "overview", label: "Overview" },
+            {
+              key: "proposals",
+              label:
+                pendingProposals.length > 0
+                  ? `Rule Proposals (${pendingProposals.length})`
+                  : "Rule Proposals",
+            },
+            { key: "history", label: "Feedback History" },
+          ]}
+          activeKey={tab}
+          onChange={(key) => setTab(key as Tab)}
+        />
       </div>
 
       {/* Tab content */}
@@ -229,15 +202,11 @@ export default function LearningPage() {
           )}
 
           {proposals.length === 0 && (
-            <p
-              style={{
-                fontSize: "var(--bru-text-sm)",
-                color: "var(--bru-grey)",
-              }}
-            >
-              No rule proposals yet. Proposals are created when the learning
-              agent detects patterns that have reached the 10-signal threshold.
-            </p>
+            <EmptyState
+              icon="💡"
+              title="No rule proposals yet"
+              description="Proposals are created when the learning agent detects patterns that have reached the 10-signal threshold."
+            />
           )}
         </div>
       )}

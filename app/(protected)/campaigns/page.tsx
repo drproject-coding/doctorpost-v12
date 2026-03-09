@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { Button } from "@bruddle/react";
+import { Button, EmptyState } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import {
@@ -282,19 +282,9 @@ export default function CampaignsPage() {
               gap: "var(--bru-space-3)",
             }}
           >
-            <button
-              onClick={handleBackToList}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "var(--bru-text-md)",
-                color: "var(--bru-grey)",
-                padding: 0,
-              }}
-            >
+            <Button variant="ghost" onClick={handleBackToList}>
               &larr;
-            </button>
+            </Button>
             <h1
               style={{
                 fontSize: "var(--bru-text-h3)",
@@ -315,15 +305,10 @@ export default function CampaignsPage() {
           />
         )}
         {slots.length === 0 && phase === "complete" && (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "var(--bru-space-8)",
-              color: "var(--bru-grey)",
-            }}
-          >
-            No ideas found for this campaign.
-          </div>
+          <EmptyState
+            title="No ideas found"
+            description="No content ideas were found for this campaign."
+          />
         )}
       </div>
     );
@@ -347,19 +332,9 @@ export default function CampaignsPage() {
             gap: "var(--bru-space-3)",
           }}
         >
-          <button
-            onClick={handleBackToList}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "var(--bru-text-md)",
-              color: "var(--bru-grey)",
-              padding: 0,
-            }}
-          >
+          <Button variant="ghost" onClick={handleBackToList}>
             &larr;
-          </button>
+          </Button>
           <h1
             style={{
               fontSize: "var(--bru-text-h3)",

@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Alert, Button, Card, Input, Loader } from "@bruddle/react";
 import { useAuth } from "@/lib/auth-context";
-import { Loader, Play, ArrowRight, RotateCcw } from "lucide-react";
+import { Play, ArrowRight, RotateCcw } from "lucide-react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
 import type {
   TopicProposal,
@@ -822,48 +822,45 @@ export default function FactoryPage() {
 
       {/* Error */}
       {state.phase === "error" && (
-        <div
-          className="bru-alert bru-alert--error"
-          style={{ marginBottom: "var(--bru-space-4)" }}
-        >
-          <span className="bru-alert__icon">!</span>
-          <div className="bru-alert__content">
-            <div className="bru-alert__text">
-              {state.error || "An error occurred"}
-            </div>
-            {state.errorAtPhase && (
-              <div
-                style={{
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-grey)",
-                  marginTop: 2,
-                }}
-              >
-                Failed at:{" "}
-                {PHASE_LABELS[state.errorAtPhase] || state.errorAtPhase}
-              </div>
-            )}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: "var(--bru-space-2)",
-              marginLeft: "var(--bru-space-3)",
-              flexShrink: 0,
-            }}
-          >
-            {state.errorAtPhase && getActionForPhase(state.errorAtPhase) && (
-              <Button
-                variant="primary"
-                onClick={() => handleRetryFromPhase(state.errorAtPhase!)}
-                disabled={running}
-              >
-                <RotateCcw size={14} />
-                Retry {PHASE_LABELS[state.errorAtPhase] || state.errorAtPhase}
+        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+          <Alert variant="error" title={state.error || "An error occurred"}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--bru-space-2)",
+                flexWrap: "wrap",
+                marginTop: "var(--bru-space-2)",
+              }}
+            >
+              {state.errorAtPhase && (
+                <span
+                  style={{
+                    fontSize: "var(--bru-text-xs)",
+                    color: "var(--bru-grey)",
+                    flex: 1,
+                  }}
+                >
+                  Failed at:{" "}
+                  {PHASE_LABELS[state.errorAtPhase] || state.errorAtPhase}
+                </span>
+              )}
+              {state.errorAtPhase && getActionForPhase(state.errorAtPhase) && (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => handleRetryFromPhase(state.errorAtPhase!)}
+                  disabled={running}
+                >
+                  <RotateCcw size={14} />
+                  Retry {PHASE_LABELS[state.errorAtPhase] || state.errorAtPhase}
+                </Button>
+              )}
+              <Button size="sm" onClick={handleNewPost}>
+                Start Over
               </Button>
-            )}
-            <Button onClick={handleNewPost}>Start Over</Button>
-          </div>
+            </div>
+          </Alert>
         </div>
       )}
 
@@ -908,25 +905,15 @@ export default function FactoryPage() {
 
       {/* Loading indicator */}
       {running && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--bru-space-2)",
-            marginBottom: "var(--bru-space-4)",
-            color: "var(--bru-grey)",
-            fontSize: "var(--bru-text-sm)",
-          }}
-        >
-          <Loader size={16} className="animate-spin" />
-          {state.phase && PHASE_ORDER.includes(state.phase as PipelinePhase) ? (
-            <>
-              Processing {PHASE_LABELS[state.phase] || state.phase} (step{" "}
-              {PHASE_ORDER.indexOf(state.phase as PipelinePhase) + 1}/7)...
-            </>
-          ) : (
-            "Processing..."
-          )}
+        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+          <Loader
+            size="sm"
+            label={
+              state.phase && PHASE_ORDER.includes(state.phase as PipelinePhase)
+                ? `Processing ${PHASE_LABELS[state.phase] || state.phase} (step ${PHASE_ORDER.indexOf(state.phase as PipelinePhase) + 1}/7)...`
+                : "Processing..."
+            }
+          />
         </div>
       )}
 
@@ -1044,12 +1031,8 @@ export default function FactoryPage() {
               flexWrap: "wrap",
             }}
           >
-            <div
-              style={{ position: "relative", display: "inline-block" }}
-              title="Override your brand tones for this session only. E.g., 'casual', 'humorous', 'celebratory'. Your brand profile remains unchanged."
-            >
-              <input
-                className="bru-input"
+            <div title="Override your brand tones for this session only. E.g., 'casual', 'humorous', 'celebratory'. Your brand profile remains unchanged.">
+              <Input
                 placeholder="Tone override (optional)"
                 value={toneInput}
                 onChange={(e) => {
@@ -1145,8 +1128,7 @@ export default function FactoryPage() {
                   alignItems: "center",
                 }}
               >
-                <input
-                  className="bru-input"
+                <Input
                   placeholder="Template name (optional)"
                   value={templateInput}
                   onChange={(e) => {
@@ -1215,18 +1197,11 @@ export default function FactoryPage() {
         (state.phase === "scoring" || state.phase === "writing") && (
           <div style={{ marginTop: "var(--bru-space-4)" }}>
             {!allGuardrailsPassing() && (
-              <div
-                style={{
-                  padding: "var(--bru-space-3)",
-                  backgroundColor: "rgba(255, 193, 7, 0.1)",
-                  border: "1px solid rgba(255, 193, 7, 0.3)",
-                  borderRadius: "4px",
-                  fontSize: "var(--bru-text-sm)",
-                  color: "var(--bru-grey)",
-                  marginBottom: "var(--bru-space-2)",
-                }}
-              >
-                ⚠️ Fix failing guardrails before formatting
+              <div style={{ marginBottom: "var(--bru-space-2)" }}>
+                <Alert
+                  variant="warning"
+                  title="Fix failing guardrails before formatting"
+                />
               </div>
             )}
             <div style={{ display: "flex", justifyContent: "flex-end" }}>

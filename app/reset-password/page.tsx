@@ -2,8 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Alert, Button, Card } from "@bruddle/react";
-import { Loader } from "lucide-react";
+import { Alert, Button, Card, Input, Loader } from "@bruddle/react";
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams();
@@ -87,21 +86,21 @@ function ResetPasswordContent() {
 
         {loading ? (
           <div className="flex items-center justify-center py-4">
-            <Loader size={24} className="animate-spin text-bru-purple" />
+            <Loader
+              label={token ? "Resetting password..." : "Sending reset link..."}
+            />
           </div>
         ) : token ? (
           <form
             onSubmit={(e) => void handleResetPassword(e)}
-            className="space-y-4"
+            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
           >
-            <input
+            <Input
+              label="New Password"
               type="password"
-              className="bru-input"
-              style={{ width: "100%" }}
               placeholder="New password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              required
             />
             <Button type="submit" variant="primary" block>
               Reset Password
@@ -110,16 +109,14 @@ function ResetPasswordContent() {
         ) : (
           <form
             onSubmit={(e) => void handleRequestReset(e)}
-            className="space-y-4"
+            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
           >
-            <input
+            <Input
+              label="Email"
               type="email"
-              className="bru-input"
-              style={{ width: "100%" }}
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
             <Button type="submit" variant="primary" block>
               Send Reset Link
@@ -140,7 +137,8 @@ function ResetPasswordContent() {
 
         <button
           onClick={() => router.push("/login")}
-          className="mt-4 text-sm text-bru-purple font-medium hover:underline"
+          className="mt-4 text-sm font-medium hover:underline"
+          style={{ color: "var(--bru-purple)" }}
         >
           Back to login
         </button>
@@ -154,10 +152,15 @@ export default function ResetPasswordPage() {
     <Suspense
       fallback={
         <div
-          className="flex items-center justify-center min-h-screen"
-          style={{ background: "var(--bru-cream)" }}
+          style={{
+            minHeight: "100vh",
+            background: "var(--bru-cream)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          <Loader size={24} className="animate-spin text-bru-purple" />
+          <Loader />
         </div>
       }
     >

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Menu, Bell, Plus, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
+import { Button } from "@bruddle/react";
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -27,28 +28,30 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   return (
     <header className="topbar">
       <div className="topbar-left">
-        <button className="topbar-menu-btn" onClick={onToggleSidebar}>
+        <button
+          className="topbar-menu-btn bru-btn bru-btn--ghost bru-btn--icon"
+          onClick={onToggleSidebar}
+        >
           <Menu size={20} />
         </button>
         <h1 className="topbar-title">{title}</h1>
       </div>
       <div className="topbar-right">
-        <button className="topbar-icon-btn">
+        <button className="topbar-icon-btn bru-btn bru-btn--ghost bru-btn--icon">
           <Bell size={20} />
           <span className="notification-dot" />
         </button>
         <button
           onClick={() => void logout()}
-          className="topbar-icon-btn"
+          className="topbar-icon-btn bru-btn bru-btn--ghost bru-btn--icon"
           title="Sign out"
         >
           <LogOut size={20} />
         </button>
         <Link href="/create">
-          <button className="topbar-create-btn">
-            <Plus size={18} />
-            <span>Create Post</span>
-          </button>
+          <Button variant="primary" size="sm">
+            <Plus size={16} /> Create Post
+          </Button>
         </Link>
       </div>
     </header>

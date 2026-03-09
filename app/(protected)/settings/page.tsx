@@ -134,6 +134,112 @@ function StatusBadge({
   );
 }
 
+type TestState =
+  | { state: "idle" }
+  | { state: "loading"; testType: "text" | "image" }
+  | { state: "success"; testType: "text"; text: string }
+  | { state: "success"; testType: "image"; imageUrl: string }
+  | { state: "error"; testType: "text" | "image"; message: string };
+
+function TestResultBlock({ test }: { test: TestState }) {
+  if (test.state === "idle") return null;
+  if (test.state === "loading") {
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          fontSize: 12,
+          color: "var(--bru-grey)",
+          padding: "8px 0",
+        }}
+      >
+        <Loader size={12} className="animate-spin" />
+        {test.testType === "text"
+          ? "Generating text..."
+          : "Generating image (may take ~30s)..."}
+      </div>
+    );
+  }
+  if (test.state === "error") {
+    return (
+      <div
+        style={{
+          background: "rgba(220, 38, 38, 0.06)",
+          border: "1px solid rgba(220, 38, 38, 0.2)",
+          padding: "8px 12px",
+          fontSize: 12,
+          color: "#dc2626",
+        }}
+      >
+        {test.message}
+      </div>
+    );
+  }
+  if (test.state === "success" && test.testType === "text") {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <div
+          style={{
+            background: "rgba(22, 163, 74, 0.06)",
+            border: "1px solid rgba(22, 163, 74, 0.2)",
+            padding: "6px 12px",
+            fontSize: 12,
+            color: "#166534",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
+          <CheckCircle size={14} />
+          Text model working correctly!
+        </div>
+        <div
+          style={{
+            background: "var(--bru-bg-2, #f5f5f5)",
+            border: "1px solid rgba(0,0,0,0.1)",
+            padding: "10px 14px",
+            fontSize: 13,
+            color: "var(--bru-text, #111)",
+            fontStyle: "italic",
+          }}
+        >
+          &ldquo;{test.text}&rdquo;
+        </div>
+      </div>
+    );
+  }
+  if (test.state === "success" && test.testType === "image") {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <div
+          style={{
+            background: "rgba(22, 163, 74, 0.06)",
+            border: "1px solid rgba(22, 163, 74, 0.2)",
+            padding: "6px 12px",
+            fontSize: 12,
+            color: "#166534",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
+          <CheckCircle size={14} />
+          Image model working correctly!
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={test.imageUrl}
+          alt="Model test output"
+          style={{ maxWidth: 200, border: "1px solid rgba(0,0,0,0.1)" }}
+        />
+      </div>
+    );
+  }
+  return null;
+}
+
 export default function SettingsPage() {
   const { user } = useAuth();
   const [profile, setProfile] = useState<BrandProfile | null>(null);
@@ -184,6 +290,13 @@ export default function SettingsPage() {
   });
   const [oneforallValidation, setOneforallValidation] =
     useState<ValidationState>({ state: "idle" });
+
+  // Per-provider model test states
+  const [claudeTest, setClaudeTest] = useState<TestState>({ state: "idle" });
+  const [straicoTest, setStraicoTest] = useState<TestState>({ state: "idle" });
+  const [oneforallTest, setOneforallTest] = useState<TestState>({
+    state: "idle",
+  });
 
   // Dynamic model lists
   const [straicoModels, setStraicoModels] = useState<AiModel[]>([
@@ -364,6 +477,62 @@ export default function SettingsPage() {
       setModelsLoading((prev) => ({ ...prev, "1forall": false }));
     }
   }, [oneforallApiKey, saveProfileSilent]);
+
+  const handleTestModel = useCallback(
+    async (
+      testType: "text" | "image",
+      provider: "claude" | "straico" | "1forall",
+      apiKey: string,
+      model: string,
+      imageModel: string,
+      setTest: React.Dispatch<React.SetStateAction<TestState>>,
+    ) => {
+      if (!apiKey.trim()) return;
+      setTest({ state: "loading", testType });
+      try {
+        const res = await fetch("/api/test-model", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: testType,
+            provider,
+            apiKey,
+            model,
+            imageModel,
+          }),
+        });
+        const data = (await res.json()) as
+          | { type: "text"; result: string }
+          | { type: "image"; imageUrl: string }
+          | { error: string };
+        if (!res.ok || "error" in data) {
+          setTest({
+            state: "error",
+            testType,
+            message: "error" in data ? data.error : "Request failed",
+          });
+          return;
+        }
+        if (data.type === "text") {
+          setTest({ state: "success", testType: "text", text: data.result });
+        } else {
+          setTest({
+            state: "success",
+            testType: "image",
+            imageUrl: data.imageUrl,
+          });
+        }
+      } catch (err) {
+        setTest({
+          state: "error",
+          testType,
+          message: err instanceof Error ? err.message : "Unknown error",
+        });
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -790,6 +959,36 @@ export default function SettingsPage() {
               Claude uses direct browser API — model selection is automatic
               (Claude Sonnet 4.5).
             </p>
+            {claudeApiKey.trim() && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  style={{ alignSelf: "flex-start" }}
+                  disabled={claudeTest.state === "loading"}
+                  onClick={() =>
+                    void handleTestModel(
+                      "text",
+                      "claude",
+                      claudeApiKey,
+                      "",
+                      "",
+                      setClaudeTest,
+                    )
+                  }
+                >
+                  {claudeTest.state === "loading" &&
+                  claudeTest.testType === "text" ? (
+                    <>
+                      <Loader size={12} className="animate-spin" /> Testing...
+                    </>
+                  ) : (
+                    "Test Text Model"
+                  )}
+                </Button>
+                <TestResultBlock test={claudeTest} />
+              </div>
+            )}
           </div>
         )}
 
@@ -1022,6 +1221,59 @@ export default function SettingsPage() {
                     </div>
                   )}
                 </div>
+
+                {/* Test buttons */}
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    disabled={straicoTest.state === "loading"}
+                    onClick={() =>
+                      void handleTestModel(
+                        "text",
+                        "straico",
+                        straicoApiKey,
+                        straicoModel,
+                        straicoImageModel,
+                        setStraicoTest,
+                      )
+                    }
+                  >
+                    {straicoTest.state === "loading" &&
+                    straicoTest.testType === "text" ? (
+                      <>
+                        <Loader size={12} className="animate-spin" /> Testing...
+                      </>
+                    ) : (
+                      "Test Text Model"
+                    )}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    disabled={straicoTest.state === "loading"}
+                    onClick={() =>
+                      void handleTestModel(
+                        "image",
+                        "straico",
+                        straicoApiKey,
+                        straicoModel,
+                        straicoImageModel,
+                        setStraicoTest,
+                      )
+                    }
+                  >
+                    {straicoTest.state === "loading" &&
+                    straicoTest.testType === "image" ? (
+                      <>
+                        <Loader size={12} className="animate-spin" /> Testing...
+                      </>
+                    ) : (
+                      "Test Image Model"
+                    )}
+                  </Button>
+                </div>
+                <TestResultBlock test={straicoTest} />
               </>
             )}
           </div>
@@ -1255,6 +1507,59 @@ export default function SettingsPage() {
                     </div>
                   )}
                 </div>
+
+                {/* Test buttons */}
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    disabled={oneforallTest.state === "loading"}
+                    onClick={() =>
+                      void handleTestModel(
+                        "text",
+                        "1forall",
+                        oneforallApiKey,
+                        oneforallModel,
+                        oneforallImageModel,
+                        setOneforallTest,
+                      )
+                    }
+                  >
+                    {oneforallTest.state === "loading" &&
+                    oneforallTest.testType === "text" ? (
+                      <>
+                        <Loader size={12} className="animate-spin" /> Testing...
+                      </>
+                    ) : (
+                      "Test Text Model"
+                    )}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    disabled={oneforallTest.state === "loading"}
+                    onClick={() =>
+                      void handleTestModel(
+                        "image",
+                        "1forall",
+                        oneforallApiKey,
+                        oneforallModel,
+                        oneforallImageModel,
+                        setOneforallTest,
+                      )
+                    }
+                  >
+                    {oneforallTest.state === "loading" &&
+                    oneforallTest.testType === "image" ? (
+                      <>
+                        <Loader size={12} className="animate-spin" /> Testing...
+                      </>
+                    ) : (
+                      "Test Image Model"
+                    )}
+                  </Button>
+                </div>
+                <TestResultBlock test={oneforallTest} />
               </>
             )}
           </div>

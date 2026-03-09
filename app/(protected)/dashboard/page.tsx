@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
-import { ProgressBar, Card } from "@bruddle/react";
+import { ProgressBar, Card, Loader, EmptyState, Button } from "@bruddle/react";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -64,16 +64,15 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div>
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-          <Card
-            variant="raised"
-            className="flex items-center justify-center p-12"
-          >
-            <p>Loading dashboard data...</p>
-          </Card>
-        </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: 300,
+        }}
+      >
+        <Loader label="Loading dashboard..." />
       </div>
     );
   }
@@ -114,7 +113,6 @@ export default function DashboardPage() {
                 style={{
                   background: "var(--bru-purple)",
                   padding: "8px",
-                  borderRadius: "var(--bru-radius-md)",
                 }}
                 className="mr-3"
               >
@@ -125,10 +123,19 @@ export default function DashboardPage() {
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 font-bold">
+                  <span
+                    style={{
+                      color: "var(--bru-grey)",
+                      fontSize: "var(--bru-text-sm)",
+                      fontWeight: 700,
+                    }}
+                  >
                     Impressions
                   </span>
-                  <span className="text-sm font-bold flex items-center text-green-600">
+                  <span
+                    className="text-sm font-bold flex items-center"
+                    style={{ color: "var(--bru-success)" }}
+                  >
                     {analyticsData?.totalImpressions.toLocaleString() ?? "N/A"}
                   </span>
                 </div>
@@ -140,10 +147,19 @@ export default function DashboardPage() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 font-bold">
+                  <span
+                    style={{
+                      color: "var(--bru-grey)",
+                      fontSize: "var(--bru-text-sm)",
+                      fontWeight: 700,
+                    }}
+                  >
                     Engagement
                   </span>
-                  <span className="text-sm font-bold flex items-center text-green-600">
+                  <span
+                    className="text-sm font-bold flex items-center"
+                    style={{ color: "var(--bru-success)" }}
+                  >
                     {analyticsData?.ctr ? `${analyticsData.ctr}%` : "N/A"}
                   </span>
                 </div>
@@ -151,10 +167,19 @@ export default function DashboardPage() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 font-bold">
+                  <span
+                    style={{
+                      color: "var(--bru-grey)",
+                      fontSize: "var(--bru-text-sm)",
+                      fontWeight: 700,
+                    }}
+                  >
                     Top Pillar
                   </span>
-                  <span className="text-sm font-bold flex items-center text-green-600">
+                  <span
+                    className="text-sm font-bold flex items-center"
+                    style={{ color: "var(--bru-success)" }}
+                  >
                     {analyticsData?.topPerformingPillar.name ?? "N/A"}
                   </span>
                 </div>
@@ -175,7 +200,6 @@ export default function DashboardPage() {
                 style={{
                   background: "var(--bru-yellow)",
                   padding: "8px",
-                  borderRadius: "var(--bru-radius-md)",
                 }}
                 className="mr-3"
               >
@@ -187,23 +211,41 @@ export default function DashboardPage() {
               <Link
                 href="/create"
                 className="flex items-center font-bold hover:underline"
-                style={{ color: "var(--bru-purple)" }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  color: "var(--bru-purple)",
+                  fontWeight: 700,
+                }}
               >
-                <ArrowUpRight size={16} className="mr-2" /> Generate New Post
+                <ArrowUpRight size={16} /> Generate New Post
               </Link>
               <Link
                 href="/calendar"
                 className="flex items-center font-bold hover:underline"
-                style={{ color: "var(--bru-purple)" }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  color: "var(--bru-purple)",
+                  fontWeight: 700,
+                }}
               >
-                <Calendar size={16} className="mr-2" /> View Calendar
+                <Calendar size={16} /> View Calendar
               </Link>
               <Link
                 href="/settings"
                 className="flex items-center font-bold hover:underline"
-                style={{ color: "var(--bru-purple)" }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  color: "var(--bru-purple)",
+                  fontWeight: 700,
+                }}
               >
-                <Settings size={16} className="mr-2" /> Update Brand Profile
+                <Settings size={16} /> Update Brand Profile
               </Link>
             </div>
           </Card>
@@ -229,11 +271,17 @@ export default function DashboardPage() {
                     style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}
                   >
                     <div className="pt-1">
-                      <Clock className="w-4 h-4 text-gray-600" />
+                      <Clock
+                        className="w-4 h-4"
+                        style={{ color: "var(--bru-grey)" }}
+                      />
                     </div>
                     <div>
                       <p className="font-semibold">{post.title}</p>
-                      <p className="text-sm text-gray-600">
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--bru-grey)" }}
+                      >
                         {formatDate(post.scheduledAt)} at{" "}
                         {formatTime(post.scheduledAt)}
                       </p>
@@ -241,9 +289,18 @@ export default function DashboardPage() {
                   </div>
                 ))
               ) : (
-                <p className="text-center text-gray-600 font-medium py-4">
-                  No upcoming scheduled posts.
-                </p>
+                <EmptyState
+                  icon="📅"
+                  title="No upcoming posts"
+                  description="Create and schedule a post to see it here."
+                  action={
+                    <Link href="/create">
+                      <Button variant="primary" size="sm">
+                        Create Post
+                      </Button>
+                    </Link>
+                  }
+                />
               )}
             </div>
           </Card>
@@ -271,20 +328,28 @@ export default function DashboardPage() {
                     style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}
                   >
                     <div className="pt-1">
-                      <Book className="w-4 h-4 text-gray-600" />
+                      <Book
+                        className="w-4 h-4"
+                        style={{ color: "var(--bru-grey)" }}
+                      />
                     </div>
                     <div>
                       <p className="font-semibold">{post.title}</p>
-                      <p className="text-sm text-gray-600">
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--bru-grey)" }}
+                      >
                         Published: {formatDate(post.scheduledAt)}
                       </p>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-center text-gray-600 font-medium py-4">
-                  No recent posts found.
-                </p>
+                <EmptyState
+                  icon="📝"
+                  title="No recent posts"
+                  description="Published posts will appear here."
+                />
               )}
             </div>
           </Card>
@@ -293,7 +358,10 @@ export default function DashboardPage() {
           <Card variant="raised">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Trending Topics</h2>
-              <span className="text-sm font-bold text-gray-600">
+              <span
+                className="text-sm font-bold"
+                style={{ color: "var(--bru-grey)" }}
+              >
                 Last 7 Days
               </span>
             </div>
@@ -307,13 +375,18 @@ export default function DashboardPage() {
                     style={{ padding: "8px" }}
                   >
                     <span className="font-medium">{topic}</span>
-                    <TrendingUp size={16} className="text-green-500" />
+                    <TrendingUp
+                      size={16}
+                      style={{ color: "var(--bru-success)" }}
+                    />
                   </Card>
                 ))
               ) : (
-                <p className="text-center text-gray-600 font-medium py-4">
-                  No trending topics available.
-                </p>
+                <EmptyState
+                  icon="📊"
+                  title="No trending topics"
+                  description="Analytics data will appear here."
+                />
               )}
             </div>
           </Card>

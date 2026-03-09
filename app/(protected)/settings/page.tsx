@@ -1,6 +1,12 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Card } from "@bruddle/react";
+import {
+  Badge,
+  Button,
+  Card,
+  Input,
+  Loader as BruLoader,
+} from "@bruddle/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import {
   BrandProfile,
@@ -30,8 +36,6 @@ import {
   Eye,
   EyeOff,
   Key,
-  ShieldCheck,
-  AlertCircle,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
@@ -45,65 +49,16 @@ function ValidationBadge({ status }: { status: ValidationState }) {
   if (status.state === "idle") return null;
   if (status.state === "validating") {
     return (
-      <span
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 4,
-          padding: "2px 8px",
-          fontSize: 10,
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "0.05em",
-          background: "rgba(59, 130, 246, 0.1)",
-          color: "#2563eb",
-        }}
-      >
-        <Loader size={10} className="animate-spin" />
-        Verifying
-      </span>
+      <Badge variant="outline">
+        <BruLoader size="sm" /> Verifying...
+      </Badge>
     );
   }
   if (status.state === "valid") {
-    return (
-      <span
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 4,
-          padding: "2px 8px",
-          fontSize: 10,
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "0.05em",
-          background: "rgba(22, 163, 74, 0.1)",
-          color: "#16a34a",
-        }}
-      >
-        <ShieldCheck size={10} />
-        Verified
-      </span>
-    );
+    return <Badge variant="mint">✓ Verified</Badge>;
   }
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 4,
-        padding: "2px 8px",
-        fontSize: 10,
-        fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "0.05em",
-        background: "rgba(239, 68, 68, 0.1)",
-        color: "#dc2626",
-      }}
-    >
-      <AlertCircle size={10} />
-      Invalid
-    </span>
-  );
+  // error state:
+  return <Badge variant="pink">{status.message ?? "Invalid"}</Badge>;
 }
 
 function StatusBadge({
@@ -114,23 +69,10 @@ function StatusBadge({
   label?: string;
 }) {
   return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 4,
-        padding: "2px 8px",
-        fontSize: 10,
-        fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "0.05em",
-        background: connected ? "rgba(22, 163, 74, 0.1)" : "rgba(0,0,0,0.05)",
-        color: connected ? "#16a34a" : "var(--bru-grey)",
-      }}
-    >
+    <Badge variant={connected ? "mint" : "outline"}>
       {connected ? <CheckCircle size={10} /> : <XCircle size={10} />}
       {label || (connected ? "Connected" : "Not connected")}
-    </span>
+    </Badge>
   );
 }
 
@@ -170,7 +112,7 @@ function TestResultBlock({ test }: { test: TestState }) {
           border: "1px solid rgba(220, 38, 38, 0.2)",
           padding: "8px 12px",
           fontSize: 12,
-          color: "#dc2626",
+          color: "var(--bru-error, #dc2626)",
         }}
       >
         {test.message}
@@ -186,7 +128,7 @@ function TestResultBlock({ test }: { test: TestState }) {
             border: "1px solid rgba(22, 163, 74, 0.2)",
             padding: "6px 12px",
             fontSize: 12,
-            color: "#166534",
+            color: "var(--bru-success-dark, #166534)",
             display: "flex",
             alignItems: "center",
             gap: 6,
@@ -219,7 +161,7 @@ function TestResultBlock({ test }: { test: TestState }) {
             border: "1px solid rgba(22, 163, 74, 0.2)",
             padding: "6px 12px",
             fontSize: 12,
-            color: "#166534",
+            color: "var(--bru-success-dark, #166534)",
             display: "flex",
             alignItems: "center",
             gap: 6,
@@ -726,61 +668,62 @@ export default function SettingsPage() {
 
         <div className="bru-form-stack">
           {/* Perplexity */}
-          <div className="bru-field">
-            <label className="bru-field__label">Perplexity API Key</label>
-            <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
-              <input
-                className="bru-input"
-                type={showPerplexityKey ? "text" : "password"}
-                value={perplexityApiKey}
-                onChange={(e) => setPerplexityApiKey(e.target.value)}
-                onBlur={() => void saveProfileSilent()}
-                placeholder="pplx-..."
-                style={{ flex: 1 }}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => setShowPerplexityKey((p) => !p)}
-                style={{ padding: "4px 8px" }}
-              >
-                {showPerplexityKey ? <EyeOff size={14} /> : <Eye size={14} />}
-              </Button>
-            </div>
+          <div style={{ position: "relative" }}>
+            <Input
+              label="Perplexity API Key"
+              type={showPerplexityKey ? "text" : "password"}
+              value={perplexityApiKey}
+              onChange={(e) => setPerplexityApiKey(e.target.value)}
+              onBlur={() => void saveProfileSilent()}
+              placeholder="pplx-..."
+            />
+            <button
+              type="button"
+              className="bru-btn bru-btn--ghost bru-btn--icon"
+              onClick={() => setShowPerplexityKey((p) => !p)}
+              style={{
+                position: "absolute",
+                right: 10,
+                top: "50%",
+                transform: "translateY(-50%)",
+                padding: 0,
+              }}
+            >
+              {showPerplexityKey ? <EyeOff size={14} /> : <Eye size={14} />}
+            </button>
           </div>
 
           {/* Reddit */}
-          <div className="bru-field">
-            <label className="bru-field__label">Reddit Client ID</label>
-            <input
-              className="bru-input"
-              value={redditClientId}
-              onChange={(e) => setRedditClientId(e.target.value)}
+          <Input
+            label="Reddit Client ID"
+            value={redditClientId}
+            onChange={(e) => setRedditClientId(e.target.value)}
+            onBlur={() => void saveProfileSilent()}
+            placeholder="Reddit app client ID"
+          />
+          <div style={{ position: "relative" }}>
+            <Input
+              label="Reddit Client Secret"
+              type={showRedditSecret ? "text" : "password"}
+              value={redditClientSecret}
+              onChange={(e) => setRedditClientSecret(e.target.value)}
               onBlur={() => void saveProfileSilent()}
-              placeholder="Reddit app client ID"
+              placeholder="Reddit app client secret"
             />
-          </div>
-          <div className="bru-field">
-            <label className="bru-field__label">Reddit Client Secret</label>
-            <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
-              <input
-                className="bru-input"
-                type={showRedditSecret ? "text" : "password"}
-                value={redditClientSecret}
-                onChange={(e) => setRedditClientSecret(e.target.value)}
-                onBlur={() => void saveProfileSilent()}
-                placeholder="Reddit app client secret"
-                style={{ flex: 1 }}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => setShowRedditSecret((p) => !p)}
-                style={{ padding: "4px 8px" }}
-              >
-                {showRedditSecret ? <EyeOff size={14} /> : <Eye size={14} />}
-              </Button>
-            </div>
+            <button
+              type="button"
+              className="bru-btn bru-btn--ghost bru-btn--icon"
+              onClick={() => setShowRedditSecret((p) => !p)}
+              style={{
+                position: "absolute",
+                right: 10,
+                top: "50%",
+                transform: "translateY(-50%)",
+                padding: 0,
+              }}
+            >
+              {showRedditSecret ? <EyeOff size={14} /> : <Eye size={14} />}
+            </button>
           </div>
         </div>
       </Card>
@@ -858,23 +801,9 @@ export default function SettingsPage() {
             >
               <ValidationBadge status={claudeValidation} />
               {isClaude && (
-                <span
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: claudeReady
-                      ? "#7C3AED"
-                      : "var(--bru-error, #FF4444)",
-                    background: claudeReady
-                      ? "rgba(124, 58, 237, 0.1)"
-                      : "rgba(231, 76, 60, 0.1)",
-                    padding: "2px 6px",
-                  }}
-                >
+                <Badge variant={claudeReady ? "primary" : "pink"}>
                   {claudeReady ? "Active" : "No Key"}
-                </span>
+                </Badge>
               )}
               {!isClaude && (
                 <Button
@@ -887,57 +816,36 @@ export default function SettingsPage() {
                 </Button>
               )}
             </div>
-            <div>
-              <label
+            <div style={{ position: "relative" }}>
+              <Input
+                label="API Key"
+                type={showClaudeKey ? "text" : "password"}
+                value={claudeApiKey}
+                onChange={(e) => {
+                  setClaudeApiKey(e.target.value);
+                  setClaudeValidation({ state: "idle" });
+                }}
+                placeholder="sk-ant-..."
+                error={
+                  claudeValidation.state === "error"
+                    ? claudeValidation.message
+                    : undefined
+                }
+              />
+              <button
+                type="button"
+                className="bru-btn bru-btn--ghost bru-btn--icon"
+                onClick={() => setShowClaudeKey((v) => !v)}
                 style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "var(--bru-grey)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  marginBottom: "var(--bru-space-2)",
+                  position: "absolute",
+                  right: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  padding: 0,
                 }}
               >
-                <Key size={12} /> API Key
-              </label>
-              <div style={{ position: "relative" }}>
-                <input
-                  type={showClaudeKey ? "text" : "password"}
-                  value={claudeApiKey}
-                  onChange={(e) => {
-                    setClaudeApiKey(e.target.value);
-                    setClaudeValidation({ state: "idle" });
-                  }}
-                  placeholder="sk-ant-..."
-                  className="bru-input"
-                  style={{ width: "100%", paddingRight: 40 }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowClaudeKey((v) => !v)}
-                  style={{
-                    position: "absolute",
-                    right: 10,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "var(--bru-grey)",
-                    padding: 0,
-                  }}
-                >
-                  {showClaudeKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-              {claudeValidation.state === "error" && (
-                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
-                  {claudeValidation.message}
-                </p>
-              )}
+                {showClaudeKey ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
             <Button
               size="sm"
@@ -1010,23 +918,9 @@ export default function SettingsPage() {
             >
               <ValidationBadge status={straicoValidation} />
               {isStraico && (
-                <span
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: straicoReady
-                      ? "#F59E0B"
-                      : "var(--bru-error, #FF4444)",
-                    background: straicoReady
-                      ? "rgba(245, 158, 11, 0.1)"
-                      : "rgba(231, 76, 60, 0.1)",
-                    padding: "2px 6px",
-                  }}
-                >
+                <Badge variant={straicoReady ? "secondary" : "pink"}>
                   {straicoReady ? "Active" : "No Key"}
-                </span>
+                </Badge>
               )}
               {!isStraico && (
                 <Button
@@ -1039,57 +933,36 @@ export default function SettingsPage() {
                 </Button>
               )}
             </div>
-            <div>
-              <label
+            <div style={{ position: "relative" }}>
+              <Input
+                label="API Key"
+                type={showStraicoKey ? "text" : "password"}
+                value={straicoApiKey}
+                onChange={(e) => {
+                  setStraicoApiKey(e.target.value);
+                  setStraicoValidation({ state: "idle" });
+                }}
+                placeholder="Your Straico API key"
+                error={
+                  straicoValidation.state === "error"
+                    ? straicoValidation.message
+                    : undefined
+                }
+              />
+              <button
+                type="button"
+                className="bru-btn bru-btn--ghost bru-btn--icon"
+                onClick={() => setShowStraicoKey((v) => !v)}
                 style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "var(--bru-grey)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  marginBottom: "var(--bru-space-2)",
+                  position: "absolute",
+                  right: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  padding: 0,
                 }}
               >
-                <Key size={12} /> API Key
-              </label>
-              <div style={{ position: "relative" }}>
-                <input
-                  type={showStraicoKey ? "text" : "password"}
-                  value={straicoApiKey}
-                  onChange={(e) => {
-                    setStraicoApiKey(e.target.value);
-                    setStraicoValidation({ state: "idle" });
-                  }}
-                  placeholder="Your Straico API key"
-                  className="bru-input"
-                  style={{ width: "100%", paddingRight: 40 }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowStraicoKey((v) => !v)}
-                  style={{
-                    position: "absolute",
-                    right: 10,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "var(--bru-grey)",
-                    padding: 0,
-                  }}
-                >
-                  {showStraicoKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-              {straicoValidation.state === "error" && (
-                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
-                  {straicoValidation.message}
-                </p>
-              )}
+                {showStraicoKey ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
             <Button
               size="sm"
@@ -1297,23 +1170,9 @@ export default function SettingsPage() {
             >
               <ValidationBadge status={oneforallValidation} />
               {isOneforall && (
-                <span
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: oneforallReady
-                      ? "#0EA5E9"
-                      : "var(--bru-error, #FF4444)",
-                    background: oneforallReady
-                      ? "rgba(14, 165, 233, 0.1)"
-                      : "rgba(231, 76, 60, 0.1)",
-                    padding: "2px 6px",
-                  }}
-                >
+                <Badge variant={oneforallReady ? "filled" : "pink"}>
                   {oneforallReady ? "Active" : "No Key"}
-                </span>
+                </Badge>
               )}
               {!isOneforall && (
                 <Button
@@ -1326,57 +1185,36 @@ export default function SettingsPage() {
                 </Button>
               )}
             </div>
-            <div>
-              <label
+            <div style={{ position: "relative" }}>
+              <Input
+                label="API Key"
+                type={showOneforallKey ? "text" : "password"}
+                value={oneforallApiKey}
+                onChange={(e) => {
+                  setOneforallApiKey(e.target.value);
+                  setOneforallValidation({ state: "idle" });
+                }}
+                placeholder="Your 1ForAll API key"
+                error={
+                  oneforallValidation.state === "error"
+                    ? oneforallValidation.message
+                    : undefined
+                }
+              />
+              <button
+                type="button"
+                className="bru-btn bru-btn--ghost bru-btn--icon"
+                onClick={() => setShowOneforallKey((v) => !v)}
                 style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "var(--bru-grey)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  marginBottom: "var(--bru-space-2)",
+                  position: "absolute",
+                  right: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  padding: 0,
                 }}
               >
-                <Key size={12} /> API Key
-              </label>
-              <div style={{ position: "relative" }}>
-                <input
-                  type={showOneforallKey ? "text" : "password"}
-                  value={oneforallApiKey}
-                  onChange={(e) => {
-                    setOneforallApiKey(e.target.value);
-                    setOneforallValidation({ state: "idle" });
-                  }}
-                  placeholder="Your 1ForAll API key"
-                  className="bru-input"
-                  style={{ width: "100%", paddingRight: 40 }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowOneforallKey((v) => !v)}
-                  style={{
-                    position: "absolute",
-                    right: 10,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "var(--bru-grey)",
-                    padding: 0,
-                  }}
-                >
-                  {showOneforallKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-              {oneforallValidation.state === "error" && (
-                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
-                  {oneforallValidation.message}
-                </p>
-              )}
+                {showOneforallKey ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
             <Button
               size="sm"

@@ -1,6 +1,14 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { Card } from "@bruddle/react";
+import Link from "next/link";
+import {
+  Card,
+  Tabs,
+  Tag,
+  EmptyState,
+  Pagination,
+  Button,
+} from "@bruddle/react";
 import { getScheduledPosts, updatePost, deletePost } from "@/lib/api";
 import { useToast } from "@/components/Toast";
 import { ScheduledPost } from "@/lib/types";
@@ -14,16 +22,16 @@ function getSource(post: ScheduledPost): "Studio" | "Factory" | "Create" {
   return "Create";
 }
 
-const SOURCE_STYLE: Record<string, { bg: string; color: string }> = {
-  Studio: { bg: "#631DED1A", color: "#631DED" },
-  Factory: { bg: "#00A8961A", color: "#00A896" },
-  Create: { bg: "#FF6C011A", color: "#FF6C01" },
+const SOURCE_TAG_COLOR: Record<string, "purple" | "mint" | "yellow"> = {
+  Studio: "purple",
+  Factory: "mint",
+  Create: "yellow",
 };
 
-const FORMAT_STYLE: Record<string, { bg: string; color: string }> = {
-  carousel: { bg: "#631DED1A", color: "#631DED" },
-  visual: { bg: "#D4A8001A", color: "#D4A800" },
-  simple: { bg: "#1212120D", color: "#666" },
+const FORMAT_TAG_COLOR: Record<string, "purple" | "yellow" | "grey"> = {
+  carousel: "purple",
+  visual: "yellow",
+  simple: "grey",
 };
 
 const STATUS_FILTERS = [
@@ -152,6 +160,12 @@ export default function LibraryPage() {
     }
   };
 
+  const tabItems = STATUS_FILTERS.map((f) => ({
+    id: f.id,
+    label: f.label,
+    count: statusCounts[f.id] ?? 0,
+  }));
+
   if (loading) {
     return (
       <div className="p-6">
@@ -173,57 +187,17 @@ export default function LibraryPage() {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">Content Library</h1>
 
-        {/* Status filter chips */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 6,
-            marginBottom: 12,
-          }}
-        >
-          {STATUS_FILTERS.map((f) => {
-            const count = statusCounts[f.id] ?? 0;
-            const active = filter === f.id;
-            return (
-              <button
-                key={f.id}
-                onClick={() => setFilter(f.id)}
-                style={{
-                  padding: "4px 12px",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  border: "2px solid #000",
-                  cursor: "pointer",
-                  background: active ? "#000" : "#f5f5f5",
-                  color: active ? "#fff" : "#333",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 5,
-                }}
-              >
-                {f.label}
-                {count > 0 && (
-                  <span
-                    style={{
-                      background: active ? "rgba(255,255,255,0.25)" : "#ddd",
-                      color: active ? "#fff" : "#555",
-                      borderRadius: 8,
-                      padding: "0 5px",
-                      fontSize: 10,
-                      fontWeight: 800,
-                    }}
-                  >
-                    {count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+        {/* Status filter tabs */}
+        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+          <Tabs
+            items={tabItems}
+            activeTab={filter}
+            onChange={(id) => setFilter(id as FilterId)}
+          />
         </div>
 
         {/* Search */}
-        <div style={{ marginBottom: 16 }}>
+        <div style={{ marginBottom: "var(--bru-space-4)" }}>
           <input
             type="text"
             placeholder="Search by title, content or pillar…"
@@ -242,14 +216,24 @@ export default function LibraryPage() {
 
         <Card variant="raised">
           {pagedPosts.length === 0 ? (
-            <p className="text-center py-12 text-gray-600 font-medium">
-              No posts found.
-            </p>
+            <div style={{ padding: "var(--bru-space-12) 0" }}>
+              <EmptyState
+                icon="📚"
+                title="No posts found"
+                description="Try a different filter or create your first post."
+                action={
+                  <Link href="/create">
+                    <Button variant="primary" size="sm">
+                      Create Post
+                    </Button>
+                  </Link>
+                }
+              />
+            </div>
           ) : (
             <div className="space-y-4">
               {pagedPosts.map((post) => {
                 const src = getSource(post);
-                const srcStyle = SOURCE_STYLE[src];
                 const showDate = DATED_STATUSES.has(post.status);
                 const dateLabel =
                   post.status === "published" ? "Published" : "Planned";
@@ -278,41 +262,24 @@ export default function LibraryPage() {
                           marginBottom: 4,
                         }}
                       >
-                        <span
-                          style={{
-                            background: srcStyle.bg,
-                            color: srcStyle.color,
-                            padding: "1px 7px",
-                            fontSize: 10,
-                            fontWeight: 800,
-                            textTransform: "uppercase",
-                            letterSpacing: 0.8,
-                          }}
-                        >
+                        <Tag color={SOURCE_TAG_COLOR[src] ?? "grey"} filled>
                           {src}
-                        </span>
-                        {post.format &&
-                          (() => {
-                            const s =
-                              FORMAT_STYLE[post.format] ?? FORMAT_STYLE.simple;
-                            return (
-                              <span
-                                style={{
-                                  background: s.bg,
-                                  color: s.color,
-                                  padding: "1px 7px",
-                                  fontSize: 10,
-                                  fontWeight: 800,
-                                  textTransform: "uppercase",
-                                  letterSpacing: 0.8,
-                                }}
-                              >
-                                {post.format}
-                              </span>
-                            );
-                          })()}
+                        </Tag>
+                        {post.format && (
+                          <Tag
+                            color={FORMAT_TAG_COLOR[post.format] ?? "grey"}
+                            filled
+                          >
+                            {post.format}
+                          </Tag>
+                        )}
                         {post.pillar && (
-                          <span style={{ fontSize: 11, color: "#666" }}>
+                          <span
+                            style={{
+                              fontSize: 11,
+                              color: "var(--bru-color-text-muted, #666)",
+                            }}
+                          >
                             {post.pillar}
                           </span>
                         )}
@@ -324,7 +291,7 @@ export default function LibraryPage() {
                           gap: 12,
                           flexWrap: "wrap",
                           fontSize: 11,
-                          color: "#888",
+                          color: "var(--bru-color-text-muted, #888)",
                         }}
                       >
                         {createdFmt && <span>Created {createdFmt}</span>}
@@ -337,8 +304,8 @@ export default function LibraryPage() {
                               gap: 3,
                               color:
                                 post.status === "published"
-                                  ? "#00A896"
-                                  : "#631DED",
+                                  ? "var(--bru-color-mint, #00A896)"
+                                  : "var(--bru-color-purple, #631DED)",
                               fontWeight: 700,
                             }}
                           >
@@ -362,25 +329,28 @@ export default function LibraryPage() {
                         {post.status.charAt(0).toUpperCase() +
                           post.status.slice(1)}
                       </span>
-                      <a
+                      <Link
                         href={`/library/${post.uuid ?? post.id}`}
-                        className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
                         style={{ textDecoration: "none" }}
                       >
-                        View
-                      </a>
-                      <button
+                        <Button variant="outline" size="sm">
+                          View
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost-bordered"
+                        size="sm"
                         onClick={() => handleEditPost(post)}
-                        className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
                       >
                         Edit
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
                         onClick={() => handleDeletePost(post.id)}
-                        className="text-sm bg-red-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-red-200 text-red-700"
                       >
                         Delete
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 );
@@ -391,46 +361,12 @@ export default function LibraryPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 12,
-              marginTop: 16,
-            }}
-          >
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((p) => p - 1)}
-              style={{
-                padding: "6px 16px",
-                fontWeight: 700,
-                border: "2px solid #000",
-                cursor: page === 1 ? "not-allowed" : "pointer",
-                background: page === 1 ? "#f5f5f5" : "#fff",
-                opacity: page === 1 ? 0.5 : 1,
-              }}
-            >
-              ← Prev
-            </button>
-            <span style={{ fontSize: 13, fontWeight: 600 }}>
-              {page} / {totalPages} &nbsp;({filteredPosts.length} posts)
-            </span>
-            <button
-              disabled={page === totalPages}
-              onClick={() => setPage((p) => p + 1)}
-              style={{
-                padding: "6px 16px",
-                fontWeight: 700,
-                border: "2px solid #000",
-                cursor: page === totalPages ? "not-allowed" : "pointer",
-                background: page === totalPages ? "#f5f5f5" : "#fff",
-                opacity: page === totalPages ? 0.5 : 1,
-              }}
-            >
-              Next →
-            </button>
+          <div style={{ marginTop: "var(--bru-space-6)" }}>
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onChange={setPage}
+            />
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { Alert, Button, EmptyState, Loader, Tabs } from "@bruddle/react";
+import { Alert, Button, EmptyState, Loader, Tabs } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import { SignalCounts } from "@/components/learning/SignalCounts";
 import { PatternList } from "@/components/learning/PatternList";
@@ -102,12 +102,12 @@ export default function LearningPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-6)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <h1
           style={{
-            fontSize: "var(--bru-text-h3)",
+            fontSize: "var(--drp-text-h3)",
             fontWeight: 700,
             margin: 0,
           }}
@@ -121,13 +121,13 @@ export default function LearningPage() {
 
       {/* Error */}
       {error && (
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <Alert variant="error">{error}</Alert>
         </div>
       )}
 
       {/* Tabs */}
-      <div style={{ marginBottom: "var(--bru-space-4)" }}>
+      <div style={{ marginBottom: "var(--drp-space-4)" }}>
         <Tabs
           items={[
             { key: "overview", label: "Overview" },
@@ -147,26 +147,26 @@ export default function LearningPage() {
 
       {/* Tab content */}
       {tab === "overview" && (
-        <div style={{ display: "grid", gap: "var(--bru-space-4)" }}>
+        <div style={{ display: "grid", gap: "var(--drp-space-4)" }}>
           <SignalCounts signals={signals} />
           <PatternList signals={signals} />
         </div>
       )}
 
       {tab === "proposals" && (
-        <div style={{ display: "grid", gap: "var(--bru-space-4)" }}>
+        <div style={{ display: "grid", gap: "var(--drp-space-4)" }}>
           {pendingProposals.length > 0 && (
             <div>
               <h3
                 style={{
-                  fontSize: "var(--bru-text-md)",
+                  fontSize: "var(--drp-text-md)",
                   fontWeight: 700,
-                  marginBottom: "var(--bru-space-2)",
+                  marginBottom: "var(--drp-space-2)",
                 }}
               >
                 Pending ({pendingProposals.length})
               </h3>
-              <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
+              <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
                 {pendingProposals.map((p, idx) => (
                   <RuleProposalCard
                     key={p.id}
@@ -182,14 +182,14 @@ export default function LearningPage() {
             <div>
               <h3
                 style={{
-                  fontSize: "var(--bru-text-md)",
+                  fontSize: "var(--drp-text-md)",
                   fontWeight: 700,
-                  marginBottom: "var(--bru-space-2)",
+                  marginBottom: "var(--drp-space-2)",
                 }}
               >
                 Resolved ({resolvedProposals.length})
               </h3>
-              <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
+              <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
                 {resolvedProposals.map((p, idx) => (
                   <RuleProposalCard
                     key={p.id}

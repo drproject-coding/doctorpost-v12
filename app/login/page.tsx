@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Card, Input, Alert, Divider, Loader } from "@bruddle/react";
+import { Button, Card, Input, Alert, Divider, Loader } from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Eye, EyeOff } from "lucide-react";
@@ -84,7 +84,7 @@ export default function LoginPage() {
       <div
         style={{
           minHeight: "100vh",
-          background: "var(--bru-cream)",
+          background: "var(--drp-cream)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -98,7 +98,7 @@ export default function LoginPage() {
   return (
     <div
       className="flex items-center justify-center"
-      style={{ minHeight: "100vh", background: "var(--bru-cream)" }}
+      style={{ minHeight: "100vh", background: "var(--drp-cream)" }}
     >
       <Card
         variant="raised"
@@ -173,7 +173,7 @@ export default function LoginPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="bru-btn bru-btn--ghost bru-btn--icon"
+                      className="drp-btn drp-btn--ghost drp-btn--icon"
                       style={{ position: "absolute", right: 8, bottom: 8 }}
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -187,7 +187,7 @@ export default function LoginPage() {
                 <button
                   onClick={() => router.push("/signup")}
                   className="mt-4 text-sm font-medium hover:underline"
-                  style={{ color: "var(--bru-purple)" }}
+                  style={{ color: "var(--drp-purple)" }}
                 >
                   Don&apos;t have an account? <strong>Sign up</strong>
                 </button>
@@ -195,7 +195,7 @@ export default function LoginPage() {
                 <button
                   onClick={() => router.push("/forgot-password")}
                   className="block mx-auto mt-2 text-sm hover:underline"
-                  style={{ color: "var(--bru-text-muted, #6b7280)" }}
+                  style={{ color: "var(--drp-text-muted, #6b7280)" }}
                 >
                   Forgot password?
                 </button>
@@ -212,7 +212,7 @@ export default function LoginPage() {
 
         <p
           className="text-xs mt-8"
-          style={{ color: "var(--bru-text-muted, #6b7280)" }}
+          style={{ color: "var(--drp-text-muted, #6b7280)" }}
         >
           By signing in, you agree to our Terms of Service and Privacy Policy.
         </p>

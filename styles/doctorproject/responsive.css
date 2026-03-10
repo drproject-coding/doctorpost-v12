@@ -1,5 +1,5 @@
 /* ============================================================
-   BRUDDLE DESIGN SYSTEM — RESPONSIVE UTILITIES
+   DOCTORPROJECT DESIGN SYSTEM — RESPONSIVE UTILITIES
    Canonical breakpoints, overflow wrappers, sidebar overlay.
 
    Breakpoints (matching Figma/Pixso designs):
@@ -41,7 +41,7 @@
 }
 
 .responsive-table-wrapper::-webkit-scrollbar-thumb {
-  background: var(--bru-grey-85, rgba(95, 100, 109, 0.85));
+  background: var(--drp-grey-85, rgba(95, 100, 109, 0.85));
   border-radius: 0;
 }
 
@@ -84,7 +84,7 @@
 
 @media (max-width: 768px) {
   .sidebar.sidebar--overlay {
-    width: var(--bru-sidebar-width, 280px);
+    width: var(--drp-sidebar-width, 280px);
     z-index: 200;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
   }
@@ -147,15 +147,15 @@
    ────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
-  .bru-grid-4 {
+  .drp-grid-4 {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 390px) {
-  .bru-grid-2,
-  .bru-grid-3,
-  .bru-grid-4 {
+  .drp-grid-2,
+  .drp-grid-3,
+  .drp-grid-4 {
     grid-template-columns: 1fr;
   }
 }
@@ -166,9 +166,9 @@
    ────────────────────────────────────────────── */
 
 @media (max-width: 412px) {
-  .bru-grid-2,
-  .bru-grid-3,
-  .bru-grid-4 {
+  .drp-grid-2,
+  .drp-grid-3,
+  .drp-grid-4 {
     grid-template-columns: 1fr;
   }
 }

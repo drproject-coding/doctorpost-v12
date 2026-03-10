@@ -8,7 +8,7 @@ import {
   EmptyState,
   Pagination,
   Button,
-} from "@bruddle/react";
+} from "@doctorproject/react";
 import { getScheduledPosts, updatePost, deletePost } from "@/lib/api";
 import { useToast } from "@/components/Toast";
 import { ScheduledPost } from "@/lib/types";
@@ -188,7 +188,7 @@ export default function LibraryPage() {
         <h1 className="text-3xl font-bold mb-6">Content Library</h1>
 
         {/* Status filter tabs */}
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <Tabs
             items={tabItems}
             activeKey={filter}
@@ -197,7 +197,7 @@ export default function LibraryPage() {
         </div>
 
         {/* Search */}
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <input
             type="text"
             placeholder="Search by title, content or pillar…"
@@ -216,7 +216,7 @@ export default function LibraryPage() {
 
         <Card variant="raised">
           {pagedPosts.length === 0 ? (
-            <div style={{ padding: "var(--bru-space-12) 0" }}>
+            <div style={{ padding: "var(--drp-space-12) 0" }}>
               <EmptyState
                 icon="📚"
                 title="No posts found"
@@ -277,7 +277,7 @@ export default function LibraryPage() {
                           <span
                             style={{
                               fontSize: 11,
-                              color: "var(--bru-color-text-muted, #666)",
+                              color: "var(--drp-color-text-muted, #666)",
                             }}
                           >
                             {post.pillar}
@@ -291,7 +291,7 @@ export default function LibraryPage() {
                           gap: 12,
                           flexWrap: "wrap",
                           fontSize: 11,
-                          color: "var(--bru-color-text-muted, #888)",
+                          color: "var(--drp-color-text-muted, #888)",
                         }}
                       >
                         {createdFmt && <span>Created {createdFmt}</span>}
@@ -304,8 +304,8 @@ export default function LibraryPage() {
                               gap: 3,
                               color:
                                 post.status === "published"
-                                  ? "var(--bru-color-mint, #00A896)"
-                                  : "var(--bru-color-purple, #631DED)",
+                                  ? "var(--drp-color-mint, #00A896)"
+                                  : "var(--drp-color-purple, #631DED)",
                               fontWeight: 700,
                             }}
                           >
@@ -324,7 +324,7 @@ export default function LibraryPage() {
                       }}
                     >
                       <span
-                        className={`bru-tag bru-tag--filled ${post.status}`}
+                        className={`drp-tag drp-tag--filled ${post.status}`}
                       >
                         {post.status.charAt(0).toUpperCase() +
                           post.status.slice(1)}
@@ -361,7 +361,7 @@ export default function LibraryPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div style={{ marginTop: "var(--bru-space-6)" }}>
+          <div style={{ marginTop: "var(--drp-space-6)" }}>
             <Pagination
               currentPage={page}
               totalPages={totalPages}

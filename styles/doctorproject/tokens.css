@@ -1,0 +1,258 @@
+/* ============================================================
+   DOCTORPROJECT DESIGN SYSTEM — TOKENS
+   Single source of truth for all design tokens.
+   All other CSS files should reference these variables.
+   ============================================================ */
+
+:root {
+  /* ──────────────────────────────────────────────
+     COLOR PALETTE
+     Doctor Project brand identity.
+     ────────────────────────────────────────────── */
+
+  /* Primary — Doctor Project Purple */
+  --drp-purple:          #631DED;
+  --drp-purple-20:       rgba(99, 29, 237, 0.20);
+  --drp-purple-hover:    #4A14B8;
+  --drp-purple-active:   #8B4FF5;
+
+  /* Dark */
+  --drp-black:           #121212;
+  --drp-black-75:        rgba(18, 18, 18, 0.75);
+
+  /* Secondary — Doctor Project Orange */
+  --drp-orange:          #FF6C01;
+  --drp-orange-dark:     #CC5500;
+  --drp-orange-light:    #FF9A4D;
+
+  /* Accent Colors */
+  --drp-yellow:          #FAE8A4;
+  --drp-yellow-80:       rgba(250, 232, 164, 0.80);
+  --drp-pink:            #E99898;
+  --drp-pink-80:         rgba(233, 152, 152, 0.80);
+  --drp-mint:            #98E9AB;
+  --drp-mint-80:         rgba(152, 233, 171, 0.80);
+
+  /* Grey */
+  --drp-grey:            #666666;
+  --drp-grey-85:         rgba(102, 102, 102, 0.85);
+  --drp-grey-light:      #E0E0E0;
+  --drp-charcoal:        #282828;
+
+  /* Backgrounds */
+  --drp-cream:           #F2F2F2;
+  --drp-white:           #FFFFFF;
+  --drp-surface:         #F2F2F2;
+
+  /* Outline colors */
+  --drp-outline-mint:    #98E9AB;
+  --drp-outline-purple:  #631DED;
+  --drp-outline-pink:    #E99898;
+
+  /* Semantic — Status */
+  --drp-success:         #00AA00;
+  --drp-success-dark:    #166534;
+  --drp-error:           #FF4444;
+  --drp-error-dark:      #991B1B;
+  --drp-warning:         #FFAA00;
+  --drp-warning-dark:    #92400E;
+  --drp-info:            #0066FF;
+  --drp-info-dark:       #5B21B6;
+
+  /* Text Colors */
+  --drp-text-primary:    #121212;
+  --drp-text-secondary:  #444444;
+  --drp-text-muted:      #888888;
+  --drp-text-inverse:    #FFFFFF;
+
+
+  /* ──────────────────────────────────────────────
+     TYPOGRAPHY
+     ────────────────────────────────────────────── */
+
+  --drp-font-primary:    'Visby', 'Roboto Flex', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --drp-font-mono:       'Space Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* Heading sizes */
+  --drp-text-h1:         48px;
+  --drp-text-h2:         36px;
+  --drp-text-h3:         28px;
+  --drp-text-h4:         24px;
+  --drp-text-h5:         20px;
+  --drp-text-h6:         18px;
+
+  /* Body sizes */
+  --drp-text-lg:         16px;
+  --drp-text-md:         14px;
+  --drp-text-sm:         12px;
+  --drp-text-xs:         11px;
+
+  /* Weights */
+  --drp-weight-regular:  400;
+  --drp-weight-medium:   500;
+  --drp-weight-semibold: 600;
+  --drp-weight-bold:     700;
+  --drp-weight-heavy:    800;
+
+  /* Line heights */
+  --drp-leading-tight:   1.2;
+  --drp-leading-snug:    1.25;
+  --drp-leading-normal:  1.5;
+  --drp-leading-loose:   1.75;
+
+  /* Letter spacing */
+  --drp-tracking-tighter: -0.05em;
+  --drp-tracking-tight:  -0.02em;
+  --drp-tracking-normal: 0;
+  --drp-tracking-wide:   0.04em;
+  --drp-tracking-wider:  0.05em;
+  --drp-tracking-caps:   0.08em;
+  --drp-tracking-widest: 0.1em;
+
+
+  /* ──────────────────────────────────────────────
+     SPACING
+     4px base grid
+     ────────────────────────────────────────────── */
+
+  --drp-space-1:   4px;
+  --drp-space-2:   8px;
+  --drp-space-3:   12px;
+  --drp-space-4:   16px;
+  --drp-space-5:   20px;
+  --drp-space-6:   24px;
+  --drp-space-8:   32px;
+  --drp-space-10:  40px;
+  --drp-space-12:  48px;
+  --drp-space-16:  64px;
+  --drp-space-20:  80px;
+  --drp-space-24:  96px;
+  --drp-space-32:  128px;
+
+
+  /* ──────────────────────────────────────────────
+     BORDERS
+     ────────────────────────────────────────────── */
+
+  --drp-border:          2px solid var(--drp-black);
+  --drp-border-thin:     1px solid var(--drp-black);
+  --drp-border-chunk:    3px solid var(--drp-black);
+  --drp-border-thick:    4px solid var(--drp-black);
+  --drp-border-dashed:   2px dashed var(--drp-black);
+  --drp-border-dotted:   2px dotted rgba(0, 0, 0, 0.15);
+
+  /* Radii — STRICTLY 0 FOR BRUTALIST */
+  --drp-radius-none:     0;
+  --drp-radius-sm:       0;
+  --drp-radius-md:       0;
+  --drp-radius-lg:       0;
+  --drp-radius-full:     0;
+
+
+  /* ──────────────────────────────────────────────
+     SHADOWS
+     Offset black (DoctorProject signature)
+     ────────────────────────────────────────────── */
+
+  --drp-shadow-xs:       2px 2px 0 0 rgba(0, 0, 0, 1);
+  --drp-shadow-sm:       3px 3px 0 0 rgba(0, 0, 0, 1);
+  --drp-shadow-md:       4px 4px 0 0 rgba(0, 0, 0, 1);
+  --drp-shadow-lg:       6px 6px 0 0 rgba(0, 0, 0, 1);
+  --drp-shadow-xl:       8px 8px 0 0 rgba(0, 0, 0, 1);
+  --drp-shadow-hover:    6px 6px 0 0 var(--drp-purple);
+  --drp-shadow-pressed:  0 0 0 0 rgba(0, 0, 0, 1);
+
+  /* Soft variants (for less emphasis) */
+  --drp-shadow-xs-soft:  2px 2px 0 0 rgba(0, 0, 0, 0.12);
+  --drp-shadow-sm-soft:  3px 3px 0 0 rgba(0, 0, 0, 0.12);
+  --drp-shadow-md-soft:  4px 4px 0 0 rgba(0, 0, 0, 0.12);
+  --drp-shadow-lg-soft:  6px 6px 0 0 rgba(0, 0, 0, 0.12);
+
+
+  /* ──────────────────────────────────────────────
+     MOTION
+     ────────────────────────────────────────────── */
+
+  --drp-ease:            cubic-bezier(0.4, 0.0, 0.2, 1);
+  --drp-ease-in:         cubic-bezier(0.4, 0.0, 1, 1);
+  --drp-ease-out:        cubic-bezier(0.0, 0.0, 0.2, 1);
+  --drp-duration-fast:   100ms;
+  --drp-duration-normal: 200ms;
+  --drp-duration-slow:   350ms;
+
+
+  /* ──────────────────────────────────────────────
+     LAYOUT
+     ────────────────────────────────────────────── */
+
+  --drp-sidebar-width:           280px;
+  --drp-sidebar-collapsed-width: 68px;
+  --drp-topbar-height:           68px;
+  --drp-footer-height:           52px;
+
+
+  /* ──────────────────────────────────────────────
+     Z-INDEX SCALE
+     ────────────────────────────────────────────── */
+
+  --drp-z-base:     1;
+  --drp-z-dropdown: 100;
+  --drp-z-sticky:   200;
+  --drp-z-overlay:  300;
+  --drp-z-modal:    400;
+  --drp-z-toast:    500;
+  --drp-z-tooltip:  600;
+
+
+  /* ──────────────────────────────────────────────
+     OPACITY
+     ────────────────────────────────────────────── */
+
+  --drp-opacity-disabled: 0.4;
+  --drp-opacity-hover:    0.8;
+  --drp-opacity-overlay:  0.5;
+}
+
+
+/* ──────────────────────────────────────────────
+   DARK MODE OVERRIDES
+   ────────────────────────────────────────────── */
+
+body.dark-mode {
+  --drp-cream:           #121212;
+  --drp-white:           #1E1E1E;
+  --drp-surface:         #2A2A2A;
+  --drp-black:           #FFFFFF;
+  --drp-black-75:        rgba(255, 255, 255, 0.75);
+  --drp-grey:            #B0B0B0;
+  --drp-grey-85:         rgba(176, 176, 176, 0.85);
+  --drp-grey-light:      #404040;
+  --drp-charcoal:        #E0E0E0;
+
+  --drp-text-primary:    #FFFFFF;
+  --drp-text-secondary:  #B0B0B0;
+  --drp-text-muted:      #707070;
+  --drp-text-inverse:    #121212;
+
+  --drp-purple-active:   #8B4FF5;
+
+  --drp-border:          2px solid rgba(255, 255, 255, 0.20);
+  --drp-border-thin:     1px solid rgba(255, 255, 255, 0.20);
+  --drp-border-chunk:    3px solid rgba(255, 255, 255, 0.20);
+  --drp-border-thick:    4px solid rgba(255, 255, 255, 0.20);
+  --drp-border-dashed:   2px dashed rgba(255, 255, 255, 0.20);
+  --drp-border-dotted:   2px dotted rgba(255, 255, 255, 0.10);
+
+  --drp-shadow-xs:       2px 2px 0 0 rgba(255, 255, 255, 0.08);
+  --drp-shadow-sm:       3px 3px 0 0 rgba(255, 255, 255, 0.08);
+  --drp-shadow-md:       4px 4px 0 0 rgba(255, 255, 255, 0.08);
+  --drp-shadow-lg:       6px 6px 0 0 rgba(255, 255, 255, 0.08);
+  --drp-shadow-xl:       8px 8px 0 0 rgba(255, 255, 255, 0.08);
+  --drp-shadow-hover:    6px 6px 0 0 var(--drp-purple-active);
+  --drp-shadow-pressed:  0 0 0 0 rgba(255, 255, 255, 0.08);
+
+  --drp-shadow-xs-soft:  2px 2px 0 0 rgba(255, 255, 255, 0.04);
+  --drp-shadow-sm-soft:  3px 3px 0 0 rgba(255, 255, 255, 0.04);
+  --drp-shadow-md-soft:  4px 4px 0 0 rgba(255, 255, 255, 0.04);
+  --drp-shadow-lg-soft:  6px 6px 0 0 rgba(255, 255, 255, 0.04);
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card } from "@bruddle/react";
+import { Card } from "@doctorproject/react";
 import { CheckCircle, Zap, Loader, AlertCircle, Crown } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
@@ -35,7 +35,7 @@ const PLAN_FEATURES: Record<
   },
   pro: {
     label: "Pro",
-    color: "var(--bru-purple)",
+    color: "var(--drp-purple)",
     limit: "30 posts/month",
     features: [
       "30 AI-generated posts per month",
@@ -95,7 +95,7 @@ export default function SettingsSubscriptionPage() {
       <div
         style={{
           minHeight: "100vh",
-          background: "var(--bru-cream)",
+          background: "var(--drp-cream)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -138,7 +138,7 @@ export default function SettingsSubscriptionPage() {
     <div
       style={{
         minHeight: "100vh",
-        background: "var(--bru-cream)",
+        background: "var(--drp-cream)",
         padding: 24,
       }}
     >
@@ -150,12 +150,12 @@ export default function SettingsSubscriptionPage() {
               fontSize: 26,
               fontWeight: 800,
               margin: "0 0 6px",
-              color: "var(--bru-black)",
+              color: "var(--drp-black)",
             }}
           >
             Subscription
           </h1>
-          <p style={{ margin: 0, color: "var(--bru-grey)", fontSize: 14 }}>
+          <p style={{ margin: 0, color: "var(--drp-grey)", fontSize: 14 }}>
             Your current plan and usage
           </p>
         </div>
@@ -198,7 +198,7 @@ export default function SettingsSubscriptionPage() {
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: 0.5,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   Current Plan
@@ -221,7 +221,7 @@ export default function SettingsSubscriptionPage() {
                   style={{
                     margin: "4px 0 0",
                     fontSize: 14,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   {planMeta.limit}
@@ -300,7 +300,7 @@ export default function SettingsSubscriptionPage() {
                   style={{
                     margin: 0,
                     fontSize: 12,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   Resets on {formattedReset}
@@ -318,7 +318,7 @@ export default function SettingsSubscriptionPage() {
                 fontWeight: 800,
                 fontSize: 15,
                 margin: "0 0 20px",
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
               }}
             >
               Plan Comparison
@@ -344,7 +344,7 @@ export default function SettingsSubscriptionPage() {
                         : "2px solid #e5e5e5",
                       background: isCurrent
                         ? `${plan.color}08`
-                        : "var(--bru-cream)",
+                        : "var(--drp-cream)",
                       position: "relative",
                     }}
                   >
@@ -383,7 +383,7 @@ export default function SettingsSubscriptionPage() {
                         style={{
                           margin: 0,
                           fontSize: 12,
-                          color: "var(--bru-grey)",
+                          color: "var(--drp-grey)",
                           fontWeight: 600,
                         }}
                       >
@@ -413,7 +413,7 @@ export default function SettingsSubscriptionPage() {
                             style={{ marginTop: 2, flexShrink: 0 }}
                           />
                           <span
-                            style={{ fontSize: 12, color: "var(--bru-black)" }}
+                            style={{ fontSize: 12, color: "var(--drp-black)" }}
                           >
                             {feature}
                           </span>
@@ -446,7 +446,7 @@ export default function SettingsSubscriptionPage() {
                     margin: "0 0 4px",
                     fontWeight: 800,
                     fontSize: 16,
-                    color: "var(--bru-black)",
+                    color: "var(--drp-black)",
                   }}
                 >
                   Ready to upgrade?
@@ -455,7 +455,7 @@ export default function SettingsSubscriptionPage() {
                   style={{
                     margin: 0,
                     fontSize: 14,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   Get more posts, advanced features, and unlimited creation.
@@ -469,7 +469,7 @@ export default function SettingsSubscriptionPage() {
                   alignItems: "center",
                   gap: 8,
                   padding: "12px 24px",
-                  background: "var(--bru-purple)",
+                  background: "var(--drp-purple)",
                   color: "#fff",
                   fontWeight: 800,
                   fontSize: 14,

@@ -1,331 +1,324 @@
 /* ============================================================
-   BRUDDLE DESIGN SYSTEM — BUTTONS
-   All button variants matching Bruddle specification.
+   DOCTORPROJECT DESIGN SYSTEM — BUTTONS
+   All button variants matching DoctorProject specification.
 
    VARIANTS:
-     .bru-btn              Base (white bg, black border)
-     .bru-btn--primary     Purple filled
-     .bru-btn--outline     White/transparent with border
-     .bru-btn--ghost       No border, no bg (text only)
-     .bru-btn--danger      Red filled
-     .bru-btn--dark        Black filled, white text
+     .drp-btn              Base (white bg, black border)
+     .drp-btn--primary     Purple filled
+     .drp-btn--outline     White/transparent with border
+     .drp-btn--ghost       No border, no bg (text only)
+     .drp-btn--danger      Red filled
+     .drp-btn--dark        Black filled, white text
 
    SIZES:
      (default)             Standard (padding 8px 20px)
-     .bru-btn--sm          Small (padding 6px 14px, 12px font)
-     .bru-btn--lg          Large (padding 12px 28px, 16px font)
+     .drp-btn--sm          Small (padding 6px 14px, 12px font)
+     .drp-btn--lg          Large (padding 12px 28px, 16px font)
 
    MODIFIERS:
-     .bru-btn--icon        Icon-only button (square)
-     .bru-btn--icon-sm     Small icon-only
-     .bru-btn--block       Full width
+     .drp-btn--icon        Icon-only button (square)
+     .drp-btn--icon-sm     Small icon-only
+     .drp-btn--block       Full width
      disabled              Dimmed, no pointer
    ============================================================ */
-
 
 /* ──────────────────────────────────────────────
    BASE
    ────────────────────────────────────────────── */
 
-.bru-btn {
+.drp-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--bru-space-2);
+  gap: var(--drp-space-2);
   padding: 8px 20px;
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-sm);
-  font-weight: var(--bru-weight-bold);
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-sm);
+  font-weight: var(--drp-weight-bold);
   line-height: 1;
   text-transform: uppercase;
-  letter-spacing: var(--bru-tracking-wide);
-  color: var(--bru-black);
-  background: var(--bru-white);
-  border: var(--bru-border);
+  letter-spacing: var(--drp-tracking-wide);
+  color: var(--drp-black);
+  background: var(--drp-white);
+  border: var(--drp-border);
   border-radius: 0;
-  box-shadow: var(--bru-shadow-sm);
+  box-shadow: var(--drp-shadow-sm);
   cursor: pointer;
   user-select: none;
+  touch-action: manipulation;
   text-decoration: none;
   white-space: nowrap;
   transition:
-    transform var(--bru-duration-fast) var(--bru-ease),
-    box-shadow var(--bru-duration-fast) var(--bru-ease);
+    transform var(--drp-duration-fast) var(--drp-ease),
+    box-shadow var(--drp-duration-fast) var(--drp-ease);
 }
 
-.bru-btn:hover {
+.drp-btn:hover {
   transform: translate(1px, 1px);
-  box-shadow: var(--bru-shadow-xs);
+  box-shadow: var(--drp-shadow-xs);
 }
 
-.bru-btn:active {
+.drp-btn:active {
   transform: translate(3px, 3px);
   box-shadow: none;
 }
 
-.bru-btn:disabled,
-.bru-btn[disabled] {
+.drp-btn:disabled,
+.drp-btn[disabled] {
   opacity: 0.45;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-.bru-btn:focus-visible {
-  outline: 2px solid var(--bru-purple);
+.drp-btn:focus-visible {
+  outline: 2px solid var(--drp-purple);
   outline-offset: 2px;
 }
-
 
 /* ──────────────────────────────────────────────
    VARIANT: PRIMARY (purple filled)
    ────────────────────────────────────────────── */
 
-.bru-btn--primary {
-  background: var(--bru-purple);
-  color: #FFFFFF;
+.drp-btn--primary {
+  background: var(--drp-purple);
+  color: #ffffff;
 }
 
-.bru-btn--primary:hover {
-  background: var(--bru-purple-hover);
+.drp-btn--primary:hover {
+  background: var(--drp-purple-hover);
 }
-
 
 /* ──────────────────────────────────────────────
    VARIANT: OUTLINE (transparent bg)
    ────────────────────────────────────────────── */
 
-.bru-btn--outline {
+.drp-btn--outline {
   background: transparent;
-  color: var(--bru-black);
+  color: var(--drp-black);
 }
-
 
 /* ──────────────────────────────────────────────
    VARIANT: GHOST (no border, no shadow)
    ────────────────────────────────────────────── */
 
-.bru-btn--ghost {
+.drp-btn--ghost {
   background: transparent;
   border-color: transparent;
   box-shadow: none;
-  color: var(--bru-black);
+  color: var(--drp-black);
 }
 
-.bru-btn--ghost:hover {
+.drp-btn--ghost:hover {
   transform: none;
   box-shadow: none;
   background: rgba(0, 0, 0, 0.04);
 }
 
-.bru-btn--ghost:active {
+.drp-btn--ghost:active {
   background: rgba(0, 0, 0, 0.08);
 }
 
-.bru-btn--ghost.bru-btn--purple {
-  color: var(--bru-purple);
+.drp-btn--ghost.drp-btn--purple {
+  color: var(--drp-purple);
 }
 
-.bru-btn--ghost.bru-btn--purple:hover {
-  background: var(--bru-purple-20);
+.drp-btn--ghost.drp-btn--purple:hover {
+  background: var(--drp-purple-20);
 }
 
 /* Ghost with visible border (DP-style) */
-.bru-btn--ghost-bordered {
+.drp-btn--ghost-bordered {
   background: transparent;
-  color: var(--bru-purple);
-  border-color: var(--bru-purple);
+  color: var(--drp-purple);
+  border-color: var(--drp-purple);
   box-shadow: none;
 }
 
-.bru-btn--ghost-bordered:hover {
-  background: var(--bru-purple);
-  color: #FFFFFF;
+.drp-btn--ghost-bordered:hover {
+  background: var(--drp-purple);
+  color: #ffffff;
   transform: translate(-2px, -2px);
-  box-shadow: var(--bru-shadow-md);
+  box-shadow: var(--drp-shadow-md);
 }
-
 
 /* ──────────────────────────────────────────────
    VARIANT: DANGER (red)
    ────────────────────────────────────────────── */
 
-.bru-btn--danger {
-  background: var(--bru-pink);
-  color: var(--bru-error-dark);
+.drp-btn--danger {
+  background: var(--drp-pink);
+  color: var(--drp-error-dark);
 }
 
-.bru-btn--danger:hover {
-  background: var(--bru-pink-80);
+.drp-btn--danger:hover {
+  background: var(--drp-pink-80);
 }
-
 
 /* ──────────────────────────────────────────────
    VARIANT: SECONDARY (orange)
    ────────────────────────────────────────────── */
 
-.bru-btn--secondary {
-  background: var(--bru-orange);
-  color: #FFFFFF;
+.drp-btn--secondary {
+  background: var(--drp-orange);
+  color: #ffffff;
 }
 
-.bru-btn--secondary:hover {
-  background: var(--bru-orange-dark);
+.drp-btn--secondary:hover {
+  background: var(--drp-orange-dark);
 }
-
 
 /* ──────────────────────────────────────────────
    VARIANT: DARK (black filled)
    ────────────────────────────────────────────── */
 
-.bru-btn--dark {
+.drp-btn--dark {
   background: #000000;
-  color: #FFFFFF;
+  color: #ffffff;
   border-color: #000000;
 }
 
-body.dark-mode .bru-btn--dark {
-  background: #FFFFFF;
+body.dark-mode .drp-btn--dark {
+  background: #ffffff;
   color: #000000;
-  border-color: #FFFFFF;
+  border-color: #ffffff;
 }
-
 
 /* ──────────────────────────────────────────────
    SIZES
    ────────────────────────────────────────────── */
 
-.bru-btn--sm {
+.drp-btn--sm {
   padding: 6px 14px;
-  font-size: var(--bru-text-sm);
+  font-size: var(--drp-text-sm);
   border-radius: 0;
-  box-shadow: var(--bru-shadow-xs);
+  box-shadow: var(--drp-shadow-xs);
 }
 
-.bru-btn--sm:hover { box-shadow: 1px 1px 0 0 rgba(0,0,0,1); }
+.drp-btn--sm:hover {
+  box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 1);
+}
 
-.bru-btn--lg {
+.drp-btn--lg {
   padding: 14px 32px;
-  font-size: var(--bru-text-lg);
+  font-size: var(--drp-text-lg);
   border-radius: 0;
-  box-shadow: var(--bru-shadow-md);
+  box-shadow: var(--drp-shadow-md);
 }
 
-.bru-btn--lg:hover { box-shadow: var(--bru-shadow-sm); }
-
+.drp-btn--lg:hover {
+  box-shadow: var(--drp-shadow-sm);
+}
 
 /* ──────────────────────────────────────────────
    ICON BUTTONS
    Square aspect, centered icon.
    ────────────────────────────────────────────── */
 
-.bru-btn--icon {
-  padding: 8px;
-  min-width: 36px;
-  min-height: 36px;
+.drp-btn--icon {
+  padding: 12px;
+  min-width: 44px;
+  min-height: 44px;
 }
 
-.bru-btn--icon.bru-btn--sm {
-  padding: 6px;
-  min-width: 28px;
-  min-height: 28px;
+.drp-btn--icon.drp-btn--sm {
+  /* Small icon button — min 44px touch target via padding, visual stays compact */
+  padding: 10px;
+  min-width: 44px;
+  min-height: 44px;
 }
 
-.bru-btn--icon.bru-btn--lg {
+.drp-btn--icon.drp-btn--lg {
   padding: 12px;
   min-width: 48px;
   min-height: 48px;
 }
 
-
 /* ──────────────────────────────────────────────
    FULL WIDTH
    ────────────────────────────────────────────── */
 
-.bru-btn--block {
+.drp-btn--block {
   display: flex;
   width: 100%;
 }
-
 
 /* ──────────────────────────────────────────────
    BUTTON GROUP
    ────────────────────────────────────────────── */
 
-.bru-btn-group {
+.drp-btn-group {
   display: inline-flex;
   gap: 0;
 }
 
-.bru-btn-group .bru-btn {
+.drp-btn-group .drp-btn {
   border-radius: 0;
 }
 
-.bru-btn-group .bru-btn:first-child {
+.drp-btn-group .drp-btn:first-child {
   border-radius: 0;
 }
 
-.bru-btn-group .bru-btn:last-child {
+.drp-btn-group .drp-btn:last-child {
   border-radius: 0;
 }
 
-.bru-btn-group .bru-btn + .bru-btn {
+.drp-btn-group .drp-btn + .drp-btn {
   margin-left: -2px;
 }
-
 
 /* ──────────────────────────────────────────────
    DARK MODE
    ────────────────────────────────────────────── */
 
-body.dark-mode .bru-btn {
-  background: var(--bru-surface);
-  color: var(--bru-black);
+body.dark-mode .drp-btn {
+  background: var(--drp-surface);
+  color: var(--drp-black);
 }
 
-body.dark-mode .bru-btn--primary {
-  background: var(--bru-purple);
-  color: #FFFFFF;
+body.dark-mode .drp-btn--primary {
+  background: var(--drp-purple);
+  color: #ffffff;
 }
 
-body.dark-mode .bru-btn--outline {
+body.dark-mode .drp-btn--outline {
   background: transparent;
 }
 
-body.dark-mode .bru-btn--ghost {
-  color: var(--bru-black);
+body.dark-mode .drp-btn--ghost {
+  color: var(--drp-black);
 }
 
-body.dark-mode .bru-btn--ghost:hover {
+body.dark-mode .drp-btn--ghost:hover {
   background: rgba(255, 255, 255, 0.06);
 }
-
 
 /* ──────────────────────────────────────────────
    RESPONSIVE — BUTTONS
    ────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
-  .bru-btn-group {
+  .drp-btn-group {
     flex-wrap: wrap;
   }
 }
 
 @media (max-width: 390px) {
-  .bru-btn {
+  .drp-btn {
     padding: 10px 16px;
-    font-size: var(--bru-text-sm);
+    font-size: var(--drp-text-sm);
   }
 
-  .bru-btn--lg {
+  .drp-btn--lg {
     padding: 12px 20px;
-    font-size: var(--bru-text-md);
+    font-size: var(--drp-text-md);
   }
 
-  .bru-btn-group {
+  .drp-btn-group {
     width: 100%;
   }
 
-  .bru-btn-group .bru-btn {
+  .drp-btn-group .drp-btn {
     flex: 1;
   }
 }

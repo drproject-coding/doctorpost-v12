@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Card } from "@bruddle/react";
+import { Card } from "@doctorproject/react";
 import type { Signal, SignalType } from "@/lib/knowledge/types";
 
 interface SignalCountsProps {
@@ -38,9 +38,9 @@ export function SignalCounts({ signals }: SignalCountsProps) {
     <Card variant="raised">
       <h3
         style={{
-          fontSize: "var(--bru-text-h5)",
+          fontSize: "var(--drp-text-h5)",
           fontWeight: 700,
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         Signal Overview
@@ -49,8 +49,8 @@ export function SignalCounts({ signals }: SignalCountsProps) {
       {signals.length === 0 ? (
         <p
           style={{
-            fontSize: "var(--bru-text-sm)",
-            color: "var(--bru-grey)",
+            fontSize: "var(--drp-text-sm)",
+            color: "var(--drp-grey)",
           }}
         >
           No signals recorded yet. Signals are created when you approve, edit,
@@ -61,9 +61,9 @@ export function SignalCounts({ signals }: SignalCountsProps) {
           {/* Total */}
           <div
             style={{
-              fontSize: "var(--bru-text-lg)",
+              fontSize: "var(--drp-text-lg)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-3)",
+              marginBottom: "var(--drp-space-3)",
             }}
           >
             {signals.length} total signals
@@ -74,29 +74,29 @@ export function SignalCounts({ signals }: SignalCountsProps) {
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
-              gap: "var(--bru-space-2)",
-              marginBottom: "var(--bru-space-4)",
+              gap: "var(--drp-space-2)",
+              marginBottom: "var(--drp-space-4)",
             }}
           >
             {Object.entries(SIGNAL_LABELS).map(([type, label]) => (
               <Card
                 key={type}
                 variant="flat"
-                style={{ padding: "var(--bru-space-2)", textAlign: "center" }}
+                style={{ padding: "var(--drp-space-2)", textAlign: "center" }}
               >
                 <div
                   style={{
-                    fontSize: "var(--bru-text-h4)",
+                    fontSize: "var(--drp-text-h4)",
                     fontWeight: 700,
-                    color: "var(--bru-purple)",
+                    color: "var(--drp-purple)",
                   }}
                 >
                   {counts[type] || 0}
                 </div>
                 <div
                   style={{
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   {label}
@@ -108,9 +108,9 @@ export function SignalCounts({ signals }: SignalCountsProps) {
           {/* By category */}
           <h4
             style={{
-              fontSize: "var(--bru-text-md)",
+              fontSize: "var(--drp-text-md)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-2)",
+              marginBottom: "var(--drp-space-2)",
             }}
           >
             By Category
@@ -118,7 +118,7 @@ export function SignalCounts({ signals }: SignalCountsProps) {
           <div
             style={{
               display: "flex",
-              gap: "var(--bru-space-2)",
+              gap: "var(--drp-space-2)",
               flexWrap: "wrap",
             }}
           >
@@ -128,9 +128,9 @@ export function SignalCounts({ signals }: SignalCountsProps) {
                 <div
                   key={cat}
                   style={{
-                    padding: "var(--bru-space-1) var(--bru-space-2)",
-                    border: "var(--bru-border)",
-                    fontSize: "var(--bru-text-xs)",
+                    padding: "var(--drp-space-1) var(--drp-space-2)",
+                    border: "var(--drp-border)",
+                    fontSize: "var(--drp-text-xs)",
                   }}
                 >
                   <strong>{cat}</strong>: {count}

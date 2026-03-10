@@ -1,5 +1,5 @@
 /* ============================================================
-   BRUDDLE DESIGN SYSTEM — CHARTS & GRAPHS
+   DOCTORPROJECT DESIGN SYSTEM — CHARTS & GRAPHS
    Reusable containers, legends, grids, and donut overlays
    for Chart.js integration.
 
@@ -12,19 +12,19 @@
    Wrapper card for any chart with header + container.
    ────────────────────────────────────────────── */
 
-.bru-chart-card {
-  background: var(--bru-surface);
-  border: var(--bru-border);
-  box-shadow: var(--bru-shadow-sm);
-  padding: var(--bru-space-6);
-  margin-bottom: var(--bru-space-6);
+.drp-chart-card {
+  background: var(--drp-surface);
+  border: var(--drp-border);
+  box-shadow: var(--drp-shadow-sm);
+  padding: var(--drp-space-6);
+  margin-bottom: var(--drp-space-6);
 }
 
-.bru-chart-card--flat {
+.drp-chart-card--flat {
   box-shadow: none;
 }
 
-.bru-chart-card--full {
+.drp-chart-card--full {
   grid-column: 1 / -1;
 }
 
@@ -34,18 +34,18 @@
    Title + optional legend/controls row.
    ────────────────────────────────────────────── */
 
-.bru-chart-header {
+.drp-chart-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--bru-space-4);
+  margin-bottom: var(--drp-space-4);
 }
 
-.bru-chart-title {
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-md);
-  font-weight: var(--bru-weight-bold);
-  color: var(--bru-black);
+.drp-chart-title {
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-md);
+  font-weight: var(--drp-weight-bold);
+  color: var(--drp-black);
   margin: 0;
 }
 
@@ -57,25 +57,25 @@
    with Chart.js responsive:true, maintainAspectRatio:false.
    ────────────────────────────────────────────── */
 
-.bru-chart-container {
+.drp-chart-container {
   position: relative;
   width: 100%;
   height: 300px;
 }
 
-.bru-chart-container--sm {
+.drp-chart-container--sm {
   height: 220px;
 }
 
-.bru-chart-container--lg {
+.drp-chart-container--lg {
   height: 380px;
 }
 
-.bru-chart-container--xl {
+.drp-chart-container--xl {
   height: 480px;
 }
 
-.bru-chart-container canvas {
+.drp-chart-container canvas {
   width: 100% !important;
   height: 100% !important;
 }
@@ -86,21 +86,21 @@
    Multi-chart layouts (2-col, 3-col).
    ────────────────────────────────────────────── */
 
-.bru-chart-grid {
+.drp-chart-grid {
   display: grid;
-  gap: var(--bru-space-6);
-  margin-bottom: var(--bru-space-6);
+  gap: var(--drp-space-6);
+  margin-bottom: var(--drp-space-6);
 }
 
-.bru-chart-grid--2 {
+.drp-chart-grid--2 {
   grid-template-columns: repeat(2, 1fr);
 }
 
-.bru-chart-grid--3 {
+.drp-chart-grid--3 {
   grid-template-columns: repeat(3, 1fr);
 }
 
-.bru-chart-grid--2-1 {
+.drp-chart-grid--2-1 {
   grid-template-columns: 1.5fr 1fr;
 }
 
@@ -110,39 +110,39 @@
    Custom legend with square dots (brutalist).
    ────────────────────────────────────────────── */
 
-.bru-chart-legend {
+.drp-chart-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--bru-space-4);
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-xs);
-  font-weight: var(--bru-weight-medium);
-  color: var(--bru-grey);
+  gap: var(--drp-space-4);
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-xs);
+  font-weight: var(--drp-weight-medium);
+  color: var(--drp-grey);
 }
 
-.bru-chart-legend--center {
+.drp-chart-legend--center {
   justify-content: center;
 }
 
-.bru-chart-legend--bordered {
-  padding-top: var(--bru-space-4);
-  border-top: var(--bru-border-thin);
-  margin-top: var(--bru-space-4);
+.drp-chart-legend--bordered {
+  padding-top: var(--drp-space-4);
+  border-top: var(--drp-border-thin);
+  margin-top: var(--drp-space-4);
 }
 
-.bru-chart-legend__item {
+.drp-chart-legend__item {
   display: flex;
   align-items: center;
-  gap: var(--bru-space-2);
+  gap: var(--drp-space-2);
 }
 
-.bru-chart-legend__dot {
+.drp-chart-legend__dot {
   width: 10px;
   height: 10px;
   flex-shrink: 0;
 }
 
-.bru-chart-legend__dot--round {
+.drp-chart-legend__dot--round {
   border-radius: 0;
 }
 
@@ -152,11 +152,11 @@
    Absolute-centered text inside doughnut charts.
    ────────────────────────────────────────────── */
 
-.bru-chart-donut-wrap {
+.drp-chart-donut-wrap {
   position: relative;
 }
 
-.bru-chart-donut-center {
+.drp-chart-donut-center {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -165,20 +165,20 @@
   pointer-events: none;
 }
 
-.bru-chart-donut-value {
-  font-family: var(--bru-font-primary);
+.drp-chart-donut-value {
+  font-family: var(--drp-font-primary);
   font-size: 28px;
-  font-weight: var(--bru-weight-bold);
-  color: var(--bru-black);
+  font-weight: var(--drp-weight-bold);
+  color: var(--drp-black);
   letter-spacing: -0.5px;
   line-height: 1;
 }
 
-.bru-chart-donut-label {
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-xs);
-  color: var(--bru-grey);
-  font-weight: var(--bru-weight-regular);
+.drp-chart-donut-label {
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-xs);
+  color: var(--drp-grey);
+  font-weight: var(--drp-weight-regular);
   margin-top: 4px;
 }
 
@@ -187,57 +187,57 @@
    STAT CARDS (mini KPI cards above charts)
    ────────────────────────────────────────────── */
 
-.bru-stat-grid {
+.drp-stat-grid {
   display: grid;
-  gap: var(--bru-space-4);
-  margin-bottom: var(--bru-space-6);
+  gap: var(--drp-space-4);
+  margin-bottom: var(--drp-space-6);
 }
 
-.bru-stat-grid--2 { grid-template-columns: repeat(2, 1fr); }
-.bru-stat-grid--3 { grid-template-columns: repeat(3, 1fr); }
-.bru-stat-grid--4 { grid-template-columns: repeat(4, 1fr); }
-.bru-stat-grid--auto { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+.drp-stat-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.drp-stat-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.drp-stat-grid--4 { grid-template-columns: repeat(4, 1fr); }
+.drp-stat-grid--auto { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
 
-.bru-stat-card {
-  background: var(--bru-surface);
-  border: var(--bru-border-dashed);
-  box-shadow: var(--bru-shadow-sm);
-  padding: var(--bru-space-5);
+.drp-stat-card {
+  background: var(--drp-surface);
+  border: var(--drp-border-dashed);
+  box-shadow: var(--drp-shadow-sm);
+  padding: var(--drp-space-5);
 }
 
-.bru-stat-card__label {
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-xs);
-  font-weight: var(--bru-weight-medium);
-  color: var(--bru-grey);
+.drp-stat-card__label {
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-xs);
+  font-weight: var(--drp-weight-medium);
+  color: var(--drp-grey);
   text-transform: uppercase;
-  letter-spacing: var(--bru-tracking-wide);
-  margin-bottom: var(--bru-space-1);
+  letter-spacing: var(--drp-tracking-wide);
+  margin-bottom: var(--drp-space-1);
 }
 
-.bru-stat-card__value {
-  font-family: var(--bru-font-primary);
+.drp-stat-card__value {
+  font-family: var(--drp-font-primary);
   font-size: 24px;
-  font-weight: var(--bru-weight-bold);
-  color: var(--bru-black);
+  font-weight: var(--drp-weight-bold);
+  color: var(--drp-black);
 }
 
-.bru-stat-card__badge {
+.drp-stat-card__badge {
   display: inline-block;
   font-size: 11px;
-  font-weight: var(--bru-weight-bold);
+  font-weight: var(--drp-weight-bold);
   padding: 2px 8px;
-  margin-top: var(--bru-space-2);
+  margin-top: var(--drp-space-2);
 }
 
-.bru-stat-card__badge--up {
-  background: var(--bru-mint-20, rgba(152, 233, 171, 0.2));
-  color: var(--bru-mint, #28a745);
+.drp-stat-card__badge--up {
+  background: var(--drp-mint-20, rgba(152, 233, 171, 0.2));
+  color: var(--drp-mint, #28a745);
 }
 
-.bru-stat-card__badge--down {
-  background: var(--bru-pink-20, rgba(233, 152, 152, 0.2));
-  color: var(--bru-pink, #dc3545);
+.drp-stat-card__badge--down {
+  background: var(--drp-pink-20, rgba(233, 152, 152, 0.2));
+  color: var(--drp-pink, #dc3545);
 }
 
 
@@ -246,27 +246,27 @@
    Quick-apply background colors for legend dots.
    ────────────────────────────────────────────── */
 
-.bru-chart-color-purple   { background: var(--bru-purple); }
-.bru-chart-color-mint     { background: var(--bru-mint); }
-.bru-chart-color-pink     { background: var(--bru-pink); }
-.bru-chart-color-yellow   { background: var(--bru-yellow); }
-.bru-chart-color-orange   { background: #FF6C01; }
-.bru-chart-color-cyan     { background: #17a2b8; }
-.bru-chart-color-indigo   { background: #6f42c1; }
-.bru-chart-color-teal     { background: #20c997; }
-.bru-chart-color-grey     { background: var(--bru-grey); }
+.drp-chart-color-purple   { background: var(--drp-purple); }
+.drp-chart-color-mint     { background: var(--drp-mint); }
+.drp-chart-color-pink     { background: var(--drp-pink); }
+.drp-chart-color-yellow   { background: var(--drp-yellow); }
+.drp-chart-color-orange   { background: #FF6C01; }
+.drp-chart-color-cyan     { background: #17a2b8; }
+.drp-chart-color-indigo   { background: #6f42c1; }
+.drp-chart-color-teal     { background: #20c997; }
+.drp-chart-color-grey     { background: var(--drp-grey); }
 
 
 /* ──────────────────────────────────────────────
    DARK MODE
    ────────────────────────────────────────────── */
 
-body.dark-mode .bru-chart-donut-value {
-  color: var(--bru-cream);
+body.dark-mode .drp-chart-donut-value {
+  color: var(--drp-cream);
 }
 
-body.dark-mode .bru-stat-card__value {
-  color: var(--bru-cream);
+body.dark-mode .drp-stat-card__value {
+  color: var(--drp-cream);
 }
 
 
@@ -275,58 +275,58 @@ body.dark-mode .bru-stat-card__value {
    ────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
-  .bru-chart-grid--2,
-  .bru-chart-grid--3,
-  .bru-chart-grid--2-1 {
+  .drp-chart-grid--2,
+  .drp-chart-grid--3,
+  .drp-chart-grid--2-1 {
     grid-template-columns: 1fr;
   }
 
-  .bru-chart-container {
+  .drp-chart-container {
     height: 260px;
   }
 
-  .bru-chart-container--lg {
+  .drp-chart-container--lg {
     height: 300px;
   }
 
-  .bru-chart-donut-value {
+  .drp-chart-donut-value {
     font-size: 22px;
   }
 
-  .bru-stat-grid--3,
-  .bru-stat-grid--4 {
+  .drp-stat-grid--3,
+  .drp-stat-grid--4 {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .bru-chart-card {
-    padding: var(--bru-space-4);
+  .drp-chart-card {
+    padding: var(--drp-space-4);
   }
 }
 
 @media (max-width: 390px) {
-  .bru-chart-container {
+  .drp-chart-container {
     height: 220px;
   }
 
-  .bru-chart-container--lg {
+  .drp-chart-container--lg {
     height: 260px;
   }
 
-  .bru-chart-donut-value {
+  .drp-chart-donut-value {
     font-size: 18px;
   }
 
-  .bru-chart-legend {
-    gap: var(--bru-space-3);
+  .drp-chart-legend {
+    gap: var(--drp-space-3);
   }
 
-  .bru-stat-grid--2,
-  .bru-stat-grid--3,
-  .bru-stat-grid--4 {
+  .drp-stat-grid--2,
+  .drp-stat-grid--3,
+  .drp-stat-grid--4 {
     grid-template-columns: 1fr;
   }
 
-  .bru-stat-card__value {
+  .drp-stat-card__value {
     font-size: 20px;
   }
 }

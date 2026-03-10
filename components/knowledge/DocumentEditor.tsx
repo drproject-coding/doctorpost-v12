@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { Alert, Badge, Button, Card, Input, Textarea } from "@bruddle/react";
+import { Alert, Badge, Button, Card, Input, Textarea } from "@doctorproject/react";
 import { Save, X, History, Lock, GitFork } from "lucide-react";
 
 interface DocumentEditorProps {
@@ -58,13 +58,13 @@ export function DocumentEditor({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         <div>
           <h3
             style={{
-              fontSize: "var(--bru-text-h5)",
+              fontSize: "var(--drp-text-h5)",
               fontWeight: 700,
               margin: 0,
             }}
@@ -75,9 +75,9 @@ export function DocumentEditor({
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--bru-space-2)",
-              fontSize: "var(--bru-text-sm)",
-              color: "var(--bru-grey)",
+              gap: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+              color: "var(--drp-grey)",
             }}
           >
             <span>
@@ -90,7 +90,7 @@ export function DocumentEditor({
             )}
           </div>
         </div>
-        <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
+        <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
           {readOnly && onFork && (
             <Button variant="primary" onClick={onFork}>
               <GitFork size={14} />
@@ -121,11 +121,11 @@ export function DocumentEditor({
           width: "100%",
           minHeight: 400,
           fontFamily: "monospace",
-          fontSize: "var(--bru-text-sm)",
+          fontSize: "var(--drp-text-sm)",
           resize: "vertical",
           ...(readOnly
             ? {
-                background: "var(--bru-bg-subtle, #f5f5f5)",
+                background: "var(--drp-bg-subtle, #f5f5f5)",
                 cursor: "default",
                 opacity: 0.85,
               }
@@ -139,8 +139,8 @@ export function DocumentEditor({
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-3)",
-            marginTop: "var(--bru-space-4)",
+            gap: "var(--drp-space-3)",
+            marginTop: "var(--drp-space-4)",
           }}
         >
           <Input
@@ -162,7 +162,7 @@ export function DocumentEditor({
 
       {/* Feedback */}
       {feedback && (
-        <div style={{ marginTop: "var(--bru-space-3)" }}>
+        <div style={{ marginTop: "var(--drp-space-3)" }}>
           <Alert
             variant={feedback.startsWith("Error") ? "error" : "success"}
             onClose={() => setFeedback(null)}

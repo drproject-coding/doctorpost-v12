@@ -41,11 +41,11 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       <div
         style={{
           position: "fixed",
-          bottom: "var(--bru-space-6)",
-          right: "var(--bru-space-6)",
+          bottom: "var(--drp-space-6)",
+          right: "var(--drp-space-6)",
           display: "flex",
           flexDirection: "column",
-          gap: "var(--bru-space-2)",
+          gap: "var(--drp-space-2)",
           zIndex: 9999,
           pointerEvents: "none",
         }}
@@ -80,7 +80,7 @@ function ToastItem({
       icon: <XCircle size={16} color="#cc0000" />,
     },
     info: {
-      bg: "var(--bru-cream, #fffdf4)",
+      bg: "var(--drp-cream, #fffdf4)",
       icon: null,
     },
   };
@@ -93,16 +93,16 @@ function ToastItem({
         pointerEvents: "auto",
         display: "flex",
         alignItems: "center",
-        gap: "var(--bru-space-2)",
-        padding: "var(--bru-space-3) var(--bru-space-4)",
+        gap: "var(--drp-space-2)",
+        padding: "var(--drp-space-3) var(--drp-space-4)",
         background: bg,
         border: "2px solid black",
         boxShadow: "3px 3px 0 black",
         minWidth: 260,
         maxWidth: 380,
-        fontSize: "var(--bru-text-sm)",
+        fontSize: "var(--drp-text-sm)",
         fontWeight: 600,
-        animation: "bru-toast-in 0.15s ease-out",
+        animation: "drp-toast-in 0.15s ease-out",
       }}
     >
       {icon}
@@ -115,7 +115,7 @@ function ToastItem({
           cursor: "pointer",
           padding: 0,
           lineHeight: 1,
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           flexShrink: 0,
         }}
         aria-label="Dismiss"
@@ -123,7 +123,7 @@ function ToastItem({
         <X size={14} />
       </button>
       <style>{`
-        @keyframes bru-toast-in {
+        @keyframes drp-toast-in {
           from { opacity: 0; transform: translateY(8px); }
           to   { opacity: 1; transform: translateY(0); }
         }

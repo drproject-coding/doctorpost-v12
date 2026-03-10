@@ -1,20 +1,20 @@
-/* Bruddle Design System */
-@import "../styles/bruddle/tokens.css";
-@import "../styles/bruddle/typography.css";
-@import "../styles/bruddle/buttons.css";
-@import "../styles/bruddle/forms.css";
-@import "../styles/bruddle/tags.css";
-@import "../styles/bruddle/cards.css";
-@import "../styles/bruddle/tables.css";
-@import "../styles/bruddle/modals.css";
-@import "../styles/bruddle/pagination.css";
-@import "../styles/bruddle/charts.css";
-@import "../styles/bruddle/layout.css";
-@import "../styles/bruddle/utilities.css";
-@import "../styles/bruddle/media.css";
-@import "../styles/bruddle/composites.css";
-@import "../styles/bruddle/animations.css";
-@import "../styles/bruddle/responsive.css";
+/* DoctorProject Design System */
+@import "../styles/doctorproject/tokens.css";
+@import "../styles/doctorproject/typography.css";
+@import "../styles/doctorproject/buttons.css";
+@import "../styles/doctorproject/forms.css";
+@import "../styles/doctorproject/tags.css";
+@import "../styles/doctorproject/cards.css";
+@import "../styles/doctorproject/tables.css";
+@import "../styles/doctorproject/modals.css";
+@import "../styles/doctorproject/pagination.css";
+@import "../styles/doctorproject/charts.css";
+@import "../styles/doctorproject/layout.css";
+@import "../styles/doctorproject/utilities.css";
+@import "../styles/doctorproject/media.css";
+@import "../styles/doctorproject/composites.css";
+@import "../styles/doctorproject/animations.css";
+@import "../styles/doctorproject/responsive.css";
 
 @tailwind base;
 @tailwind components;
@@ -66,9 +66,9 @@
     width: 100%;
     max-height: 300px;
     overflow-y: auto;
-    background: var(--bru-surface);
-    border: var(--bru-border);
-    box-shadow: var(--bru-shadow-md);
+    background: var(--drp-surface);
+    border: var(--drp-border);
+    box-shadow: var(--drp-shadow-md);
   }
 
   .enhanced-dropdown-option {
@@ -77,10 +77,10 @@
     justify-content: space-between;
     height: 44px;
     padding: 8px 12px;
-    font-size: var(--bru-text-md);
+    font-size: var(--drp-text-md);
     cursor: pointer;
     position: relative;
-    color: var(--bru-black);
+    color: var(--drp-black);
     transition: background 150ms ease;
   }
 
@@ -89,8 +89,8 @@
   }
 
   .enhanced-dropdown-option.selected {
-    background: var(--bru-purple-20);
-    color: var(--bru-purple);
+    background: var(--drp-purple-20);
+    color: var(--drp-purple);
     font-weight: 700;
   }
 
@@ -114,17 +114,17 @@
 
   .enhanced-dropdown-search input {
     padding: 8px 12px;
-    font-family: var(--bru-font-primary);
-    font-size: var(--bru-text-md);
-    color: var(--bru-black);
-    background: var(--bru-white);
-    border: var(--bru-border-thin);
+    font-family: var(--drp-font-primary);
+    font-size: var(--drp-text-md);
+    color: var(--drp-black);
+    background: var(--drp-white);
+    border: var(--drp-border-thin);
     outline: none;
     width: 100%;
   }
 
   .enhanced-dropdown-search input:focus {
-    border-color: var(--bru-purple);
+    border-color: var(--drp-purple);
   }
 
   .enhanced-dropdown-filters {
@@ -137,27 +137,27 @@
 
   .enhanced-dropdown-filter-tag {
     padding: 4px 8px;
-    font-size: var(--bru-text-sm);
-    font-weight: var(--bru-weight-bold);
+    font-size: var(--drp-text-sm);
+    font-weight: var(--drp-weight-bold);
     cursor: pointer;
-    border: 1px solid var(--bru-black);
+    border: 1px solid var(--drp-black);
     background: transparent;
   }
 
   .enhanced-dropdown-filter-tag.active {
-    background: var(--bru-purple);
+    background: var(--drp-purple);
     color: white;
-    border-color: var(--bru-purple);
+    border-color: var(--drp-purple);
   }
 
   .enhanced-dropdown-category-header {
-    font-size: var(--bru-text-sm);
-    font-weight: var(--bru-weight-bold);
+    font-size: var(--drp-text-sm);
+    font-weight: var(--drp-weight-bold);
     text-transform: uppercase;
-    letter-spacing: var(--bru-tracking-wide);
+    letter-spacing: var(--drp-tracking-wide);
     padding: 8px 12px;
-    color: var(--bru-grey);
-    background: var(--bru-cream);
+    color: var(--drp-grey);
+    background: var(--drp-cream);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
 
@@ -166,11 +166,11 @@
     z-index: 200;
     width: 288px;
     padding: 12px;
-    font-size: var(--bru-text-sm);
-    background: var(--bru-surface);
-    border: var(--bru-border);
-    box-shadow: var(--bru-shadow-md);
-    color: var(--bru-black);
+    font-size: var(--drp-text-sm);
+    background: var(--drp-surface);
+    border: var(--drp-border);
+    box-shadow: var(--drp-shadow-md);
+    color: var(--drp-black);
     left: 100%;
     margin-left: 8px;
     top: 50%;
@@ -178,8 +178,8 @@
   }
 
   .enhanced-dropdown-tooltip h4 {
-    font-size: var(--bru-text-md);
-    font-weight: var(--bru-weight-bold);
+    font-size: var(--drp-text-md);
+    font-weight: var(--drp-weight-bold);
     margin-bottom: 4px;
   }
 
@@ -189,15 +189,15 @@
   }
 
   .enhanced-dropdown-tooltip li {
-    font-size: var(--bru-text-sm);
+    font-size: var(--drp-text-sm);
   }
 
   .enhanced-dropdown-suggested-combinations {
     margin-top: 16px;
     padding: 16px;
-    background: var(--bru-purple-20);
-    border: var(--bru-border-thin);
-    border-color: var(--bru-purple);
+    background: var(--drp-purple-20);
+    border: var(--drp-border-thin);
+    border-color: var(--drp-purple);
   }
 
   .enhanced-dropdown-suggested-combinations ul {
@@ -209,22 +209,22 @@
   .badge-high {
     background: rgba(152, 233, 171, 0.2);
     color: #166534;
-    border: 1px solid var(--bru-mint);
+    border: 1px solid var(--drp-mint);
   }
   .badge-medium {
     background: rgba(250, 232, 164, 0.3);
     color: #92400e;
-    border: 1px solid var(--bru-yellow);
+    border: 1px solid var(--drp-yellow);
   }
   .badge-experimental {
     background: rgba(233, 152, 152, 0.2);
     color: #991b1b;
-    border: 1px solid var(--bru-pink);
+    border: 1px solid var(--drp-pink);
   }
   .badge-trending {
     background: rgba(250, 232, 164, 0.3);
     color: #92400e;
-    border: 1px solid var(--bru-yellow);
+    border: 1px solid var(--drp-yellow);
   }
   .badge-compatibility-recommended {
     background: rgba(152, 233, 171, 0.15);
@@ -248,9 +248,9 @@
     align-items: center;
     gap: 4px;
     padding: 4px 8px;
-    font-weight: var(--bru-weight-bold);
-    font-size: var(--bru-text-sm);
-    border: 2px solid var(--bru-yellow);
+    font-weight: var(--drp-weight-bold);
+    font-size: var(--drp-text-sm);
+    border: 2px solid var(--drp-yellow);
     background: rgba(250, 232, 164, 0.3);
     color: #92400e;
   }
@@ -267,13 +267,13 @@
       position: sticky;
       top: 0;
       z-index: 40;
-      background: var(--bru-surface);
+      background: var(--drp-surface);
     }
     .enhanced-dropdown-filters {
       position: sticky;
       top: 48px;
       z-index: 40;
-      background: var(--bru-surface);
+      background: var(--drp-surface);
     }
   }
 }

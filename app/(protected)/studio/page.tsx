@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from "react";
-import { Card } from "@bruddle/react";
+import { Card } from "@doctorproject/react";
 import {
   Zap,
   Copy,
@@ -142,7 +142,7 @@ function PipelineProgress({
               style={{
                 fontWeight: 800,
                 fontSize: 13,
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
                 whiteSpace: "nowrap",
                 flexShrink: 0,
               }}
@@ -158,7 +158,7 @@ function PipelineProgress({
                   style={{
                     fontSize: 13,
                     fontWeight: 700,
-                    color: "var(--bru-purple)",
+                    color: "var(--drp-purple)",
                     whiteSpace: "nowrap",
                     flexShrink: 0,
                   }}
@@ -168,7 +168,7 @@ function PipelineProgress({
                 <span
                   style={{
                     fontSize: 12,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
@@ -189,7 +189,7 @@ function PipelineProgress({
             style={{
               fontSize: 12,
               fontWeight: 800,
-              color: isComplete ? "#00A896" : "var(--bru-purple)",
+              color: isComplete ? "#00A896" : "var(--drp-purple)",
               marginLeft: 12,
               whiteSpace: "nowrap",
             }}
@@ -227,7 +227,7 @@ function PipelineProgress({
                     background: isDone
                       ? "#00A896"
                       : isActive
-                        ? "var(--bru-purple)"
+                        ? "var(--drp-purple)"
                         : "#e8e8e8",
                     position: "relative",
                     overflow: "hidden",
@@ -244,7 +244,7 @@ function PipelineProgress({
                         height: "100%",
                         background:
                           "linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent)",
-                        animation: "bru-shimmer 1.4s ease-in-out infinite",
+                        animation: "drp-shimmer 1.4s ease-in-out infinite",
                       }}
                     />
                   )}
@@ -257,9 +257,9 @@ function PipelineProgress({
                     color: isDone
                       ? "#00A896"
                       : isActive
-                        ? "var(--bru-purple)"
+                        ? "var(--drp-purple)"
                         : activeStep === s
-                          ? "var(--bru-purple)"
+                          ? "var(--drp-purple)"
                           : "#b0b0b0",
                     marginTop: 5,
                     textAlign: "center",
@@ -269,7 +269,7 @@ function PipelineProgress({
                       stage === "complete" && onStepClick
                         ? "underline"
                         : "none",
-                    textDecorationColor: "var(--bru-purple)",
+                    textDecorationColor: "var(--drp-purple)",
                   }}
                 >
                   {STAGE_META[s].label}
@@ -297,7 +297,7 @@ function renderStageContent(
     whiteSpace: "pre-wrap",
     wordBreak: "break-word",
     margin: 0,
-    color: "var(--bru-black)",
+    color: "var(--drp-black)",
     maxHeight: 280,
     overflow: "auto",
     background: "#f9f7f3",
@@ -330,7 +330,7 @@ function renderStageContent(
                 margin: 0,
                 fontSize: 13,
                 fontWeight: 700,
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
                 lineHeight: 1.4,
               }}
             >
@@ -344,7 +344,7 @@ function renderStageContent(
                 fontSize: 12,
                 color: "#555",
                 fontStyle: "italic",
-                borderLeft: "3px solid var(--bru-purple)",
+                borderLeft: "3px solid var(--drp-purple)",
                 paddingLeft: 10,
                 lineHeight: 1.5,
               }}
@@ -367,7 +367,7 @@ function renderStageContent(
                   key={i}
                   style={{
                     fontSize: 12,
-                    color: "var(--bru-black)",
+                    color: "var(--drp-black)",
                     lineHeight: 1.4,
                   }}
                 >
@@ -384,7 +384,7 @@ function renderStageContent(
                     fontSize: 10,
                     fontWeight: 700,
                     background: "rgba(100,60,220,0.1)",
-                    color: "var(--bru-purple)",
+                    color: "var(--drp-purple)",
                     padding: "2px 7px",
                     letterSpacing: 0.5,
                     textTransform: "uppercase",
@@ -397,7 +397,7 @@ function renderStageContent(
                 <span
                   style={{
                     fontSize: 10,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                     padding: "2px 0",
                   }}
                 >
@@ -454,7 +454,7 @@ function renderStageContent(
               >
                 {d.total}
               </span>
-              <span style={{ fontSize: 9, color: "var(--bru-grey)" }}>
+              <span style={{ fontSize: 9, color: "var(--drp-grey)" }}>
                 /100
               </span>
             </div>
@@ -506,7 +506,7 @@ function renderStageContent(
                     <span
                       style={{
                         fontSize: 11,
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                         width: 110,
                         flexShrink: 0,
                         fontWeight: 600,
@@ -573,7 +573,7 @@ function renderStageContent(
                 style={{
                   margin: 0,
                   fontSize: 12,
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                   fontStyle: "italic",
                   borderLeft: "3px solid #e5e5e5",
                   paddingLeft: 8,
@@ -598,7 +598,7 @@ function renderStageContent(
                   <span
                     style={{
                       fontWeight: 800,
-                      color: "var(--bru-purple)",
+                      color: "var(--drp-purple)",
                       fontSize: 11,
                       whiteSpace: "nowrap",
                       paddingTop: 1,
@@ -608,7 +608,7 @@ function renderStageContent(
                   </span>
                   <div>
                     <span
-                      style={{ fontWeight: 700, color: "var(--bru-black)" }}
+                      style={{ fontWeight: 700, color: "var(--drp-black)" }}
                     >
                       {s.title}
                     </span>
@@ -622,7 +622,7 @@ function renderStageContent(
                 </div>
               ))}
               {d.slides.length > 6 && (
-                <span style={{ fontSize: 11, color: "var(--bru-grey)" }}>
+                <span style={{ fontSize: 11, color: "var(--drp-grey)" }}>
                   +{d.slides.length - 6} more slides
                 </span>
               )}
@@ -664,7 +664,7 @@ function StageCard({
       style={{
         marginBottom: 12,
         borderLeft: isActive
-          ? "4px solid var(--bru-purple)"
+          ? "4px solid var(--drp-purple)"
           : isComplete
             ? "4px solid #00A896"
             : "4px solid #e5e5e5",
@@ -689,8 +689,8 @@ function StageCard({
               width: "35%",
               height: "100%",
               background:
-                "linear-gradient(90deg, transparent, var(--bru-purple), transparent)",
-              animation: "bru-shimmer 1.2s ease-in-out infinite",
+                "linear-gradient(90deg, transparent, var(--drp-purple), transparent)",
+              animation: "drp-shimmer 1.2s ease-in-out infinite",
             }}
           />
         </div>
@@ -712,21 +712,21 @@ function StageCard({
               textTransform: "uppercase",
               letterSpacing: 1,
               color: isActive
-                ? "var(--bru-purple)"
+                ? "var(--drp-purple)"
                 : isComplete
                   ? "#00A896"
-                  : "var(--bru-grey)",
+                  : "var(--drp-grey)",
             }}
           >
             {meta.label}
           </span>
-          <span style={{ fontSize: 12, color: "var(--bru-grey)", flex: 1 }}>
+          <span style={{ fontSize: 12, color: "var(--drp-grey)", flex: 1 }}>
             {isActive ? meta.description : isComplete ? "Done" : "Waiting..."}
           </span>
           {isActive && (
             <Loader
               size={15}
-              color="var(--bru-purple)"
+              color="var(--drp-purple)"
               style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
             />
           )}
@@ -741,7 +741,7 @@ function StageCard({
                 padding: 2,
                 display: "flex",
                 alignItems: "center",
-                color: copiedProp ? "#00A896" : "var(--bru-grey)",
+                color: copiedProp ? "#00A896" : "var(--drp-grey)",
               }}
             >
               {copiedProp ? <Check size={14} /> : <Copy size={14} />}
@@ -780,7 +780,7 @@ function VisualStageCard({
       style={{
         marginBottom: 12,
         borderLeft: isActive
-          ? "4px solid var(--bru-purple)"
+          ? "4px solid var(--drp-purple)"
           : isComplete
             ? "4px solid #00A896"
             : error
@@ -807,8 +807,8 @@ function VisualStageCard({
               width: "35%",
               height: "100%",
               background:
-                "linear-gradient(90deg, transparent, var(--bru-purple), transparent)",
-              animation: "bru-shimmer 1.2s ease-in-out infinite",
+                "linear-gradient(90deg, transparent, var(--drp-purple), transparent)",
+              animation: "drp-shimmer 1.2s ease-in-out infinite",
             }}
           />
         </div>
@@ -830,12 +830,12 @@ function VisualStageCard({
               textTransform: "uppercase",
               letterSpacing: 1,
               color: isActive
-                ? "var(--bru-purple)"
+                ? "var(--drp-purple)"
                 : isComplete
                   ? "#00A896"
                   : error
                     ? "#E99898"
-                    : "var(--bru-grey)",
+                    : "var(--drp-grey)",
             }}
           >
             Visual
@@ -843,7 +843,7 @@ function VisualStageCard({
           <span
             style={{
               fontSize: 12,
-              color: error ? "#E99898" : "var(--bru-grey)",
+              color: error ? "#E99898" : "var(--drp-grey)",
               flex: 1,
             }}
           >
@@ -858,7 +858,7 @@ function VisualStageCard({
           {isActive && (
             <Loader
               size={15}
-              color="var(--bru-purple)"
+              color="var(--drp-purple)"
               style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
             />
           )}
@@ -886,7 +886,7 @@ function VisualStageCard({
                 style={{
                   margin: "10px 0 0",
                   fontSize: 11,
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                   fontStyle: "italic",
                   lineHeight: 1.4,
                 }}
@@ -921,7 +921,7 @@ function ScoreCircle({ score }: { score: number }) {
       <span style={{ fontSize: 30, fontWeight: 800, color, lineHeight: 1 }}>
         {score}
       </span>
-      <span style={{ fontSize: 10, color: "var(--bru-grey)" }}>/100</span>
+      <span style={{ fontSize: 10, color: "var(--drp-grey)" }}>/100</span>
     </div>
   );
 }
@@ -1484,7 +1484,7 @@ export default function StudioPage() {
     <div
       style={{
         minHeight: "100vh",
-        background: "var(--bru-cream)",
+        background: "var(--drp-cream)",
         padding: 24,
       }}
     >
@@ -1496,12 +1496,12 @@ export default function StudioPage() {
               fontSize: 28,
               fontWeight: 800,
               margin: "0 0 6px",
-              color: "var(--bru-black)",
+              color: "var(--drp-black)",
             }}
           >
             Studio
           </h1>
-          <p style={{ margin: 0, color: "var(--bru-grey)", fontSize: 14 }}>
+          <p style={{ margin: 0, color: "var(--drp-grey)", fontSize: 14 }}>
             4-agent AI pipeline: Strategist → Writer → Scorer → Formatter
           </p>
         </div>
@@ -1525,7 +1525,7 @@ export default function StudioPage() {
                     fontWeight: 800,
                     fontSize: 15,
                     margin: "0 0 16px",
-                    color: "var(--bru-black)",
+                    color: "var(--drp-black)",
                   }}
                 >
                   Post Brief
@@ -1541,7 +1541,7 @@ export default function StudioPage() {
                       textTransform: "uppercase",
                       letterSpacing: 0.5,
                       marginBottom: 6,
-                      color: "var(--bru-black)",
+                      color: "var(--drp-black)",
                     }}
                   >
                     Topic / Prompt
@@ -1555,15 +1555,15 @@ export default function StudioPage() {
                       width: "100%",
                       minHeight: 100,
                       padding: "10px 12px",
-                      border: "2px solid var(--bru-black)",
-                      background: "var(--bru-cream)",
+                      border: "2px solid var(--drp-black)",
+                      background: "var(--drp-cream)",
                       fontFamily: "inherit",
                       fontSize: 13,
                       lineHeight: 1.5,
                       resize: "vertical",
                       outline: "none",
                       boxSizing: "border-box",
-                      color: "var(--bru-black)",
+                      color: "var(--drp-black)",
                     }}
                   />
                 </div>
@@ -1578,7 +1578,7 @@ export default function StudioPage() {
                       textTransform: "uppercase",
                       letterSpacing: 0.5,
                       marginBottom: 10,
-                      color: "var(--bru-black)",
+                      color: "var(--drp-black)",
                     }}
                   >
                     Format
@@ -1596,11 +1596,11 @@ export default function StudioPage() {
                             gap: 10,
                             cursor: isRunning ? "default" : "pointer",
                             padding: "8px 10px",
-                            border: `2px solid ${format === f ? "var(--bru-purple)" : "#ccc"}`,
+                            border: `2px solid ${format === f ? "var(--drp-purple)" : "#ccc"}`,
                             background:
                               format === f
                                 ? "rgba(99,29,237,0.05)"
-                                : "var(--bru-cream)",
+                                : "var(--drp-cream)",
                             transition: "border-color 0.15s",
                           }}
                         >
@@ -1611,7 +1611,7 @@ export default function StudioPage() {
                             checked={format === f}
                             onChange={() => !isRunning && setFormat(f)}
                             style={{
-                              accentColor: "var(--bru-purple)",
+                              accentColor: "var(--drp-purple)",
                               marginTop: 2,
                             }}
                           />
@@ -1626,7 +1626,7 @@ export default function StudioPage() {
                               {f}
                             </div>
                             <div
-                              style={{ fontSize: 11, color: "var(--bru-grey)" }}
+                              style={{ fontSize: 11, color: "var(--drp-grey)" }}
                             >
                               {f === "simple" && "Single text post"}
                               {f === "visual" && "Post + visual brief"}
@@ -1649,7 +1649,7 @@ export default function StudioPage() {
                     background:
                       isRunning || topic.trim().length < 10
                         ? "#aaa"
-                        : "var(--bru-purple)",
+                        : "var(--drp-purple)",
                     color: "#fff",
                     border: "none",
                     fontWeight: 800,
@@ -1690,11 +1690,11 @@ export default function StudioPage() {
                       marginTop: 8,
                       padding: "10px 0",
                       background: "transparent",
-                      border: "2px solid var(--bru-black)",
+                      border: "2px solid var(--drp-black)",
                       fontWeight: 700,
                       fontSize: 13,
                       cursor: "pointer",
-                      color: "var(--bru-black)",
+                      color: "var(--drp-black)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -1757,7 +1757,7 @@ export default function StudioPage() {
                         style={{
                           margin: 0,
                           fontSize: 11,
-                          color: "var(--bru-grey)",
+                          color: "var(--drp-grey)",
                         }}
                       >
                         Threshold: 75/100
@@ -1778,7 +1778,7 @@ export default function StudioPage() {
                   style={{
                     padding: 64,
                     textAlign: "center",
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   <Zap size={48} style={{ marginBottom: 16, opacity: 0.25 }} />
@@ -1787,7 +1787,7 @@ export default function StudioPage() {
                       fontWeight: 700,
                       fontSize: 16,
                       margin: "0 0 8px",
-                      color: "var(--bru-black)",
+                      color: "var(--drp-black)",
                     }}
                   >
                     Ready to create
@@ -1853,14 +1853,14 @@ export default function StudioPage() {
                         border: "none",
                         borderBottom:
                           resultTab === tab
-                            ? "2px solid var(--bru-purple)"
+                            ? "2px solid var(--drp-purple)"
                             : "2px solid transparent",
                         marginBottom: -2,
                         background: "transparent",
                         color:
                           resultTab === tab
-                            ? "var(--bru-purple)"
-                            : "var(--bru-grey)",
+                            ? "var(--drp-purple)"
+                            : "var(--drp-grey)",
                         cursor: "pointer",
                       }}
                     >
@@ -1894,7 +1894,7 @@ export default function StudioPage() {
                               style={{
                                 fontSize: 12,
                                 fontWeight: 400,
-                                color: "var(--bru-grey)",
+                                color: "var(--drp-grey)",
                               }}
                             >
                               {currentSlide + 1} / {totalSlides}
@@ -1936,7 +1936,7 @@ export default function StudioPage() {
                                   padding: "6px 14px",
                                   background: isSaving
                                     ? "#aaa"
-                                    : "var(--bru-purple)",
+                                    : "var(--drp-purple)",
                                   color: "white",
                                   border: "none",
                                   fontWeight: 700,
@@ -1971,9 +1971,9 @@ export default function StudioPage() {
                                 alignItems: "center",
                                 gap: 6,
                                 padding: "6px 14px",
-                                border: "2px solid var(--bru-black)",
+                                border: "2px solid var(--drp-black)",
                                 background: "transparent",
-                                color: "var(--bru-black)",
+                                color: "var(--drp-black)",
                                 fontWeight: 700,
                                 fontSize: 13,
                                 cursor: isExporting ? "not-allowed" : "pointer",
@@ -1993,7 +1993,7 @@ export default function StudioPage() {
                                 padding: "6px 14px",
                                 background: isExporting
                                   ? "#aaa"
-                                  : "var(--bru-black)",
+                                  : "var(--drp-black)",
                                 color: "white",
                                 border: "none",
                                 fontWeight: 700,
@@ -2160,8 +2160,8 @@ export default function StudioPage() {
                             style={{
                               width: 40,
                               height: 40,
-                              border: "2px solid var(--bru-black)",
-                              background: "var(--bru-cream)",
+                              border: "2px solid var(--drp-black)",
+                              background: "var(--drp-cream)",
                               cursor:
                                 currentSlide === 0 ? "not-allowed" : "pointer",
                               display: "flex",
@@ -2176,7 +2176,7 @@ export default function StudioPage() {
                             style={{
                               fontSize: 13,
                               fontWeight: 700,
-                              color: "var(--bru-grey)",
+                              color: "var(--drp-grey)",
                               minWidth: 60,
                               textAlign: "center",
                             }}
@@ -2193,8 +2193,8 @@ export default function StudioPage() {
                             style={{
                               width: 40,
                               height: 40,
-                              border: "2px solid var(--bru-black)",
-                              background: "var(--bru-cream)",
+                              border: "2px solid var(--drp-black)",
+                              background: "var(--drp-cream)",
                               cursor:
                                 currentSlide === totalSlides - 1
                                   ? "not-allowed"
@@ -2232,7 +2232,7 @@ export default function StudioPage() {
                                   "linear-gradient(135deg, #631DED 0%, #9B59F5 100%)",
                                 border:
                                   i === currentSlide
-                                    ? "3px solid var(--bru-black)"
+                                    ? "3px solid var(--drp-black)"
                                     : "3px solid transparent",
                                 cursor: "pointer",
                                 padding: 8,
@@ -2306,7 +2306,7 @@ export default function StudioPage() {
                           textTransform: "uppercase",
                           letterSpacing: 0.5,
                           margin: "0 0 12px",
-                          color: "var(--bru-black)",
+                          color: "var(--drp-black)",
                         }}
                       >
                         Strategy
@@ -2337,7 +2337,7 @@ export default function StudioPage() {
                           value: strategy.word_count_target
                             ? `~${strategy.word_count_target} words`
                             : undefined,
-                          color: "var(--bru-black)",
+                          color: "var(--drp-black)",
                         },
                       ]
                         .filter((f) => f.value)
@@ -2368,7 +2368,7 @@ export default function StudioPage() {
                               style={{
                                 fontSize: 13,
                                 fontWeight: 600,
-                                color: "var(--bru-black)",
+                                color: "var(--drp-black)",
                               }}
                             >
                               {field.value}
@@ -2428,12 +2428,12 @@ export default function StudioPage() {
                                   fontSize: 12,
                                   background:
                                     previewMode === "mobile"
-                                      ? "var(--bru-purple)"
+                                      ? "var(--drp-purple)"
                                       : "transparent",
                                   color:
                                     previewMode === "mobile"
                                       ? "white"
-                                      : "var(--bru-grey)",
+                                      : "var(--drp-grey)",
                                   border: "none",
                                   cursor: "pointer",
                                 }}
@@ -2454,12 +2454,12 @@ export default function StudioPage() {
                                   fontSize: 12,
                                   background:
                                     previewMode === "desktop"
-                                      ? "var(--bru-purple)"
+                                      ? "var(--drp-purple)"
                                       : "transparent",
                                   color:
                                     previewMode === "desktop"
                                       ? "white"
-                                      : "var(--bru-grey)",
+                                      : "var(--drp-grey)",
                                   border: "none",
                                   cursor: "pointer",
                                 }}
@@ -2477,9 +2477,9 @@ export default function StudioPage() {
                                 alignItems: "center",
                                 gap: 6,
                                 padding: "6px 14px",
-                                border: "2px solid var(--bru-black)",
+                                border: "2px solid var(--drp-black)",
                                 background: copied ? "#00A896" : "transparent",
-                                color: copied ? "white" : "var(--bru-black)",
+                                color: copied ? "white" : "var(--drp-black)",
                                 fontWeight: 700,
                                 fontSize: 13,
                                 cursor: "pointer",
@@ -2524,7 +2524,7 @@ export default function StudioPage() {
                                   padding: "6px 14px",
                                   background: isSaving
                                     ? "#aaa"
-                                    : "var(--bru-purple)",
+                                    : "var(--drp-purple)",
                                   color: "white",
                                   border: "none",
                                   fontWeight: 700,
@@ -2579,7 +2579,7 @@ export default function StudioPage() {
                                 width: 48,
                                 height: 48,
                                 borderRadius: "50%",
-                                background: "var(--bru-purple)",
+                                background: "var(--drp-purple)",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -2709,7 +2709,7 @@ export default function StudioPage() {
                             marginTop: 12,
                             textAlign: "center",
                             fontSize: 12,
-                            color: "var(--bru-grey)",
+                            color: "var(--drp-grey)",
                           }}
                         >
                           Hook is{" "}
@@ -2717,8 +2717,8 @@ export default function StudioPage() {
                             style={{
                               color:
                                 finalPostText.length <= foldAt
-                                  ? "var(--bru-success-dark, #2d7a3a)"
-                                  : "var(--bru-error-dark, #c0392b)",
+                                  ? "var(--drp-success-dark, #2d7a3a)"
+                                  : "var(--drp-error-dark, #c0392b)",
                             }}
                           >
                             {finalPostText.length <= foldAt ? "above" : "below"}
@@ -2730,7 +2730,7 @@ export default function StudioPage() {
                             marginTop: 4,
                             textAlign: "center",
                             fontSize: 11,
-                            color: "var(--bru-grey)",
+                            color: "var(--drp-grey)",
                           }}
                         >
                           {finalPostText.length} characters
@@ -2780,7 +2780,7 @@ export default function StudioPage() {
                             style={{
                               margin: 0,
                               fontSize: 11,
-                              color: "var(--bru-grey)",
+                              color: "var(--drp-grey)",
                             }}
                           >
                             Threshold: 75/100
@@ -2849,7 +2849,7 @@ export default function StudioPage() {
                                   style={{
                                     margin: "4px 0 0",
                                     fontSize: 12,
-                                    color: "var(--bru-grey)",
+                                    color: "var(--drp-grey)",
                                     lineHeight: 1.4,
                                   }}
                                 >
@@ -2889,7 +2889,7 @@ export default function StudioPage() {
                                 style={{
                                   margin: 0,
                                   fontSize: 13,
-                                  color: "var(--bru-black)",
+                                  color: "var(--drp-black)",
                                   paddingLeft: 10,
                                   borderLeft: "2px solid #00A896",
                                 }}
@@ -2929,7 +2929,7 @@ export default function StudioPage() {
                                 style={{
                                   margin: 0,
                                   fontSize: 13,
-                                  color: "var(--bru-black)",
+                                  color: "var(--drp-black)",
                                   paddingLeft: 10,
                                   borderLeft: "2px solid #FF6C01",
                                 }}
@@ -2973,7 +2973,7 @@ export default function StudioPage() {
                       style={{
                         fontSize: 13,
                         fontWeight: 700,
-                        color: "var(--bru-purple)",
+                        color: "var(--drp-purple)",
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 4,
@@ -3021,7 +3021,7 @@ export default function StudioPage() {
                       style={{
                         fontSize: 13,
                         margin: 0,
-                        color: "var(--bru-black)",
+                        color: "var(--drp-black)",
                       }}
                     >
                       {error}
@@ -3035,7 +3035,7 @@ export default function StudioPage() {
                           marginTop: 8,
                           fontSize: 13,
                           fontWeight: 700,
-                          color: "var(--bru-purple)",
+                          color: "var(--drp-purple)",
                           textDecoration: "none",
                         }}
                       >

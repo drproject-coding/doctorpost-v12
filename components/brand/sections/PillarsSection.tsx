@@ -159,7 +159,7 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
                     border: "none",
                     cursor: "pointer",
                     padding: 2,
-                    color: "var(--bru-muted, #888)",
+                    color: "var(--drp-muted, #888)",
                     display: "flex",
                     alignItems: "center",
                   }}
@@ -178,10 +178,10 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
               >
                 <span
                   style={{
-                    fontFamily: "var(--bru-font-primary)",
-                    fontWeight: "var(--bru-weight-heavy)",
-                    fontSize: "var(--bru-text-sm)",
-                    color: "var(--bru-black)",
+                    fontFamily: "var(--drp-font-primary)",
+                    fontWeight: "var(--drp-weight-heavy)",
+                    fontSize: "var(--drp-text-sm)",
+                    color: "var(--drp-black)",
                     lineHeight: 1.3,
                   }}
                 >
@@ -203,12 +203,12 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
                 style={{
                   display: "inline-block",
                   backgroundColor: "rgba(0,0,0,0.07)",
-                  color: "var(--bru-black)",
+                  color: "var(--drp-black)",
                   padding: "1px 7px",
-                  fontSize: "var(--bru-text-xs)",
-                  fontFamily: "var(--bru-font-primary)",
+                  fontSize: "var(--drp-text-xs)",
+                  fontFamily: "var(--drp-font-primary)",
                   fontWeight: "500",
-                  letterSpacing: "var(--bru-tracking-caps)",
+                  letterSpacing: "var(--drp-tracking-caps)",
                   textTransform: "uppercase" as const,
                   alignSelf: "flex-start",
                 }}
@@ -221,9 +221,9 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
                 <p
                   style={{
                     margin: 0,
-                    fontFamily: "var(--bru-font-primary)",
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-muted, #666)",
+                    fontFamily: "var(--drp-font-primary)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-muted, #666)",
                     lineHeight: 1.5,
                   }}
                 >
@@ -241,7 +241,7 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
           <div style={{ display: "flex", gap: "8px" }}>
             <input
               type="text"
-              className="bru-input"
+              className="drp-input"
               value={newPillarLabel}
               onChange={(e) => setNewPillarLabel(e.target.value)}
               placeholder="Pillar name..."
@@ -249,7 +249,7 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
             />
             <input
               type="text"
-              className="bru-input"
+              className="drp-input"
               value={newPillarDesc}
               onChange={(e) => setNewPillarDesc(e.target.value)}
               placeholder="Description..."
@@ -257,7 +257,7 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
             />
             <button
               type="button"
-              className="bru-btn bru-btn--secondary bru-btn--sm"
+              className="drp-btn drp-btn--secondary drp-btn--sm"
               disabled={!newPillarLabel.trim()}
               onClick={() => {
                 const label = newPillarLabel.trim();

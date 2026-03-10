@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { ArrowLeft, Loader, Check, Scissors } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import type { DocumentCategory } from "@/lib/knowledge/types";
@@ -118,8 +118,8 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "var(--bru-space-3)",
-          marginBottom: "var(--bru-space-6)",
+          gap: "var(--drp-space-3)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <Button variant="ghost" onClick={onCancel}>
@@ -127,7 +127,7 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
         </Button>
         <h2
           style={{
-            fontSize: "var(--bru-text-h4)",
+            fontSize: "var(--drp-text-h4)",
             fontWeight: 700,
             margin: 0,
           }}
@@ -140,33 +140,33 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
         <Card variant="raised">
           <h3
             style={{
-              fontSize: "var(--bru-text-h5)",
+              fontSize: "var(--drp-text-h5)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-4)",
+              marginBottom: "var(--drp-space-4)",
             }}
           >
             Paste an admired LinkedIn post
           </h3>
           <p
             style={{
-              fontSize: "var(--bru-text-md)",
-              color: "var(--bru-grey)",
-              marginBottom: "var(--bru-space-4)",
+              fontSize: "var(--drp-text-md)",
+              color: "var(--drp-grey)",
+              marginBottom: "var(--drp-space-4)",
             }}
           >
             AI will deconstruct the post into a reusable template with hook
             patterns, structure, and closer patterns.
           </p>
           <textarea
-            className="bru-input"
+            className="drp-input"
             value={postContent}
             onChange={(e) => setPostContent(e.target.value)}
             placeholder="Paste the full LinkedIn post here..."
             style={{ minHeight: 250, fontFamily: "monospace" }}
           />
           <div
-            className="bru-form-actions"
-            style={{ marginTop: "var(--bru-space-4)" }}
+            className="drp-form-actions"
+            style={{ marginTop: "var(--drp-space-4)" }}
           >
             <Button onClick={onCancel}>Cancel</Button>
             <Button
@@ -181,13 +181,13 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           {feedback && (
             <div
               style={{
-                marginTop: "var(--bru-space-3)",
-                padding: "var(--bru-space-3)",
-                border: "var(--bru-border)",
-                fontSize: "var(--bru-text-md)",
+                marginTop: "var(--drp-space-3)",
+                padding: "var(--drp-space-3)",
+                border: "var(--drp-border)",
+                fontSize: "var(--drp-text-md)",
                 fontWeight: 500,
                 background: "rgba(255, 68, 68, 0.12)",
-                color: "var(--bru-error-dark)",
+                color: "var(--drp-error-dark)",
               }}
             >
               {feedback}
@@ -201,19 +201,19 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           variant="raised"
           style={{
             textAlign: "center",
-            padding: "var(--bru-space-8)",
+            padding: "var(--drp-space-8)",
           }}
         >
           <Loader
             size={32}
             className="animate-spin"
-            style={{ margin: "0 auto var(--bru-space-4)" }}
+            style={{ margin: "0 auto var(--drp-space-4)" }}
           />
-          <h3 style={{ fontSize: "var(--bru-text-h5)", fontWeight: 700 }}>
+          <h3 style={{ fontSize: "var(--drp-text-h5)", fontWeight: 700 }}>
             Analyzing post structure...
           </h3>
           <p
-            style={{ color: "var(--bru-grey)", fontSize: "var(--bru-text-md)" }}
+            style={{ color: "var(--drp-grey)", fontSize: "var(--drp-text-md)" }}
           >
             AI is deconstructing the post into a reusable template
           </p>
@@ -224,30 +224,30 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
         <Card variant="raised">
           <h3
             style={{
-              fontSize: "var(--bru-text-h5)",
+              fontSize: "var(--drp-text-h5)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-4)",
+              marginBottom: "var(--drp-space-4)",
             }}
           >
             Template Preview
           </h3>
 
-          <div className="bru-form-stack">
-            <div className="bru-field">
-              <label className="bru-field__label">Template Name</label>
+          <div className="drp-form-stack">
+            <div className="drp-field">
+              <label className="drp-field__label">Template Name</label>
               <input
-                className="bru-input"
+                className="drp-input"
                 value={templateName}
                 onChange={(e) => setTemplateName(e.target.value)}
               />
             </div>
 
-            <div className="bru-form-row">
+            <div className="drp-form-row">
               <div>
                 <label
-                  className="bru-field__label"
+                  className="drp-field__label"
                   style={{
-                    marginBottom: "var(--bru-space-2)",
+                    marginBottom: "var(--drp-space-2)",
                     display: "block",
                   }}
                 >
@@ -255,10 +255,10 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
                 </label>
                 <div
                   style={{
-                    padding: "var(--bru-space-3)",
-                    background: "var(--bru-cream)",
-                    border: "var(--bru-border)",
-                    fontSize: "var(--bru-text-sm)",
+                    padding: "var(--drp-space-3)",
+                    background: "var(--drp-cream)",
+                    border: "var(--drp-border)",
+                    fontSize: "var(--drp-text-sm)",
                   }}
                 >
                   {template.hookPattern}
@@ -266,9 +266,9 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
               </div>
               <div>
                 <label
-                  className="bru-field__label"
+                  className="drp-field__label"
                   style={{
-                    marginBottom: "var(--bru-space-2)",
+                    marginBottom: "var(--drp-space-2)",
                     display: "block",
                   }}
                 >
@@ -276,10 +276,10 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
                 </label>
                 <div
                   style={{
-                    padding: "var(--bru-space-3)",
-                    background: "var(--bru-cream)",
-                    border: "var(--bru-border)",
-                    fontSize: "var(--bru-text-sm)",
+                    padding: "var(--drp-space-3)",
+                    background: "var(--drp-cream)",
+                    border: "var(--drp-border)",
+                    fontSize: "var(--drp-text-sm)",
                   }}
                 >
                   {template.closerPattern}
@@ -289,17 +289,17 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
 
             <div>
               <label
-                className="bru-field__label"
-                style={{ marginBottom: "var(--bru-space-2)", display: "block" }}
+                className="drp-field__label"
+                style={{ marginBottom: "var(--drp-space-2)", display: "block" }}
               >
                 Structure
               </label>
               <pre
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  background: "var(--bru-cream)",
-                  padding: "var(--bru-space-3)",
-                  border: "var(--bru-border)",
+                  fontSize: "var(--drp-text-xs)",
+                  background: "var(--drp-cream)",
+                  padding: "var(--drp-space-3)",
+                  border: "var(--drp-border)",
                   whiteSpace: "pre-wrap",
                 }}
               >
@@ -309,19 +309,19 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
 
             <div>
               <label
-                className="bru-field__label"
-                style={{ marginBottom: "var(--bru-space-2)", display: "block" }}
+                className="drp-field__label"
+                style={{ marginBottom: "var(--drp-space-2)", display: "block" }}
               >
                 Example Hooks
               </label>
               <ul
                 style={{
-                  padding: "var(--bru-space-3)",
-                  background: "var(--bru-cream)",
-                  border: "var(--bru-border)",
-                  fontSize: "var(--bru-text-sm)",
+                  padding: "var(--drp-space-3)",
+                  background: "var(--drp-cream)",
+                  border: "var(--drp-border)",
+                  fontSize: "var(--drp-text-sm)",
                   listStyle: "disc",
-                  paddingLeft: "var(--bru-space-6)",
+                  paddingLeft: "var(--drp-space-6)",
                 }}
               >
                 {template.exampleHooks.map((h) => (
@@ -332,10 +332,10 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
 
             <div
               style={{
-                padding: "var(--bru-space-3)",
-                background: "var(--bru-cream)",
-                border: "var(--bru-border)",
-                fontSize: "var(--bru-text-sm)",
+                padding: "var(--drp-space-3)",
+                background: "var(--drp-cream)",
+                border: "var(--drp-border)",
+                fontSize: "var(--drp-text-sm)",
               }}
             >
               <strong>Tone:</strong> {template.toneNotes}
@@ -345,8 +345,8 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           </div>
 
           <div
-            className="bru-form-actions"
-            style={{ marginTop: "var(--bru-space-4)" }}
+            className="drp-form-actions"
+            style={{ marginTop: "var(--drp-space-4)" }}
           >
             <Button onClick={() => setStep("paste")}>Back</Button>
             <Button
@@ -362,17 +362,17 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           {feedback && (
             <div
               style={{
-                marginTop: "var(--bru-space-3)",
-                padding: "var(--bru-space-3)",
-                border: "var(--bru-border)",
-                fontSize: "var(--bru-text-md)",
+                marginTop: "var(--drp-space-3)",
+                padding: "var(--drp-space-3)",
+                border: "var(--drp-border)",
+                fontSize: "var(--drp-text-md)",
                 fontWeight: 500,
                 background: feedback.startsWith("Error")
                   ? "rgba(255, 68, 68, 0.12)"
                   : "rgba(0, 170, 0, 0.12)",
                 color: feedback.startsWith("Error")
-                  ? "var(--bru-error-dark)"
-                  : "var(--bru-success-dark)",
+                  ? "var(--drp-error-dark)"
+                  : "var(--drp-success-dark)",
               }}
             >
               {feedback}
@@ -386,15 +386,15 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           variant="raised"
           style={{
             textAlign: "center",
-            padding: "var(--bru-space-8)",
+            padding: "var(--drp-space-8)",
           }}
         >
           <Loader
             size={32}
             className="animate-spin"
-            style={{ margin: "0 auto var(--bru-space-4)" }}
+            style={{ margin: "0 auto var(--drp-space-4)" }}
           />
-          <h3 style={{ fontSize: "var(--bru-text-h5)", fontWeight: 700 }}>
+          <h3 style={{ fontSize: "var(--drp-text-h5)", fontWeight: 700 }}>
             Saving template...
           </h3>
         </Card>

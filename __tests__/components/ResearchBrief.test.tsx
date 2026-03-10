@@ -132,9 +132,9 @@ describe("ResearchBrief", () => {
   it("applies correct styling classes", () => {
     render(<ResearchBrief brief={mockBrief} />);
 
-    // The Card component with variant="raised" renders with class "bru-card--raised"
+    // The Card component with variant="raised" renders with class "drp-card--raised"
     const card = screen.getByText("Research Brief").closest("div");
-    expect(card).toHaveClass("bru-card--raised");
+    expect(card).toHaveClass("drp-card--raised");
   });
 
   it("shows refined topic with correct styling", () => {
@@ -144,8 +144,8 @@ describe("ResearchBrief", () => {
     const refinedTopicSection = screen
       .getByText("Refined Topic")
       .closest("div");
-    expect(refinedTopicSection).toHaveStyle({ background: "var(--bru-cream)" });
-    expect(refinedTopicSection).toHaveStyle({ border: "var(--bru-border)" });
+    expect(refinedTopicSection).toHaveStyle({ background: "var(--drp-cream)" });
+    expect(refinedTopicSection).toHaveStyle({ border: "var(--drp-border)" });
   });
 
   it("handles missing refined topic", () => {

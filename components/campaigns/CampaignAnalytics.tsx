@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Card } from "@bruddle/react";
+import { Card } from "@doctorproject/react";
 import type { CampaignPostStatus } from "@/lib/knowledge/types";
 
 interface CampaignAnalyticsProps {
@@ -46,16 +46,16 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
   return (
     <Card
       variant="flat"
-      style={{ marginTop: "var(--bru-space-4)", padding: "var(--bru-space-4)" }}
+      style={{ marginTop: "var(--drp-space-4)", padding: "var(--drp-space-4)" }}
     >
       <div
         style={{
-          fontSize: "var(--bru-text-xs)",
+          fontSize: "var(--drp-text-xs)",
           fontWeight: 700,
           textTransform: "uppercase",
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           letterSpacing: "0.05em",
-          marginBottom: "var(--bru-space-3)",
+          marginBottom: "var(--drp-space-3)",
         }}
       >
         Idea Funnel
@@ -63,7 +63,7 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
       <div
         style={{
           display: "flex",
-          gap: "var(--bru-space-2)",
+          gap: "var(--drp-space-2)",
           alignItems: "flex-end",
           flexWrap: "wrap",
         }}
@@ -86,8 +86,8 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
               {i > 0 && (
                 <div
                   style={{
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                     alignSelf: "flex-start",
                     marginBottom: 2,
                   }}
@@ -107,9 +107,9 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
               />
               <div
                 style={{
-                  fontSize: "var(--bru-text-xs)",
+                  fontSize: "var(--drp-text-xs)",
                   fontWeight: 700,
-                  color: step.count > 0 ? step.color : "var(--bru-grey)",
+                  color: step.count > 0 ? step.color : "var(--drp-grey)",
                 }}
               >
                 {step.count}
@@ -117,7 +117,7 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
               <div
                 style={{
                   fontSize: 10,
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                   textAlign: "center",
                   whiteSpace: "nowrap",
                 }}
@@ -127,7 +127,7 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
               <div
                 style={{
                   fontSize: 10,
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                 }}
               >
                 {pct}%
@@ -139,8 +139,8 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
       {counts.rejected > 0 && (
         <div
           style={{
-            marginTop: "var(--bru-space-3)",
-            fontSize: "var(--bru-text-xs)",
+            marginTop: "var(--drp-space-3)",
+            fontSize: "var(--drp-text-xs)",
             color: "#990000",
           }}
         >

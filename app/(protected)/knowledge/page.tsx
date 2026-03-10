@@ -9,7 +9,7 @@ import {
   Input,
   Loader,
   Tag,
-} from "@bruddle/react";
+} from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import { FileText, Upload, Scissors, Lock, GitFork } from "lucide-react";
 import type {
@@ -201,7 +201,7 @@ export default function KnowledgePage() {
         style={{
           display: "grid",
           gridTemplateColumns: "1fr",
-          gap: "var(--bru-space-6)",
+          gap: "var(--drp-space-6)",
         }}
       >
         <DocumentEditor
@@ -243,15 +243,15 @@ export default function KnowledgePage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-6)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <h1
-          style={{ fontSize: "var(--bru-text-h3)", fontWeight: 700, margin: 0 }}
+          style={{ fontSize: "var(--drp-text-h3)", fontWeight: 700, margin: 0 }}
         >
           Knowledge Base
         </h1>
-        <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
+        <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
           <Button onClick={() => setView("import")}>
             <Upload size={14} />
             Import
@@ -268,9 +268,9 @@ export default function KnowledgePage() {
         variant="flat"
         style={{
           display: "flex",
-          gap: "var(--bru-space-3)",
+          gap: "var(--drp-space-3)",
           alignItems: "center",
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
           flexWrap: "wrap",
         }}
       >
@@ -295,7 +295,7 @@ export default function KnowledgePage() {
 
       {/* Error */}
       {error && (
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <Alert variant="error">{error}</Alert>
         </div>
       )}
@@ -306,7 +306,7 @@ export default function KnowledgePage() {
           style={{
             display: "flex",
             justifyContent: "center",
-            padding: "var(--bru-space-8)",
+            padding: "var(--drp-space-8)",
           }}
         >
           <Loader label="Loading documents..." />
@@ -328,7 +328,7 @@ export default function KnowledgePage() {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-            gap: "var(--bru-space-4)",
+            gap: "var(--drp-space-4)",
           }}
         >
           {filtered.map((doc) => (
@@ -342,14 +342,14 @@ export default function KnowledgePage() {
                 style={{
                   display: "flex",
                   alignItems: "flex-start",
-                  gap: "var(--bru-space-3)",
+                  gap: "var(--drp-space-3)",
                 }}
               >
                 <FileText size={20} style={{ flexShrink: 0, marginTop: 2 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <h4
                     style={{
-                      fontSize: "var(--bru-text-md)",
+                      fontSize: "var(--drp-text-md)",
                       fontWeight: 700,
                       margin: 0,
                       overflow: "hidden",
@@ -362,8 +362,8 @@ export default function KnowledgePage() {
                   <div
                     style={{
                       display: "flex",
-                      gap: "var(--bru-space-2)",
-                      marginTop: "var(--bru-space-1)",
+                      gap: "var(--drp-space-2)",
+                      marginTop: "var(--drp-space-1)",
                       flexWrap: "wrap",
                     }}
                   >
@@ -378,8 +378,8 @@ export default function KnowledgePage() {
                     {doc.subcategory && (
                       <span
                         style={{
-                          fontSize: "var(--bru-text-xs)",
-                          color: "var(--bru-grey)",
+                          fontSize: "var(--drp-text-xs)",
+                          color: "var(--drp-grey)",
                         }}
                       >
                         {doc.subcategory}
@@ -388,9 +388,9 @@ export default function KnowledgePage() {
                   </div>
                   <p
                     style={{
-                      fontSize: "var(--bru-text-xs)",
-                      color: "var(--bru-grey)",
-                      margin: "var(--bru-space-2) 0 0",
+                      fontSize: "var(--drp-text-xs)",
+                      color: "var(--drp-grey)",
+                      margin: "var(--drp-space-2) 0 0",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       display: "-webkit-box",
@@ -406,9 +406,9 @@ export default function KnowledgePage() {
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
-                  marginTop: "var(--bru-space-3)",
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-grey)",
+                  marginTop: "var(--drp-space-3)",
+                  fontSize: "var(--drp-text-xs)",
+                  color: "var(--drp-grey)",
                 }}
               >
                 <span>v{doc.version}</span>

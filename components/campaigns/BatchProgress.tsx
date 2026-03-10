@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Alert, Card } from "@bruddle/react";
+import { Alert, Card } from "@doctorproject/react";
 import { Loader, Check, AlertCircle } from "lucide-react";
 
 const PILLAR_COLORS = [
@@ -36,9 +36,9 @@ export function BatchProgress({
     <Card variant="raised">
       <h3
         style={{
-          fontSize: "var(--bru-text-h5)",
+          fontSize: "var(--drp-text-h5)",
           fontWeight: 700,
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         Campaign Progress
@@ -49,8 +49,8 @@ export function BatchProgress({
         style={{
           width: "100%",
           height: 8,
-          background: "var(--bru-border-color, #e0e0e0)",
-          marginBottom: "var(--bru-space-3)",
+          background: "var(--drp-border-color, #e0e0e0)",
+          marginBottom: "var(--drp-space-3)",
         }}
       >
         <div
@@ -59,10 +59,10 @@ export function BatchProgress({
             height: "100%",
             background:
               phase === "error"
-                ? "var(--bru-error, #FF4444)"
+                ? "var(--drp-error, #FF4444)"
                 : phase === "complete"
-                  ? "var(--bru-success, #00AA00)"
-                  : "var(--bru-purple)",
+                  ? "var(--drp-success, #00AA00)"
+                  : "var(--drp-purple)",
             transition: "width 0.3s ease",
           }}
         />
@@ -73,23 +73,23 @@ export function BatchProgress({
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "var(--bru-space-2)",
-          marginBottom: "var(--bru-space-3)",
+          gap: "var(--drp-space-2)",
+          marginBottom: "var(--drp-space-3)",
         }}
       >
         {phase === "complete" ? (
-          <Check size={16} style={{ color: "var(--bru-success, #00AA00)" }} />
+          <Check size={16} style={{ color: "var(--drp-success, #00AA00)" }} />
         ) : phase === "error" ? (
           <AlertCircle
             size={16}
-            style={{ color: "var(--bru-error, #FF4444)" }}
+            style={{ color: "var(--drp-error, #FF4444)" }}
           />
         ) : phase !== "idle" ? (
           <Loader size={16} className="animate-spin" />
         ) : null}
         <span
           style={{
-            fontSize: "var(--bru-text-md)",
+            fontSize: "var(--drp-text-md)",
             fontWeight: 500,
           }}
         >
@@ -105,7 +105,7 @@ export function BatchProgress({
 
       {/* Error */}
       {error && (
-        <div style={{ marginBottom: "var(--bru-space-3)" }}>
+        <div style={{ marginBottom: "var(--drp-space-3)" }}>
           <Alert variant="error">{error}</Alert>
         </div>
       )}
@@ -115,9 +115,9 @@ export function BatchProgress({
         <div>
           <h4
             style={{
-              fontSize: "var(--bru-text-md)",
+              fontSize: "var(--drp-text-md)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-2)",
+              marginBottom: "var(--drp-space-2)",
             }}
           >
             Pillar Distribution
@@ -125,7 +125,7 @@ export function BatchProgress({
           <div
             style={{
               display: "flex",
-              gap: "var(--bru-space-2)",
+              gap: "var(--drp-space-2)",
               flexWrap: "wrap",
             }}
           >
@@ -136,10 +136,10 @@ export function BatchProgress({
                   display: "flex",
                   alignItems: "center",
                   gap: 4,
-                  padding: "var(--bru-space-1) var(--bru-space-2)",
+                  padding: "var(--drp-space-1) var(--drp-space-2)",
                   background: PILLAR_COLORS[i % PILLAR_COLORS.length].bg,
                   color: PILLAR_COLORS[i % PILLAR_COLORS.length].text,
-                  fontSize: "var(--bru-text-xs)",
+                  fontSize: "var(--drp-text-xs)",
                   fontWeight: 600,
                   borderRadius: 2,
                 }}

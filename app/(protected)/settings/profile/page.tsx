@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, Button } from "@bruddle/react";
+import { Card, Button } from "@doctorproject/react";
 import { User, Mail, Camera, Check, Loader, AlertCircle } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
@@ -60,7 +60,7 @@ export default function SettingsProfilePage() {
     <div
       style={{
         minHeight: "100vh",
-        background: "var(--bru-cream)",
+        background: "var(--drp-cream)",
         padding: 24,
       }}
     >
@@ -72,12 +72,12 @@ export default function SettingsProfilePage() {
               fontSize: 26,
               fontWeight: 800,
               margin: "0 0 6px",
-              color: "var(--bru-black)",
+              color: "var(--drp-black)",
             }}
           >
             Profile
           </h1>
-          <p style={{ margin: 0, color: "var(--bru-grey)", fontSize: 14 }}>
+          <p style={{ margin: 0, color: "var(--drp-grey)", fontSize: 14 }}>
             Manage your personal information
           </p>
         </div>
@@ -90,7 +90,7 @@ export default function SettingsProfilePage() {
                 fontWeight: 800,
                 fontSize: 15,
                 margin: "0 0 20px",
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
               }}
             >
               Profile Picture
@@ -103,13 +103,13 @@ export default function SettingsProfilePage() {
                   width: 80,
                   height: 80,
                   borderRadius: "50%",
-                  background: "var(--bru-purple)",
+                  background: "var(--drp-purple)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   flexShrink: 0,
                   overflow: "hidden",
-                  border: "3px solid var(--bru-black)",
+                  border: "3px solid var(--drp-black)",
                 }}
               >
                 {user?.image ? (
@@ -137,7 +137,7 @@ export default function SettingsProfilePage() {
                     margin: "0 0 4px",
                     fontWeight: 700,
                     fontSize: 14,
-                    color: "var(--bru-black)",
+                    color: "var(--drp-black)",
                   }}
                 >
                   {user?.name ?? "Your Name"}
@@ -146,7 +146,7 @@ export default function SettingsProfilePage() {
                   style={{
                     margin: "0 0 12px",
                     fontSize: 13,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   {user?.email ?? ""}
@@ -160,7 +160,7 @@ export default function SettingsProfilePage() {
                     border: "2px solid #ccc",
                     fontSize: 12,
                     fontWeight: 700,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                     cursor: "not-allowed",
                   }}
                 >
@@ -180,7 +180,7 @@ export default function SettingsProfilePage() {
                 fontWeight: 800,
                 fontSize: 15,
                 margin: "0 0 20px",
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
               }}
             >
               Personal Information
@@ -198,7 +198,7 @@ export default function SettingsProfilePage() {
                   textTransform: "uppercase",
                   letterSpacing: 0.5,
                   marginBottom: 8,
-                  color: "var(--bru-black)",
+                  color: "var(--drp-black)",
                 }}
               >
                 <User size={13} />
@@ -213,13 +213,13 @@ export default function SettingsProfilePage() {
                 style={{
                   width: "100%",
                   padding: "10px 14px",
-                  border: "2px solid var(--bru-black)",
-                  background: "var(--bru-cream)",
+                  border: "2px solid var(--drp-black)",
+                  background: "var(--drp-cream)",
                   fontFamily: "inherit",
                   fontSize: 14,
                   outline: "none",
                   boxSizing: "border-box",
-                  color: "var(--bru-black)",
+                  color: "var(--drp-black)",
                 }}
               />
             </div>
@@ -236,7 +236,7 @@ export default function SettingsProfilePage() {
                   textTransform: "uppercase",
                   letterSpacing: 0.5,
                   marginBottom: 8,
-                  color: "var(--bru-black)",
+                  color: "var(--drp-black)",
                 }}
               >
                 <Mail size={13} />
@@ -255,7 +255,7 @@ export default function SettingsProfilePage() {
                   fontSize: 14,
                   outline: "none",
                   boxSizing: "border-box",
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                   cursor: "not-allowed",
                 }}
               />
@@ -263,7 +263,7 @@ export default function SettingsProfilePage() {
                 style={{
                   margin: "6px 0 0",
                   fontSize: 12,
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                 }}
               >
                 Email cannot be changed. Contact support if needed.
@@ -284,7 +284,7 @@ export default function SettingsProfilePage() {
                 }}
               >
                 <AlertCircle size={14} color="#E99898" />
-                <span style={{ fontSize: 13, color: "var(--bru-black)" }}>
+                <span style={{ fontSize: 13, color: "var(--drp-black)" }}>
                   {error}
                 </span>
               </div>
@@ -302,7 +302,7 @@ export default function SettingsProfilePage() {
                   ? "#00A896"
                   : saving || !displayName.trim() || displayName === user?.name
                     ? "#aaa"
-                    : "var(--bru-purple)",
+                    : "var(--drp-purple)",
                 color: "#fff",
                 border: "none",
                 fontWeight: 800,

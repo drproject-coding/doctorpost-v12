@@ -144,9 +144,9 @@ describe("ImportFlow", () => {
 
     await waitFor(() => {
       // "Content Preview" is a <label>; the <pre> is a sibling, not an ancestor.
-      // Navigate up to the wrapping bru-field div, then find the <pre> inside it.
+      // Navigate up to the wrapping drp-field div, then find the <pre> inside it.
       const label = screen.getByText("Content Preview");
-      const fieldDiv = label.closest(".bru-field");
+      const fieldDiv = label.closest(".drp-field");
       const preview = fieldDiv?.querySelector("pre") as HTMLElement;
       expect(preview).toBeInTheDocument();
       expect(preview).toHaveTextContent("A".repeat(1000));

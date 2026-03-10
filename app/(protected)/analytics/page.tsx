@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Alert, Card, Loader, ProgressBar } from "@bruddle/react";
+import { Alert, Card, Loader, ProgressBar } from "@doctorproject/react";
 import { getAnalytics } from "@/lib/api";
 import { AnalyticsData } from "@/lib/types";
 import { BarChart2, MessageSquare, ThumbsUp, TrendingUp } from "lucide-react";
@@ -19,11 +19,11 @@ const StatCard = ({
     <div className="flex items-center mb-2">
       <div
         style={{
-          padding: "var(--bru-space-2)",
-          background: "var(--bru-purple)",
-          borderRadius: "var(--bru-radius-md)",
+          padding: "var(--drp-space-2)",
+          background: "var(--drp-purple)",
+          borderRadius: "var(--drp-radius-md)",
           border: "2px solid black",
-          marginRight: "var(--bru-space-2)",
+          marginRight: "var(--drp-space-2)",
         }}
       >
         {React.cloneElement(icon as React.ReactElement, {
@@ -124,24 +124,24 @@ export default function AnalyticsPage() {
               Top Performers &amp; Insights
             </h2>
             <div className="space-y-4">
-              <p style={{ color: "var(--bru-text)", fontWeight: 500 }}>
+              <p style={{ color: "var(--drp-text)", fontWeight: 500 }}>
                 <span className="font-bold">Top Content Pillar:</span>{" "}
                 {data.topPerformingPillar.name} (
                 {data.topPerformingPillar.value.toLocaleString()} impressions)
               </p>
-              <p style={{ color: "var(--bru-text)", fontWeight: 500 }}>
+              <p style={{ color: "var(--drp-text)", fontWeight: 500 }}>
                 <span className="font-bold">Top Hook Pattern:</span>{" "}
                 {data.topPerformingHook.name} (
                 {data.topPerformingHook.value.toLocaleString()} reactions)
               </p>
               <div
                 style={{
-                  marginTop: "var(--bru-space-4)",
-                  padding: "var(--bru-space-3)",
-                  background: "var(--bru-purple-light, #ede9fe)",
+                  marginTop: "var(--drp-space-4)",
+                  padding: "var(--drp-space-3)",
+                  background: "var(--drp-purple-light, #ede9fe)",
                   border: "2px solid black",
-                  borderRadius: "var(--bru-radius-md)",
-                  color: "var(--bru-purple)",
+                  borderRadius: "var(--drp-radius-md)",
+                  color: "var(--drp-purple)",
                   fontWeight: 500,
                 }}
               >
@@ -163,18 +163,18 @@ export default function AnalyticsPage() {
                   <div className="flex justify-between mb-1">
                     <span
                       style={{
-                        fontSize: "var(--bru-text-base)",
+                        fontSize: "var(--drp-text-base)",
                         fontWeight: 700,
-                        color: "var(--bru-text)",
+                        color: "var(--drp-text)",
                       }}
                     >
                       {pillar.name}
                     </span>
                     <span
                       style={{
-                        fontSize: "var(--bru-text-sm)",
+                        fontSize: "var(--drp-text-sm)",
                         fontWeight: 700,
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       {pillar.impressions.toLocaleString()}

@@ -8,7 +8,7 @@ import {
   Input,
   Textarea,
   Loader as BruLoader,
-} from "@bruddle/react";
+} from "@doctorproject/react";
 import {
   BrandProfile,
   SubtopicSuggestion,
@@ -37,7 +37,7 @@ import {
   Eye,
 } from "lucide-react";
 // Loader from lucide-react used only for inline icon buttons (search spinner, generate button)
-// BruLoader from @bruddle/react used for full loading states
+// BruLoader from @doctorproject/react used for full loading states
 import EnhancedDropdown from "@/components/EnhancedDropdown";
 import ContentAngleChips from "@/components/create/ContentAngleChips";
 import PostStructureCards from "@/components/create/PostStructureCards";
@@ -391,9 +391,9 @@ export default function CreatePage() {
     <>
       <h1
         style={{
-          fontSize: "var(--bru-text-h3)",
+          fontSize: "var(--drp-text-h3)",
           fontWeight: 700,
-          marginBottom: "var(--bru-space-6)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         Create New Post
@@ -403,8 +403,8 @@ export default function CreatePage() {
       <div
         style={{
           display: "flex",
-          gap: "var(--bru-space-2)",
-          marginBottom: "var(--bru-space-6)",
+          gap: "var(--drp-space-2)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <Button
@@ -426,7 +426,7 @@ export default function CreatePage() {
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gap: "var(--bru-space-6)",
+            gap: "var(--drp-space-6)",
           }}
           className="create-grid"
         >
@@ -434,25 +434,25 @@ export default function CreatePage() {
           <Card variant="raised">
             <h2
               style={{
-                fontSize: "var(--bru-text-h5)",
+                fontSize: "var(--drp-text-h5)",
                 fontWeight: 700,
-                marginBottom: "var(--bru-space-4)",
+                marginBottom: "var(--drp-space-4)",
               }}
             >
               Post Details
             </h2>
 
-            <div className="bru-form-stack">
+            <div className="drp-form-stack">
               {/* Topic field */}
-              <div className="bru-field bru-field--has-icon">
-                <label htmlFor="topic-input" className="bru-field__label">
+              <div className="drp-field drp-field--has-icon">
+                <label htmlFor="topic-input" className="drp-field__label">
                   Topic
                 </label>
                 <div style={{ position: "relative" }}>
                   <input
                     type="text"
                     id="topic-input"
-                    className="bru-input"
+                    className="drp-input"
                     style={{ width: "100%", paddingRight: 40 }}
                     value={topic}
                     onChange={handleTopicChange}
@@ -477,10 +477,10 @@ export default function CreatePage() {
                       <Loader
                         size={20}
                         className="animate-spin"
-                        style={{ color: "var(--bru-purple)" }}
+                        style={{ color: "var(--drp-purple)" }}
                       />
                     ) : (
-                      <Search size={20} style={{ color: "var(--bru-grey)" }} />
+                      <Search size={20} style={{ color: "var(--drp-grey)" }} />
                     )}
                   </button>
                 </div>
@@ -490,11 +490,11 @@ export default function CreatePage() {
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: "var(--bru-space-2)",
-                      marginTop: "var(--bru-space-3)",
+                      gap: "var(--drp-space-2)",
+                      marginTop: "var(--drp-space-3)",
                     }}
                   >
-                    <span className="bru-field__label">
+                    <span className="drp-field__label">
                       Subtopic Suggestions
                     </span>
                     {subtopics.map((sub) => (
@@ -506,31 +506,31 @@ export default function CreatePage() {
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "space-between",
-                          padding: "var(--bru-space-2) var(--bru-space-3)",
+                          padding: "var(--drp-space-2) var(--drp-space-3)",
                           border:
                             selectedSubtopic?.id === sub.id
-                              ? "2px solid var(--bru-purple)"
-                              : "var(--bru-border)",
+                              ? "2px solid var(--drp-purple)"
+                              : "var(--drp-border)",
                           background:
                             selectedSubtopic?.id === sub.id
-                              ? "var(--bru-purple-20)"
-                              : "var(--bru-cream)",
+                              ? "var(--drp-purple-20)"
+                              : "var(--drp-cream)",
                           cursor: "pointer",
                           textAlign: "left",
                           width: "100%",
-                          fontFamily: "var(--bru-font-primary)",
-                          fontSize: "var(--bru-text-md)",
+                          fontFamily: "var(--drp-font-primary)",
+                          fontSize: "var(--drp-text-md)",
                         }}
                       >
                         <span style={{ fontWeight: 500 }}>{sub.text}</span>
                         <span
-                          className="bru-tag bru-tag--filled"
+                          className="drp-tag drp-tag--filled"
                           style={{
                             fontSize: 11,
                             padding: "2px 8px",
                             background:
                               sub.source === "google_trends"
-                                ? "var(--bru-purple-20)"
+                                ? "var(--drp-purple-20)"
                                 : sub.source === "google_questions"
                                   ? "rgba(0, 170, 0, 0.12)"
                                   : "rgba(255, 170, 0, 0.15)",
@@ -567,14 +567,14 @@ export default function CreatePage() {
 
               {/* Post Structure */}
               <div
-                className="bru-field"
+                className="drp-field"
                 style={{
                   borderLeft: "3px solid #631DED",
-                  paddingLeft: "var(--bru-space-3)",
+                  paddingLeft: "var(--drp-space-3)",
                 }}
               >
                 <label
-                  className="bru-field__label"
+                  className="drp-field__label"
                   style={{ color: "#631DED" }}
                 >
                   Post Structure
@@ -587,14 +587,14 @@ export default function CreatePage() {
 
               {/* Content Angle */}
               <div
-                className="bru-field"
+                className="drp-field"
                 style={{
                   borderLeft: "3px solid #00A896",
-                  paddingLeft: "var(--bru-space-3)",
+                  paddingLeft: "var(--drp-space-3)",
                 }}
               >
                 <label
-                  className="bru-field__label"
+                  className="drp-field__label"
                   style={{ color: "#00A896" }}
                 >
                   Content Angle
@@ -610,10 +610,10 @@ export default function CreatePage() {
 
               {/* Content Pillar */}
               <div
-                className="bru-field"
+                className="drp-field"
                 style={{
                   borderLeft: "3px solid #059669",
-                  paddingLeft: "var(--bru-space-3)",
+                  paddingLeft: "var(--drp-space-3)",
                 }}
               >
                 <EnhancedDropdown
@@ -632,22 +632,22 @@ export default function CreatePage() {
                   style={{
                     border: "1px solid rgba(99,29,237,0.2)",
                     background: "rgba(99,29,237,0.03)",
-                    padding: "var(--bru-space-3)",
+                    padding: "var(--drp-space-3)",
                   }}
                 >
                   <button
                     type="button"
                     onClick={() => setShowRecommendationReasoning((v) => !v)}
-                    className="bru-btn bru-btn--ghost"
+                    className="drp-btn drp-btn--ghost"
                     style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
                       width: "100%",
                       padding: 0,
-                      fontSize: "var(--bru-text-sm)",
+                      fontSize: "var(--drp-text-sm)",
                       fontWeight: 600,
-                      color: "var(--bru-purple)",
+                      color: "var(--drp-purple)",
                     }}
                   >
                     <span>
@@ -668,12 +668,12 @@ export default function CreatePage() {
                   {showRecommendationReasoning && (
                     <div
                       style={{
-                        marginTop: "var(--bru-space-3)",
+                        marginTop: "var(--drp-space-3)",
                         display: "flex",
                         flexDirection: "column",
-                        gap: "var(--bru-space-2)",
-                        fontSize: "var(--bru-text-sm)",
-                        color: "var(--bru-grey)",
+                        gap: "var(--drp-space-2)",
+                        fontSize: "var(--drp-text-sm)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       {recommendation.reasoning.contentAngle && (
@@ -731,10 +731,10 @@ export default function CreatePage() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "var(--bru-space-2)",
+                    gap: "var(--drp-space-2)",
                     flexWrap: "wrap",
-                    fontSize: "var(--bru-text-sm)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-sm)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   <Eye size={14} />
@@ -748,10 +748,10 @@ export default function CreatePage() {
                         key={toneId}
                         type="button"
                         onClick={() => setPreviewToneId(toneId)}
-                        className="bru-btn bru-btn--ghost"
+                        className="drp-btn drp-btn--ghost"
                         style={{
-                          fontSize: "var(--bru-text-sm)",
-                          color: "var(--bru-purple)",
+                          fontSize: "var(--drp-text-sm)",
+                          color: "var(--drp-purple)",
                           fontWeight: 600,
                           textDecoration: "underline",
                           padding: 0,
@@ -784,7 +784,7 @@ export default function CreatePage() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "var(--bru-space-4)",
+              gap: "var(--drp-space-4)",
             }}
           >
             <PostGenerator
@@ -796,7 +796,7 @@ export default function CreatePage() {
               onContentGenerated={handleContentGenerated}
             />
             {generatedContent && (
-              <div className="bru-form-actions">
+              <div className="drp-form-actions">
                 <Button
                   onClick={() => void handleSaveDraft()}
                   variant="outline"
@@ -826,65 +826,65 @@ export default function CreatePage() {
         <Card variant="raised">
           <h2
             style={{
-              fontSize: "var(--bru-text-h5)",
+              fontSize: "var(--drp-text-h5)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-4)",
+              marginBottom: "var(--drp-space-4)",
             }}
           >
             Your Content Strategy
           </h2>
-          <div className="bru-form-stack">
-            <div className="bru-field">
-              <h3 className="bru-field__label">Content Strategy Overview</h3>
+          <div className="drp-form-stack">
+            <div className="drp-field">
+              <h3 className="drp-field__label">Content Strategy Overview</h3>
               <p>
                 {profile.contentStrategy ??
                   "No content strategy defined yet. Go to Settings to add one."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Brand Definition</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Brand Definition</h3>
               <p>
                 {profile.definition ??
                   "No brand definition provided. Go to Settings to add one."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Copy Guidelines</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Copy Guidelines</h3>
               <p>
                 {profile.copyGuideline ??
                   "No copy guidelines set. Go to Settings to add them."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Audience</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Audience</h3>
               <p>
                 {profile.audience.join(", ") ||
                   "No audience defined. Go to Settings to add one."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Tones</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Tones</h3>
               <p>
                 {profile.tones.join(", ") ||
                   "No tones defined. Go to Settings to add them."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Offers</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Offers</h3>
               <p>
                 {profile.offers.join(", ") ||
                   "No offers defined. Go to Settings to add them."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Taboos</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Taboos</h3>
               <p>
                 {profile.taboos.join(", ") ||
                   "No taboo topics defined. Go to Settings to add them."}
               </p>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Link href="/settings" className="bru-btn">
+              <Link href="/settings" className="drp-btn">
                 Edit Strategy in Settings
               </Link>
             </div>

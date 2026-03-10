@@ -30,10 +30,10 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
             width: "100%",
             resize: "vertical",
             padding: "10px 12px",
-            fontFamily: "var(--bru-font-primary)",
-            fontSize: "var(--bru-text-sm)",
-            color: "var(--bru-black)",
-            background: "var(--bru-white)",
+            fontFamily: "var(--drp-font-primary)",
+            fontSize: "var(--drp-text-sm)",
+            color: "var(--drp-black)",
+            background: "var(--drp-white)",
             border: "1px solid rgba(0,0,0,0.18)",
             borderRadius: 0,
             outline: "none",
@@ -44,8 +44,8 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
         <p
           style={{
             marginTop: "6px",
-            fontFamily: "var(--bru-font-primary)",
-            fontSize: "var(--bru-text-xs)",
+            fontFamily: "var(--drp-font-primary)",
+            fontSize: "var(--drp-text-xs)",
             color: "rgba(18,18,18,0.5)",
           }}
         >
@@ -77,9 +77,9 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
           <p
             style={{
               margin: 0,
-              fontFamily: "var(--bru-font-primary)",
-              fontSize: "var(--bru-text-sm)",
-              color: "var(--bru-black)",
+              fontFamily: "var(--drp-font-primary)",
+              fontSize: "var(--drp-text-sm)",
+              color: "var(--drp-black)",
               lineHeight: 1.7,
               whiteSpace: "pre-wrap",
             }}
@@ -95,8 +95,8 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
                 border: "none",
                 padding: 0,
                 cursor: "pointer",
-                fontFamily: "var(--bru-font-primary)",
-                fontSize: "var(--bru-text-xs)",
+                fontFamily: "var(--drp-font-primary)",
+                fontSize: "var(--drp-text-xs)",
                 fontWeight: 700,
                 color: ACCENT,
                 textDecoration: "underline",
@@ -111,8 +111,8 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
         <p
           style={{
             margin: 0,
-            fontFamily: "var(--bru-font-primary)",
-            fontSize: "var(--bru-text-sm)",
+            fontFamily: "var(--drp-font-primary)",
+            fontSize: "var(--drp-text-sm)",
             color: "rgba(18,18,18,0.45)",
             lineHeight: 1.7,
             fontStyle: "italic",

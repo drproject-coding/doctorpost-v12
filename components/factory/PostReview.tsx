@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { ThumbsUp, ThumbsDown, Edit3, MessageSquare } from "lucide-react";
 
 interface PostReviewProps {
@@ -35,9 +35,9 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
     <Card variant="raised">
       <h3
         style={{
-          fontSize: "var(--bru-text-h5)",
+          fontSize: "var(--drp-text-h5)",
           fontWeight: 700,
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         Review & Approve
@@ -47,8 +47,8 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
       <div
         style={{
           display: "flex",
-          gap: "var(--bru-space-2)",
-          marginBottom: "var(--bru-space-4)",
+          gap: "var(--drp-space-2)",
+          marginBottom: "var(--drp-space-4)",
           flexWrap: "wrap",
         }}
       >
@@ -60,7 +60,7 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
           onClick={() => setAction(action === "editing" ? "idle" : "editing")}
           style={{
             border:
-              action === "editing" ? "2px solid var(--bru-purple)" : undefined,
+              action === "editing" ? "2px solid var(--drp-purple)" : undefined,
           }}
         >
           <Edit3 size={14} />
@@ -70,7 +70,7 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
           onClick={() => setAction(action === "feedback" ? "idle" : "feedback")}
           style={{
             border:
-              action === "feedback" ? "2px solid var(--bru-purple)" : undefined,
+              action === "feedback" ? "2px solid var(--drp-purple)" : undefined,
           }}
         >
           <MessageSquare size={14} />
@@ -84,27 +84,27 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
 
       {/* Edit mode */}
       {action === "editing" && (
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <label
-            className="bru-field__label"
+            className="drp-field__label"
             style={{
-              marginBottom: "var(--bru-space-2)",
+              marginBottom: "var(--drp-space-2)",
               display: "block",
             }}
           >
             Edit Post
           </label>
           <textarea
-            className="bru-input"
+            className="drp-input"
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
             style={{ minHeight: 300, fontFamily: "monospace" }}
           />
           <div
             style={{
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-grey)",
-              marginTop: "var(--bru-space-1)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-grey)",
+              marginTop: "var(--drp-space-1)",
             }}
           >
             {editedContent.length} characters
@@ -115,19 +115,19 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
 
       {/* Feedback mode */}
       {action === "feedback" && (
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <label
-            className="bru-field__label"
+            className="drp-field__label"
             style={{
-              marginBottom: "var(--bru-space-2)",
+              marginBottom: "var(--drp-space-2)",
               display: "block",
             }}
           >
             Feedback
           </label>
-          <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
+          <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
             <input
-              className="bru-input"
+              className="drp-input"
               value={feedbackText}
               onChange={(e) => setFeedbackText(e.target.value)}
               placeholder="Type feedback and press Add..."
@@ -143,25 +143,25 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
 
       {/* Feedback list */}
       {feedbackList.length > 0 && (
-        <div style={{ marginBottom: "var(--bru-space-3)" }}>
+        <div style={{ marginBottom: "var(--drp-space-3)" }}>
           <h4
             style={{
-              fontSize: "var(--bru-text-sm)",
+              fontSize: "var(--drp-text-sm)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-1)",
+              marginBottom: "var(--drp-space-1)",
             }}
           >
             Feedback ({feedbackList.length})
           </h4>
-          <div style={{ display: "grid", gap: "var(--bru-space-1)" }}>
+          <div style={{ display: "grid", gap: "var(--drp-space-1)" }}>
             {feedbackList.map((fb, i) => (
               <div
                 key={i}
                 style={{
-                  padding: "var(--bru-space-1) var(--bru-space-2)",
-                  background: "var(--bru-cream)",
-                  border: "var(--bru-border)",
-                  fontSize: "var(--bru-text-sm)",
+                  padding: "var(--drp-space-1) var(--drp-space-2)",
+                  background: "var(--drp-cream)",
+                  border: "var(--drp-border)",
+                  fontSize: "var(--drp-text-sm)",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -173,8 +173,8 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                   }}
                   onClick={() =>
                     setFeedbackList((prev) => prev.filter((_, j) => j !== i))

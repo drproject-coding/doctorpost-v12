@@ -48,7 +48,7 @@ function CopyButton({
   return (
     <button
       onClick={onCopy}
-      className="bru-btn bru-btn--outline bru-btn--sm"
+      className="drp-btn drp-btn--outline drp-btn--sm"
       style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
     >
       {copied ? <Check size={13} /> : <Copy size={13} />}
@@ -383,7 +383,7 @@ export default function PostDetailPage() {
             border: "none",
             cursor: "pointer",
             fontWeight: 700,
-            color: "var(--bru-purple)",
+            color: "var(--drp-purple)",
             marginBottom: 16,
           }}
         >
@@ -431,7 +431,7 @@ export default function PostDetailPage() {
             border: "none",
             cursor: "pointer",
             fontWeight: 700,
-            color: "var(--bru-purple)",
+            color: "var(--drp-purple)",
             marginBottom: 20,
             fontSize: 14,
           }}
@@ -512,7 +512,7 @@ export default function PostDetailPage() {
                 <span
                   style={{
                     padding: "2px 10px",
-                    border: "2px solid var(--bru-black)",
+                    border: "2px solid var(--drp-black)",
                     fontWeight: 700,
                     fontSize: 11,
                     textTransform: "uppercase",
@@ -523,7 +523,7 @@ export default function PostDetailPage() {
                 </span>
               )}
               {date && (
-                <span style={{ fontSize: 13, color: "var(--bru-grey)" }}>
+                <span style={{ fontSize: 13, color: "var(--drp-grey)" }}>
                   {date}
                 </span>
               )}
@@ -585,7 +585,7 @@ export default function PostDetailPage() {
             <button
               onClick={() => void handleMarkPublished()}
               disabled={markingPublished}
-              className="bru-btn bru-btn--outline"
+              className="drp-btn drp-btn--outline"
               style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
             >
               {markingPublished ? (

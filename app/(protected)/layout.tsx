@@ -28,12 +28,12 @@ export default function ProtectedLayout({
     return (
       <div
         className="flex items-center justify-center h-screen"
-        style={{ background: "var(--bru-cream)" }}
+        style={{ background: "var(--drp-cream)" }}
       >
         <Loader
           size={32}
           className="animate-spin"
-          style={{ color: "var(--bru-purple)" }}
+          style={{ color: "var(--drp-purple)" }}
         />
       </div>
     );

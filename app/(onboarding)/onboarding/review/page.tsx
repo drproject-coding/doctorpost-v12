@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@bruddle/react";
+import { Button } from "@doctorproject/react";
 import {
   CheckCircle,
   Edit2,
@@ -128,7 +128,7 @@ function SectionCard({
   return (
     <div
       style={{
-        border: "2px solid var(--bru-black)",
+        border: "2px solid var(--drp-black)",
         borderLeft: `5px solid ${accentColor}`,
         borderRadius: 0,
         background: "white",
@@ -151,7 +151,7 @@ function SectionCard({
             style={{
               fontWeight: 700,
               fontSize: 15,
-              color: "var(--bru-black)",
+              color: "var(--drp-black)",
             }}
           >
             {title}
@@ -167,18 +167,18 @@ function SectionCard({
             alignItems: "center",
             gap: 5,
             background: "none",
-            border: "1.5px solid var(--bru-black)",
+            border: "1.5px solid var(--drp-black)",
             cursor: "pointer",
             padding: "4px 12px",
             fontSize: 12,
             fontWeight: 600,
-            color: "var(--bru-black)",
+            color: "var(--drp-black)",
             borderRadius: 0,
             transition: "background 0.12s",
           }}
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLButtonElement).style.background =
-              "var(--bru-cream)";
+              "var(--drp-cream)";
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.background = "none";
@@ -200,7 +200,7 @@ function SectionCard({
 function EmptyValue({ label }: { label: string }) {
   return (
     <span
-      style={{ color: "var(--bru-grey)", fontSize: 13, fontStyle: "italic" }}
+      style={{ color: "var(--drp-grey)", fontSize: 13, fontStyle: "italic" }}
     >
       {label}
     </span>
@@ -216,7 +216,7 @@ function FieldRow({ label, value }: { label: string; value: string }) {
         style={{
           fontSize: 12,
           fontWeight: 700,
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           minWidth: 120,
           textTransform: "uppercase",
           letterSpacing: "0.04em",
@@ -226,7 +226,7 @@ function FieldRow({ label, value }: { label: string; value: string }) {
         {label}
       </span>
       <span
-        style={{ fontSize: 13, color: "var(--bru-black)", lineHeight: 1.5 }}
+        style={{ fontSize: 13, color: "var(--drp-black)", lineHeight: 1.5 }}
       >
         {value || <EmptyValue label="Not set" />}
       </span>
@@ -274,7 +274,7 @@ export default function OnboardingReviewPage() {
           justifyContent: "center",
           minHeight: "40vh",
           gap: 10,
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           fontSize: 14,
         }}
       >
@@ -290,7 +290,7 @@ export default function OnboardingReviewPage() {
   if (!profile) {
     return (
       <div style={{ textAlign: "center", padding: "40px 0" }}>
-        <p style={{ color: "var(--bru-grey)", fontSize: 14 }}>
+        <p style={{ color: "var(--drp-grey)", fontSize: 14 }}>
           {error ?? "Could not load profile."}
         </p>
         <button
@@ -300,7 +300,7 @@ export default function OnboardingReviewPage() {
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: "var(--bru-purple)",
+            color: "var(--drp-purple)",
             fontWeight: 600,
             fontSize: 14,
           }}
@@ -324,7 +324,7 @@ export default function OnboardingReviewPage() {
             margin: "0 0 8px",
             fontSize: "clamp(22px, 4vw, 30px)",
             fontWeight: 800,
-            color: "var(--bru-black)",
+            color: "var(--drp-black)",
             lineHeight: 1.15,
           }}
         >
@@ -334,7 +334,7 @@ export default function OnboardingReviewPage() {
           style={{
             margin: 0,
             fontSize: 15,
-            color: "var(--bru-grey)",
+            color: "var(--drp-grey)",
             lineHeight: 1.5,
           }}
         >
@@ -372,7 +372,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -398,7 +398,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -420,7 +420,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 4,
@@ -432,7 +432,7 @@ export default function OnboardingReviewPage() {
               style={{
                 margin: 0,
                 fontSize: 13,
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
                 lineHeight: 1.6,
               }}
             >
@@ -457,7 +457,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 4,
@@ -469,7 +469,7 @@ export default function OnboardingReviewPage() {
               style={{
                 margin: 0,
                 fontSize: 13,
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
                 lineHeight: 1.6,
               }}
             >
@@ -486,7 +486,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 4,
@@ -498,7 +498,7 @@ export default function OnboardingReviewPage() {
               style={{
                 margin: 0,
                 fontSize: 13,
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
                 lineHeight: 1.6,
               }}
             >
@@ -523,7 +523,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -549,7 +549,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -580,7 +580,7 @@ export default function OnboardingReviewPage() {
             style={{
               margin: 0,
               fontSize: 13,
-              color: "var(--bru-black)",
+              color: "var(--drp-black)",
               lineHeight: 1.6,
             }}
           >
@@ -657,7 +657,7 @@ export default function OnboardingReviewPage() {
             border: "none",
             cursor: saving ? "not-allowed" : "pointer",
             fontSize: 13,
-            color: "var(--bru-grey)",
+            color: "var(--drp-grey)",
             padding: "4px 0",
             transition: "color 0.12s",
             opacity: saving ? 0.5 : 1,
@@ -665,11 +665,11 @@ export default function OnboardingReviewPage() {
           onMouseEnter={(e) => {
             if (!saving)
               (e.currentTarget as HTMLButtonElement).style.color =
-                "var(--bru-black)";
+                "var(--drp-black)";
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.color =
-              "var(--bru-grey)";
+              "var(--drp-grey)";
           }}
         >
           ← Go back to wizard

@@ -8,7 +8,7 @@ import {
   Select,
   Tabs,
   Tag,
-} from "@bruddle/react";
+} from "@doctorproject/react";
 import { getScheduledPosts, updatePost } from "@/lib/api";
 import { ScheduledPost, PostStatus } from "@/lib/types";
 import CalendarView from "@/components/calendar/CalendarView";
@@ -61,8 +61,8 @@ const ListView = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  padding: "var(--bru-space-4)",
-                  borderBottom: "1px solid var(--bru-border)",
+                  padding: "var(--drp-space-4)",
+                  borderBottom: "1px solid var(--drp-border)",
                 }}
               >
                 <div>
@@ -74,8 +74,8 @@ const ListView = ({
                   </p>
                   <p
                     style={{
-                      fontSize: "var(--bru-text-sm)",
-                      color: "var(--bru-grey)",
+                      fontSize: "var(--drp-text-sm)",
+                      color: "var(--drp-grey)",
                     }}
                   >
                     Pillar: {post.pillar} | Scheduled:{" "}
@@ -86,7 +86,7 @@ const ListView = ({
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "var(--bru-space-4)",
+                    gap: "var(--drp-space-4)",
                   }}
                 >
                   <Tag color={getStatusTagColor(post.status)} filled>
@@ -207,7 +207,7 @@ export default function CalendarPage() {
             <input
               type="date"
               id="date-picker"
-              className="bru-input !py-2 !pl-3 !pr-8 text-sm font-bold appearance-none bg-white"
+              className="drp-input !py-2 !pl-3 !pr-8 text-sm font-bold appearance-none bg-white"
               value={selectedDateFromPicker ?? ""}
               onChange={(e) => setSelectedDateFromPicker(e.target.value)}
             />
@@ -258,9 +258,9 @@ export default function CalendarPage() {
                   width: "0.75rem",
                   height: "0.75rem",
                   borderRadius: "9999px",
-                  border: "2px solid var(--bru-border)",
-                  background: "var(--bru-purple-light, #ede9fe)",
-                  marginRight: "var(--bru-space-2)",
+                  border: "2px solid var(--drp-border)",
+                  background: "var(--drp-purple-light, #ede9fe)",
+                  marginRight: "var(--drp-space-2)",
                   display: "inline-block",
                 }}
               ></span>
@@ -272,9 +272,9 @@ export default function CalendarPage() {
                   width: "0.75rem",
                   height: "0.75rem",
                   borderRadius: "9999px",
-                  border: "2px solid var(--bru-yellow)",
-                  background: "var(--bru-yellow-light, #fef9c3)",
-                  marginRight: "var(--bru-space-2)",
+                  border: "2px solid var(--drp-yellow)",
+                  background: "var(--drp-yellow-light, #fef9c3)",
+                  marginRight: "var(--drp-space-2)",
                   display: "inline-block",
                 }}
               ></span>

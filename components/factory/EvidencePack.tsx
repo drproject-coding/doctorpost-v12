@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { ChevronDown, ChevronRight, ExternalLink, Filter } from "lucide-react";
 import type { EvidencePack as EvidencePackType } from "@/lib/knowledge/types";
 
@@ -77,12 +77,12 @@ export function EvidencePack({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         <h3
           style={{
-            fontSize: "var(--bru-text-h5)",
+            fontSize: "var(--drp-text-h5)",
             fontWeight: 700,
             margin: 0,
           }}
@@ -91,8 +91,8 @@ export function EvidencePack({
         </h3>
         <span
           style={{
-            fontSize: "var(--bru-text-xs)",
-            color: "var(--bru-grey)",
+            fontSize: "var(--drp-text-xs)",
+            color: "var(--drp-grey)",
           }}
         >
           Using {selectedClaims.size} of {evidence.claims.length} claims
@@ -109,27 +109,27 @@ export function EvidencePack({
         <div
           style={{
             display: "flex",
-            gap: "var(--bru-space-2)",
-            marginBottom: "var(--bru-space-3)",
+            gap: "var(--drp-space-2)",
+            marginBottom: "var(--drp-space-3)",
             flexWrap: "wrap",
             alignItems: "center",
           }}
         >
-          <Filter size={12} style={{ color: "var(--bru-grey)" }} />
+          <Filter size={12} style={{ color: "var(--drp-grey)" }} />
           {(["all", "verified", "estimate", "anecdotal"] as const).map((f) => (
             <button
               key={f}
               onClick={() => setVerificationFilter(f)}
               style={{
                 padding: "2px 8px",
-                fontSize: "var(--bru-text-xs)",
+                fontSize: "var(--drp-text-xs)",
                 fontWeight: verificationFilter === f ? 700 : 400,
                 background:
                   verificationFilter === f
-                    ? "var(--bru-purple)"
+                    ? "var(--drp-purple)"
                     : "transparent",
-                color: verificationFilter === f ? "white" : "var(--bru-grey)",
-                border: "1px solid var(--bru-border-color, #e0e0e0)",
+                color: verificationFilter === f ? "white" : "var(--drp-grey)",
+                border: "1px solid var(--drp-border-color, #e0e0e0)",
                 cursor: "pointer",
                 textTransform: "capitalize",
               }}
@@ -144,8 +144,8 @@ export function EvidencePack({
               background: "none",
               border: "none",
               cursor: "pointer",
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-purple)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-purple)",
               textDecoration: "underline",
             }}
           >
@@ -157,8 +157,8 @@ export function EvidencePack({
               background: "none",
               border: "none",
               cursor: "pointer",
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-grey)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-grey)",
               textDecoration: "underline",
             }}
           >
@@ -170,8 +170,8 @@ export function EvidencePack({
               background: "none",
               border: "none",
               cursor: "pointer",
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-success-dark, #2d7a3a)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-success-dark, #2d7a3a)",
               textDecoration: "underline",
             }}
           >
@@ -183,12 +183,12 @@ export function EvidencePack({
           <div
             key={`claim-${i}`}
             style={{
-              padding: "var(--bru-space-2)",
+              padding: "var(--drp-space-2)",
               border: selectedClaims.has(i)
-                ? "2px solid var(--bru-purple)"
-                : "var(--bru-border)",
-              marginBottom: "var(--bru-space-2)",
-              fontSize: "var(--bru-text-sm)",
+                ? "2px solid var(--drp-purple)"
+                : "var(--drp-border)",
+              marginBottom: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
               opacity: selectedClaims.has(i) ? 1 : 0.5,
               cursor: "pointer",
             }}
@@ -198,7 +198,7 @@ export function EvidencePack({
               style={{
                 display: "flex",
                 alignItems: "flex-start",
-                gap: "var(--bru-space-2)",
+                gap: "var(--drp-space-2)",
               }}
             >
               <input
@@ -213,10 +213,10 @@ export function EvidencePack({
                 <div
                   style={{
                     display: "flex",
-                    gap: "var(--bru-space-2)",
-                    marginTop: "var(--bru-space-1)",
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    gap: "var(--drp-space-2)",
+                    marginTop: "var(--drp-space-1)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                     flexWrap: "wrap",
                     alignItems: "center",
                   }}
@@ -246,7 +246,7 @@ export function EvidencePack({
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 2,
-                        color: "var(--bru-purple)",
+                        color: "var(--drp-purple)",
                       }}
                       onClick={(e) => e.stopPropagation()}
                     >
@@ -258,10 +258,10 @@ export function EvidencePack({
                 {c.usageNote && (
                   <p
                     style={{
-                      margin: "var(--bru-space-1) 0 0",
-                      fontSize: "var(--bru-text-xs)",
+                      margin: "var(--drp-space-1) 0 0",
+                      fontSize: "var(--drp-text-xs)",
                       fontStyle: "italic",
-                      color: "var(--bru-grey)",
+                      color: "var(--drp-grey)",
                     }}
                   >
                     {c.usageNote}
@@ -283,18 +283,18 @@ export function EvidencePack({
           <div
             key={`voice-${i}`}
             style={{
-              padding: "var(--bru-space-2)",
-              border: "var(--bru-border)",
-              marginBottom: "var(--bru-space-2)",
-              fontSize: "var(--bru-text-sm)",
+              padding: "var(--drp-space-2)",
+              border: "var(--drp-border)",
+              marginBottom: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
             }}
           >
             <em>&ldquo;{v.quote}&rdquo;</em>
             <div
               style={{
-                fontSize: "var(--bru-text-xs)",
-                color: "var(--bru-grey)",
-                marginTop: "var(--bru-space-1)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-grey)",
+                marginTop: "var(--drp-space-1)",
               }}
             >
               {v.context} — Sentiment: {v.sentiment}
@@ -312,8 +312,8 @@ export function EvidencePack({
         >
           <ul
             style={{
-              paddingLeft: "var(--bru-space-4)",
-              fontSize: "var(--bru-text-sm)",
+              paddingLeft: "var(--drp-space-4)",
+              fontSize: "var(--drp-text-sm)",
               margin: 0,
             }}
           >
@@ -333,8 +333,8 @@ export function EvidencePack({
         >
           <ul
             style={{
-              paddingLeft: "var(--bru-space-4)",
-              fontSize: "var(--bru-text-sm)",
+              paddingLeft: "var(--drp-space-4)",
+              fontSize: "var(--drp-text-sm)",
               margin: 0,
             }}
           >
@@ -360,19 +360,19 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div style={{ marginBottom: "var(--bru-space-3)" }}>
+    <div style={{ marginBottom: "var(--drp-space-3)" }}>
       <button
         onClick={onToggle}
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "var(--bru-space-1)",
+          gap: "var(--drp-space-1)",
           background: "none",
           border: "none",
           cursor: "pointer",
           fontWeight: 700,
-          fontSize: "var(--bru-text-md)",
-          padding: "var(--bru-space-1) 0",
+          fontSize: "var(--drp-text-md)",
+          padding: "var(--drp-space-1) 0",
           width: "100%",
           textAlign: "left",
           color: "inherit",
@@ -382,7 +382,7 @@ function Section({
         {title}
       </button>
       {isOpen && (
-        <div style={{ marginTop: "var(--bru-space-2)" }}>{children}</div>
+        <div style={{ marginTop: "var(--drp-space-2)" }}>{children}</div>
       )}
     </div>
   );

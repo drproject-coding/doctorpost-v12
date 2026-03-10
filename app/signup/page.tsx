@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Loader, Eye, EyeOff } from "lucide-react";
@@ -49,7 +49,7 @@ export default function SignupPage() {
   return (
     <div
       className="flex items-center justify-center"
-      style={{ minHeight: "100vh", background: "var(--bru-cream)" }}
+      style={{ minHeight: "100vh", background: "var(--drp-cream)" }}
     >
       <Card
         variant="raised"
@@ -61,7 +61,7 @@ export default function SignupPage() {
             fontSize: "24px",
             fontWeight: 700,
             marginBottom: "24px",
-            color: "var(--bru-purple)",
+            color: "var(--drp-purple)",
           }}
         >
           Create your account
@@ -86,7 +86,7 @@ export default function SignupPage() {
             <input
               id="name"
               type="text"
-              className="bru-input"
+              className="drp-input"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -110,7 +110,7 @@ export default function SignupPage() {
             <input
               id="email"
               type="email"
-              className="bru-input"
+              className="drp-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -135,7 +135,7 @@ export default function SignupPage() {
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                className="bru-input"
+                className="drp-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -210,7 +210,7 @@ export default function SignupPage() {
           <a
             href="/login"
             style={{
-              color: "var(--bru-purple)",
+              color: "var(--drp-purple)",
               fontWeight: 600,
               textDecoration: "underline",
             }}

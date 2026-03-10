@@ -14,15 +14,15 @@ const MAX_DEFINITION = 1000;
 
 const FieldLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <label
-    className="bru-field__label"
+    className="drp-field__label"
     style={{
       display: "block",
-      fontFamily: "var(--bru-font-primary)",
-      fontWeight: "var(--bru-weight-bold)",
-      fontSize: "var(--bru-text-sm)",
-      letterSpacing: "var(--bru-tracking-caps)",
+      fontFamily: "var(--drp-font-primary)",
+      fontWeight: "var(--drp-weight-bold)",
+      fontSize: "var(--drp-text-sm)",
+      letterSpacing: "var(--drp-tracking-caps)",
       textTransform: "uppercase" as const,
-      color: "var(--bru-black)",
+      color: "var(--drp-black)",
       marginBottom: "6px",
     }}
   >
@@ -34,9 +34,9 @@ const ViewValue: React.FC<{ value: string }> = ({ value }) =>
   value.trim() ? (
     <p
       style={{
-        fontFamily: "var(--bru-font-primary)",
-        fontSize: "var(--bru-text-md)",
-        color: "var(--bru-black)",
+        fontFamily: "var(--drp-font-primary)",
+        fontSize: "var(--drp-text-md)",
+        color: "var(--drp-black)",
         lineHeight: 1.6,
         margin: 0,
         whiteSpace: "pre-wrap",
@@ -47,9 +47,9 @@ const ViewValue: React.FC<{ value: string }> = ({ value }) =>
   ) : (
     <p
       style={{
-        fontFamily: "var(--bru-font-primary)",
-        fontSize: "var(--bru-text-md)",
-        color: "var(--bru-grey)",
+        fontFamily: "var(--drp-font-primary)",
+        fontSize: "var(--drp-text-md)",
+        color: "var(--drp-grey)",
         margin: 0,
         fontStyle: "italic",
       }}
@@ -66,8 +66,8 @@ const CharCount: React.FC<{ current: number; max: number }> = ({
     style={{
       display: "block",
       textAlign: "right" as const,
-      fontSize: "var(--bru-text-xs)",
-      color: current > max * 0.9 ? TEAL : "var(--bru-grey)",
+      fontSize: "var(--drp-text-xs)",
+      color: current > max * 0.9 ? TEAL : "var(--drp-grey)",
       marginTop: "4px",
     }}
   >
@@ -93,7 +93,7 @@ const StrategySection: React.FC<StrategySectionProps> = ({
         {editing ? (
           <>
             <textarea
-              className="bru-input"
+              className="drp-input"
               rows={4}
               maxLength={MAX_STRATEGY}
               value={profile.contentStrategy}
@@ -121,7 +121,7 @@ const StrategySection: React.FC<StrategySectionProps> = ({
         {editing ? (
           <>
             <textarea
-              className="bru-input"
+              className="drp-input"
               rows={3}
               maxLength={MAX_DEFINITION}
               value={profile.definition}

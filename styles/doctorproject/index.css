@@ -1,13 +1,13 @@
 /* ============================================================
-   BRUDDLE DESIGN SYSTEM
+   DOCTORPROJECT DESIGN SYSTEM
    Import this single file to get the complete design system.
 
    Usage:
-     <link rel="stylesheet" href="bruddle-design-system/css/index.css">
+     <link rel="stylesheet" href="doctorproject-design-system/css/index.css">
 
    Or selectively:
-     @import 'bruddle-design-system/css/tokens.css';
-     @import 'bruddle-design-system/css/buttons.css';
+     @import 'doctorproject-design-system/css/tokens.css';
+     @import 'doctorproject-design-system/css/buttons.css';
    ============================================================ */
 
 @import url('tokens.css');

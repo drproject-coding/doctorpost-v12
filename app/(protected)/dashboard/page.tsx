@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
-import { ProgressBar, Card, Loader, EmptyState, Button } from "@bruddle/react";
+import { ProgressBar, Card, Loader, EmptyState, Button } from "@doctorproject/react";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -111,7 +111,7 @@ export default function DashboardPage() {
             <div className="flex items-center mb-4">
               <div
                 style={{
-                  background: "var(--bru-purple)",
+                  background: "var(--drp-purple)",
                   padding: "8px",
                 }}
                 className="mr-3"
@@ -125,8 +125,8 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between">
                   <span
                     style={{
-                      color: "var(--bru-grey)",
-                      fontSize: "var(--bru-text-sm)",
+                      color: "var(--drp-grey)",
+                      fontSize: "var(--drp-text-sm)",
                       fontWeight: 700,
                     }}
                   >
@@ -134,7 +134,7 @@ export default function DashboardPage() {
                   </span>
                   <span
                     className="text-sm font-bold flex items-center"
-                    style={{ color: "var(--bru-success)" }}
+                    style={{ color: "var(--drp-success)" }}
                   >
                     {analyticsData?.totalImpressions.toLocaleString() ?? "N/A"}
                   </span>
@@ -149,8 +149,8 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between">
                   <span
                     style={{
-                      color: "var(--bru-grey)",
-                      fontSize: "var(--bru-text-sm)",
+                      color: "var(--drp-grey)",
+                      fontSize: "var(--drp-text-sm)",
                       fontWeight: 700,
                     }}
                   >
@@ -158,7 +158,7 @@ export default function DashboardPage() {
                   </span>
                   <span
                     className="text-sm font-bold flex items-center"
-                    style={{ color: "var(--bru-success)" }}
+                    style={{ color: "var(--drp-success)" }}
                   >
                     {analyticsData?.ctr ? `${analyticsData.ctr}%` : "N/A"}
                   </span>
@@ -169,8 +169,8 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between">
                   <span
                     style={{
-                      color: "var(--bru-grey)",
-                      fontSize: "var(--bru-text-sm)",
+                      color: "var(--drp-grey)",
+                      fontSize: "var(--drp-text-sm)",
                       fontWeight: 700,
                     }}
                   >
@@ -178,7 +178,7 @@ export default function DashboardPage() {
                   </span>
                   <span
                     className="text-sm font-bold flex items-center"
-                    style={{ color: "var(--bru-success)" }}
+                    style={{ color: "var(--drp-success)" }}
                   >
                     {analyticsData?.topPerformingPillar.name ?? "N/A"}
                   </span>
@@ -198,7 +198,7 @@ export default function DashboardPage() {
             <div className="flex items-center mb-4">
               <div
                 style={{
-                  background: "var(--bru-yellow)",
+                  background: "var(--drp-yellow)",
                   padding: "8px",
                 }}
                 className="mr-3"
@@ -215,7 +215,7 @@ export default function DashboardPage() {
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
-                  color: "var(--bru-purple)",
+                  color: "var(--drp-purple)",
                   fontWeight: 700,
                 }}
               >
@@ -228,7 +228,7 @@ export default function DashboardPage() {
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
-                  color: "var(--bru-purple)",
+                  color: "var(--drp-purple)",
                   fontWeight: 700,
                 }}
               >
@@ -241,7 +241,7 @@ export default function DashboardPage() {
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
-                  color: "var(--bru-purple)",
+                  color: "var(--drp-purple)",
                   fontWeight: 700,
                 }}
               >
@@ -257,7 +257,7 @@ export default function DashboardPage() {
               <Link
                 href="/calendar"
                 className="text-sm font-bold hover:underline"
-                style={{ color: "var(--bru-purple)" }}
+                style={{ color: "var(--drp-purple)" }}
               >
                 View All
               </Link>
@@ -273,14 +273,14 @@ export default function DashboardPage() {
                     <div className="pt-1">
                       <Clock
                         className="w-4 h-4"
-                        style={{ color: "var(--bru-grey)" }}
+                        style={{ color: "var(--drp-grey)" }}
                       />
                     </div>
                     <div>
                       <p className="font-semibold">{post.title}</p>
                       <p
                         className="text-sm"
-                        style={{ color: "var(--bru-grey)" }}
+                        style={{ color: "var(--drp-grey)" }}
                       >
                         {formatDate(post.scheduledAt)} at{" "}
                         {formatTime(post.scheduledAt)}
@@ -314,7 +314,7 @@ export default function DashboardPage() {
               <Link
                 href="/library"
                 className="text-sm font-bold hover:underline"
-                style={{ color: "var(--bru-purple)" }}
+                style={{ color: "var(--drp-purple)" }}
               >
                 View Library
               </Link>
@@ -330,14 +330,14 @@ export default function DashboardPage() {
                     <div className="pt-1">
                       <Book
                         className="w-4 h-4"
-                        style={{ color: "var(--bru-grey)" }}
+                        style={{ color: "var(--drp-grey)" }}
                       />
                     </div>
                     <div>
                       <p className="font-semibold">{post.title}</p>
                       <p
                         className="text-sm"
-                        style={{ color: "var(--bru-grey)" }}
+                        style={{ color: "var(--drp-grey)" }}
                       >
                         Published: {formatDate(post.scheduledAt)}
                       </p>
@@ -360,7 +360,7 @@ export default function DashboardPage() {
               <h2 className="text-xl font-bold">Trending Topics</h2>
               <span
                 className="text-sm font-bold"
-                style={{ color: "var(--bru-grey)" }}
+                style={{ color: "var(--drp-grey)" }}
               >
                 Last 7 Days
               </span>
@@ -377,7 +377,7 @@ export default function DashboardPage() {
                     <span className="font-medium">{topic}</span>
                     <TrendingUp
                       size={16}
-                      style={{ color: "var(--bru-success)" }}
+                      style={{ color: "var(--drp-success)" }}
                     />
                   </Card>
                 ))

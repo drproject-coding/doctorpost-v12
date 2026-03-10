@@ -7,7 +7,7 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import { Alert, Button, Card } from "@bruddle/react";
+import { Alert, Button, Card } from "@doctorproject/react";
 import {
   PostGenerationParameters,
   BrandProfile,
@@ -194,7 +194,7 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
     return (
       <div>
         {error && (
-          <div style={{ marginBottom: "var(--bru-space-4)" }}>
+          <div style={{ marginBottom: "var(--drp-space-4)" }}>
             <Alert variant="error">{error}</Alert>
           </div>
         )}
@@ -203,19 +203,19 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
           <div
             style={{
               minHeight: 256,
-              border: "2px dashed var(--bru-grey-85)",
+              border: "2px dashed var(--drp-grey-85)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              color: "var(--bru-grey)",
-              gap: "var(--bru-space-3)",
+              color: "var(--drp-grey)",
+              gap: "var(--drp-space-3)",
             }}
           >
             <Loader
               size={32}
               className="animate-spin"
-              style={{ color: "var(--bru-purple)" }}
+              style={{ color: "var(--drp-purple)" }}
             />
             <p>{aiProgress?.step ?? "Generating your post..."}</p>
             {aiProgress && (
@@ -231,13 +231,13 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
                   style={{
                     width: `${aiProgress.percent}%`,
                     height: "100%",
-                    background: "var(--bru-purple)",
+                    background: "var(--drp-purple)",
                     transition: "width 300ms ease",
                   }}
                 />
               </div>
             )}
-            <p style={{ fontSize: "var(--bru-text-sm)" }}>
+            <p style={{ fontSize: "var(--drp-text-sm)" }}>
               Using {aiSettings.activeProvider}
             </p>
           </div>
@@ -247,10 +247,10 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
               style={{
                 display: "flex",
                 alignItems: "center",
-                fontSize: "var(--bru-text-sm)",
-                color: "var(--bru-grey)",
-                marginBottom: "var(--bru-space-2)",
-                gap: "var(--bru-space-1)",
+                fontSize: "var(--drp-text-sm)",
+                color: "var(--drp-grey)",
+                marginBottom: "var(--drp-space-2)",
+                gap: "var(--drp-space-1)",
               }}
             >
               <Clock size={14} /> {estimatedReadTime} min read
@@ -261,18 +261,18 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
                 width: "100%",
                 minHeight: 256,
                 resize: "vertical",
-                padding: "var(--bru-space-4)",
+                padding: "var(--drp-space-4)",
                 border: isContentSelected
-                  ? "2px solid var(--bru-purple)"
-                  : "var(--bru-border)",
+                  ? "2px solid var(--drp-purple)"
+                  : "var(--drp-border)",
                 boxShadow: isContentSelected
-                  ? "3px 3px 0 0 var(--bru-purple)"
-                  : "var(--bru-shadow-sm)",
-                background: "var(--bru-white)",
-                fontFamily: "var(--bru-font-mono)",
-                fontSize: "var(--bru-text-md)",
-                lineHeight: "var(--bru-leading-loose)",
-                color: "var(--bru-black)",
+                  ? "3px 3px 0 0 var(--drp-purple)"
+                  : "var(--drp-shadow-sm)",
+                background: "var(--drp-white)",
+                fontFamily: "var(--drp-font-mono)",
+                fontSize: "var(--drp-text-md)",
+                lineHeight: "var(--drp-leading-loose)",
+                color: "var(--drp-black)",
                 outline: "none",
               }}
               value={generatedContent}
@@ -282,8 +282,8 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
               }}
             />
             <div
-              className="bru-form-actions"
-              style={{ marginTop: "var(--bru-space-3)" }}
+              className="drp-form-actions"
+              style={{ marginTop: "var(--drp-space-3)" }}
             >
               <Button size="sm" onClick={() => copyToClipboard()}>
                 <Copy size={14} />
@@ -299,12 +299,12 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
           <div
             style={{
               minHeight: 256,
-              border: "2px dashed var(--bru-grey-85)",
+              border: "2px dashed var(--drp-grey-85)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "var(--bru-grey)",
-              padding: "var(--bru-space-6)",
+              color: "var(--drp-grey)",
+              padding: "var(--drp-space-6)",
               textAlign: "center",
             }}
           >

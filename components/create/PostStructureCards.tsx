@@ -306,7 +306,7 @@ function PostPreview({ structureId }: { structureId: string }) {
                     fontSize: 12,
                     lineHeight: 1.6,
                     color: "#1a1a1a",
-                    fontFamily: "var(--bru-font-mono, monospace)",
+                    fontFamily: "var(--drp-font-mono, monospace)",
                   }}
                 >
                   {line}
@@ -380,7 +380,7 @@ export default function PostStructureCards({
                 gap: 6,
                 padding: "14px 10px 10px",
                 border: isSelected
-                  ? "2px solid var(--bru-purple, #631DED)"
+                  ? "2px solid var(--drp-purple, #631DED)"
                   : isPreviewing
                     ? "2px solid rgba(99,29,237,0.3)"
                     : "2px solid rgba(0,0,0,0.1)",
@@ -398,8 +398,8 @@ export default function PostStructureCards({
               <span
                 style={{
                   color: isSelected
-                    ? "var(--bru-purple, #631DED)"
-                    : "var(--bru-grey, #888)",
+                    ? "var(--drp-purple, #631DED)"
+                    : "var(--drp-grey, #888)",
                 }}
               >
                 {ICONS[option.id] ?? <FileText size={20} />}
@@ -408,7 +408,7 @@ export default function PostStructureCards({
                 style={{
                   fontWeight: isSelected ? 700 : 600,
                   fontSize: 13,
-                  color: isSelected ? "var(--bru-purple, #631DED)" : "inherit",
+                  color: isSelected ? "var(--drp-purple, #631DED)" : "inherit",
                 }}
               >
                 {option.label}
@@ -416,7 +416,7 @@ export default function PostStructureCards({
               <span
                 style={{
                   fontSize: 11,
-                  color: "var(--bru-grey, #888)",
+                  color: "var(--drp-grey, #888)",
                   lineHeight: 1.3,
                 }}
               >

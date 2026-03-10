@@ -2,7 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Alert, Button, Card, Input, Loader } from "@bruddle/react";
+import { Alert, Button, Card, Input, Loader } from "@doctorproject/react";
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams();
@@ -73,7 +73,7 @@ function ResetPasswordContent() {
   return (
     <div
       className="flex items-center justify-center min-h-screen"
-      style={{ background: "var(--bru-cream)" }}
+      style={{ background: "var(--drp-cream)" }}
     >
       <Card
         variant="raised"
@@ -125,12 +125,12 @@ function ResetPasswordContent() {
         )}
 
         {message && (
-          <div style={{ marginTop: "var(--bru-space-4)" }}>
+          <div style={{ marginTop: "var(--drp-space-4)" }}>
             <Alert variant="success">{message}</Alert>
           </div>
         )}
         {error && (
-          <div style={{ marginTop: "var(--bru-space-4)" }}>
+          <div style={{ marginTop: "var(--drp-space-4)" }}>
             <Alert variant="error">{error}</Alert>
           </div>
         )}
@@ -138,7 +138,7 @@ function ResetPasswordContent() {
         <button
           onClick={() => router.push("/login")}
           className="mt-4 text-sm font-medium hover:underline"
-          style={{ color: "var(--bru-purple)" }}
+          style={{ color: "var(--drp-purple)" }}
         >
           Back to login
         </button>
@@ -154,7 +154,7 @@ export default function ResetPasswordPage() {
         <div
           style={{
             minHeight: "100vh",
-            background: "var(--bru-cream)",
+            background: "var(--drp-cream)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

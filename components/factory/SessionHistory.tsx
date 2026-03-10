@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { Clock, Trash2, Play, RotateCcw } from "lucide-react";
 import {
   listSessions as listLocalSessions,
@@ -108,26 +108,26 @@ export function SessionHistory({
   const displayed = expanded ? sessions : sessions.slice(0, 3);
 
   return (
-    <Card variant="raised" style={{ marginBottom: "var(--bru-space-4)" }}>
+    <Card variant="raised" style={{ marginBottom: "var(--drp-space-4)" }}>
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "var(--bru-space-3)",
+          marginBottom: "var(--drp-space-3)",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
-          <Clock size={16} style={{ color: "var(--bru-grey)" }} />
+          <Clock size={16} style={{ color: "var(--drp-grey)" }} />
           <h4
             style={{
-              fontSize: "var(--bru-text-md)",
+              fontSize: "var(--drp-text-md)",
               fontWeight: 700,
               margin: 0,
             }}
@@ -136,8 +136,8 @@ export function SessionHistory({
           </h4>
           <span
             style={{
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-grey)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-grey)",
             }}
           >
             ({sessions.length})
@@ -145,17 +145,17 @@ export function SessionHistory({
         </div>
       </div>
 
-      <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
+      <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
         {displayed.map((session) => (
           <div
             key={session.id}
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--bru-space-3)",
-              padding: "var(--bru-space-2) var(--bru-space-3)",
-              border: "var(--bru-border)",
-              fontSize: "var(--bru-text-sm)",
+              gap: "var(--drp-space-3)",
+              padding: "var(--drp-space-2) var(--drp-space-3)",
+              border: "var(--drp-border)",
+              fontSize: "var(--drp-text-sm)",
             }}
           >
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -171,10 +171,10 @@ export function SessionHistory({
               </div>
               <div
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-grey)",
+                  fontSize: "var(--drp-text-xs)",
+                  color: "var(--drp-grey)",
                   display: "flex",
-                  gap: "var(--bru-space-2)",
+                  gap: "var(--drp-space-2)",
                 }}
               >
                 <span>{formatDate(session.updatedAt)}</span>
@@ -253,7 +253,7 @@ export function SessionHistory({
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 flexShrink: 0,
                 padding: 4,
               }}
@@ -269,12 +269,12 @@ export function SessionHistory({
         <button
           onClick={() => setExpanded(!expanded)}
           style={{
-            marginTop: "var(--bru-space-2)",
+            marginTop: "var(--drp-space-2)",
             background: "none",
             border: "none",
             cursor: "pointer",
-            fontSize: "var(--bru-text-xs)",
-            color: "var(--bru-purple)",
+            fontSize: "var(--drp-text-xs)",
+            color: "var(--drp-purple)",
             textDecoration: "underline",
           }}
         >

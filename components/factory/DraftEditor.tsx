@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import { Card } from "@bruddle/react";
+import { Card } from "@doctorproject/react";
 import { Layers, FileText } from "lucide-react";
 import type { GuardrailResult } from "@/lib/knowledge/types";
 import type { WriterOutput } from "@/lib/agents/writer";
@@ -168,12 +168,12 @@ export function DraftEditor({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         <h3
           style={{
-            fontSize: "var(--bru-text-h5)",
+            fontSize: "var(--drp-text-h5)",
             fontWeight: 700,
             margin: 0,
           }}
@@ -183,7 +183,7 @@ export function DraftEditor({
         <div
           style={{
             display: "flex",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
             alignItems: "center",
           }}
         >
@@ -195,10 +195,10 @@ export function DraftEditor({
               alignItems: "center",
               gap: 4,
               padding: "2px 8px",
-              fontSize: "var(--bru-text-xs)",
-              background: showStructure ? "var(--bru-purple)" : "transparent",
-              color: showStructure ? "white" : "var(--bru-grey)",
-              border: "1px solid var(--bru-border-color, #e0e0e0)",
+              fontSize: "var(--drp-text-xs)",
+              background: showStructure ? "var(--drp-purple)" : "transparent",
+              color: showStructure ? "white" : "var(--drp-grey)",
+              border: "1px solid var(--drp-border-color, #e0e0e0)",
               cursor: "pointer",
             }}
           >
@@ -208,8 +208,8 @@ export function DraftEditor({
           {rewriteCount > 0 && (
             <span
               style={{
-                fontSize: "var(--bru-text-xs)",
-                color: "var(--bru-grey)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-grey)",
               }}
             >
               Rewrite #{rewriteCount}
@@ -217,8 +217,8 @@ export function DraftEditor({
           )}
           <span
             style={{
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-grey)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-grey)",
             }}
           >
             {totalWords} words | {writerOutput.content.length} chars
@@ -230,9 +230,9 @@ export function DraftEditor({
       {writerOutput.template && (
         <div
           style={{
-            fontSize: "var(--bru-text-xs)",
-            color: "var(--bru-grey)",
-            marginBottom: "var(--bru-space-2)",
+            fontSize: "var(--drp-text-xs)",
+            color: "var(--drp-grey)",
+            marginBottom: "var(--drp-space-2)",
           }}
         >
           Template: <strong>{writerOutput.template}</strong>
@@ -245,7 +245,7 @@ export function DraftEditor({
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 160px",
-            gap: "var(--bru-space-3)",
+            gap: "var(--drp-space-3)",
           }}
         >
           {/* Content with structure markers */}
@@ -253,28 +253,28 @@ export function DraftEditor({
             style={{
               maxHeight: 500,
               overflow: "auto",
-              border: "var(--bru-border)",
+              border: "var(--drp-border)",
             }}
           >
             {sections.map((section, i) => (
               <div
                 key={i}
                 style={{
-                  padding: "var(--bru-space-3)",
+                  padding: "var(--drp-space-3)",
                   background: section.bg,
                   borderLeft: `3px solid ${section.color}`,
                   borderBottom:
                     i < sections.length - 1
-                      ? "1px solid var(--bru-border-color, #e0e0e0)"
+                      ? "1px solid var(--drp-border-color, #e0e0e0)"
                       : "none",
                 }}
               >
                 <div
                   style={{
-                    fontSize: "var(--bru-text-xs)",
+                    fontSize: "var(--drp-text-xs)",
                     fontWeight: 700,
                     color: section.color,
-                    marginBottom: "var(--bru-space-1)",
+                    marginBottom: "var(--drp-space-1)",
                     textTransform: "uppercase",
                   }}
                 >
@@ -282,7 +282,7 @@ export function DraftEditor({
                 </div>
                 <pre
                   style={{
-                    fontSize: "var(--bru-text-sm)",
+                    fontSize: "var(--drp-text-sm)",
                     whiteSpace: "pre-wrap",
                     wordWrap: "break-word",
                     lineHeight: 1.6,
@@ -299,16 +299,16 @@ export function DraftEditor({
           {/* Side panel breakdown */}
           <div
             style={{
-              border: "var(--bru-border)",
-              padding: "var(--bru-space-2)",
-              fontSize: "var(--bru-text-xs)",
+              border: "var(--drp-border)",
+              padding: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-xs)",
             }}
           >
             <div
               style={{
                 fontWeight: 700,
-                marginBottom: "var(--bru-space-2)",
-                fontSize: "var(--bru-text-sm)",
+                marginBottom: "var(--drp-space-2)",
+                fontSize: "var(--drp-text-sm)",
               }}
             >
               Structure
@@ -320,10 +320,10 @@ export function DraftEditor({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  padding: "var(--bru-space-1) 0",
+                  padding: "var(--drp-space-1) 0",
                   borderBottom:
                     i < sections.length - 1
-                      ? "1px solid var(--bru-border-color, #e0e0e0)"
+                      ? "1px solid var(--drp-border-color, #e0e0e0)"
                       : "none",
                 }}
               >
@@ -335,16 +335,16 @@ export function DraftEditor({
                 >
                   {section.label}
                 </span>
-                <span style={{ color: "var(--bru-grey)" }}>
+                <span style={{ color: "var(--drp-grey)" }}>
                   {section.wordCount}w
                 </span>
               </div>
             ))}
             <div
               style={{
-                marginTop: "var(--bru-space-2)",
-                paddingTop: "var(--bru-space-2)",
-                borderTop: "2px solid var(--bru-border-color, #e0e0e0)",
+                marginTop: "var(--drp-space-2)",
+                paddingTop: "var(--drp-space-2)",
+                borderTop: "2px solid var(--drp-border-color, #e0e0e0)",
                 display: "flex",
                 justifyContent: "space-between",
                 fontWeight: 700,
@@ -359,10 +359,10 @@ export function DraftEditor({
         /* Plain text view */
         <pre
           style={{
-            fontSize: "var(--bru-text-sm)",
-            background: "var(--bru-cream)",
-            padding: "var(--bru-space-4)",
-            border: "var(--bru-border)",
+            fontSize: "var(--drp-text-sm)",
+            background: "var(--drp-cream)",
+            padding: "var(--drp-space-4)",
+            border: "var(--drp-border)",
             whiteSpace: "pre-wrap",
             wordWrap: "break-word",
             lineHeight: 1.6,

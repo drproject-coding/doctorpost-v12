@@ -71,9 +71,9 @@ describe("PostEditorModal", () => {
       />,
     );
 
-    // Close button renders with class "bru-modal__close" and has no accessible text name
+    // Close button renders with class "drp-modal__close" and has no accessible text name
     const closeButton = document.querySelector(
-      ".bru-modal__close",
+      ".drp-modal__close",
     ) as HTMLElement;
     fireEvent.click(closeButton);
 

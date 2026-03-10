@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { Button, EmptyState } from "@bruddle/react";
+import { Button, EmptyState } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import {
@@ -241,12 +241,12 @@ export default function CampaignsPage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: "var(--bru-space-6)",
+            marginBottom: "var(--drp-space-6)",
           }}
         >
           <h1
             style={{
-              fontSize: "var(--bru-text-h3)",
+              fontSize: "var(--drp-text-h3)",
               fontWeight: 700,
               margin: 0,
             }}
@@ -272,14 +272,14 @@ export default function CampaignsPage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: "var(--bru-space-6)",
+            marginBottom: "var(--drp-space-6)",
           }}
         >
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--bru-space-3)",
+              gap: "var(--drp-space-3)",
             }}
           >
             <Button variant="ghost" onClick={handleBackToList}>
@@ -287,7 +287,7 @@ export default function CampaignsPage() {
             </Button>
             <h1
               style={{
-                fontSize: "var(--bru-text-h3)",
+                fontSize: "var(--drp-text-h3)",
                 fontWeight: 700,
                 margin: 0,
               }}
@@ -322,14 +322,14 @@ export default function CampaignsPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-6)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-3)",
+            gap: "var(--drp-space-3)",
           }}
         >
           <Button variant="ghost" onClick={handleBackToList}>
@@ -337,7 +337,7 @@ export default function CampaignsPage() {
           </Button>
           <h1
             style={{
-              fontSize: "var(--bru-text-h3)",
+              fontSize: "var(--drp-text-h3)",
               fontWeight: 700,
               margin: 0,
             }}
@@ -350,7 +350,7 @@ export default function CampaignsPage() {
       {phase === "idle" && <CampaignSetup onSubmit={handleSubmit} />}
 
       {phase !== "idle" && (
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <BatchProgress
             phase={phase}
             slotsPlanned={slots.length}

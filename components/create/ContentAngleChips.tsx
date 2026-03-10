@@ -30,12 +30,12 @@ export default function ContentAngleChips({
               fontSize: 13,
               fontWeight: isSelected ? 700 : 500,
               border: isSelected
-                ? "2px solid var(--bru-purple, #631DED)"
+                ? "2px solid var(--drp-purple, #631DED)"
                 : isSuggested
-                  ? "2px dashed var(--bru-purple, #631DED)"
+                  ? "2px dashed var(--drp-purple, #631DED)"
                   : "2px solid rgba(0,0,0,0.12)",
               background: isSelected
-                ? "var(--bru-purple, #631DED)"
+                ? "var(--drp-purple, #631DED)"
                 : "transparent",
               color: isSelected ? "#fff" : "inherit",
               cursor: "pointer",
@@ -52,7 +52,7 @@ export default function ContentAngleChips({
                   right: -6,
                   fontSize: 9,
                   fontWeight: 800,
-                  background: "var(--bru-purple, #631DED)",
+                  background: "var(--drp-purple, #631DED)",
                   color: "#fff",
                   padding: "1px 5px",
                   textTransform: "uppercase",

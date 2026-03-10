@@ -1,0 +1,80 @@
+/* ============================================================
+   DOCTORPROJECT DESIGN SYSTEM — TABLES
+   ============================================================ */
+
+/* ──────────────────────────────────────────────
+   TABLE
+   ────────────────────────────────────────────── */
+
+.drp-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: var(--drp-border);
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-sm);
+}
+
+.drp-table th {
+  padding: var(--drp-space-3) var(--drp-space-4);
+  text-align: left;
+  font-weight: var(--drp-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--drp-tracking-wide);
+  font-size: var(--drp-text-xs);
+  color: var(--drp-grey);
+  background: rgba(0, 0, 0, 0.02);
+  border-bottom: var(--drp-border);
+}
+
+.drp-table td {
+  padding: var(--drp-space-3) var(--drp-space-4);
+  border-bottom: var(--drp-border-thin);
+  color: var(--drp-black);
+}
+
+.drp-table tr:last-child td {
+  border-bottom: none;
+}
+
+.drp-table tr:hover td {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+body.dark-mode .drp-table th {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ──────────────────────────────────────────────
+   TABLE SCROLL WRAPPER
+   Used by Table.tsx — wraps drp-table for horizontal scrolling on small viewports.
+   Usage: <div class="drp-table-scroll"><table class="drp-table">...</table></div>
+   ────────────────────────────────────────────── */
+
+.drp-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+/* ──────────────────────────────────────────────
+   RESPONSIVE — TABLES
+   ────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .drp-table th,
+  .drp-table td {
+    padding: var(--drp-space-2) var(--drp-space-3);
+  }
+}
+
+@media (max-width: 390px) {
+  .drp-table {
+    font-size: var(--drp-text-xs);
+  }
+
+  .drp-table th,
+  .drp-table td {
+    padding: var(--drp-space-2);
+  }
+}

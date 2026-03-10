@@ -19,17 +19,17 @@ export function CampaignFilters({
       style={{
         display: "flex",
         alignItems: "center",
-        gap: "var(--bru-space-2)",
+        gap: "var(--drp-space-2)",
         flexWrap: "wrap",
-        marginBottom: "var(--bru-space-3)",
+        marginBottom: "var(--drp-space-3)",
       }}
     >
       <span
         style={{
-          fontSize: "var(--bru-text-xs)",
+          fontSize: "var(--drp-text-xs)",
           fontWeight: 700,
           textTransform: "uppercase",
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
         }}
       >
         Pillar:
@@ -38,12 +38,12 @@ export function CampaignFilters({
         onClick={() => onPillarClick(null)}
         style={{
           padding: "2px 8px",
-          fontSize: "var(--bru-text-xs)",
+          fontSize: "var(--drp-text-xs)",
           fontWeight: activePillar === null ? 700 : 400,
           background:
-            activePillar === null ? "var(--bru-black, #000)" : "transparent",
-          color: activePillar === null ? "#fff" : "var(--bru-grey)",
-          border: "var(--bru-border)",
+            activePillar === null ? "var(--drp-black, #000)" : "transparent",
+          color: activePillar === null ? "#fff" : "var(--drp-grey)",
+          border: "var(--drp-border)",
           cursor: "pointer",
         }}
       >
@@ -57,11 +57,11 @@ export function CampaignFilters({
             onClick={() => onPillarClick(isActive ? null : p)}
             style={{
               padding: "2px 8px",
-              fontSize: "var(--bru-text-xs)",
+              fontSize: "var(--drp-text-xs)",
               fontWeight: isActive ? 700 : 400,
-              background: isActive ? "var(--bru-black, #000)" : "transparent",
-              color: isActive ? "#fff" : "var(--bru-grey)",
-              border: "var(--bru-border)",
+              background: isActive ? "var(--drp-black, #000)" : "transparent",
+              color: isActive ? "#fff" : "var(--drp-grey)",
+              border: "var(--drp-border)",
               cursor: "pointer",
             }}
           >

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Loader as LucideLoader } from "lucide-react";
-import { Loader, Alert } from "@bruddle/react";
+import { Loader, Alert } from "@doctorproject/react";
 import {
   getBrandProfile,
   updateBrandProfile,
@@ -168,13 +168,13 @@ export default function BrandPage() {
         <div className="flex items-start justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-1">Brand</h1>
-            <p style={{ color: "var(--bru-grey)", fontWeight: 500 }}>
+            <p style={{ color: "var(--drp-grey)", fontWeight: 500 }}>
               Your brand identity, voice, and strategy in one place.
             </p>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <button
-              className="bru-btn bru-btn--primary bru-btn--sm"
+              className="drp-btn drp-btn--primary drp-btn--sm"
               onClick={() => void handleAudit()}
               disabled={auditing || !aiSettings}
             >
@@ -182,7 +182,7 @@ export default function BrandPage() {
             </button>
             <div style={{ position: "relative" }} ref={exportRef}>
               <button
-                className="bru-btn bru-btn--secondary bru-btn--sm"
+                className="drp-btn drp-btn--secondary drp-btn--sm"
                 onClick={() => setExportOpen((o) => !o)}
               >
                 Export ↓

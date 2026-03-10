@@ -48,8 +48,8 @@ const BrandSection: React.FC<BrandSectionProps> = ({
     <div
       style={{
         borderLeft: `3px solid ${color}`,
-        background: "var(--bru-white)",
-        border: "var(--bru-border-thin)",
+        background: "var(--drp-white)",
+        border: "var(--drp-border-thin)",
         borderLeftColor: color,
         borderLeftWidth: "3px",
         borderLeftStyle: "solid",
@@ -71,11 +71,11 @@ const BrandSection: React.FC<BrandSectionProps> = ({
             backgroundColor: `${color}1A`,
             color: color,
             padding: "2px 8px",
-            fontSize: "var(--bru-text-xs)",
-            fontWeight: "var(--bru-weight-heavy)",
-            letterSpacing: "var(--bru-tracking-caps)",
+            fontSize: "var(--drp-text-xs)",
+            fontWeight: "var(--drp-weight-heavy)",
+            letterSpacing: "var(--drp-tracking-caps)",
             textTransform: "uppercase" as const,
-            fontFamily: "var(--bru-font-primary)",
+            fontFamily: "var(--drp-font-primary)",
             flexShrink: 0,
           }}
         >
@@ -85,10 +85,10 @@ const BrandSection: React.FC<BrandSectionProps> = ({
         {/* Title */}
         <span
           style={{
-            fontFamily: "var(--bru-font-primary)",
-            fontWeight: "var(--bru-weight-bold)",
-            fontSize: "var(--bru-text-lg)",
-            color: "var(--bru-black)",
+            fontFamily: "var(--drp-font-primary)",
+            fontWeight: "var(--drp-weight-bold)",
+            fontSize: "var(--drp-text-lg)",
+            color: "var(--drp-black)",
             flex: 1,
           }}
         >
@@ -100,7 +100,7 @@ const BrandSection: React.FC<BrandSectionProps> = ({
           {!editing && onAiGenerate && (
             <button
               type="button"
-              className="bru-btn bru-btn--sm bru-btn--ghost bru-btn--purple"
+              className="drp-btn drp-btn--sm drp-btn--ghost drp-btn--purple"
               onClick={handleAiGenerate}
               disabled={aiLoading}
               aria-label="AI Generate"
@@ -117,7 +117,7 @@ const BrandSection: React.FC<BrandSectionProps> = ({
           {!editing && (
             <button
               type="button"
-              className="bru-btn bru-btn--sm bru-btn--outline"
+              className="drp-btn drp-btn--sm drp-btn--outline"
               onClick={handleEdit}
               aria-label="Edit section"
             >
@@ -130,7 +130,7 @@ const BrandSection: React.FC<BrandSectionProps> = ({
             <>
               <button
                 type="button"
-                className="bru-btn bru-btn--sm bru-btn--ghost"
+                className="drp-btn drp-btn--sm drp-btn--ghost"
                 onClick={handleCancel}
                 disabled={saving}
                 aria-label="Cancel editing"
@@ -140,7 +140,7 @@ const BrandSection: React.FC<BrandSectionProps> = ({
               </button>
               <button
                 type="button"
-                className="bru-btn bru-btn--sm bru-btn--primary"
+                className="drp-btn drp-btn--sm drp-btn--primary"
                 onClick={handleSave}
                 disabled={saving}
                 aria-label="Save section"

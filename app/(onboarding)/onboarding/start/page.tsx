@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { Upload, Wand2 } from "lucide-react";
 
 interface OptionCardProps {
@@ -22,7 +22,7 @@ function OptionCard({
   return (
     <div
       style={{
-        border: "2px solid var(--bru-black)",
+        border: "2px solid var(--drp-black)",
         borderRadius: 0,
         padding: "32px 28px",
         flex: 1,
@@ -30,7 +30,7 @@ function OptionCard({
         display: "flex",
         flexDirection: "column",
         gap: "20px",
-        backgroundColor: "var(--bru-cream)",
+        backgroundColor: "var(--drp-cream)",
         cursor: "pointer",
         transition: "background-color 0.15s ease",
       }}
@@ -39,11 +39,11 @@ function OptionCard({
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLDivElement).style.backgroundColor =
-          "var(--bru-cream)";
+          "var(--drp-cream)";
       }}
       onClick={onClick}
     >
-      <div style={{ color: "var(--bru-purple)" }}>{icon}</div>
+      <div style={{ color: "var(--drp-purple)" }}>{icon}</div>
       <div
         style={{
           display: "flex",
@@ -57,7 +57,7 @@ function OptionCard({
             margin: 0,
             fontSize: "20px",
             fontWeight: 700,
-            color: "var(--bru-black)",
+            color: "var(--drp-black)",
             lineHeight: 1.2,
           }}
         >
@@ -67,7 +67,7 @@ function OptionCard({
           style={{
             margin: 0,
             fontSize: "15px",
-            color: "var(--bru-grey)",
+            color: "var(--drp-grey)",
             lineHeight: 1.55,
           }}
         >
@@ -96,7 +96,7 @@ export default function OnboardingStartPage() {
     <main
       style={{
         minHeight: "100vh",
-        backgroundColor: "var(--bru-cream)",
+        backgroundColor: "var(--drp-cream)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -118,7 +118,7 @@ export default function OnboardingStartPage() {
               margin: "0 0 12px",
               fontSize: "clamp(24px, 4vw, 34px)",
               fontWeight: 800,
-              color: "var(--bru-black)",
+              color: "var(--drp-black)",
               lineHeight: 1.15,
             }}
           >
@@ -128,7 +128,7 @@ export default function OnboardingStartPage() {
             style={{
               margin: 0,
               fontSize: "16px",
-              color: "var(--bru-grey)",
+              color: "var(--drp-grey)",
               lineHeight: 1.5,
             }}
           >
@@ -168,18 +168,18 @@ export default function OnboardingStartPage() {
               border: "none",
               cursor: "pointer",
               fontSize: "14px",
-              color: "var(--bru-grey)",
+              color: "var(--drp-grey)",
               padding: "4px 0",
               textDecoration: "none",
               transition: "color 0.15s ease",
             }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLButtonElement).style.color =
-                "var(--bru-black)";
+                "var(--drp-black)";
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLButtonElement).style.color =
-                "var(--bru-grey)";
+                "var(--drp-grey)";
             }}
           >
             Skip for now &rarr;

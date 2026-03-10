@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { X, Eye, Loader } from "lucide-react";
 import { resolvePromptTemplate } from "@/lib/knowledge/resolvePromptTemplate";
 
@@ -62,14 +62,14 @@ export function TonePromptPreviewModal({
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: "var(--bru-space-4)",
+            marginBottom: "var(--drp-space-4)",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <Eye size={18} />
             <h3
               style={{
-                fontSize: "var(--bru-text-h5)",
+                fontSize: "var(--drp-text-h5)",
                 fontWeight: 700,
                 margin: 0,
               }}
@@ -88,8 +88,8 @@ export function TonePromptPreviewModal({
             <div
               style={{
                 textAlign: "center",
-                padding: "var(--bru-space-8)",
-                color: "var(--bru-grey)",
+                padding: "var(--drp-space-8)",
+                color: "var(--drp-grey)",
               }}
             >
               <Loader size={24} className="animate-spin" />
@@ -100,11 +100,11 @@ export function TonePromptPreviewModal({
                 whiteSpace: "pre-wrap",
                 wordBreak: "break-word",
                 fontFamily: "monospace",
-                fontSize: "var(--bru-text-sm)",
+                fontSize: "var(--drp-text-sm)",
                 lineHeight: 1.6,
-                padding: "var(--bru-space-4)",
+                padding: "var(--drp-space-4)",
                 background: "#f5f5f5",
-                border: "var(--bru-border)",
+                border: "var(--drp-border)",
                 margin: 0,
               }}
             >
@@ -114,8 +114,8 @@ export function TonePromptPreviewModal({
             <p
               style={{
                 textAlign: "center",
-                padding: "var(--bru-space-6)",
-                color: "var(--bru-grey)",
+                padding: "var(--drp-space-6)",
+                color: "var(--drp-grey)",
               }}
             >
               No system prompt template found for this tone. Visit Knowledge
@@ -127,9 +127,9 @@ export function TonePromptPreviewModal({
         {/* Footer */}
         <div
           style={{
-            marginTop: "var(--bru-space-4)",
-            fontSize: "var(--bru-text-xs)",
-            color: "var(--bru-grey)",
+            marginTop: "var(--drp-space-4)",
+            fontSize: "var(--drp-text-xs)",
+            color: "var(--drp-grey)",
           }}
         >
           Variables like {"{{brand.name}}"} are replaced with your brand profile

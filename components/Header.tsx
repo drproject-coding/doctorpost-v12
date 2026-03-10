@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Menu, Bell, Plus, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
-import { Button } from "@bruddle/react";
+import { Button } from "@doctorproject/react";
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -29,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
     <header className="topbar">
       <div className="topbar-left">
         <button
-          className="topbar-menu-btn bru-btn bru-btn--ghost bru-btn--icon"
+          className="topbar-menu-btn drp-btn drp-btn--ghost drp-btn--icon"
           onClick={onToggleSidebar}
         >
           <Menu size={20} />
@@ -37,13 +37,13 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
         <h1 className="topbar-title">{title}</h1>
       </div>
       <div className="topbar-right">
-        <button className="topbar-icon-btn bru-btn bru-btn--ghost bru-btn--icon">
+        <button className="topbar-icon-btn drp-btn drp-btn--ghost drp-btn--icon">
           <Bell size={20} />
           <span className="notification-dot" />
         </button>
         <button
           onClick={() => void logout()}
-          className="topbar-icon-btn bru-btn bru-btn--ghost bru-btn--icon"
+          className="topbar-icon-btn drp-btn drp-btn--ghost drp-btn--icon"
           title="Sign out"
         >
           <LogOut size={20} />

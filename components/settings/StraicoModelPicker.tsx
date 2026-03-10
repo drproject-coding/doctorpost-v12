@@ -1,7 +1,7 @@
 "use client";
 import type React from "react";
 import { useState, useMemo } from "react";
-import { Select } from "@bruddle/react";
+import { Select } from "@doctorproject/react";
 import {
   Search,
   Star,
@@ -65,8 +65,8 @@ function FeatureBadge({ label }: { label: string }) {
         alignItems: "center",
         gap: 4,
         padding: "2px 6px",
-        background: "var(--bru-purple-20)",
-        color: "var(--bru-purple)",
+        background: "var(--drp-purple-20)",
+        color: "var(--drp-purple)",
         fontSize: 10,
         fontWeight: 700,
         textTransform: "uppercase",
@@ -149,15 +149,15 @@ export function StraicoModelPicker({
     borderStyle: "solid",
     borderColor: "rgba(0,0,0,0.15)",
     cursor: "pointer",
-    background: "var(--bru-white)",
-    color: "var(--bru-black)",
+    background: "var(--drp-white)",
+    color: "var(--drp-black)",
   };
 
   const chipActive: React.CSSProperties = {
     ...chipBase,
-    borderColor: "var(--bru-purple)",
-    background: "var(--bru-purple)",
-    color: "var(--bru-white)",
+    borderColor: "var(--drp-purple)",
+    background: "var(--drp-purple)",
+    color: "var(--drp-white)",
   };
 
   return (
@@ -165,7 +165,7 @@ export function StraicoModelPicker({
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: "var(--bru-space-3)",
+        gap: "var(--drp-space-3)",
       }}
     >
       {/* Account Bar */}
@@ -174,8 +174,8 @@ export function StraicoModelPicker({
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-3)",
-            padding: "var(--bru-space-2)",
+            gap: "var(--drp-space-3)",
+            padding: "var(--drp-space-2)",
             background: "rgba(217, 119, 6, 0.08)",
             border: "1px solid rgba(217, 119, 6, 0.25)",
           }}
@@ -205,7 +205,7 @@ export function StraicoModelPicker({
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "var(--bru-space-2)",
+          gap: "var(--drp-space-2)",
         }}
       >
         <div style={{ position: "relative" }}>
@@ -216,7 +216,7 @@ export function StraicoModelPicker({
               left: 10,
               top: "50%",
               transform: "translateY(-50%)",
-              color: "var(--bru-grey)",
+              color: "var(--drp-grey)",
             }}
           />
           <input
@@ -224,7 +224,7 @@ export function StraicoModelPicker({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search models..."
-            className="bru-input"
+            className="drp-input"
             style={{ width: "100%", paddingLeft: 32, fontSize: 12 }}
           />
         </div>
@@ -274,10 +274,10 @@ export function StraicoModelPicker({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "var(--bru-space-4) 0",
-            gap: "var(--bru-space-2)",
+            padding: "var(--drp-space-4) 0",
+            gap: "var(--drp-space-2)",
             fontSize: 12,
-            color: "var(--bru-grey)",
+            color: "var(--drp-grey)",
           }}
         >
           <Loader size={14} className="animate-spin" />
@@ -310,13 +310,13 @@ export function StraicoModelPicker({
                   textAlign: "left",
                   padding: 10,
                   border: isSelected
-                    ? "2px solid var(--bru-purple)"
-                    : "var(--bru-border)",
+                    ? "2px solid var(--drp-purple)"
+                    : "var(--drp-border)",
                   background: isSelected
                     ? "rgba(99, 29, 237, 0.05)"
-                    : "var(--bru-white)",
+                    : "var(--drp-white)",
                   cursor: "pointer",
-                  fontFamily: "var(--bru-font-primary)",
+                  fontFamily: "var(--drp-font-primary)",
                 }}
               >
                 <div
@@ -378,7 +378,7 @@ export function StraicoModelPicker({
                         gap: 12,
                         marginTop: 4,
                         fontSize: 10,
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       {model.pricing && (
@@ -423,7 +423,7 @@ export function StraicoModelPicker({
                       <p
                         style={{
                           fontSize: 10,
-                          color: "var(--bru-grey)",
+                          color: "var(--drp-grey)",
                           marginTop: 4,
                           lineHeight: 1.4,
                           overflow: "hidden",
@@ -483,14 +483,14 @@ export function StraicoModelPicker({
                     gap: 4,
                     padding: "4px 0",
                     fontSize: 10,
-                    color: "var(--bru-purple)",
+                    color: "var(--drp-purple)",
                     fontWeight: 700,
-                    borderLeft: "2px solid var(--bru-purple)",
-                    borderRight: "2px solid var(--bru-purple)",
-                    borderBottom: "2px solid var(--bru-purple)",
+                    borderLeft: "2px solid var(--drp-purple)",
+                    borderRight: "2px solid var(--drp-purple)",
+                    borderBottom: "2px solid var(--drp-purple)",
                     background: "rgba(99, 29, 237, 0.05)",
                     cursor: "pointer",
-                    fontFamily: "var(--bru-font-primary)",
+                    fontFamily: "var(--drp-font-primary)",
                   }}
                 >
                   {isExpanded ? (
@@ -508,9 +508,9 @@ export function StraicoModelPicker({
               {isSelected && isExpanded && (
                 <div
                   style={{
-                    borderLeft: "2px solid var(--bru-purple)",
-                    borderRight: "2px solid var(--bru-purple)",
-                    borderBottom: "2px solid var(--bru-purple)",
+                    borderLeft: "2px solid var(--drp-purple)",
+                    borderRight: "2px solid var(--drp-purple)",
+                    borderBottom: "2px solid var(--drp-purple)",
                     background: "rgba(99, 29, 237, 0.05)",
                     padding: "0 12px 12px",
                     display: "flex",
@@ -522,7 +522,7 @@ export function StraicoModelPicker({
                     <p
                       style={{
                         fontSize: 11,
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                         lineHeight: 1.4,
                       }}
                     >
@@ -530,7 +530,7 @@ export function StraicoModelPicker({
                     </p>
                   )}
                   {model.pricing && (
-                    <p style={{ fontSize: 11, color: "var(--bru-grey)" }}>
+                    <p style={{ fontSize: 11, color: "var(--drp-grey)" }}>
                       <Coins
                         size={11}
                         style={{
@@ -545,7 +545,7 @@ export function StraicoModelPicker({
                     </p>
                   )}
                   {!model.pricing && model.creditsPerInputToken != null && (
-                    <p style={{ fontSize: 11, color: "var(--bru-grey)" }}>
+                    <p style={{ fontSize: 11, color: "var(--drp-grey)" }}>
                       <Coins
                         size={11}
                         style={{
@@ -560,7 +560,7 @@ export function StraicoModelPicker({
                     </p>
                   )}
                   {model.maxTokens && (
-                    <p style={{ fontSize: 11, color: "var(--bru-grey)" }}>
+                    <p style={{ fontSize: 11, color: "var(--drp-grey)" }}>
                       This model supports up to{" "}
                       <strong>{model.maxTokens.max.toLocaleString()}</strong>{" "}
                       output tokens
@@ -597,7 +597,7 @@ export function StraicoModelPicker({
                             key={i}
                             style={{
                               fontSize: 11,
-                              color: "var(--bru-grey)",
+                              color: "var(--drp-grey)",
                               paddingLeft: 12,
                               position: "relative",
                             }}
@@ -648,7 +648,7 @@ export function StraicoModelPicker({
                             key={i}
                             style={{
                               fontSize: 11,
-                              color: "var(--bru-grey)",
+                              color: "var(--drp-grey)",
                               paddingLeft: 12,
                               position: "relative",
                             }}
@@ -678,9 +678,9 @@ export function StraicoModelPicker({
           <p
             style={{
               fontSize: 12,
-              color: "var(--bru-grey)",
+              color: "var(--drp-grey)",
               textAlign: "center",
-              padding: "var(--bru-space-4) 0",
+              padding: "var(--drp-space-4) 0",
             }}
           >
             No models match your filters
@@ -692,13 +692,13 @@ export function StraicoModelPicker({
       {selectedModel && (
         <div
           style={{
-            paddingTop: "var(--bru-space-2)",
-            borderTop: "var(--bru-border)",
+            paddingTop: "var(--drp-space-2)",
+            borderTop: "var(--drp-border)",
           }}
         >
-          <p style={{ fontSize: 10, color: "var(--bru-grey)" }}>
+          <p style={{ fontSize: 10, color: "var(--drp-grey)" }}>
             Selected:{" "}
-            <span style={{ fontWeight: 700, color: "var(--bru-black)" }}>
+            <span style={{ fontWeight: 700, color: "var(--drp-black)" }}>
               {selectedModel.label}
             </span>
             {selectedModel.pricing && (

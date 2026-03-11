@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Button } from "@doctorproject/react";
 import type { CampaignPostStatus } from "@/lib/knowledge/types";
 import { STATUS_CONFIG } from "./IdeaStatusBadge";
 
@@ -34,52 +35,38 @@ export function CampaignSummaryRow({
         marginBottom: "var(--drp-space-4)",
       }}
     >
-      <button
+      <Button
+        variant={
+          activeFilter === null || activeFilter === undefined
+            ? "dark"
+            : "ghost-bordered"
+        }
         onClick={() => onFilterClick(null)}
-        style={{
-          padding: "4px 12px",
-          fontSize: "var(--drp-text-sm)",
-          fontWeight:
-            activeFilter === null || activeFilter === undefined ? 700 : 500,
-          background:
-            activeFilter === null || activeFilter === undefined
-              ? "var(--drp-black, #000)"
-              : "transparent",
-          color:
-            activeFilter === null || activeFilter === undefined
-              ? "#fff"
-              : "var(--drp-grey)",
-          border: "var(--drp-border)",
-          cursor: "pointer",
-        }}
       >
         All {total}
-      </button>
+      </Button>
       {statuses.map((s) => {
         const cfg = STATUS_CONFIG[s];
         const count = counts[s] || 0;
         if (count === 0) return null;
         const isActive = activeFilter === s;
         return (
-          <button
+          <Button
             key={s}
+            variant="ghost-bordered"
             onClick={() => onFilterClick(isActive ? null : s)}
             style={{
-              padding: "4px 12px",
-              fontSize: "var(--drp-text-sm)",
-              fontWeight: isActive ? 700 : 500,
               background: isActive ? cfg.bg : "transparent",
               color: isActive
                 ? cfg.color
                 : cfg.bg === "#e0e0e0"
                   ? "#444"
                   : cfg.bg,
-              border: `1px solid ${cfg.bg === "#e0e0e0" ? "#ccc" : cfg.bg}`,
-              cursor: "pointer",
+              borderColor: cfg.bg === "#e0e0e0" ? "#ccc" : cfg.bg,
             }}
           >
             {cfg.label} {count}
-          </button>
+          </Button>
         );
       })}
     </div>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import { Card } from "@doctorproject/react";
+import { Button, Card } from "@doctorproject/react";
 import { Layers, FileText } from "lucide-react";
 import type { GuardrailResult } from "@/lib/knowledge/types";
 import type { WriterOutput } from "@/lib/agents/writer";
@@ -188,23 +188,14 @@ export function DraftEditor({
           }}
         >
           {/* Structure toggle */}
-          <button
+          <Button
+            size="sm"
+            variant={showStructure ? "primary" : "ghost"}
             onClick={() => setShowStructure(!showStructure)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-              padding: "2px 8px",
-              fontSize: "var(--drp-text-xs)",
-              background: showStructure ? "var(--drp-purple)" : "transparent",
-              color: showStructure ? "white" : "var(--drp-grey)",
-              border: "1px solid var(--drp-border-color, #e0e0e0)",
-              cursor: "pointer",
-            }}
           >
             {showStructure ? <Layers size={12} /> : <FileText size={12} />}
             {showStructure ? "Structure" : "Plain"}
-          </button>
+          </Button>
           {rewriteCount > 0 && (
             <span
               style={{

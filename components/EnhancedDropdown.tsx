@@ -19,6 +19,7 @@ import {
   Zap,
   Loader,
 } from "lucide-react";
+import { Button } from "@doctorproject/react";
 import {
   DropdownOption,
   CompatibilityMap,
@@ -229,6 +230,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
       {isOpen && (
         <div className="enhanced-dropdown-content">
           <div className="enhanced-dropdown-search">
+            {/* Keep raw input — DS Input wrapper would break the custom dropdown layout */}
             <input
               type="text"
               placeholder="Search options..."

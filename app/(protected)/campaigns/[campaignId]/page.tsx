@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button, EmptyState, Loader } from "@doctorproject/react";
 import {
   CampaignCalendar,
   type CalendarSlot,
@@ -84,26 +85,23 @@ export default function CampaignDetailPage({ params }: Props) {
     return (
       <div
         style={{
-          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
           padding: "var(--drp-space-8)",
-          color: "var(--drp-grey)",
         }}
       >
-        Loading campaign...
+        <Loader label="Loading campaign..." />
       </div>
     );
   }
 
   if (!campaign) {
     return (
-      <div
-        style={{
-          textAlign: "center",
-          padding: "var(--drp-space-8)",
-          color: "var(--drp-grey)",
-        }}
-      >
-        Campaign not found.
+      <div style={{ padding: "var(--drp-space-8)" }}>
+        <EmptyState
+          title="Campaign not found"
+          description="This campaign could not be found."
+        />
       </div>
     );
   }
@@ -118,19 +116,9 @@ export default function CampaignDetailPage({ params }: Props) {
           marginBottom: "var(--drp-space-6)",
         }}
       >
-        <button
-          onClick={() => router.push("/campaigns")}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "var(--drp-text-md)",
-            color: "var(--drp-grey)",
-            padding: 0,
-          }}
-        >
+        <Button variant="ghost" onClick={() => router.push("/campaigns")}>
           &larr;
-        </button>
+        </Button>
         <h1
           style={{ fontSize: "var(--drp-text-h3)", fontWeight: 700, margin: 0 }}
         >
@@ -146,15 +134,10 @@ export default function CampaignDetailPage({ params }: Props) {
           campaignId={campaignId}
         />
       ) : (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "var(--drp-space-8)",
-            color: "var(--drp-grey)",
-          }}
-        >
-          No ideas found for this campaign.
-        </div>
+        <EmptyState
+          title="No ideas found"
+          description="No content ideas were found for this campaign."
+        />
       )}
     </div>
   );

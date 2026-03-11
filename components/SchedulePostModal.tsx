@@ -1,8 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button } from "@doctorproject/react";
+import { Button, Input, Select } from "@doctorproject/react";
 import { PostStatus, DropdownOption } from "@/lib/types";
-import { X } from "lucide-react";
 
 interface SchedulePostModalProps {
   isOpen: boolean;
@@ -100,41 +99,40 @@ const SchedulePostModal: React.FC<SchedulePostModalProps> = ({
       <div className="drp-modal w-full max-w-md">
         <div className="drp-modal__header">
           <h2 className="drp-modal__title">Schedule Post</h2>
-          <button onClick={onClose} className="drp-modal__close">
-            <X size={20} />
-          </button>
+          <Button
+            onClick={onClose}
+            variant="ghost"
+            size="sm"
+            aria-label="Close"
+          >
+            ✕
+          </Button>
         </div>
 
         <div className="drp-modal__body">
           <div className="mb-4">
-            <label htmlFor="schedule-date" className="drp-field__label">
-              Date
-            </label>
-            <input
+            <Input
+              label="Date"
               type="date"
               id="schedule-date"
-              className="drp-input"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
             />
           </div>
 
           <div className="mb-6">
-            <label htmlFor="schedule-status" className="drp-field__label">
-              Status
-            </label>
-            <select
+            <Select
+              label="Status"
               id="schedule-status"
-              className="drp-input"
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value as PostStatus)}
             >
-              {statusOptions.map((option) => (
-                <option key={option.id} value={option.value}>
-                  {option.label}
+              {statusOptions.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
 

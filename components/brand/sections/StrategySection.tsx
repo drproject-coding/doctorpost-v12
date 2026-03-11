@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Textarea } from "@doctorproject/react";
 import { BrandProfile } from "@/lib/types";
 
 interface StrategySectionProps {
@@ -68,7 +69,7 @@ const CharCount: React.FC<{ current: number; max: number }> = ({
       textAlign: "right" as const,
       fontSize: "var(--drp-text-xs)",
       color: current > max * 0.9 ? TEAL : "var(--drp-grey)",
-      marginTop: "4px",
+      marginTop: "var(--drp-space-1)",
     }}
   >
     {current} / {max}
@@ -84,7 +85,7 @@ const StrategySection: React.FC<StrategySectionProps> = ({
     <div
       style={{
         display: "grid",
-        gap: "24px",
+        gap: "var(--drp-space-6)",
       }}
     >
       {/* Content Strategy */}
@@ -92,8 +93,7 @@ const StrategySection: React.FC<StrategySectionProps> = ({
         <FieldLabel>Content Strategy</FieldLabel>
         {editing ? (
           <>
-            <textarea
-              className="drp-input"
+            <Textarea
               rows={4}
               maxLength={MAX_STRATEGY}
               value={profile.contentStrategy}
@@ -120,8 +120,7 @@ const StrategySection: React.FC<StrategySectionProps> = ({
         <FieldLabel>Brand Definition</FieldLabel>
         {editing ? (
           <>
-            <textarea
-              className="drp-input"
+            <Textarea
               rows={3}
               maxLength={MAX_DEFINITION}
               value={profile.definition}

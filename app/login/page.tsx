@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Card, Input, Alert, Divider, Loader } from "@doctorproject/react";
+import {
+  Button,
+  Card,
+  Input,
+  Alert,
+  Divider,
+  Loader,
+} from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Eye, EyeOff } from "lucide-react";
@@ -170,35 +177,49 @@ export default function LoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="sm"
+                      icon
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
                       onClick={() => setShowPassword(!showPassword)}
-                      className="drp-btn drp-btn--ghost drp-btn--icon"
-                      style={{ position: "absolute", right: 8, bottom: 8 }}
+                      style={{ position: "absolute", right: 6, bottom: 6 }}
                     >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </Button>
                   </div>
                   <Button type="submit" variant="primary" block>
                     Sign In
                   </Button>
                 </form>
 
-                <button
-                  onClick={() => router.push("/signup")}
-                  className="mt-4 text-sm font-medium hover:underline"
-                  style={{ color: "var(--drp-purple)" }}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "var(--drp-space-1)",
+                    marginTop: "var(--drp-space-4)",
+                  }}
                 >
-                  Don&apos;t have an account? <strong>Sign up</strong>
-                </button>
-
-                <button
-                  onClick={() => router.push("/forgot-password")}
-                  className="block mx-auto mt-2 text-sm hover:underline"
-                  style={{ color: "var(--drp-text-muted, #6b7280)" }}
-                >
-                  Forgot password?
-                </button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => router.push("/signup")}
+                  >
+                    Don&apos;t have an account? Sign up
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => router.push("/forgot-password")}
+                  >
+                    Forgot password?
+                  </Button>
+                </div>
               </>
             )}
           </>

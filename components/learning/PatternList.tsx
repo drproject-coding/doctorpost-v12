@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Card } from "@doctorproject/react";
+import { Badge, Card, ProgressBar } from "@doctorproject/react";
 import type { Signal } from "@/lib/knowledge/types";
 
 interface PatternListProps {
@@ -73,7 +73,7 @@ export function PatternList({ signals }: PatternListProps) {
         </p>
       ) : (
         <div style={{ display: "grid", gap: "var(--drp-space-3)" }}>
-          {patterns.map((p, idx) => (
+          {patterns.map((p) => (
             <Card
               key={`${p.category}::${p.signalType}`}
               variant="flat"
@@ -87,20 +87,9 @@ export function PatternList({ signals }: PatternListProps) {
                   marginBottom: "var(--drp-space-2)",
                 }}
               >
-                <span
-                  style={{
-                    fontSize: "var(--drp-text-xs)",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    padding: "0 4px",
-                    background: p.promotionReady
-                      ? "var(--drp-success, #00AA00)"
-                      : "var(--drp-purple)",
-                    color: "white",
-                  }}
-                >
+                <Badge variant={p.promotionReady ? "mint" : "primary"}>
                   {p.promotionReady ? "Promotion Ready" : `${p.count} signals`}
-                </span>
+                </Badge>
                 <span
                   style={{ fontSize: "var(--drp-text-sm)", fontWeight: 700 }}
                 >
@@ -120,7 +109,7 @@ export function PatternList({ signals }: PatternListProps) {
               <div style={{ display: "grid", gap: "var(--drp-space-1)" }}>
                 {p.recentObservations.map((obs, oi) => (
                   <div
-                    key={`obs-${idx}-${oi}`}
+                    key={`obs-${p.category}-${p.signalType}-${oi}`}
                     style={{
                       fontSize: "var(--drp-text-xs)",
                       color: "var(--drp-grey)",
@@ -143,21 +132,8 @@ export function PatternList({ signals }: PatternListProps) {
                   }}
                 >
                   {p.count}/10 signals toward rule promotion
-                  <div
-                    style={{
-                      width: "100%",
-                      height: 4,
-                      background: "var(--drp-border-color, #e0e0e0)",
-                      marginTop: 4,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: `${Math.min(100, (p.count / 10) * 100)}%`,
-                        height: "100%",
-                        background: "var(--drp-purple)",
-                      }}
-                    />
+                  <div style={{ marginTop: "var(--drp-space-1)" }}>
+                    <ProgressBar value={Math.min(100, (p.count / 10) * 100)} />
                   </div>
                 </div>
               )}

@@ -1,7 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card, Select } from "@doctorproject/react";
-import { Upload, FileText, Check, ArrowLeft, Loader } from "lucide-react";
+import {
+  Alert,
+  Button,
+  Card,
+  Input,
+  Loader,
+  Select,
+  Textarea,
+} from "@doctorproject/react";
+import { Upload, FileText, Check, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import type { DocumentCategory } from "@/lib/knowledge/types";
 
@@ -160,16 +168,13 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
           </div>
 
           {/* Text paste */}
-          <div className="drp-field">
-            <label className="drp-field__label">Or paste content</label>
-            <textarea
-              className="drp-input"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Paste markdown content here..."
-              style={{ minHeight: 200, fontFamily: "monospace" }}
-            />
-          </div>
+          <Textarea
+            label="Or paste content"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Paste markdown content here..."
+            style={{ minHeight: 200, fontFamily: "monospace" }}
+          />
 
           <div
             className="drp-form-actions"
@@ -196,19 +201,16 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
               marginBottom: "var(--drp-space-4)",
             }}
           >
-            Classify & Name
+            Classify &amp; Name
           </h3>
 
           <div className="drp-form-stack">
-            <div className="drp-field">
-              <label className="drp-field__label">Document Name</label>
-              <input
-                className="drp-input"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. brand-voice"
-              />
-            </div>
+            <Input
+              label="Document Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. brand-voice"
+            />
 
             <div className="drp-form-row">
               <Select
@@ -224,15 +226,12 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
                   </option>
                 ))}
               </Select>
-              <div className="drp-field">
-                <label className="drp-field__label">Subcategory</label>
-                <input
-                  className="drp-input"
-                  value={subcategory}
-                  onChange={(e) => setSubcategory(e.target.value)}
-                  placeholder="e.g. hooks, closers"
-                />
-              </div>
+              <Input
+                label="Subcategory"
+                value={subcategory}
+                onChange={(e) => setSubcategory(e.target.value)}
+                placeholder="e.g. hooks, closers"
+              />
             </div>
 
             {/* Preview */}
@@ -267,7 +266,7 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
             >
               {saving ? (
                 <>
-                  <Loader size={14} className="animate-spin" /> Saving...
+                  <Loader size="sm" /> Saving...
                 </>
               ) : (
                 <>
@@ -278,22 +277,13 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
           </div>
 
           {feedback && (
-            <div
-              style={{
-                marginTop: "var(--drp-space-3)",
-                padding: "var(--drp-space-3)",
-                border: "var(--drp-border)",
-                fontSize: "var(--drp-text-md)",
-                fontWeight: 500,
-                background: feedback.startsWith("Error")
-                  ? "rgba(255, 68, 68, 0.12)"
-                  : "rgba(0, 170, 0, 0.12)",
-                color: feedback.startsWith("Error")
-                  ? "var(--drp-error-dark)"
-                  : "var(--drp-success-dark)",
-              }}
-            >
-              {feedback}
+            <div style={{ marginTop: "var(--drp-space-3)" }}>
+              <Alert
+                variant={feedback.startsWith("Error") ? "error" : "success"}
+                onClose={() => setFeedback(null)}
+              >
+                {feedback}
+              </Alert>
             </div>
           )}
         </Card>

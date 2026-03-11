@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card } from "@doctorproject/react";
+import { Button, Card, Input, Textarea } from "@doctorproject/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import type { BrandProfile } from "@/lib/types";
 
@@ -100,22 +100,23 @@ function TagInput({ value, onChange, placeholder }: TagInputProps) {
           }}
         >
           {tag}
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            icon
             onClick={() => remove(tag)}
             aria-label={`Remove ${tag}`}
             style={{
-              background: "none",
-              border: "none",
               color: "#fff",
-              cursor: "pointer",
               padding: "0 0 0 4px",
               fontSize: "14px",
               lineHeight: 1,
+              minWidth: "unset",
+              height: "unset",
             }}
           >
             ×
-          </button>
+          </Button>
         </span>
       ))}
       <input
@@ -164,31 +165,26 @@ function ChipSelector({ options, selected, onChange, max }: ChipSelectorProps) {
     <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
       {options.map((option) => {
         const active = selected.includes(option);
+        const isDisabled =
+          max !== undefined && selected.length >= max && !active;
         return (
-          <button
+          <Button
             key={option}
             type="button"
+            variant={active ? "primary" : "outline"}
             onClick={() => toggle(option)}
+            disabled={isDisabled}
             style={{
               padding: "6px 14px",
-              border: `1.5px solid ${active ? "var(--drp-purple)" : "var(--drp-grey)"}`,
-              background: active ? "var(--drp-purple)" : "#fff",
-              color: active ? "#fff" : "var(--drp-black)",
-              cursor:
-                max !== undefined && selected.length >= max && !active
-                  ? "not-allowed"
-                  : "pointer",
               fontSize: "13px",
               fontWeight: active ? 600 : 400,
-              opacity:
-                max !== undefined && selected.length >= max && !active
-                  ? 0.45
-                  : 1,
+              opacity: isDisabled ? 0.45 : 1,
               transition: "all 0.12s ease",
+              cursor: isDisabled ? "not-allowed" : "pointer",
             }}
           >
             {option}
-          </button>
+          </Button>
         );
       })}
     </div>
@@ -239,25 +235,6 @@ function LabeledField({ label, error, children, hint }: LabeledFieldProps) {
     </div>
   );
 }
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "10px 12px",
-  border: "1.5px solid var(--drp-grey)",
-  outline: "none",
-  fontSize: "14px",
-  background: "#fff",
-  color: "var(--drp-black)",
-  boxSizing: "border-box",
-};
-
-const textareaStyle: React.CSSProperties = {
-  ...inputStyle,
-  resize: "vertical",
-  minHeight: "96px",
-  fontFamily: "inherit",
-  lineHeight: 1.6,
-};
 
 // ---------------------------------------------------------------------------
 // Step definitions
@@ -313,51 +290,52 @@ function Step1({
       <div
         style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}
       >
-        <LabeledField label="First Name" error={errors.firstName}>
-          <input
-            style={{
-              ...inputStyle,
-              borderColor: errors.firstName ? "#e53e3e" : "var(--drp-grey)",
-            }}
-            value={state.firstName}
-            onChange={set("firstName")}
-            placeholder="Jane"
-            autoFocus
-          />
-        </LabeledField>
-        <LabeledField label="Last Name">
-          <input
-            style={inputStyle}
-            value={state.lastName}
-            onChange={set("lastName")}
-            placeholder="Smith"
-          />
-        </LabeledField>
+        <Input
+          id="firstName"
+          label="First Name"
+          value={state.firstName}
+          onChange={set("firstName")}
+          placeholder="Jane"
+          autoComplete="given-name"
+          className={errors.firstName ? "drp-input--error" : undefined}
+        />
+        <Input
+          id="lastName"
+          label="Last Name"
+          value={state.lastName}
+          onChange={set("lastName")}
+          placeholder="Smith"
+          autoComplete="family-name"
+        />
       </div>
-      <LabeledField label="Company / Brand Name">
-        <input
-          style={inputStyle}
-          value={state.companyName}
-          onChange={set("companyName")}
-          placeholder="Acme Corp"
-        />
-      </LabeledField>
-      <LabeledField label="Your Role / Title">
-        <input
-          style={inputStyle}
-          value={state.role}
-          onChange={set("role")}
-          placeholder="Head of Marketing"
-        />
-      </LabeledField>
-      <LabeledField label="Industry">
-        <input
-          style={inputStyle}
-          value={state.industry}
-          onChange={set("industry")}
-          placeholder="SaaS / Healthcare / Finance…"
-        />
-      </LabeledField>
+      {errors.firstName && (
+        <p style={{ margin: "-14px 0 0", fontSize: "12px", color: "#e53e3e" }}>
+          {errors.firstName}
+        </p>
+      )}
+      <Input
+        id="companyName"
+        label="Company / Brand Name"
+        value={state.companyName}
+        onChange={set("companyName")}
+        placeholder="Acme Corp"
+        autoComplete="organization"
+      />
+      <Input
+        id="role"
+        label="Your Role / Title"
+        value={state.role}
+        onChange={set("role")}
+        placeholder="Head of Marketing"
+        autoComplete="organization-title"
+      />
+      <Input
+        id="industry"
+        label="Industry"
+        value={state.industry}
+        onChange={set("industry")}
+        placeholder="SaaS / Healthcare / Finance…"
+      />
     </div>
   );
 }
@@ -412,19 +390,14 @@ function Step2({
         />
       </LabeledField>
 
-      <LabeledField
+      <Textarea
+        id="copyGuideline"
         label="Copy Guideline"
-        hint="Any additional instructions for your writing style (optional)."
-      >
-        <textarea
-          style={textareaStyle}
-          value={state.copyGuideline}
-          onChange={(e) =>
-            onChange({ ...state, copyGuideline: e.target.value })
-          }
-          placeholder="e.g. Always lead with data. Keep sentences under 20 words. Never use passive voice."
-        />
-      </LabeledField>
+        value={state.copyGuideline}
+        onChange={(e) => onChange({ ...state, copyGuideline: e.target.value })}
+        placeholder="e.g. Always lead with data. Keep sentences under 20 words. Never use passive voice."
+        className="drp-textarea--resize-vertical"
+      />
     </div>
   );
 }
@@ -453,35 +426,30 @@ function Step3({
 }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-      <LabeledField
-        label="Content Strategy"
-        hint="Describe your main content themes and topics."
-        error={errors.contentStrategy}
-      >
-        <textarea
-          style={{
-            ...textareaStyle,
-            borderColor: errors.contentStrategy ? "#e53e3e" : "var(--drp-grey)",
-          }}
+      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+        <Textarea
+          id="contentStrategy"
+          label="Content Strategy"
           value={state.contentStrategy}
           onChange={(e) =>
             onChange({ ...state, contentStrategy: e.target.value })
           }
           placeholder="e.g. I cover AI productivity, leadership lessons from startup failures, and data-driven marketing tactics."
         />
-      </LabeledField>
+        {errors.contentStrategy && (
+          <p style={{ margin: 0, fontSize: "12px", color: "#e53e3e" }}>
+            {errors.contentStrategy}
+          </p>
+        )}
+      </div>
 
-      <LabeledField
+      <Textarea
+        id="definition"
         label="Brand Definition"
-        hint="What makes your content unique? How do you define value?"
-      >
-        <textarea
-          style={textareaStyle}
-          value={state.definition}
-          onChange={(e) => onChange({ ...state, definition: e.target.value })}
-          placeholder="e.g. I translate complex technical concepts into actionable frameworks that non-technical executives can implement immediately."
-        />
-      </LabeledField>
+        value={state.definition}
+        onChange={(e) => onChange({ ...state, definition: e.target.value })}
+        placeholder="e.g. I translate complex technical concepts into actionable frameworks that non-technical executives can implement immediately."
+      />
     </div>
   );
 }
@@ -559,22 +527,21 @@ function Step5({
 }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-      <LabeledField
-        label="Positioning Statement"
-        hint="How do you describe your value? This is often the first sentence of your LinkedIn bio."
-        error={errors.positioning}
-      >
-        <textarea
-          style={{
-            ...textareaStyle,
-            minHeight: "128px",
-            borderColor: errors.positioning ? "#e53e3e" : "var(--drp-grey)",
-          }}
+      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+        <Textarea
+          id="positioning"
+          label="Positioning Statement"
           value={state.positioning}
           onChange={(e) => onChange({ ...state, positioning: e.target.value })}
           placeholder="e.g. I help B2B SaaS companies grow from $1M to $10M ARR by building content-led demand engines — without paid ads."
+          style={{ minHeight: "128px" }}
         />
-      </LabeledField>
+        {errors.positioning && (
+          <p style={{ margin: 0, fontSize: "12px", color: "#e53e3e" }}>
+            {errors.positioning}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

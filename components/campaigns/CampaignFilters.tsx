@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Button } from "@doctorproject/react";
 
 interface CampaignFiltersProps {
   pillars: string[];
@@ -34,39 +35,24 @@ export function CampaignFilters({
       >
         Pillar:
       </span>
-      <button
+      <Button
+        variant={activePillar === null ? "dark" : "ghost-bordered"}
+        size="sm"
         onClick={() => onPillarClick(null)}
-        style={{
-          padding: "2px 8px",
-          fontSize: "var(--drp-text-xs)",
-          fontWeight: activePillar === null ? 700 : 400,
-          background:
-            activePillar === null ? "var(--drp-black, #000)" : "transparent",
-          color: activePillar === null ? "#fff" : "var(--drp-grey)",
-          border: "var(--drp-border)",
-          cursor: "pointer",
-        }}
       >
         All
-      </button>
+      </Button>
       {pillars.map((p) => {
         const isActive = activePillar === p;
         return (
-          <button
+          <Button
             key={p}
+            variant={isActive ? "dark" : "ghost-bordered"}
+            size="sm"
             onClick={() => onPillarClick(isActive ? null : p)}
-            style={{
-              padding: "2px 8px",
-              fontSize: "var(--drp-text-xs)",
-              fontWeight: isActive ? 700 : 400,
-              background: isActive ? "var(--drp-black, #000)" : "transparent",
-              color: isActive ? "#fff" : "var(--drp-grey)",
-              border: "var(--drp-border)",
-              cursor: "pointer",
-            }}
           >
             {p}
-          </button>
+          </Button>
         );
       })}
     </div>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Card } from "@doctorproject/react";
+import { Card, Button } from "@doctorproject/react";
 import { ChevronDown, ChevronUp, Brain, TrendingUp, Zap } from "lucide-react";
 import type { LearnerOutput, LearnerSignal } from "@/lib/agents/learner";
 
@@ -47,18 +47,17 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
   return (
     <Card variant="raised">
       {/* Header */}
-      <button
+      <Button
+        variant="ghost"
         onClick={() => setExpanded(!expanded)}
         style={{
           width: "100%",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
           padding: 0,
           marginBottom: expanded ? "var(--drp-space-4)" : 0,
+          height: "auto",
         }}
       >
         <div
@@ -98,7 +97,7 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
           </span>
           {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </div>
-      </button>
+      </Button>
 
       {expanded && (
         <div>

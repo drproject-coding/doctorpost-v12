@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Loader, Sparkles, Pencil, X, Check } from "lucide-react";
+import { Button, Loader } from "@doctorproject/react";
+import { Sparkles, Pencil, X, Check } from "lucide-react";
 
 interface BrandSectionProps {
   title: string;
@@ -60,8 +61,8 @@ const BrandSection: React.FC<BrandSectionProps> = ({
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "12px",
-          padding: "12px 16px",
+          gap: "var(--drp-space-3)",
+          padding: "var(--drp-space-3) var(--drp-space-4)",
           borderBottom: "1px solid rgba(0,0,0,0.08)",
         }}
       >
@@ -96,69 +97,67 @@ const BrandSection: React.FC<BrandSectionProps> = ({
         </span>
 
         {/* Action buttons */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--drp-space-2)",
+          }}
+        >
           {!editing && onAiGenerate && (
-            <button
-              type="button"
-              className="drp-btn drp-btn--sm drp-btn--ghost drp-btn--purple"
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={handleAiGenerate}
               disabled={aiLoading}
               aria-label="AI Generate"
             >
-              {aiLoading ? (
-                <Loader size={13} className="animate-spin" />
-              ) : (
-                <Sparkles size={13} />
-              )}
+              {aiLoading ? <Loader size="sm" /> : <Sparkles size={13} />}
               {aiLoading ? "Generating..." : "Generate"}
-            </button>
+            </Button>
           )}
 
           {!editing && (
-            <button
-              type="button"
-              className="drp-btn drp-btn--sm drp-btn--outline"
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={handleEdit}
               aria-label="Edit section"
             >
               <Pencil size={13} />
               Edit
-            </button>
+            </Button>
           )}
 
           {editing && (
             <>
-              <button
-                type="button"
-                className="drp-btn drp-btn--sm drp-btn--ghost"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleCancel}
                 disabled={saving}
                 aria-label="Cancel editing"
               >
                 <X size={13} />
                 Cancel
-              </button>
-              <button
-                type="button"
-                className="drp-btn drp-btn--sm drp-btn--primary"
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
                 onClick={handleSave}
                 disabled={saving}
                 aria-label="Save section"
               >
-                {saving ? (
-                  <Loader size={13} className="animate-spin" />
-                ) : (
-                  <Check size={13} />
-                )}
+                {saving ? <Loader size="sm" /> : <Check size={13} />}
                 {saving ? "Saving..." : "Save"}
-              </button>
+              </Button>
             </>
           )}
         </div>
       </div>
 
       {/* Content area */}
-      <div style={{ padding: "16px" }}>{children(editing)}</div>
+      <div style={{ padding: "var(--drp-space-4)" }}>{children(editing)}</div>
     </div>
   );
 };

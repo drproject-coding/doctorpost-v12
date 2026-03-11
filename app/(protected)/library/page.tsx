@@ -8,6 +8,8 @@ import {
   EmptyState,
   Pagination,
   Button,
+  Input,
+  Loader,
 } from "@doctorproject/react";
 import { getScheduledPosts, updatePost, deletePost } from "@/lib/api";
 import { useToast } from "@/components/Toast";
@@ -168,14 +170,27 @@ export default function LibraryPage() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Content Library</h1>
+      <div style={{ padding: "var(--drp-space-6)" }}>
+        <div style={{ maxWidth: 1152, margin: "0 auto" }}>
+          <h1
+            style={{
+              fontSize: "var(--drp-text-h3)",
+              fontWeight: 700,
+              marginBottom: "var(--drp-space-6)",
+            }}
+          >
+            Content Library
+          </h1>
           <Card
             variant="raised"
-            className="flex items-center justify-center p-12"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "var(--drp-space-12)",
+            }}
           >
-            <p>Loading content library...</p>
+            <Loader label="Loading content library..." />
           </Card>
         </div>
       </div>
@@ -183,9 +198,17 @@ export default function LibraryPage() {
   }
 
   return (
-    <div className="p-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Content Library</h1>
+    <div style={{ padding: "var(--drp-space-6)" }}>
+      <div style={{ maxWidth: 1152, margin: "0 auto" }}>
+        <h1
+          style={{
+            fontSize: "var(--drp-text-h3)",
+            fontWeight: 700,
+            marginBottom: "var(--drp-space-6)",
+          }}
+        >
+          Content Library
+        </h1>
 
         {/* Status filter tabs */}
         <div style={{ marginBottom: "var(--drp-space-4)" }}>
@@ -198,19 +221,13 @@ export default function LibraryPage() {
 
         {/* Search */}
         <div style={{ marginBottom: "var(--drp-space-4)" }}>
-          <input
+          <Input
+            label=""
             type="text"
             placeholder="Search by title, content or pillar…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "8px 12px",
-              fontSize: 14,
-              border: "2px solid #000",
-              outline: "none",
-              fontFamily: "inherit",
-            }}
+            style={{ width: "100%" }}
           />
         </div>
 
@@ -231,7 +248,7 @@ export default function LibraryPage() {
               />
             </div>
           ) : (
-            <div className="space-y-4">
+            <div style={{ display: "flex", flexDirection: "column" }}>
               {pagedPosts.map((post) => {
                 const src = getSource(post);
                 const showDate = DATED_STATUSES.has(post.status);
@@ -245,11 +262,17 @@ export default function LibraryPage() {
                 return (
                   <div
                     key={post.id}
-                    className="flex items-start justify-between p-4 border-b border-gray-200 last:border-b-0"
-                    style={{ gap: 12 }}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                      padding: "var(--drp-space-4)",
+                      borderBottom: "1px solid var(--drp-border-color)",
+                      gap: 12,
+                    }}
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p className="font-bold" style={{ marginBottom: 4 }}>
+                      <p style={{ fontWeight: 700, marginBottom: 4 }}>
                         {post.title}
                       </p>
                       {/* Badge row */}
@@ -277,7 +300,7 @@ export default function LibraryPage() {
                           <span
                             style={{
                               fontSize: 11,
-                              color: "var(--drp-color-text-muted, #666)",
+                              color: "var(--drp-text-muted)",
                             }}
                           >
                             {post.pillar}
@@ -291,7 +314,7 @@ export default function LibraryPage() {
                           gap: 12,
                           flexWrap: "wrap",
                           fontSize: 11,
-                          color: "var(--drp-color-text-muted, #888)",
+                          color: "var(--drp-text-muted)",
                         }}
                       >
                         {createdFmt && <span>Created {createdFmt}</span>}
@@ -304,8 +327,8 @@ export default function LibraryPage() {
                               gap: 3,
                               color:
                                 post.status === "published"
-                                  ? "var(--drp-color-mint, #00A896)"
-                                  : "var(--drp-color-purple, #631DED)",
+                                  ? "var(--drp-mint)"
+                                  : "var(--drp-purple)",
                               fontWeight: 700,
                             }}
                           >

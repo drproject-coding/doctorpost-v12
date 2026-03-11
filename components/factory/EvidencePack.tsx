@@ -117,66 +117,26 @@ export function EvidencePack({
         >
           <Filter size={12} style={{ color: "var(--drp-grey)" }} />
           {(["all", "verified", "estimate", "anecdotal"] as const).map((f) => (
-            <button
+            <Button
               key={f}
+              variant={verificationFilter === f ? "primary" : "ghost-bordered"}
+              size="sm"
               onClick={() => setVerificationFilter(f)}
-              style={{
-                padding: "2px 8px",
-                fontSize: "var(--drp-text-xs)",
-                fontWeight: verificationFilter === f ? 700 : 400,
-                background:
-                  verificationFilter === f
-                    ? "var(--drp-purple)"
-                    : "transparent",
-                color: verificationFilter === f ? "white" : "var(--drp-grey)",
-                border: "1px solid var(--drp-border-color, #e0e0e0)",
-                cursor: "pointer",
-                textTransform: "capitalize",
-              }}
+              style={{ textTransform: "capitalize" }}
             >
               {f}
-            </button>
+            </Button>
           ))}
           <span style={{ marginLeft: "auto" }} />
-          <button
-            onClick={selectAll}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "var(--drp-text-xs)",
-              color: "var(--drp-purple)",
-              textDecoration: "underline",
-            }}
-          >
+          <Button variant="ghost" size="sm" onClick={selectAll}>
             Select all
-          </button>
-          <button
-            onClick={selectNone}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "var(--drp-text-xs)",
-              color: "var(--drp-grey)",
-              textDecoration: "underline",
-            }}
-          >
+          </Button>
+          <Button variant="ghost" size="sm" onClick={selectNone}>
             Clear
-          </button>
-          <button
-            onClick={selectVerifiedOnly}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "var(--drp-text-xs)",
-              color: "var(--drp-success-dark, #2d7a3a)",
-              textDecoration: "underline",
-            }}
-          >
+          </Button>
+          <Button variant="ghost" size="sm" onClick={selectVerifiedOnly}>
             Verified only
-          </button>
+          </Button>
         </div>
 
         {filteredClaims.map(({ claim: c, originalIndex: i }) => (
@@ -361,15 +321,13 @@ function Section({
 }) {
   return (
     <div style={{ marginBottom: "var(--drp-space-3)" }}>
-      <button
+      <Button
+        variant="ghost"
         onClick={onToggle}
         style={{
           display: "flex",
           alignItems: "center",
           gap: "var(--drp-space-1)",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
           fontWeight: 700,
           fontSize: "var(--drp-text-md)",
           padding: "var(--drp-space-1) 0",
@@ -380,7 +338,7 @@ function Section({
       >
         {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
         {title}
-      </button>
+      </Button>
       {isOpen && (
         <div style={{ marginTop: "var(--drp-space-2)" }}>{children}</div>
       )}

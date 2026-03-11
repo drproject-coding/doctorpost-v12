@@ -247,39 +247,32 @@ export function SessionHistory({
                 Resume
               </Button>
             )}
-            <button
+            <Button
+              size="sm"
+              variant="ghost"
               onClick={() => handleDelete(session.id)}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: "var(--drp-grey)",
-                flexShrink: 0,
-                padding: 4,
-              }}
+              style={{ flexShrink: 0, color: "var(--drp-grey)" }}
               title="Delete session"
             >
               <Trash2 size={14} />
-            </button>
+            </Button>
           </div>
         ))}
       </div>
 
       {sessions.length > 3 && (
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => setExpanded(!expanded)}
           style={{
             marginTop: "var(--drp-space-2)",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "var(--drp-text-xs)",
             color: "var(--drp-purple)",
             textDecoration: "underline",
           }}
         >
           {expanded ? "Show less" : `Show all ${sessions.length} sessions`}
-        </button>
+        </Button>
       )}
     </Card>
   );

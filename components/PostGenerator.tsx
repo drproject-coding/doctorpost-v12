@@ -7,14 +7,14 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import { Alert, Button, Card } from "@doctorproject/react";
+import { Alert, Button, Card, Loader, ProgressBar } from "@doctorproject/react";
 import {
   PostGenerationParameters,
   BrandProfile,
   AiSettings,
   AiProgress,
 } from "@/lib/types";
-import { Loader, Clock, Copy, Download } from "lucide-react";
+import { Clock, Copy, Download } from "lucide-react";
 
 interface PostGeneratorProps {
   parameters: PostGenerationParameters;
@@ -212,29 +212,11 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
               gap: "var(--drp-space-3)",
             }}
           >
-            <Loader
-              size={32}
-              className="animate-spin"
-              style={{ color: "var(--drp-purple)" }}
-            />
+            <Loader size="lg" />
             <p>{aiProgress?.step ?? "Generating your post..."}</p>
             {aiProgress && (
-              <div
-                style={{
-                  width: 192,
-                  height: 8,
-                  background: "rgba(0,0,0,0.1)",
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    width: `${aiProgress.percent}%`,
-                    height: "100%",
-                    background: "var(--drp-purple)",
-                    transition: "width 300ms ease",
-                  }}
-                />
+              <div style={{ width: 192 }}>
+                <ProgressBar value={aiProgress.percent} />
               </div>
             )}
             <p style={{ fontSize: "var(--drp-text-sm)" }}>
@@ -257,6 +239,7 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
             </div>
             <textarea
               ref={contentRef}
+              className="drp-input"
               style={{
                 width: "100%",
                 minHeight: 256,

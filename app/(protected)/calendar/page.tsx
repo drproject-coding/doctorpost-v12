@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   EmptyState,
+  Input,
   Loader,
   Select,
   Tabs,
@@ -46,7 +47,7 @@ const ListView = ({
 }) => {
   return (
     <Card variant="raised">
-      <div className="space-y-4">
+      <div style={{ display: "grid", gap: "var(--drp-space-4)" }}>
         {posts.length > 0 ? (
           posts
             .sort(
@@ -66,7 +67,7 @@ const ListView = ({
                 }}
               >
                 <div>
-                  <p className="font-bold">
+                  <p style={{ fontWeight: 700 }}>
                     {post.factoryScore != null && (
                       <ScoreBadge score={post.factoryScore} size="md" />
                     )}
@@ -172,12 +173,25 @@ export default function CalendarPage() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Content Calendar</h1>
+      <div style={{ padding: "var(--drp-space-6)" }}>
+        <div style={{ maxWidth: 1152, margin: "0 auto" }}>
+          <h1
+            style={{
+              fontSize: "var(--drp-text-h2)",
+              fontWeight: 700,
+              marginBottom: "var(--drp-space-6)",
+            }}
+          >
+            Content Calendar
+          </h1>
           <Card
             variant="raised"
-            className="flex items-center justify-center p-12"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "var(--drp-space-10)",
+            }}
           >
             <Loader label="Loading calendar..." />
           </Card>
@@ -187,12 +201,29 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="p-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Content Calendar</h1>
+    <div style={{ padding: "var(--drp-space-6)" }}>
+      <div style={{ maxWidth: 1152, margin: "0 auto" }}>
+        <h1
+          style={{
+            fontSize: "var(--drp-text-h2)",
+            fontWeight: 700,
+            marginBottom: "var(--drp-space-6)",
+          }}
+        >
+          Content Calendar
+        </h1>
 
         {/* View Toggle, Date Picker and Filter */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "var(--drp-space-4)",
+            marginBottom: "var(--drp-space-6)",
+          }}
+        >
           <Tabs
             items={viewTabItems}
             activeKey={view}
@@ -200,18 +231,17 @@ export default function CalendarPage() {
           />
 
           {/* Date Picker */}
-          <div className="relative">
-            <label htmlFor="date-picker" className="sr-only">
-              Select Date
-            </label>
-            <input
-              type="date"
-              id="date-picker"
-              className="drp-input !py-2 !pl-3 !pr-8 text-sm font-bold appearance-none bg-white"
-              value={selectedDateFromPicker ?? ""}
-              onChange={(e) => setSelectedDateFromPicker(e.target.value)}
-            />
-          </div>
+          <Input
+            type="date"
+            label="Select Date"
+            id="date-picker"
+            value={selectedDateFromPicker ?? ""}
+            onChange={(e) =>
+              setSelectedDateFromPicker(
+                (e as React.ChangeEvent<HTMLInputElement>).target.value,
+              )
+            }
+          />
 
           <Select
             label=""
@@ -234,30 +264,66 @@ export default function CalendarPage() {
         </div>
 
         {/* Color Guide Legend */}
-        <Card variant="raised" className="p-4 mb-6">
-          <h3 className="text-md font-bold mb-2">Status Color Guide:</h3>
-          <div className="flex flex-wrap gap-x-4 gap-y-2">
+        <Card
+          variant="raised"
+          style={{
+            padding: "var(--drp-space-4)",
+            marginBottom: "var(--drp-space-6)",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "var(--drp-text-md)",
+              fontWeight: 700,
+              marginBottom: "var(--drp-space-2)",
+            }}
+          >
+            Status Color Guide:
+          </h3>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "var(--drp-space-4) var(--drp-space-3)",
+            }}
+          >
             {statusOptions.map((option) => (
-              <div key={option.id} className="flex items-center text-sm">
+              <div
+                key={option.id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  fontSize: "var(--drp-text-sm)",
+                }}
+              >
                 <span
-                  className={`w-3 h-3 rounded-full border-2 ${getStatusColorClasses(
+                  className={`w-3 h-3 border-2 ${getStatusColorClasses(
                     option.value as PostStatus,
                   )
                     .split(" ")[0]
                     .replace(
                       "bg-",
                       "border-",
-                    )} ${getStatusColorClasses(option.value as PostStatus).split(" ")[0]} mr-2`}
+                    )} ${getStatusColorClasses(option.value as PostStatus).split(" ")[0]}`}
+                  style={{
+                    marginRight: "var(--drp-space-2)",
+                    display: "inline-block",
+                  }}
                 ></span>
                 {option.label}
               </div>
             ))}
-            <div className="flex items-center text-sm">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                fontSize: "var(--drp-text-sm)",
+              }}
+            >
               <span
                 style={{
                   width: "0.75rem",
                   height: "0.75rem",
-                  borderRadius: "9999px",
                   border: "2px solid var(--drp-border)",
                   background: "var(--drp-purple-light, #ede9fe)",
                   marginRight: "var(--drp-space-2)",
@@ -266,12 +332,17 @@ export default function CalendarPage() {
               ></span>
               Today&apos;s Date
             </div>
-            <div className="flex items-center text-sm">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                fontSize: "var(--drp-text-sm)",
+              }}
+            >
               <span
                 style={{
                   width: "0.75rem",
                   height: "0.75rem",
-                  borderRadius: "9999px",
                   border: "2px solid var(--drp-yellow)",
                   background: "var(--drp-yellow-light, #fef9c3)",
                   marginRight: "var(--drp-space-2)",

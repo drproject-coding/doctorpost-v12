@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
+import { Button, Card, Input, Textarea } from "@doctorproject/react";
 import { Plus, Minus } from "lucide-react";
 
 interface CampaignSetupProps {
@@ -89,63 +89,48 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
         </h3>
 
         <div className="drp-form-stack">
-          <div className="drp-field">
-            <label className="drp-field__label">Campaign Name</label>
-            <input
-              className="drp-input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Q2 2026 Authority Building"
-              required
-            />
-          </div>
+          <Input
+            label="Campaign Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. Q2 2026 Authority Building"
+            required
+          />
 
           <div className="drp-form-row">
-            <div className="drp-field">
-              <label className="drp-field__label">Duration (weeks)</label>
-              <input
-                className="drp-input"
-                type="number"
-                min={1}
-                max={52}
-                step={1}
-                value={durationWeeks}
-                onChange={(e) => setDurationWeeks(Number(e.target.value))}
-              />
-            </div>
-            <div className="drp-field">
-              <label className="drp-field__label">Posts per week</label>
-              <input
-                className="drp-input"
-                type="number"
-                min={1}
-                max={7}
-                step={1}
-                value={postsPerWeek}
-                onChange={(e) => setPostsPerWeek(Number(e.target.value))}
-              />
-            </div>
-            <div className="drp-field">
-              <label className="drp-field__label">Start Date</label>
-              <input
-                className="drp-input"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="drp-field">
-            <label className="drp-field__label">Goals</label>
-            <textarea
-              className="drp-input"
-              value={goals}
-              onChange={(e) => setGoals(e.target.value)}
-              placeholder="What do you want to achieve with this campaign?"
-              style={{ minHeight: 80 }}
+            <Input
+              label="Duration (weeks)"
+              type="number"
+              min={1}
+              max={52}
+              step={1}
+              value={String(durationWeeks)}
+              onChange={(e) => setDurationWeeks(Number(e.target.value))}
+            />
+            <Input
+              label="Posts per week"
+              type="number"
+              min={1}
+              max={7}
+              step={1}
+              value={String(postsPerWeek)}
+              onChange={(e) => setPostsPerWeek(Number(e.target.value))}
+            />
+            <Input
+              label="Start Date"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
+
+          <Textarea
+            label="Goals"
+            value={goals}
+            onChange={(e) => setGoals(e.target.value)}
+            placeholder="What do you want to achieve with this campaign?"
+            style={{ minHeight: 80 }}
+          />
 
           {/* Pillar Weights */}
           <div className="drp-field">
@@ -182,12 +167,11 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                   >
                     {pillar}
                   </span>
-                  <input
-                    className="drp-input"
+                  <Input
                     type="number"
                     min={0}
                     max={100}
-                    value={weight}
+                    value={String(weight)}
                     onChange={(e) =>
                       handlePillarWeight(pillar, Number(e.target.value))
                     }
@@ -219,8 +203,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                   gap: "var(--drp-space-2)",
                 }}
               >
-                <input
-                  className="drp-input"
+                <Input
                   value={newPillar}
                   onChange={(e) => setNewPillar(e.target.value)}
                   placeholder="New pillar..."

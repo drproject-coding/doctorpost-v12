@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Input } from "@doctorproject/react";
 import { BrandProfile } from "@/lib/types";
 
 interface ProfileSectionProps {
@@ -44,7 +45,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           style={{
             display: "grid",
             gridTemplateColumns: "140px 1fr",
-            gap: "8px",
+            gap: "var(--drp-space-2)",
             alignItems: "baseline",
           }}
         >
@@ -65,7 +66,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           style={{
             display: "grid",
             gridTemplateColumns: "140px 1fr",
-            gap: "8px",
+            gap: "var(--drp-space-2)",
             alignItems: "baseline",
           }}
         >
@@ -86,7 +87,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           style={{
             display: "grid",
             gridTemplateColumns: "140px 1fr",
-            gap: "8px",
+            gap: "var(--drp-space-2)",
             alignItems: "baseline",
           }}
         >
@@ -107,7 +108,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           style={{
             display: "grid",
             gridTemplateColumns: "140px 1fr",
-            gap: "8px",
+            gap: "var(--drp-space-2)",
             alignItems: "baseline",
           }}
         >
@@ -128,7 +129,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           style={{
             display: "grid",
             gridTemplateColumns: "140px 1fr",
-            gap: "8px",
+            gap: "var(--drp-space-2)",
             alignItems: "flex-start",
           }}
         >
@@ -157,26 +158,18 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
       {/* First + Last name row */}
       <div className="drp-form-row">
         <div className="drp-field">
-          <label className="drp-field__label" htmlFor="profile-first-name">
-            First Name
-          </label>
-          <input
+          <Input
+            label="First Name"
             id="profile-first-name"
-            type="text"
-            className="drp-input"
             value={profile.firstName}
             onChange={(e) => onChange({ firstName: e.target.value })}
             placeholder="First name"
           />
         </div>
         <div className="drp-field">
-          <label className="drp-field__label" htmlFor="profile-last-name">
-            Last Name
-          </label>
-          <input
+          <Input
+            label="Last Name"
             id="profile-last-name"
-            type="text"
-            className="drp-input"
             value={profile.lastName}
             onChange={(e) => onChange({ lastName: e.target.value })}
             placeholder="Last name"
@@ -185,63 +178,37 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
       </div>
 
       {/* Company */}
-      <div className="drp-field">
-        <label className="drp-field__label" htmlFor="profile-company">
-          Company
-        </label>
-        <input
-          id="profile-company"
-          type="text"
-          className="drp-input"
-          style={{ width: "100%" }}
-          value={profile.companyName}
-          onChange={(e) => onChange({ companyName: e.target.value })}
-          placeholder="Company name"
-        />
-      </div>
+      <Input
+        label="Company"
+        id="profile-company"
+        value={profile.companyName}
+        onChange={(e) => onChange({ companyName: e.target.value })}
+        placeholder="Company name"
+      />
 
       {/* Role */}
-      <div className="drp-field">
-        <label className="drp-field__label" htmlFor="profile-role">
-          Role
-        </label>
-        <input
-          id="profile-role"
-          type="text"
-          className="drp-input"
-          style={{ width: "100%" }}
-          value={profile.role}
-          onChange={(e) => onChange({ role: e.target.value })}
-          placeholder="Your role or job title"
-        />
-      </div>
+      <Input
+        label="Role"
+        id="profile-role"
+        value={profile.role}
+        onChange={(e) => onChange({ role: e.target.value })}
+        placeholder="Your role or job title"
+      />
 
       {/* Industry */}
-      <div className="drp-field">
-        <label className="drp-field__label" htmlFor="profile-industry">
-          Industry
-        </label>
-        <input
-          id="profile-industry"
-          type="text"
-          className="drp-input"
-          style={{ width: "100%" }}
-          value={profile.industry}
-          onChange={(e) => onChange({ industry: e.target.value })}
-          placeholder="e.g. Technology, Healthcare, Finance"
-        />
-      </div>
+      <Input
+        label="Industry"
+        id="profile-industry"
+        value={profile.industry}
+        onChange={(e) => onChange({ industry: e.target.value })}
+        placeholder="e.g. Technology, Healthcare, Finance"
+      />
 
       {/* Audience */}
       <div className="drp-field">
-        <label className="drp-field__label" htmlFor="profile-audience">
-          Audience
-        </label>
-        <input
+        <Input
+          label="Audience"
           id="profile-audience"
-          type="text"
-          className="drp-input"
-          style={{ width: "100%" }}
           value={profile.audience.join(", ")}
           onChange={(e) => handleAudienceChange(e.target.value)}
           placeholder="Comma-separated, e.g. Founders, Marketers, CTOs"

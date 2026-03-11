@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Alert, Button, Card } from "@doctorproject/react";
+import { Alert, Badge, Button, Card } from "@doctorproject/react";
 import { Check, X } from "lucide-react";
 import type { RuleProposal, ProposalStatus } from "@/lib/knowledge/types";
 
@@ -31,6 +31,13 @@ export function RuleProposalCard({
 
   const isPending = proposal.status === "pending";
 
+  const statusVariant =
+    proposal.status === "approved"
+      ? "mint"
+      : proposal.status === "rejected"
+        ? "pink"
+        : "primary";
+
   return (
     <Card variant="flat" style={{ padding: "var(--drp-space-3)" }}>
       {/* Header */}
@@ -49,23 +56,7 @@ export function RuleProposalCard({
             gap: "var(--drp-space-2)",
           }}
         >
-          <span
-            style={{
-              fontSize: "var(--drp-text-xs)",
-              fontWeight: 700,
-              textTransform: "uppercase",
-              padding: "0 4px",
-              background:
-                proposal.status === "approved"
-                  ? "var(--drp-success, #00AA00)"
-                  : proposal.status === "rejected"
-                    ? "var(--drp-error, #FF4444)"
-                    : "var(--drp-purple)",
-              color: "white",
-            }}
-          >
-            {proposal.status}
-          </span>
+          <Badge variant={statusVariant}>{proposal.status}</Badge>
           <span style={{ fontSize: "var(--drp-text-sm)", fontWeight: 700 }}>
             {proposal.proposalType}
           </span>
@@ -131,7 +122,7 @@ export function RuleProposalCard({
                 fontSize: "var(--drp-text-xs)",
                 fontWeight: 700,
                 marginBottom: 4,
-                color: "var(--drp-error, #FF4444)",
+                color: "var(--drp-error-dark)",
               }}
             >
               Current
@@ -156,7 +147,7 @@ export function RuleProposalCard({
                 fontSize: "var(--drp-text-xs)",
                 fontWeight: 700,
                 marginBottom: 4,
-                color: "var(--drp-success, #00AA00)",
+                color: "var(--drp-success-dark)",
               }}
             >
               Proposed

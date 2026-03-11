@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
+import { Button, Card, Input, Alert, Loader } from "@doctorproject/react";
 import { useRouter } from "next/navigation";
-import { Loader } from "lucide-react";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -38,36 +37,41 @@ export default function ForgotPasswordPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "1rem",
+        padding: "var(--drp-space-4)",
       }}
     >
       <Card
+        variant="raised"
         style={{
           width: "100%",
           maxWidth: "400px",
-          borderRadius: 0,
-          padding: "2rem",
+          padding: "var(--drp-space-8)",
         }}
       >
         {submitted ? (
           <div style={{ textAlign: "center" }}>
             <h1
               style={{
-                fontSize: "1.5rem",
-                fontWeight: 700,
-                marginBottom: "1rem",
+                fontSize: "var(--drp-text-h4)",
+                fontWeight: "var(--drp-weight-bold)",
+                marginBottom: "var(--drp-space-4)",
                 color: "var(--drp-purple)",
               }}
             >
               Check your inbox
             </h1>
-            <p style={{ marginBottom: "1.5rem", color: "#555" }}>
+            <p
+              style={{
+                marginBottom: "var(--drp-space-6)",
+                color: "var(--drp-text-secondary)",
+              }}
+            >
               If that email is registered, you&apos;ll receive a reset link
               shortly.
             </p>
             <Button
               variant="primary"
-              style={{ borderRadius: 0, width: "100%" }}
+              block
               onClick={() => void router.push("/login")}
             >
               ← Back to login
@@ -77,88 +81,57 @@ export default function ForgotPasswordPage() {
           <>
             <h1
               style={{
-                fontSize: "1.5rem",
-                fontWeight: 700,
-                marginBottom: "0.5rem",
+                fontSize: "var(--drp-text-h4)",
+                fontWeight: "var(--drp-weight-bold)",
+                marginBottom: "var(--drp-space-2)",
                 color: "var(--drp-purple)",
               }}
             >
               Reset your password
             </h1>
-            <p style={{ marginBottom: "1.5rem", color: "#555" }}>
+            <p
+              style={{
+                marginBottom: "var(--drp-space-6)",
+                color: "var(--drp-text-secondary)",
+              }}
+            >
               Enter your email and we&apos;ll send you a reset link.
             </p>
 
-            <form onSubmit={(e) => void handleSubmit(e)}>
-              <div style={{ marginBottom: "1rem" }}>
-                <label
-                  htmlFor="email"
-                  style={{
-                    display: "block",
-                    marginBottom: "0.375rem",
-                    fontWeight: 500,
-                    fontSize: "0.875rem",
-                  }}
-                >
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  className="drp-input"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                  style={{ borderRadius: 0, width: "100%" }}
-                />
-              </div>
+            <form
+              onSubmit={(e) => void handleSubmit(e)}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--drp-space-4)",
+              }}
+            >
+              <Input
+                label="Email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+              />
 
-              {error && (
-                <p
-                  style={{
-                    color: "#c00",
-                    fontSize: "0.875rem",
-                    marginBottom: "1rem",
-                  }}
-                >
-                  {error}
-                </p>
-              )}
+              {error && <Alert variant="error">{error}</Alert>}
 
-              <Button
-                type="submit"
-                variant="primary"
-                disabled={loading}
-                style={{ borderRadius: 0, width: "100%", marginBottom: "1rem" }}
-              >
-                {loading ? (
-                  <Loader
-                    size={16}
-                    style={{ animation: "spin 1s linear infinite" }}
-                  />
-                ) : (
-                  "Send Reset Link"
-                )}
+              <Button type="submit" variant="primary" disabled={loading} block>
+                {loading ? <Loader size="sm" /> : "Send Reset Link"}
               </Button>
             </form>
 
-            <div style={{ textAlign: "center" }}>
-              <button
-                type="button"
+            <div
+              style={{ textAlign: "center", marginTop: "var(--drp-space-4)" }}
+            >
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => void router.push("/login")}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "var(--drp-purple)",
-                  cursor: "pointer",
-                  fontSize: "0.875rem",
-                  textDecoration: "underline",
-                  padding: 0,
-                }}
               >
                 ← Back to login
-              </button>
+              </Button>
             </div>
           </>
         )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Button } from "@doctorproject/react";
 import { FileText, BookOpen, Eye, MessageSquare, List } from "lucide-react";
 import { postStructureOptions } from "@/lib/dropdownData";
 
@@ -369,9 +370,10 @@ export default function PostStructureCards({
           const isPreviewing = previewId === option.id;
 
           return (
-            <button
+            <Button
               key={option.id}
               type="button"
+              variant={isSelected ? "primary" : "ghost-bordered"}
               onClick={() => handleSelect(option.value)}
               style={{
                 display: "flex",
@@ -379,19 +381,18 @@ export default function PostStructureCards({
                 alignItems: "center",
                 gap: 6,
                 padding: "14px 10px 10px",
-                border: isSelected
-                  ? "2px solid var(--drp-purple, #631DED)"
-                  : isPreviewing
-                    ? "2px solid rgba(99,29,237,0.3)"
-                    : "2px solid rgba(0,0,0,0.1)",
                 background: isSelected
                   ? "#631DED0D"
                   : isPreviewing
                     ? "#631DED05"
                     : "transparent",
-                cursor: "pointer",
+                borderColor: isSelected
+                  ? "var(--drp-purple, #631DED)"
+                  : isPreviewing
+                    ? "rgba(99,29,237,0.3)"
+                    : "rgba(0,0,0,0.1)",
                 textAlign: "center",
-                transition: "all 0.15s ease",
+                height: "auto",
                 position: "relative",
               }}
             >
@@ -445,7 +446,7 @@ export default function PostStructureCards({
               >
                 {isPreviewing ? "▲ hide" : "▼ example"}
               </span>
-            </button>
+            </Button>
           );
         })}
       </div>

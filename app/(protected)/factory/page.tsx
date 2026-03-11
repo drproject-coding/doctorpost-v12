@@ -793,7 +793,6 @@ export default function FactoryPage() {
             marginBottom: "var(--drp-space-4)",
             background: "rgba(0,0,0,0.04)",
             border: "1px solid rgba(0,0,0,0.08)",
-            borderRadius: "4px",
             fontSize: "var(--drp-text-xs)",
             color: "var(--drp-grey)",
           }}
@@ -877,7 +876,6 @@ export default function FactoryPage() {
               marginBottom: "var(--drp-space-4)",
               padding: "var(--drp-space-3)",
               background: "rgba(124, 58, 237, 0.08)",
-              borderRadius: "4px",
               border: "1px solid rgba(124, 58, 237, 0.2)",
             }}
           >

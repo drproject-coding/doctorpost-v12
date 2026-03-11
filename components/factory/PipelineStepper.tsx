@@ -15,6 +15,7 @@ import {
   Eye,
   Lightbulb,
 } from "lucide-react";
+import { Button } from "@doctorproject/react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
 
 const STEPS: { phase: PipelinePhase; label: string; icon: React.ReactNode }[] =
@@ -229,34 +230,22 @@ export function PipelineStepper({
                   />
                 )}
                 {canRetry && (
-                  <button
+                  <Button
+                    variant="ghost"
+                    icon
+                    aria-label={`Reload ${step.label}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       onRetryPhase(step.phase);
                     }}
-                    title={`Reload ${step.label}`}
                     style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
                       color: "var(--drp-purple)",
                       padding: "2px 4px",
-                      display: "flex",
-                      alignItems: "center",
                       opacity: 0.7,
-                      transition: "opacity 0.2s",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.opacity =
-                        "1";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.opacity =
-                        "0.7";
                     }}
                   >
                     <RotateCcw size={12} />
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>
@@ -274,26 +263,20 @@ export function PipelineStepper({
             marginTop: "var(--drp-space-2)",
           }}
         >
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={handlePrev}
             disabled={!canGoPrev}
+            iconLeft={<ChevronLeft size={14} />}
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-              background: "none",
-              border: "none",
-              cursor: canGoPrev ? "pointer" : "default",
-              fontSize: "var(--drp-text-xs)",
               color: canGoPrev
                 ? "var(--drp-purple)"
                 : "var(--drp-border-color, #e0e0e0)",
-              padding: "2px 0",
             }}
           >
-            <ChevronLeft size={14} />
             Previous
-          </button>
+          </Button>
 
           {isViewingPast && (
             <span
@@ -304,42 +287,35 @@ export function PipelineStepper({
               }}
             >
               Viewing: {STEPS[viewIdx]?.label}{" "}
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => onPhaseClick(currentPhase)}
                 style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
                   color: "var(--drp-grey)",
                   fontSize: "var(--drp-text-xs)",
                   textDecoration: "underline",
                 }}
               >
                 Return to current
-              </button>
+              </Button>
             </span>
           )}
 
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={handleNext}
             disabled={!canGoNext}
+            iconRight={<ChevronRight size={14} />}
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-              background: "none",
-              border: "none",
-              cursor: canGoNext ? "pointer" : "default",
-              fontSize: "var(--drp-text-xs)",
               color: canGoNext
                 ? "var(--drp-purple)"
                 : "var(--drp-border-color, #e0e0e0)",
-              padding: "2px 0",
             }}
           >
             Next
-            <ChevronRight size={14} />
-          </button>
+          </Button>
         </div>
       )}
 

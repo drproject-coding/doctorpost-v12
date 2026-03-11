@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useCallback, useRef } from "react";
+import { Button } from "@doctorproject/react";
 
 interface ConfirmOptions {
   title?: string;
@@ -101,31 +102,20 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
                 justifyContent: "flex-end",
               }}
             >
-              <button
-                className="drp-btn drp-btn--secondary drp-btn--sm"
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => handleClose(false)}
               >
                 {state.cancelLabel ?? "Cancel"}
-              </button>
-              <button
-                className="drp-btn drp-btn--sm"
-                style={
-                  state.danger
-                    ? {
-                        background: "#c0392b",
-                        color: "white",
-                        border: "1px solid #c0392b",
-                      }
-                    : {
-                        background: "#121212",
-                        color: "white",
-                        border: "1px solid #121212",
-                      }
-                }
+              </Button>
+              <Button
+                variant={state.danger ? "danger" : "primary"}
+                size="sm"
                 onClick={() => handleClose(true)}
               >
                 {state.confirmLabel ?? "Confirm"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

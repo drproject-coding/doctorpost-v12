@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card } from "@doctorproject/react";
+import { Badge, Button, Card } from "@doctorproject/react";
 import { IdeaStatusBadge } from "./IdeaStatusBadge";
 import type { CampaignPostStatus } from "@/lib/knowledge/types";
 
@@ -73,18 +73,15 @@ export function IdeaInbox({ onSelect }: IdeaInboxProps) {
       variant="flat"
       style={{ marginBottom: "var(--drp-space-4)", overflow: "hidden" }}
     >
-      <button
+      <Button
+        variant="ghost"
         onClick={() => setOpen((v) => !v)}
         style={{
           width: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
           padding: "var(--drp-space-3)",
-          fontFamily: "var(--drp-font-primary)",
         }}
       >
         <div
@@ -97,25 +94,14 @@ export function IdeaInbox({ onSelect }: IdeaInboxProps) {
           <span style={{ fontSize: "var(--drp-text-sm)", fontWeight: 700 }}>
             Campaign Ideas Ready to Write
           </span>
-          <span
-            style={{
-              fontSize: "var(--drp-text-xs)",
-              fontWeight: 700,
-              background: "#0066CC",
-              color: "#fff",
-              padding: "1px 7px",
-              borderRadius: 2,
-            }}
-          >
-            {ideas.length}
-          </span>
+          <Badge variant="primary">{ideas.length}</Badge>
         </div>
         <span
           style={{ fontSize: "var(--drp-text-xs)", color: "var(--drp-grey)" }}
         >
           {open ? "▲ Hide" : "▼ Show"}
         </span>
-      </button>
+      </Button>
 
       {open && (
         <div
@@ -129,8 +115,9 @@ export function IdeaInbox({ onSelect }: IdeaInboxProps) {
           }}
         >
           {ideas.map((idea) => (
-            <button
+            <Button
               key={idea.id}
+              variant="ghost"
               onClick={() => {
                 onSelect(idea);
                 setOpen(false);
@@ -141,11 +128,9 @@ export function IdeaInbox({ onSelect }: IdeaInboxProps) {
                 gap: "var(--drp-space-3)",
                 padding: "var(--drp-space-3)",
                 background: "var(--drp-bg, #fff)",
-                border: "none",
-                cursor: "pointer",
                 textAlign: "left",
-                fontFamily: "var(--drp-font-primary)",
                 width: "100%",
+                justifyContent: "flex-start",
               }}
             >
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -193,7 +178,7 @@ export function IdeaInbox({ onSelect }: IdeaInboxProps) {
                 </div>
               </div>
               <IdeaStatusBadge status={idea.generationStatus} size="sm" />
-            </button>
+            </Button>
           ))}
         </div>
       )}

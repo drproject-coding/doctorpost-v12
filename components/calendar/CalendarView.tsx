@@ -123,9 +123,11 @@ export default function CalendarView({
           {dayPosts.length > 0 ? (
             <div className="space-y-1">
               {dayPosts.map((post) => (
-                <button
+                <Button
                   key={post.id}
-                  className={`block w-full text-left px-2 py-1 text-xs rounded-drp-md border-2 truncate ${getStatusColorClasses(post.status)} hover:opacity-80 transition-opacity`}
+                  variant="ghost"
+                  size="sm"
+                  className={`block w-full text-left px-2 py-1 text-xs border-2 truncate ${getStatusColorClasses(post.status)} hover:opacity-80 transition-opacity`}
                   title={post.title}
                   onClick={() => onPostClick(post)}
                 >
@@ -133,7 +135,7 @@ export default function CalendarView({
                     <ScoreBadge score={post.factoryScore} />
                   )}
                   {post.title}
-                </button>
+                </Button>
               ))}
             </div>
           ) : null}

@@ -23,7 +23,6 @@ function OptionCard({
     <div
       style={{
         border: "2px solid var(--drp-black)",
-        borderRadius: 0,
         padding: "32px 28px",
         flex: 1,
         minWidth: 0,
@@ -80,7 +79,8 @@ function OptionCard({
             e.stopPropagation();
             onClick();
           }}
-          style={{ borderRadius: 0, width: "100%" }}
+          style={{ width: "100%" }}
+          block
         >
           {buttonLabel}
         </Button>
@@ -161,29 +161,13 @@ export default function OnboardingStartPage() {
         </div>
 
         <div style={{ textAlign: "center" }}>
-          <button
+          <Button
+            variant="ghost"
             onClick={() => router.push("/dashboard")}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "14px",
-              color: "var(--drp-grey)",
-              padding: "4px 0",
-              textDecoration: "none",
-              transition: "color 0.15s ease",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.color =
-                "var(--drp-black)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.color =
-                "var(--drp-grey)";
-            }}
+            style={{ fontSize: "14px", color: "var(--drp-grey)" }}
           >
             Skip for now &rarr;
-          </button>
+          </Button>
         </div>
       </div>
     </main>

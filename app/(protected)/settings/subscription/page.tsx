@@ -1,8 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card } from "@doctorproject/react";
-import { CheckCircle, Zap, Loader, AlertCircle, Crown } from "lucide-react";
+import {
+  Card,
+  Alert,
+  Button,
+  Loader as DSLoader,
+  ProgressBar,
+} from "@doctorproject/react";
+import { CheckCircle, Zap, Crown } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 interface UserSettings {
@@ -24,7 +30,7 @@ const PLAN_FEATURES: Record<
 > = {
   free: {
     label: "Free",
-    color: "#888",
+    color: "var(--drp-text-muted)",
     limit: "5 posts/month",
     features: [
       "5 AI-generated posts per month",
@@ -47,7 +53,7 @@ const PLAN_FEATURES: Record<
   },
   power: {
     label: "Power",
-    color: "#FF6C01",
+    color: "var(--drp-orange)",
     limit: "Unlimited",
     features: [
       "Unlimited AI-generated posts",
@@ -101,11 +107,7 @@ export default function SettingsSubscriptionPage() {
           justifyContent: "center",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Loader size={20} style={{ animation: "spin 1s linear infinite" }} />
-          <span style={{ fontWeight: 600 }}>Loading…</span>
-        </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        <DSLoader label="Loading…" />
       </div>
     );
   }
@@ -119,12 +121,12 @@ export default function SettingsSubscriptionPage() {
   const usagePct = limit !== null ? Math.min(100, (used / limit) * 100) : 0;
   const usageColor =
     limit === null
-      ? "#00A896"
+      ? "var(--drp-success)"
       : usagePct >= 90
-        ? "#E99898"
+        ? "var(--drp-error-dark)"
         : usagePct >= 70
-          ? "#FF6C01"
-          : "#00A896";
+          ? "var(--drp-orange)"
+          : "var(--drp-success)";
 
   const formattedReset = resetDate
     ? new Date(resetDate).toLocaleDateString("en-US", {
@@ -161,19 +163,8 @@ export default function SettingsSubscriptionPage() {
         </div>
 
         {error && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "12px 16px",
-              background: "rgba(233,152,152,0.1)",
-              border: "1px solid #E99898",
-              marginBottom: 16,
-            }}
-          >
-            <AlertCircle size={15} color="#E99898" />
-            <span style={{ fontSize: 13 }}>{error}</span>
+          <div style={{ marginBottom: "var(--drp-space-4)" }}>
+            <Alert variant="error">{error}</Alert>
           </div>
         )}
 
@@ -214,7 +205,11 @@ export default function SettingsSubscriptionPage() {
                     {planMeta.label}
                   </span>
                   {tier === "power" && (
-                    <Crown size={20} color="#FF6C01" fill="#FF6C01" />
+                    <Crown
+                      size={20}
+                      color="var(--drp-orange)"
+                      fill="var(--drp-orange)"
+                    />
                   )}
                 </div>
                 <p
@@ -276,22 +271,8 @@ export default function SettingsSubscriptionPage() {
               </div>
 
               {limit !== null && (
-                <div
-                  style={{
-                    height: 10,
-                    background: "#eee",
-                    position: "relative",
-                    marginBottom: 8,
-                  }}
-                >
-                  <div
-                    style={{
-                      height: "100%",
-                      width: `${usagePct}%`,
-                      background: usageColor,
-                      transition: "width 0.4s ease",
-                    }}
-                  />
+                <div style={{ marginBottom: 8 }}>
+                  <ProgressBar value={usagePct} />
                 </div>
               )}
 
@@ -464,32 +445,16 @@ export default function SettingsSubscriptionPage() {
 
               <a
                 href="mailto:support@doctorpost.ai?subject=Upgrade%20Request"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "12px 24px",
-                  background: "var(--drp-purple)",
-                  color: "#fff",
-                  fontWeight: 800,
-                  fontSize: 14,
-                  textDecoration: "none",
-                  flexShrink: 0,
-                }}
+                style={{ textDecoration: "none", flexShrink: 0 }}
               >
-                <Zap size={15} />
-                {tier === "free" ? "Upgrade to Pro" : "Upgrade to Power"}
+                <Button variant="primary" iconLeft={<Zap size={15} />}>
+                  {tier === "free" ? "Upgrade to Pro" : "Upgrade to Power"}
+                </Button>
               </a>
             </div>
           </Card>
         )}
       </div>
-
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }

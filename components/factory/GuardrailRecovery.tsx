@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button } from "@doctorproject/react";
+import { Button, Textarea } from "@doctorproject/react";
 import { Edit3, Wand2, RotateCcw } from "lucide-react";
 import type { GuardrailResult } from "@/lib/knowledge/types";
 
@@ -197,8 +197,7 @@ export function GuardrailRecovery({
       {/* Manual edit area */}
       {isEditing && (
         <div style={{ marginTop: "var(--drp-space-3)" }}>
-          <textarea
-            className="drp-input"
+          <Textarea
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
             style={{

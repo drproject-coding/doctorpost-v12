@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Loader as LucideLoader } from "lucide-react";
-import { Loader, Alert } from "@doctorproject/react";
+import { Loader, Alert, Button } from "@doctorproject/react";
 import {
   getBrandProfile,
   updateBrandProfile,
@@ -173,20 +172,22 @@ export default function BrandPage() {
             </p>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <button
-              className="drp-btn drp-btn--primary drp-btn--sm"
+            <Button
+              variant="primary"
+              size="sm"
               onClick={() => void handleAudit()}
               disabled={auditing || !aiSettings}
             >
               {auditing ? "Auditing..." : "✦ Audit Brand"}
-            </button>
+            </Button>
             <div style={{ position: "relative" }} ref={exportRef}>
-              <button
-                className="drp-btn drp-btn--secondary drp-btn--sm"
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => setExportOpen((o) => !o)}
               >
                 Export ↓
-              </button>
+              </Button>
               {exportOpen && profile && (
                 <div
                   style={{
@@ -194,8 +195,8 @@ export default function BrandPage() {
                     right: 0,
                     top: "100%",
                     marginTop: 4,
-                    background: "white",
-                    border: "1px solid #121212",
+                    background: "var(--drp-white)",
+                    border: "1px solid var(--drp-black)",
                     zIndex: 50,
                     minWidth: 180,
                   }}
@@ -215,16 +216,14 @@ export default function BrandPage() {
                     },
                     { label: "Print / PDF", action: () => triggerPrint() },
                   ].map((item) => (
-                    <button
+                    <Button
                       key={item.label}
+                      variant="ghost"
                       style={{
                         display: "block",
                         width: "100%",
                         textAlign: "left",
-                        padding: "8px 12px",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
+                        padding: "var(--drp-space-2) var(--drp-space-3)",
                       }}
                       onClick={() => {
                         item.action();
@@ -232,7 +231,7 @@ export default function BrandPage() {
                       }}
                     >
                       {item.label}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               )}
@@ -244,10 +243,10 @@ export default function BrandPage() {
         {auditOpen && (
           <div
             style={{
-              border: "1px solid #121212",
-              padding: 16,
-              marginBottom: 24,
-              background: "#F2F2F2",
+              border: "1px solid var(--drp-black)",
+              padding: "var(--drp-space-4)",
+              marginBottom: "var(--drp-space-6)",
+              background: "var(--drp-cream)",
             }}
           >
             <div
@@ -255,20 +254,17 @@ export default function BrandPage() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: 12,
+                marginBottom: "var(--drp-space-3)",
               }}
             >
               <strong>Brand Audit</strong>
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setAuditOpen(false)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
               >
                 ✕
-              </button>
+              </Button>
             </div>
             {auditing ? (
               <div>Analyzing your brand...</div>
@@ -277,11 +273,13 @@ export default function BrandPage() {
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr 1fr",
-                  gap: 16,
+                  gap: "var(--drp-space-4)",
                 }}
               >
                 <div>
-                  <strong style={{ color: "#00AA00" }}>Strengths</strong>
+                  <strong style={{ color: "var(--drp-success-dark)" }}>
+                    Strengths
+                  </strong>
                   <ul>
                     {auditResult.strengths.map((s, i) => (
                       <li key={i}>{s}</li>
@@ -289,7 +287,9 @@ export default function BrandPage() {
                   </ul>
                 </div>
                 <div>
-                  <strong style={{ color: "#FF4444" }}>Gaps</strong>
+                  <strong style={{ color: "var(--drp-error-dark)" }}>
+                    Gaps
+                  </strong>
                   <ul>
                     {auditResult.gaps.map((g, i) => (
                       <li key={i}>{g}</li>
@@ -297,7 +297,9 @@ export default function BrandPage() {
                   </ul>
                 </div>
                 <div>
-                  <strong style={{ color: "#631DED" }}>Suggestions</strong>
+                  <strong style={{ color: "var(--drp-purple)" }}>
+                    Suggestions
+                  </strong>
                   <ul>
                     {auditResult.suggestions.map((s, i) => (
                       <li key={i}>{s}</li>
@@ -316,7 +318,7 @@ export default function BrandPage() {
             <BrandSection
               title="Profile"
               tag="PROFILE"
-              color="#631DED"
+              color="var(--drp-purple)"
               onSave={() => handleSave("profile", draft ? { ...draft } : {})}
               saving={savingSection === "profile"}
               onAiGenerate={() => handleAiGenerate("Profile")}

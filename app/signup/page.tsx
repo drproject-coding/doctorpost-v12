@@ -1,10 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
+import {
+  Button,
+  Card,
+  Input,
+  Alert,
+  Loader,
+  Divider,
+} from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { Loader, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -48,20 +55,30 @@ export default function SignupPage() {
 
   return (
     <div
-      className="flex items-center justify-center"
-      style={{ minHeight: "100vh", background: "var(--drp-cream)" }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        background: "var(--drp-cream)",
+        padding: "var(--drp-space-4)",
+      }}
     >
       <Card
         variant="raised"
-        className="text-center"
-        style={{ padding: "32px", maxWidth: "420px", width: "100%" }}
+        style={{
+          padding: "var(--drp-space-8)",
+          maxWidth: "420px",
+          width: "100%",
+        }}
       >
         <h1
           style={{
-            fontSize: "24px",
-            fontWeight: 700,
-            marginBottom: "24px",
+            fontSize: "var(--drp-text-h4)",
+            fontWeight: "var(--drp-weight-bold)",
+            marginBottom: "var(--drp-space-6)",
             color: "var(--drp-purple)",
+            textAlign: "center",
           }}
         >
           Create your account
@@ -69,135 +86,65 @@ export default function SignupPage() {
 
         <form
           onSubmit={(e) => void handleSubmit(e)}
-          style={{ textAlign: "left" }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--drp-space-4)",
+          }}
         >
-          <div style={{ marginBottom: "16px" }}>
-            <label
-              htmlFor="name"
-              style={{
-                display: "block",
-                fontWeight: 600,
-                marginBottom: "6px",
-                fontSize: "14px",
-              }}
-            >
-              Full name
-            </label>
-            <input
-              id="name"
-              type="text"
-              className="drp-input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+          <Input
+            label="Full name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            autoComplete="name"
+          />
+
+          <Input
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+          />
+
+          <div style={{ position: "relative" }}>
+            <Input
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
-              autoComplete="name"
-              style={{ width: "100%", borderRadius: 0 }}
+              autoComplete="new-password"
             />
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              icon
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              onClick={() => setShowPassword((prev) => !prev)}
+              style={{ position: "absolute", right: 6, bottom: 6 }}
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </Button>
           </div>
 
-          <div style={{ marginBottom: "16px" }}>
-            <label
-              htmlFor="email"
-              style={{
-                display: "block",
-                fontWeight: 600,
-                marginBottom: "6px",
-                fontSize: "14px",
-              }}
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              className="drp-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-              style={{ width: "100%", borderRadius: 0 }}
-            />
-          </div>
+          {error && <Alert variant="error">{error}</Alert>}
 
-          <div style={{ marginBottom: "24px" }}>
-            <label
-              htmlFor="password"
-              style={{
-                display: "block",
-                fontWeight: 600,
-                marginBottom: "6px",
-                fontSize: "14px",
-              }}
-            >
-              Password
-            </label>
-            <div style={{ position: "relative" }}>
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                className="drp-input"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="new-password"
-                style={{ width: "100%", borderRadius: 0, paddingRight: "40px" }}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  color: "inherit",
-                }}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-          </div>
-
-          {error && (
-            <div
-              style={{
-                marginBottom: "16px",
-                padding: "10px 14px",
-                background: "#fee2e2",
-                border: "2px solid #ef4444",
-                borderRadius: 0,
-                color: "#b91c1c",
-                fontSize: "14px",
-              }}
-            >
-              {error}
-            </div>
-          )}
-
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={loading}
-            style={{ width: "100%", borderRadius: 0 }}
-          >
+          <Button type="submit" variant="primary" disabled={loading} block>
             {loading ? (
               <span
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "8px",
+                  gap: "var(--drp-space-2)",
                 }}
               >
-                <Loader size={16} className="animate-spin" />
-                Creating account...
+                <Loader size="sm" /> Creating account...
               </span>
             ) : (
               "Create Account"
@@ -205,18 +152,25 @@ export default function SignupPage() {
           </Button>
         </form>
 
-        <p style={{ marginTop: "20px", fontSize: "14px" }}>
+        <div style={{ margin: "var(--drp-space-5) 0" }}>
+          <Divider />
+        </div>
+
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "var(--drp-text-md)",
+            color: "var(--drp-text-secondary)",
+          }}
+        >
           Already have an account?{" "}
-          <a
-            href="/login"
-            style={{
-              color: "var(--drp-purple)",
-              fontWeight: 600,
-              textDecoration: "underline",
-            }}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push("/login")}
           >
             Sign in
-          </a>
+          </Button>
         </p>
       </Card>
     </div>

@@ -399,26 +399,22 @@ export default function OnboardingUploadPage() {
                     </div>
                     <StatusBadge status={uf.status} />
                     {uf.status !== "uploading" && (
-                      <button
-                        onClick={(e) => {
+                      <Button
+                        variant="ghost"
+                        icon
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           removeFile(uf.id);
                         }}
                         aria-label={`Remove ${uf.file.name}`}
                         style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          padding: 4,
                           color: "var(--drp-grey)",
-                          display: "flex",
-                          alignItems: "center",
                           flexShrink: 0,
-                          lineHeight: 1,
+                          padding: 4,
                         }}
                       >
                         <X size={14} />
-                      </button>
+                      </Button>
                     )}
                   </div>
                 ))}
@@ -462,21 +458,18 @@ export default function OnboardingUploadPage() {
               )}
             </Button>
 
-            <button
+            <Button
+              variant="ghost"
               onClick={() => router.push("/onboarding/wizard/1")}
               style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
                 fontSize: "var(--drp-text-sm, 13px)",
                 color: "var(--drp-grey)",
                 textDecoration: "underline",
                 textUnderlineOffset: 3,
-                padding: 0,
               }}
             >
               Build with wizard instead →
-            </button>
+            </Button>
           </div>
 
           {/* File count warning */}

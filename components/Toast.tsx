@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useCallback, useEffect, useRef } from "react";
+import { Button } from "@doctorproject/react";
 import { CheckCircle, XCircle, X } from "lucide-react";
 
 type ToastType = "success" | "error" | "info";
@@ -107,21 +108,15 @@ function ToastItem({
     >
       {icon}
       <span style={{ flex: 1 }}>{toast.message}</span>
-      <button
+      <Button
+        variant="ghost"
+        icon
         onClick={() => onDismiss(toast.id)}
-        style={{
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          padding: 0,
-          lineHeight: 1,
-          color: "var(--drp-grey)",
-          flexShrink: 0,
-        }}
         aria-label="Dismiss"
+        style={{ flexShrink: 0, color: "var(--drp-grey)" }}
       >
         <X size={14} />
-      </button>
+      </Button>
       <style>{`
         @keyframes drp-toast-in {
           from { opacity: 0; transform: translateY(8px); }

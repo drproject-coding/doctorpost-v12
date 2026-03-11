@@ -1,8 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, Button } from "@doctorproject/react";
-import { User, Mail, Camera, Check, Loader, AlertCircle } from "lucide-react";
+import {
+  Card,
+  Button,
+  Input,
+  Alert,
+  Loader as DSLoader,
+} from "@doctorproject/react";
+import { Camera, Check } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 export default function SettingsProfilePage() {
@@ -102,7 +108,6 @@ export default function SettingsProfilePage() {
                 style={{
                   width: 80,
                   height: 80,
-                  borderRadius: "50%",
                   background: "var(--drp-purple)",
                   display: "flex",
                   alignItems: "center",
@@ -187,77 +192,24 @@ export default function SettingsProfilePage() {
             </h2>
 
             {/* Display name */}
-            <div style={{ marginBottom: 20 }}>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  fontWeight: 700,
-                  fontSize: 12,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.5,
-                  marginBottom: 8,
-                  color: "var(--drp-black)",
-                }}
-              >
-                <User size={13} />
-                Display Name
-              </label>
-              <input
+            <div style={{ marginBottom: "var(--drp-space-5)" }}>
+              <Input
+                label="Display Name"
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 disabled={saving}
                 placeholder="Your full name"
-                style={{
-                  width: "100%",
-                  padding: "10px 14px",
-                  border: "2px solid var(--drp-black)",
-                  background: "var(--drp-cream)",
-                  fontFamily: "inherit",
-                  fontSize: 14,
-                  outline: "none",
-                  boxSizing: "border-box",
-                  color: "var(--drp-black)",
-                }}
               />
             </div>
 
             {/* Email (readonly) */}
-            <div style={{ marginBottom: 24 }}>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  fontWeight: 700,
-                  fontSize: 12,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.5,
-                  marginBottom: 8,
-                  color: "var(--drp-black)",
-                }}
-              >
-                <Mail size={13} />
-                Email Address
-              </label>
-              <input
+            <div style={{ marginBottom: "var(--drp-space-6)" }}>
+              <Input
+                label="Email Address"
                 type="email"
                 value={user?.email ?? ""}
                 disabled
-                style={{
-                  width: "100%",
-                  padding: "10px 14px",
-                  border: "2px solid #ccc",
-                  background: "#f5f5f5",
-                  fontFamily: "inherit",
-                  fontSize: 14,
-                  outline: "none",
-                  boxSizing: "border-box",
-                  color: "var(--drp-grey)",
-                  cursor: "not-allowed",
-                }}
               />
               <p
                 style={{
@@ -272,57 +224,22 @@ export default function SettingsProfilePage() {
 
             {/* Error */}
             {error && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "10px 14px",
-                  background: "rgba(233,152,152,0.1)",
-                  border: "1px solid #E99898",
-                  marginBottom: 16,
-                }}
-              >
-                <AlertCircle size={14} color="#E99898" />
-                <span style={{ fontSize: 13, color: "var(--drp-black)" }}>
-                  {error}
-                </span>
+              <div style={{ marginBottom: "var(--drp-space-4)" }}>
+                <Alert variant="error">{error}</Alert>
               </div>
             )}
 
             {/* Save button */}
-            <button
+            <Button
+              variant={saved ? "outline" : "primary"}
               onClick={() => void handleSave()}
               disabled={
                 saving || !displayName.trim() || displayName === user?.name
               }
-              style={{
-                padding: "11px 28px",
-                background: saved
-                  ? "#00A896"
-                  : saving || !displayName.trim() || displayName === user?.name
-                    ? "#aaa"
-                    : "var(--drp-purple)",
-                color: "#fff",
-                border: "none",
-                fontWeight: 800,
-                fontSize: 14,
-                cursor:
-                  saving || !displayName.trim() || displayName === user?.name
-                    ? "not-allowed"
-                    : "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                transition: "background 0.2s",
-              }}
             >
               {saving ? (
                 <>
-                  <Loader
-                    size={14}
-                    style={{ animation: "spin 1s linear infinite" }}
-                  />
+                  <DSLoader size="sm" />
                   Saving…
                 </>
               ) : saved ? (
@@ -333,16 +250,10 @@ export default function SettingsProfilePage() {
               ) : (
                 "Save Changes"
               )}
-            </button>
+            </Button>
           </div>
         </Card>
       </div>
-
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }

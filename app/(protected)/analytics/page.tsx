@@ -21,7 +21,6 @@ const StatCard = ({
         style={{
           padding: "var(--drp-space-2)",
           background: "var(--drp-purple)",
-          borderRadius: "var(--drp-radius-md)",
           border: "2px solid black",
           marginRight: "var(--drp-space-2)",
         }}
@@ -140,7 +139,6 @@ export default function AnalyticsPage() {
                   padding: "var(--drp-space-3)",
                   background: "var(--drp-purple-light, #ede9fe)",
                   border: "2px solid black",
-                  borderRadius: "var(--drp-radius-md)",
                   color: "var(--drp-purple)",
                   fontWeight: 500,
                 }}

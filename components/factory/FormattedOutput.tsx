@@ -15,7 +15,11 @@ interface FormattedOutputProps {
   isSaving?: boolean;
 }
 
-export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps) {
+export function FormattedOutput({
+  post,
+  onSave,
+  isSaving,
+}: FormattedOutputProps) {
   const [copied, setCopied] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile");
   const [showMore, setShowMore] = useState(false);
@@ -68,59 +72,29 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
         </h3>
         <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
           {/* Preview mode toggle */}
-          <div
-            style={{
-              display: "flex",
-              border: "1px solid var(--drp-border-color, #e0e0e0)",
-              overflow: "hidden",
-            }}
-          >
-            <button
+          <div style={{ display: "flex", gap: "var(--drp-space-1)" }}>
+            <Button
+              size="sm"
+              variant={previewMode === "mobile" ? "primary" : "ghost"}
               onClick={() => {
                 setPreviewMode("mobile");
                 setShowMore(false);
               }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 4,
-                padding: "4px 8px",
-                fontSize: "var(--drp-text-xs)",
-                background:
-                  previewMode === "mobile"
-                    ? "var(--drp-purple)"
-                    : "transparent",
-                color: previewMode === "mobile" ? "white" : "var(--drp-grey)",
-                border: "none",
-                cursor: "pointer",
-              }}
             >
               <Smartphone size={12} />
               Mobile
-            </button>
-            <button
+            </Button>
+            <Button
+              size="sm"
+              variant={previewMode === "desktop" ? "primary" : "ghost"}
               onClick={() => {
                 setPreviewMode("desktop");
                 setShowMore(false);
               }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 4,
-                padding: "4px 8px",
-                fontSize: "var(--drp-text-xs)",
-                background:
-                  previewMode === "desktop"
-                    ? "var(--drp-purple)"
-                    : "transparent",
-                color: previewMode === "desktop" ? "white" : "var(--drp-grey)",
-                border: "none",
-                cursor: "pointer",
-              }}
             >
               <Monitor size={12} />
               Desktop
-            </button>
+            </Button>
           </div>
           <Button
             onClick={handleCopy}
@@ -148,7 +122,6 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
           maxWidth: containerWidth,
           margin: "0 auto",
           background: "white",
-          borderRadius: 8,
           boxShadow: "0 0 0 1px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.1)",
           overflow: "hidden",
         }}
@@ -180,13 +153,27 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
             Y
           </div>
           <div>
-            <div style={{ fontWeight: 600, fontSize: 14, color: "#191919" }}>
+            <div
+              style={{
+                fontWeight: 600,
+                fontSize: 14,
+                color: "var(--drp-black)",
+              }}
+            >
               Your Name
             </div>
-            <div style={{ fontSize: 12, color: "#666666", lineHeight: 1.3 }}>
+            <div
+              style={{
+                fontSize: 12,
+                color: "var(--drp-text-muted)",
+                lineHeight: 1.3,
+              }}
+            >
               Your headline here
             </div>
-            <div style={{ fontSize: 12, color: "#666666" }}>Just now</div>
+            <div style={{ fontSize: 12, color: "var(--drp-text-muted)" }}>
+              Just now
+            </div>
           </div>
         </div>
 
@@ -201,45 +188,31 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
               fontFamily:
                 '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
               margin: 0,
-              color: "#191919",
+              color: "var(--drp-black)",
             }}
           >
             {displayContent || "(No content)"}
             {isTruncated && !showMore && "..."}
           </pre>
           {isTruncated && !showMore && (
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setShowMore(true)}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#666666",
-                cursor: "pointer",
-                fontSize: 14,
-                fontWeight: 600,
-                padding: "4px 0",
-                display: "block",
-              }}
+              style={{ padding: "4px 0", display: "block" }}
             >
               ...see more
-            </button>
+            </Button>
           )}
           {showMore && isTruncated && (
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setShowMore(false)}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#666666",
-                cursor: "pointer",
-                fontSize: 14,
-                fontWeight: 600,
-                padding: "4px 0",
-                display: "block",
-              }}
+              style={{ padding: "4px 0", display: "block" }}
             >
               show less
-            </button>
+            </Button>
           )}
         </div>
 
@@ -247,11 +220,11 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
         <div
           style={{
             padding: "8px 16px",
-            borderTop: "1px solid #e0e0e0",
+            borderTop: "var(--drp-border)",
             display: "flex",
             justifyContent: "space-between",
             fontSize: 12,
-            color: "#666666",
+            color: "var(--drp-text-muted)",
           }}
         >
           <span>0 reactions</span>
@@ -262,12 +235,12 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
         <div
           style={{
             padding: "4px 16px 8px",
-            borderTop: "1px solid #e0e0e0",
+            borderTop: "var(--drp-border)",
             display: "flex",
             justifyContent: "space-around",
             fontSize: 13,
             fontWeight: 600,
-            color: "#666666",
+            color: "var(--drp-text-muted)",
           }}
         >
           <span>Like</span>

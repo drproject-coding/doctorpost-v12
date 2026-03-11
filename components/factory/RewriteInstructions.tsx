@@ -102,7 +102,8 @@ export function RewriteInstructions({
       }}
     >
       {/* Header */}
-      <button
+      <Button
+        variant="ghost"
         onClick={() => setExpanded(!expanded)}
         style={{
           width: "100%",
@@ -113,10 +114,9 @@ export function RewriteInstructions({
           background: passes
             ? "rgba(0, 170, 0, 0.08)"
             : "rgba(233, 215, 152, 0.3)",
-          border: "none",
-          cursor: "pointer",
           fontSize: "var(--drp-text-sm)",
           fontWeight: 700,
+          textAlign: "left",
         }}
       >
         <span>
@@ -132,7 +132,7 @@ export function RewriteInstructions({
           )}
         </span>
         {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-      </button>
+      </Button>
 
       {expanded && (
         <div style={{ padding: "var(--drp-space-3)" }}>
@@ -211,12 +211,14 @@ export function RewriteInstructions({
                   variant="primary"
                   onClick={() => onApplyFix(instructions)}
                   disabled={isApplying}
+                  iconLeft={
+                    isApplying ? (
+                      <RotateCcw size={14} className="animate-spin" />
+                    ) : (
+                      <Wand2 size={14} />
+                    )
+                  }
                 >
-                  {isApplying ? (
-                    <RotateCcw size={14} className="animate-spin" />
-                  ) : (
-                    <Wand2 size={14} />
-                  )}
                   {isApplying ? "Applying fixes..." : "Apply Fixes with AI"}
                 </Button>
               ) : (

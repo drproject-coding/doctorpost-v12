@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Card } from "@doctorproject/react";
+import { Badge, Card, Select } from "@doctorproject/react";
 import type { Signal } from "@/lib/knowledge/types";
 
 interface FeedbackHistoryProps {
@@ -20,6 +20,11 @@ export function FeedbackHistory({ signals }: FeedbackHistoryProps) {
     filterType === "all"
       ? sorted
       : sorted.filter((s) => s.signalType === filterType);
+
+  const filterOptions = [
+    { value: "all", label: "All types" },
+    ...signalTypes.map((t) => ({ value: t, label: t })),
+  ];
 
   return (
     <Card variant="raised">
@@ -43,19 +48,17 @@ export function FeedbackHistory({ signals }: FeedbackHistoryProps) {
 
         {/* Filter */}
         {signalTypes.length > 1 && (
-          <select
-            className="drp-input"
+          <Select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
             style={{ width: "auto", fontSize: "var(--drp-text-sm)" }}
           >
-            <option value="all">All types</option>
-            {signalTypes.map((t) => (
-              <option key={t} value={t}>
-                {t}
+            {filterOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
               </option>
             ))}
-          </select>
+          </Select>
         )}
       </div>
 
@@ -70,7 +73,7 @@ export function FeedbackHistory({ signals }: FeedbackHistoryProps) {
         </p>
       ) : (
         <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
-          {filtered.map((signal, idx) => (
+          {filtered.map((signal) => (
             <div
               key={signal.id}
               style={{
@@ -96,22 +99,7 @@ export function FeedbackHistory({ signals }: FeedbackHistoryProps) {
               </span>
 
               {/* Type badge */}
-              <span
-                style={{
-                  fontSize: "var(--drp-text-xs)",
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  padding: "0 4px",
-                  background: "var(--drp-purple)",
-                  color: "white",
-                  textAlign: "center",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {signal.signalType}
-              </span>
+              <Badge variant="primary">{signal.signalType}</Badge>
 
               {/* Observation */}
               <div>

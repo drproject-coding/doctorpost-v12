@@ -28,14 +28,12 @@ import {
 } from "@/lib/ai/constants";
 import { StraicoModelPicker } from "@/components/settings/StraicoModelPicker";
 import {
-  Loader,
   CheckCircle,
   XCircle,
   ChevronDown,
   ChevronRight,
   Eye,
   EyeOff,
-  Key,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
@@ -97,7 +95,7 @@ function TestResultBlock({ test }: { test: TestState }) {
           padding: "8px 0",
         }}
       >
-        <Loader size={12} className="animate-spin" />
+        <BruLoader size="sm" />
         {test.testType === "text"
           ? "Generating text..."
           : "Generating image (may take ~30s)..."}
@@ -677,9 +675,9 @@ export default function SettingsPage() {
               onBlur={() => void saveProfileSilent()}
               placeholder="pplx-..."
             />
-            <button
+            <Button
+              variant="ghost"
               type="button"
-              className="drp-btn drp-btn--ghost drp-btn--icon"
               onClick={() => setShowPerplexityKey((p) => !p)}
               style={{
                 position: "absolute",
@@ -690,7 +688,7 @@ export default function SettingsPage() {
               }}
             >
               {showPerplexityKey ? <EyeOff size={14} /> : <Eye size={14} />}
-            </button>
+            </Button>
           </div>
 
           {/* Reddit */}
@@ -710,9 +708,9 @@ export default function SettingsPage() {
               onBlur={() => void saveProfileSilent()}
               placeholder="Reddit app client secret"
             />
-            <button
+            <Button
+              variant="ghost"
               type="button"
-              className="drp-btn drp-btn--ghost drp-btn--icon"
               onClick={() => setShowRedditSecret((p) => !p)}
               style={{
                 position: "absolute",
@@ -723,7 +721,7 @@ export default function SettingsPage() {
               }}
             >
               {showRedditSecret ? <EyeOff size={14} /> : <Eye size={14} />}
-            </button>
+            </Button>
           </div>
         </div>
       </Card>
@@ -742,35 +740,30 @@ export default function SettingsPage() {
             {
               id: "claude" as AiProviderType,
               label: "Claude",
-              color: "#7C3AED",
+              color: "var(--drp-purple)",
             },
             {
               id: "straico" as AiProviderType,
               label: "Straico",
-              color: "#F59E0B",
+              color: "var(--drp-yellow)",
             },
             {
               id: "1forall" as AiProviderType,
               label: "1ForAll",
-              color: "#0EA5E9",
+              color: "var(--drp-blue)",
             },
           ].map(({ id, label, color }) => {
             const isActive = expandedProvider === id;
             return (
-              <button
+              <Button
                 key={id}
-                type="button"
+                variant="ghost"
                 onClick={() => setExpandedProvider(id)}
                 style={{
-                  padding: "10px 20px",
-                  background: "none",
-                  border: "none",
+                  padding: "var(--drp-space-2) var(--drp-space-5)",
                   borderBottom: isActive
                     ? `3px solid ${color}`
                     : "3px solid transparent",
-                  cursor: "pointer",
-                  fontFamily: "var(--drp-font-primary)",
-                  fontSize: "var(--drp-text-md)",
                   fontWeight: isActive ? 700 : 400,
                   color: isActive ? color : "var(--drp-grey)",
                   marginBottom: -2,
@@ -778,7 +771,7 @@ export default function SettingsPage() {
                 }}
               >
                 {label}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -831,9 +824,9 @@ export default function SettingsPage() {
                   !!claudeValidation.message
                 }
               />
-              <button
+              <Button
+                variant="ghost"
                 type="button"
-                className="drp-btn drp-btn--ghost drp-btn--icon"
                 onClick={() => setShowClaudeKey((v) => !v)}
                 style={{
                   position: "absolute",
@@ -844,7 +837,7 @@ export default function SettingsPage() {
                 }}
               >
                 {showClaudeKey ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
+              </Button>
             </div>
             <Button
               size="sm"
@@ -855,7 +848,7 @@ export default function SettingsPage() {
             >
               {claudeValidation.state === "validating" ? (
                 <>
-                  <Loader size={12} className="animate-spin" />
+                  <BruLoader size="sm" />
                   Validating...
                 </>
               ) : (
@@ -887,7 +880,7 @@ export default function SettingsPage() {
                   {claudeTest.state === "loading" &&
                   claudeTest.testType === "text" ? (
                     <>
-                      <Loader size={12} className="animate-spin" /> Testing...
+                      <BruLoader size="sm" /> Testing...
                     </>
                   ) : (
                     "Test Text Model"
@@ -947,9 +940,9 @@ export default function SettingsPage() {
                   !!straicoValidation.message
                 }
               />
-              <button
+              <Button
+                variant="ghost"
                 type="button"
-                className="drp-btn drp-btn--ghost drp-btn--icon"
                 onClick={() => setShowStraicoKey((v) => !v)}
                 style={{
                   position: "absolute",
@@ -960,7 +953,7 @@ export default function SettingsPage() {
                 }}
               >
                 {showStraicoKey ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
+              </Button>
             </div>
             <Button
               size="sm"
@@ -971,7 +964,7 @@ export default function SettingsPage() {
             >
               {straicoValidation.state === "validating" ? (
                 <>
-                  <Loader size={12} className="animate-spin" />
+                  <BruLoader size="sm" />
                   Validating...
                 </>
               ) : (
@@ -981,8 +974,9 @@ export default function SettingsPage() {
             {straicoApiKey.trim() && (
               <>
                 {/* Model for Copy dropdown */}
-                <div style={{ border: "var(--drp-border)", borderRadius: 0 }}>
-                  <button
+                <div style={{ border: "var(--drp-border)" }}>
+                  <Button
+                    variant="ghost"
                     type="button"
                     onClick={() => setStraicoModelOpen((v) => !v)}
                     style={{
@@ -990,13 +984,10 @@ export default function SettingsPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "10px 14px",
+                      padding: "var(--drp-space-2) var(--drp-space-3)",
                       background: straicoModelOpen
                         ? "rgba(245, 158, 11, 0.05)"
                         : "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "var(--drp-font-primary)",
                     }}
                   >
                     <span
@@ -1015,7 +1006,7 @@ export default function SettingsPage() {
                     ) : (
                       <ChevronRight size={14} color="var(--drp-grey)" />
                     )}
-                  </button>
+                  </Button>
                   {straicoModelOpen && (
                     <div
                       style={{
@@ -1035,8 +1026,9 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Model for Image dropdown */}
-                <div style={{ border: "var(--drp-border)", borderRadius: 0 }}>
-                  <button
+                <div style={{ border: "var(--drp-border)" }}>
+                  <Button
+                    variant="ghost"
                     type="button"
                     onClick={() => setStraicoImageOpen((v) => !v)}
                     style={{
@@ -1044,13 +1036,10 @@ export default function SettingsPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "10px 14px",
+                      padding: "var(--drp-space-2) var(--drp-space-3)",
                       background: straicoImageOpen
                         ? "rgba(245, 158, 11, 0.05)"
                         : "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "var(--drp-font-primary)",
                     }}
                   >
                     <span
@@ -1069,7 +1058,7 @@ export default function SettingsPage() {
                     ) : (
                       <ChevronRight size={14} color="var(--drp-grey)" />
                     )}
-                  </button>
+                  </Button>
                   {straicoImageOpen && (
                     <div
                       style={{
@@ -1113,7 +1102,7 @@ export default function SettingsPage() {
                     {straicoTest.state === "loading" &&
                     straicoTest.testType === "text" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <BruLoader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Text Model"
@@ -1137,7 +1126,7 @@ export default function SettingsPage() {
                     {straicoTest.state === "loading" &&
                     straicoTest.testType === "image" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <BruLoader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Image Model"
@@ -1198,9 +1187,9 @@ export default function SettingsPage() {
                   !!oneforallValidation.message
                 }
               />
-              <button
+              <Button
+                variant="ghost"
                 type="button"
-                className="drp-btn drp-btn--ghost drp-btn--icon"
                 onClick={() => setShowOneforallKey((v) => !v)}
                 style={{
                   position: "absolute",
@@ -1211,7 +1200,7 @@ export default function SettingsPage() {
                 }}
               >
                 {showOneforallKey ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
+              </Button>
             </div>
             <Button
               size="sm"
@@ -1222,7 +1211,7 @@ export default function SettingsPage() {
             >
               {oneforallValidation.state === "validating" ? (
                 <>
-                  <Loader size={12} className="animate-spin" />
+                  <BruLoader size="sm" />
                   Validating...
                 </>
               ) : (
@@ -1232,8 +1221,9 @@ export default function SettingsPage() {
             {oneforallApiKey.trim() && (
               <>
                 {/* Model for Copy dropdown */}
-                <div style={{ border: "var(--drp-border)", borderRadius: 0 }}>
-                  <button
+                <div style={{ border: "var(--drp-border)" }}>
+                  <Button
+                    variant="ghost"
                     type="button"
                     onClick={() => setOneforallModelOpen((v) => !v)}
                     style={{
@@ -1241,13 +1231,10 @@ export default function SettingsPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "10px 14px",
+                      padding: "var(--drp-space-2) var(--drp-space-3)",
                       background: oneforallModelOpen
                         ? "rgba(14, 165, 233, 0.05)"
                         : "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "var(--drp-font-primary)",
                     }}
                   >
                     <span
@@ -1266,7 +1253,7 @@ export default function SettingsPage() {
                     ) : (
                       <ChevronRight size={14} color="var(--drp-grey)" />
                     )}
-                  </button>
+                  </Button>
                   {oneforallModelOpen && (
                     <div
                       style={{
@@ -1285,8 +1272,9 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Model for Image dropdown */}
-                <div style={{ border: "var(--drp-border)", borderRadius: 0 }}>
-                  <button
+                <div style={{ border: "var(--drp-border)" }}>
+                  <Button
+                    variant="ghost"
                     type="button"
                     onClick={() => setOneforallImageOpen((v) => !v)}
                     style={{
@@ -1294,13 +1282,10 @@ export default function SettingsPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "10px 14px",
+                      padding: "var(--drp-space-2) var(--drp-space-3)",
                       background: oneforallImageOpen
                         ? "rgba(14, 165, 233, 0.05)"
                         : "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "var(--drp-font-primary)",
                     }}
                   >
                     <span
@@ -1319,7 +1304,7 @@ export default function SettingsPage() {
                     ) : (
                       <ChevronRight size={14} color="var(--drp-grey)" />
                     )}
-                  </button>
+                  </Button>
                   {oneforallImageOpen && (
                     <div
                       style={{
@@ -1363,7 +1348,7 @@ export default function SettingsPage() {
                     {oneforallTest.state === "loading" &&
                     oneforallTest.testType === "text" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <BruLoader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Text Model"
@@ -1387,7 +1372,7 @@ export default function SettingsPage() {
                     {oneforallTest.state === "loading" &&
                     oneforallTest.testType === "image" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <BruLoader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Image Model"
@@ -1410,7 +1395,7 @@ export default function SettingsPage() {
         >
           {saving ? (
             <>
-              <Loader size={16} className="animate-spin" />
+              <BruLoader size="sm" />
               Saving & Validating...
             </>
           ) : (

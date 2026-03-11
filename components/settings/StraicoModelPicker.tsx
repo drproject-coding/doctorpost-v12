@@ -1,7 +1,7 @@
 "use client";
 import type React from "react";
 import { useState, useMemo } from "react";
-import { Select } from "@doctorproject/react";
+import { Button, Input, Loader, Select } from "@doctorproject/react";
 import {
   Search,
   Star,
@@ -13,7 +13,6 @@ import {
   Globe,
   ThumbsUp,
   ThumbsDown,
-  Loader,
 } from "lucide-react";
 import type { AiModel, StraicoUserInfo } from "@/lib/types";
 
@@ -79,6 +78,13 @@ function FeatureBadge({ label }: { label: string }) {
   );
 }
 
+const sortOptions = [
+  { value: "quality", label: "Sort: Quality Rating" },
+  { value: "price-asc", label: "Sort: Price (low to high)" },
+  { value: "price-desc", label: "Sort: Price (high to low)" },
+  { value: "newest", label: "Sort: Newest First" },
+];
+
 export function StraicoModelPicker({
   models,
   selectedModelId,
@@ -139,27 +145,6 @@ export function StraicoModelPicker({
 
   const selectedModel = models.find((m) => m.id === selectedModelId);
 
-  const chipBase: React.CSSProperties = {
-    padding: "2px 8px",
-    fontSize: 10,
-    fontWeight: 700,
-    textTransform: "uppercase",
-    letterSpacing: "0.05em",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: "rgba(0,0,0,0.15)",
-    cursor: "pointer",
-    background: "var(--drp-white)",
-    color: "var(--drp-black)",
-  };
-
-  const chipActive: React.CSSProperties = {
-    ...chipBase,
-    borderColor: "var(--drp-purple)",
-    background: "var(--drp-purple)",
-    color: "var(--drp-white)",
-  };
-
   return (
     <div
       style={{
@@ -217,14 +202,14 @@ export function StraicoModelPicker({
               top: "50%",
               transform: "translateY(-50%)",
               color: "var(--drp-grey)",
+              zIndex: 1,
             }}
           />
-          <input
+          <Input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search models..."
-            className="drp-input"
             style={{ width: "100%", paddingLeft: 32, fontSize: 12 }}
           />
         </div>
@@ -232,24 +217,26 @@ export function StraicoModelPicker({
         {/* Provider chips */}
         {providers.length > 0 && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-            <button
+            <Button
               type="button"
+              size="sm"
+              variant={!providerFilter ? "primary" : "ghost-bordered"}
               onClick={() => setProviderFilter(null)}
-              style={!providerFilter ? chipActive : chipBase}
             >
               All
-            </button>
+            </Button>
             {providers.map((p) => (
-              <button
+              <Button
                 type="button"
+                size="sm"
                 key={p}
+                variant={providerFilter === p ? "primary" : "ghost-bordered"}
                 onClick={() =>
                   setProviderFilter(providerFilter === p ? null : p)
                 }
-                style={providerFilter === p ? chipActive : chipBase}
               >
                 {p}
-              </button>
+              </Button>
             ))}
           </div>
         )}
@@ -260,10 +247,11 @@ export function StraicoModelPicker({
           onChange={(e) => setSort(e.target.value as SortOption)}
           style={{ width: "100%", fontSize: 12 }}
         >
-          <option value="quality">Sort: Quality Rating</option>
-          <option value="price-asc">Sort: Price (low to high)</option>
-          <option value="price-desc">Sort: Price (high to low)</option>
-          <option value="newest">Sort: Newest First</option>
+          {sortOptions.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
         </Select>
       </div>
 
@@ -280,7 +268,7 @@ export function StraicoModelPicker({
             color: "var(--drp-grey)",
           }}
         >
-          <Loader size={14} className="animate-spin" />
+          <Loader size="sm" />
           Loading models...
         </div>
       )}
@@ -302,21 +290,23 @@ export function StraicoModelPicker({
 
           return (
             <div key={model.id}>
-              <button
+              <Button
                 type="button"
+                variant={isSelected ? "ghost-bordered" : "ghost-bordered"}
                 onClick={() => onSelectModel(model.id)}
                 style={{
                   width: "100%",
                   textAlign: "left",
                   padding: 10,
-                  border: isSelected
-                    ? "2px solid var(--drp-purple)"
-                    : "var(--drp-border)",
+                  borderColor: isSelected
+                    ? "var(--drp-purple)"
+                    : "rgba(0,0,0,0.12)",
+                  borderWidth: isSelected ? 2 : 1,
                   background: isSelected
                     ? "rgba(99, 29, 237, 0.05)"
                     : "var(--drp-white)",
-                  cursor: "pointer",
-                  fontFamily: "var(--drp-font-primary)",
+                  height: "auto",
+                  justifyContent: "flex-start",
                 }}
               >
                 <div
@@ -466,11 +456,12 @@ export function StraicoModelPicker({
                     </div>
                   </div>
                 </div>
-              </button>
+              </Button>
 
               {isSelected && (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
                   onClick={(e) => {
                     e.stopPropagation();
                     setExpandedModelId(isExpanded ? null : model.id);
@@ -489,8 +480,7 @@ export function StraicoModelPicker({
                     borderRight: "2px solid var(--drp-purple)",
                     borderBottom: "2px solid var(--drp-purple)",
                     background: "rgba(99, 29, 237, 0.05)",
-                    cursor: "pointer",
-                    fontFamily: "var(--drp-font-primary)",
+                    height: "auto",
                   }}
                 >
                   {isExpanded ? (
@@ -502,7 +492,7 @@ export function StraicoModelPicker({
                       Show details <ChevronDown size={10} />
                     </>
                   )}
-                </button>
+                </Button>
               )}
 
               {isSelected && isExpanded && (
@@ -576,7 +566,7 @@ export function StraicoModelPicker({
                           gap: 4,
                           fontSize: 10,
                           fontWeight: 700,
-                          color: "#16a34a",
+                          color: "var(--drp-success-dark)",
                           marginBottom: 4,
                         }}
                       >
@@ -606,7 +596,7 @@ export function StraicoModelPicker({
                               style={{
                                 position: "absolute",
                                 left: 0,
-                                color: "#22c55e",
+                                color: "var(--drp-success-dark)",
                               }}
                             >
                               &bull;
@@ -627,7 +617,7 @@ export function StraicoModelPicker({
                           gap: 4,
                           fontSize: 10,
                           fontWeight: 700,
-                          color: "#ef4444",
+                          color: "var(--drp-error-dark)",
                           marginBottom: 4,
                         }}
                       >
@@ -657,7 +647,7 @@ export function StraicoModelPicker({
                               style={{
                                 position: "absolute",
                                 left: 0,
-                                color: "#f87171",
+                                color: "var(--drp-error-dark)",
                               }}
                             >
                               &bull;

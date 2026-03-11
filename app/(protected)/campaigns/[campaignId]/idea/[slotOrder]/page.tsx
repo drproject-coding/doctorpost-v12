@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Card, Alert } from "@doctorproject/react";
+import { Button, Card, Alert, Loader } from "@doctorproject/react";
 import { IdeaStatusBadge } from "@/components/campaigns/IdeaStatusBadge";
 import type { CampaignPostStatus } from "@/lib/knowledge/types";
 
@@ -144,12 +144,12 @@ export default function IdeaDetailPage({ params }: Props) {
     return (
       <div
         style={{
-          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
           padding: "var(--drp-space-8)",
-          color: "var(--drp-grey)",
         }}
       >
-        Loading idea...
+        <Loader label="Loading idea..." />
       </div>
     );
   }
@@ -177,19 +177,12 @@ export default function IdeaDetailPage({ params }: Props) {
           marginBottom: "var(--drp-space-6)",
         }}
       >
-        <button
+        <Button
+          variant="ghost"
           onClick={() => router.push(`/campaigns/${campaignId}`)}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "var(--drp-text-md)",
-            color: "var(--drp-grey)",
-            padding: 0,
-          }}
         >
           &larr;
-        </button>
+        </Button>
         <div style={{ flex: 1 }}>
           <div
             style={{
@@ -263,54 +256,21 @@ export default function IdeaDetailPage({ params }: Props) {
       >
         {/* Write this post — only for validated */}
         {idea.generationStatus === "validated" && (
-          <button
-            onClick={handleWritePost}
-            disabled={saving}
-            style={{
-              padding: "var(--drp-space-2) var(--drp-space-4)",
-              background: "var(--drp-black, #000)",
-              color: "#fff",
-              border: "none",
-              fontWeight: 700,
-              fontSize: "var(--drp-text-sm)",
-              cursor: saving ? "not-allowed" : "pointer",
-              opacity: saving ? 0.6 : 1,
-            }}
-          >
+          <Button variant="primary" onClick={handleWritePost} disabled={saving}>
             Write this post →
-          </button>
+          </Button>
         )}
 
         {/* Status change buttons */}
         {actions.map((action) => (
-          <button
+          <Button
             key={action.next}
+            variant={action.variant}
             onClick={() => handleStatusChange(action.next)}
             disabled={saving}
-            style={{
-              padding: "var(--drp-space-2) var(--drp-space-4)",
-              background:
-                action.variant === "danger"
-                  ? "#FFCCCC"
-                  : action.variant === "primary"
-                    ? "#0066CC"
-                    : "transparent",
-              color:
-                action.variant === "danger"
-                  ? "#990000"
-                  : action.variant === "primary"
-                    ? "#fff"
-                    : "var(--drp-grey)",
-              border:
-                action.variant === "secondary" ? "var(--drp-border)" : "none",
-              fontWeight: 600,
-              fontSize: "var(--drp-text-sm)",
-              cursor: saving ? "not-allowed" : "pointer",
-              opacity: saving ? 0.6 : 1,
-            }}
           >
             {saving ? "Saving..." : action.label}
-          </button>
+          </Button>
         ))}
       </div>
     </div>

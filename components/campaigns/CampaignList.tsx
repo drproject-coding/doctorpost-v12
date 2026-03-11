@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card } from "@doctorproject/react";
+import { Badge, Button, Card } from "@doctorproject/react";
 import type { Campaign } from "@/lib/knowledge/types";
 
 interface CampaignListProps {
@@ -75,20 +75,9 @@ export function CampaignList({ onSelect, onNewCampaign }: CampaignListProps) {
           No campaigns yet. Create your first one to start brainstorming content
           ideas.
         </p>
-        <button
-          onClick={onNewCampaign}
-          style={{
-            padding: "var(--drp-space-2) var(--drp-space-4)",
-            background: "var(--drp-black, #000)",
-            color: "#fff",
-            border: "none",
-            fontWeight: 700,
-            fontSize: "var(--drp-text-sm)",
-            cursor: "pointer",
-          }}
-        >
+        <Button variant="primary" onClick={onNewCampaign}>
           NEW CAMPAIGN
-        </button>
+        </Button>
       </Card>
     );
   }
@@ -124,18 +113,9 @@ export function CampaignList({ onSelect, onNewCampaign }: CampaignListProps) {
                 {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : ""}
               </div>
             </div>
-            <span
-              style={{
-                fontSize: "var(--drp-text-xs)",
-                fontWeight: 600,
-                padding: "2px 8px",
-                background: c.status === "planning" ? "#E85D04" : "#00AA66",
-                color: "#fff",
-                borderRadius: 2,
-              }}
-            >
+            <Badge variant={c.status === "planning" ? "pink" : "mint"}>
               {c.status}
-            </span>
+            </Badge>
           </div>
         </Card>
       ))}

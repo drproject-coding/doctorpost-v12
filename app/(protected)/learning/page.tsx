@@ -167,7 +167,7 @@ export default function LearningPage() {
                 Pending ({pendingProposals.length})
               </h3>
               <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
-                {pendingProposals.map((p, idx) => (
+                {pendingProposals.map((p) => (
                   <RuleProposalCard
                     key={p.id}
                     proposal={p}
@@ -190,7 +190,7 @@ export default function LearningPage() {
                 Resolved ({resolvedProposals.length})
               </h3>
               <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
-                {resolvedProposals.map((p, idx) => (
+                {resolvedProposals.map((p) => (
                   <RuleProposalCard
                     key={p.id}
                     proposal={p}

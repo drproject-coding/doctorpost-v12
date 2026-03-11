@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Card } from "@doctorproject/react";
-import { X, Eye, Loader } from "lucide-react";
+import { Button, Card, Loader } from "@doctorproject/react";
+import { X, Eye } from "lucide-react";
 import { resolvePromptTemplate } from "@/lib/knowledge/resolvePromptTemplate";
 
 interface TonePromptPreviewModalProps {
@@ -92,7 +92,7 @@ export function TonePromptPreviewModal({
                 color: "var(--drp-grey)",
               }}
             >
-              <Loader size={24} className="animate-spin" />
+              <Loader />
             </div>
           ) : template ? (
             <pre
@@ -103,7 +103,7 @@ export function TonePromptPreviewModal({
                 fontSize: "var(--drp-text-sm)",
                 lineHeight: 1.6,
                 padding: "var(--drp-space-4)",
-                background: "#f5f5f5",
+                background: "var(--drp-cream)",
                 border: "var(--drp-border)",
                 margin: 0,
               }}

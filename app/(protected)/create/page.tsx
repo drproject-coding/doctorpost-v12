@@ -458,18 +458,16 @@ export default function CreatePage() {
                     onChange={handleTopicChange}
                     placeholder="e.g., 'AI in healthcare'"
                   />
-                  <button
+                  <Button
                     onClick={() => void handleFindSubtopics()}
                     disabled={loadingSubtopics || !topic.trim()}
                     aria-label="Find Subtopics"
+                    variant="ghost"
                     style={{
                       position: "absolute",
                       right: 8,
                       top: "50%",
                       transform: "translateY(-50%)",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
                       padding: 4,
                     }}
                   >
@@ -482,7 +480,7 @@ export default function CreatePage() {
                     ) : (
                       <Search size={20} style={{ color: "var(--drp-grey)" }} />
                     )}
-                  </button>
+                  </Button>
                 </div>
 
                 {subtopics.length > 0 && (
@@ -498,10 +496,11 @@ export default function CreatePage() {
                       Subtopic Suggestions
                     </span>
                     {subtopics.map((sub) => (
-                      <button
+                      <Button
                         key={sub.id}
                         type="button"
                         onClick={() => void handleSelectSubtopic(sub)}
+                        variant="ghost"
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -515,7 +514,6 @@ export default function CreatePage() {
                             selectedSubtopic?.id === sub.id
                               ? "var(--drp-purple-20)"
                               : "var(--drp-cream)",
-                          cursor: "pointer",
                           textAlign: "left",
                           width: "100%",
                           fontFamily: "var(--drp-font-primary)",
@@ -538,7 +536,7 @@ export default function CreatePage() {
                         >
                           {getSourceBadgeLabel(sub.source)}
                         </span>
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 )}
@@ -569,13 +567,13 @@ export default function CreatePage() {
               <div
                 className="drp-field"
                 style={{
-                  borderLeft: "3px solid #631DED",
+                  borderLeft: "3px solid var(--drp-purple)",
                   paddingLeft: "var(--drp-space-3)",
                 }}
               >
                 <label
                   className="drp-field__label"
-                  style={{ color: "#631DED" }}
+                  style={{ color: "var(--drp-purple)" }}
                 >
                   Post Structure
                 </label>
@@ -589,13 +587,13 @@ export default function CreatePage() {
               <div
                 className="drp-field"
                 style={{
-                  borderLeft: "3px solid #00A896",
+                  borderLeft: "3px solid var(--drp-mint)",
                   paddingLeft: "var(--drp-space-3)",
                 }}
               >
                 <label
                   className="drp-field__label"
-                  style={{ color: "#00A896" }}
+                  style={{ color: "var(--drp-mint)" }}
                 >
                   Content Angle
                 </label>
@@ -612,7 +610,7 @@ export default function CreatePage() {
               <div
                 className="drp-field"
                 style={{
-                  borderLeft: "3px solid #059669",
+                  borderLeft: "3px solid var(--drp-success-dark)",
                   paddingLeft: "var(--drp-space-3)",
                 }}
               >
@@ -635,10 +633,10 @@ export default function CreatePage() {
                     padding: "var(--drp-space-3)",
                   }}
                 >
-                  <button
+                  <Button
                     type="button"
                     onClick={() => setShowRecommendationReasoning((v) => !v)}
-                    className="drp-btn drp-btn--ghost"
+                    variant="ghost"
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -663,7 +661,7 @@ export default function CreatePage() {
                     ) : (
                       <ChevronDown size={16} />
                     )}
-                  </button>
+                  </Button>
 
                   {showRecommendationReasoning && (
                     <div
@@ -744,11 +742,11 @@ export default function CreatePage() {
                       (t) => t.id === toneId,
                     );
                     return (
-                      <button
+                      <Button
                         key={toneId}
                         type="button"
                         onClick={() => setPreviewToneId(toneId)}
-                        className="drp-btn drp-btn--ghost"
+                        variant="ghost"
                         style={{
                           fontSize: "var(--drp-text-sm)",
                           color: "var(--drp-purple)",
@@ -758,7 +756,7 @@ export default function CreatePage() {
                         }}
                       >
                         {tone?.label ?? toneId}
-                      </button>
+                      </Button>
                     );
                   })}
                 </div>

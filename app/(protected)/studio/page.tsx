@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from "react";
-import { Card } from "@doctorproject/react";
+import { Card, Button, Textarea, Loader, Alert } from "@doctorproject/react";
 import {
   Zap,
   Copy,
@@ -9,7 +9,6 @@ import {
   RefreshCw,
   CheckCircle,
   AlertCircle,
-  Loader,
   ExternalLink,
   Smartphone,
   Monitor,
@@ -180,7 +179,13 @@ function PipelineProgress({
               </>
             )}
             {isComplete && (
-              <span style={{ fontSize: 13, color: "#00A896", fontWeight: 700 }}>
+              <span
+                style={{
+                  fontSize: 13,
+                  color: "var(--drp-mint)",
+                  fontWeight: 700,
+                }}
+              >
                 All stages complete
               </span>
             )}
@@ -189,7 +194,7 @@ function PipelineProgress({
             style={{
               fontSize: 12,
               fontWeight: 800,
-              color: isComplete ? "#00A896" : "var(--drp-purple)",
+              color: isComplete ? "var(--drp-mint)" : "var(--drp-purple)",
               marginLeft: 12,
               whiteSpace: "nowrap",
             }}
@@ -223,9 +228,8 @@ function PipelineProgress({
                 <div
                   style={{
                     height: 6,
-                    borderRadius: 3,
                     background: isDone
-                      ? "#00A896"
+                      ? "var(--drp-mint)"
                       : isActive
                         ? "var(--drp-purple)"
                         : "#e8e8e8",
@@ -255,7 +259,7 @@ function PipelineProgress({
                     fontWeight:
                       isDone || isActive || activeStep === s ? 700 : 400,
                     color: isDone
-                      ? "#00A896"
+                      ? "var(--drp-mint)"
                       : isActive
                         ? "var(--drp-purple)"
                         : activeStep === s
@@ -342,7 +346,7 @@ function renderStageContent(
               style={{
                 margin: 0,
                 fontSize: 12,
-                color: "#555",
+                color: "var(--drp-text-muted)",
                 fontStyle: "italic",
                 borderLeft: "3px solid var(--drp-purple)",
                 paddingLeft: 10,
@@ -429,10 +433,10 @@ function renderStageContent(
       };
       const color =
         (d.total ?? 0) >= 75
-          ? "#00A896"
+          ? "var(--drp-mint)"
           : (d.total ?? 0) >= 60
-            ? "#FF6C01"
-            : "#E99898";
+            ? "var(--drp-orange)"
+            : "var(--drp-error-dark)";
       return (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -440,7 +444,6 @@ function renderStageContent(
               style={{
                 width: 56,
                 height: 56,
-                borderRadius: "50%",
                 border: `3px solid ${color}`,
                 display: "flex",
                 flexDirection: "column",
@@ -479,7 +482,7 @@ function renderStageContent(
                   style={{
                     margin: 0,
                     fontSize: 12,
-                    color: "#555",
+                    color: "var(--drp-text-muted)",
                     lineHeight: 1.4,
                   }}
                 >
@@ -494,10 +497,10 @@ function renderStageContent(
                 const pct = Math.round((b.score / b.max) * 100);
                 const bc =
                   b.status === "excellent"
-                    ? "#00A896"
+                    ? "var(--drp-mint)"
                     : b.status === "good"
-                      ? "#FF6C01"
-                      : "#E99898";
+                      ? "var(--drp-orange)"
+                      : "var(--drp-error-dark)";
                 return (
                   <div
                     key={b.criterion}
@@ -519,7 +522,6 @@ function renderStageContent(
                         flex: 1,
                         height: 5,
                         background: "#e8e8e8",
-                        borderRadius: 3,
                         overflow: "hidden",
                       }}
                     >
@@ -528,7 +530,6 @@ function renderStageContent(
                           width: `${pct}%`,
                           height: "100%",
                           background: bc,
-                          borderRadius: 3,
                           transition: "width 0.6s ease",
                         }}
                       />
@@ -613,7 +614,12 @@ function renderStageContent(
                       {s.title}
                     </span>
                     {s.body && (
-                      <span style={{ color: "#555", marginLeft: 6 }}>
+                      <span
+                        style={{
+                          color: "var(--drp-text-muted)",
+                          marginLeft: 6,
+                        }}
+                      >
                         — {s.body.slice(0, 70)}
                         {s.body.length > 70 ? "..." : ""}
                       </span>
@@ -714,7 +720,7 @@ function StageCard({
               color: isActive
                 ? "var(--drp-purple)"
                 : isComplete
-                  ? "#00A896"
+                  ? "var(--drp-mint)"
                   : "var(--drp-grey)",
             }}
           >
@@ -724,31 +730,31 @@ function StageCard({
             {isActive ? meta.description : isComplete ? "Done" : "Waiting..."}
           </span>
           {isActive && (
-            <Loader
-              size={15}
-              color="var(--drp-purple)"
-              style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
-            />
+            <span style={{ flexShrink: 0 }}>
+              <Loader size="sm" />
+            </span>
           )}
           {isComplete && onCopy && (
-            <button
+            <Button
               onClick={onCopy}
               title={copiedProp ? "Copied!" : "Copy post"}
+              variant="ghost"
               style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
                 padding: 2,
                 display: "flex",
                 alignItems: "center",
-                color: copiedProp ? "#00A896" : "var(--drp-grey)",
+                color: copiedProp ? "var(--drp-mint)" : "var(--drp-text-muted)",
               }}
             >
               {copiedProp ? <Check size={14} /> : <Copy size={14} />}
-            </button>
+            </Button>
           )}
           {isComplete && (
-            <CheckCircle size={15} color="#00A896" style={{ flexShrink: 0 }} />
+            <CheckCircle
+              size={15}
+              color="var(--drp-mint)"
+              style={{ flexShrink: 0 }}
+            />
           )}
         </div>
 
@@ -784,7 +790,7 @@ function VisualStageCard({
           : isComplete
             ? "4px solid #00A896"
             : error
-              ? "4px solid #E99898"
+              ? "4px solid var(--drp-error-dark)"
               : "4px solid #e5e5e5",
         opacity: isPending ? 0.4 : 1,
         transition: "opacity 0.3s, border-left-color 0.3s",
@@ -832,9 +838,9 @@ function VisualStageCard({
               color: isActive
                 ? "var(--drp-purple)"
                 : isComplete
-                  ? "#00A896"
+                  ? "var(--drp-mint)"
                   : error
-                    ? "#E99898"
+                    ? "var(--drp-error-dark)"
                     : "var(--drp-grey)",
             }}
           >
@@ -843,7 +849,7 @@ function VisualStageCard({
           <span
             style={{
               fontSize: 12,
-              color: error ? "#E99898" : "var(--drp-grey)",
+              color: error ? "var(--drp-error-dark)" : "var(--drp-grey)",
               flex: 1,
             }}
           >
@@ -856,14 +862,16 @@ function VisualStageCard({
                   : "Waiting..."}
           </span>
           {isActive && (
-            <Loader
-              size={15}
-              color="var(--drp-purple)"
-              style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
-            />
+            <span style={{ flexShrink: 0 }}>
+              <Loader size="sm" />
+            </span>
           )}
           {isComplete && (
-            <CheckCircle size={15} color="#00A896" style={{ flexShrink: 0 }} />
+            <CheckCircle
+              size={15}
+              color="var(--drp-mint)"
+              style={{ flexShrink: 0 }}
+            />
           )}
         </div>
 
@@ -903,13 +911,17 @@ function VisualStageCard({
 }
 
 function ScoreCircle({ score }: { score: number }) {
-  const color = score >= 75 ? "#00A896" : score >= 60 ? "#FF6C01" : "#E99898";
+  const color =
+    score >= 75
+      ? "var(--drp-mint)"
+      : score >= 60
+        ? "var(--drp-orange)"
+        : "var(--drp-error-dark)";
   return (
     <div
       style={{
         width: 96,
         height: 96,
-        borderRadius: "50%",
         border: `6px solid ${color}`,
         display: "flex",
         flexDirection: "column",
@@ -921,7 +933,7 @@ function ScoreCircle({ score }: { score: number }) {
       <span style={{ fontSize: 30, fontWeight: 800, color, lineHeight: 1 }}>
         {score}
       </span>
-      <span style={{ fontSize: 10, color: "var(--drp-grey)" }}>/100</span>
+      <span style={{ fontSize: 10, color: "var(--drp-text-muted)" }}>/100</span>
     </div>
   );
 }
@@ -1533,20 +1545,8 @@ export default function StudioPage() {
 
                 {/* Topic */}
                 <div style={{ marginBottom: 16 }}>
-                  <label
-                    style={{
-                      display: "block",
-                      fontWeight: 700,
-                      fontSize: 11,
-                      textTransform: "uppercase",
-                      letterSpacing: 0.5,
-                      marginBottom: 6,
-                      color: "var(--drp-black)",
-                    }}
-                  >
-                    Topic / Prompt
-                  </label>
-                  <textarea
+                  <Textarea
+                    label="Topic / Prompt"
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     disabled={isRunning}
@@ -1554,16 +1554,7 @@ export default function StudioPage() {
                     style={{
                       width: "100%",
                       minHeight: 100,
-                      padding: "10px 12px",
-                      border: "2px solid var(--drp-black)",
-                      background: "var(--drp-cream)",
-                      fontFamily: "inherit",
-                      fontSize: 13,
-                      lineHeight: 1.5,
                       resize: "vertical",
-                      outline: "none",
-                      boxSizing: "border-box",
-                      color: "var(--drp-black)",
                     }}
                   />
                 </div>
@@ -1640,38 +1631,16 @@ export default function StudioPage() {
                 </div>
 
                 {/* Generate button */}
-                <button
+                <Button
                   onClick={() => void runPipeline()}
                   disabled={isRunning || topic.trim().length < 10}
-                  style={{
-                    width: "100%",
-                    padding: "12px 0",
-                    background:
-                      isRunning || topic.trim().length < 10
-                        ? "#aaa"
-                        : "var(--drp-purple)",
-                    color: "#fff",
-                    border: "none",
-                    fontWeight: 800,
-                    fontSize: 14,
-                    letterSpacing: 0.5,
-                    cursor:
-                      isRunning || topic.trim().length < 10
-                        ? "not-allowed"
-                        : "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 8,
-                    transition: "background 0.15s",
-                  }}
+                  variant="primary"
+                  block
+                  style={{ gap: 8 }}
                 >
                   {isRunning ? (
                     <>
-                      <Loader
-                        size={15}
-                        style={{ animation: "spin 1s linear infinite" }}
-                      />
+                      <Loader size="sm" />
                       Running…
                     </>
                   ) : (
@@ -1680,29 +1649,17 @@ export default function StudioPage() {
                       Generate
                     </>
                   )}
-                </button>
+                </Button>
 
                 {isComplete && (
-                  <button
+                  <Button
                     onClick={handleReset}
-                    style={{
-                      width: "100%",
-                      marginTop: 8,
-                      padding: "10px 0",
-                      background: "transparent",
-                      border: "2px solid var(--drp-black)",
-                      fontWeight: 700,
-                      fontSize: 13,
-                      cursor: "pointer",
-                      color: "var(--drp-black)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 6,
-                    }}
+                    variant="outline"
+                    block
+                    style={{ marginTop: 8, gap: 6 }}
                   >
                     <RefreshCw size={13} /> New Post
-                  </button>
+                  </Button>
                 )}
               </div>
             </Card>
@@ -1736,8 +1693,10 @@ export default function StudioPage() {
                           alignItems: "center",
                           gap: 4,
                           padding: "2px 10px",
-                          background: score.pass ? "#00A896" : "#FF6C01",
-                          color: "#fff",
+                          background: score.pass
+                            ? "var(--drp-mint)"
+                            : "var(--drp-orange)",
+                          color: "white",
                           fontWeight: 800,
                           fontSize: 11,
                           marginBottom: 6,
@@ -1843,29 +1802,27 @@ export default function StudioPage() {
                   }}
                 >
                   {(["preview", "score"] as const).map((tab) => (
-                    <button
+                    <Button
                       key={tab}
                       onClick={() => setResultTab(tab)}
+                      variant="ghost"
                       style={{
                         padding: "10px 20px",
                         fontWeight: 700,
                         fontSize: 13,
-                        border: "none",
                         borderBottom:
                           resultTab === tab
                             ? "2px solid var(--drp-purple)"
                             : "2px solid transparent",
                         marginBottom: -2,
-                        background: "transparent",
                         color:
                           resultTab === tab
                             ? "var(--drp-purple)"
-                            : "var(--drp-grey)",
-                        cursor: "pointer",
+                            : "var(--drp-text-muted)",
                       }}
                     >
                       {tab === "preview" ? "Post" : "Score"}
-                    </button>
+                    </Button>
                   ))}
                 </div>
 
@@ -1908,14 +1865,14 @@ export default function StudioPage() {
                             }}
                           >
                             {savedId ? (
-                              <a
+                              <Link
                                 href={`/library/${savedId}`}
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
                                   gap: 6,
                                   padding: "6px 14px",
-                                  background: "#00A896",
+                                  background: "var(--drp-mint)",
                                   color: "white",
                                   fontWeight: 700,
                                   fontSize: 13,
@@ -1924,34 +1881,18 @@ export default function StudioPage() {
                               >
                                 <CheckCircle size={14} />
                                 Saved
-                              </a>
+                              </Link>
                             ) : (
-                              <button
+                              <Button
                                 onClick={() => void handleManualSave()}
                                 disabled={isSaving}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 6,
-                                  padding: "6px 14px",
-                                  background: isSaving
-                                    ? "#aaa"
-                                    : "var(--drp-purple)",
-                                  color: "white",
-                                  border: "none",
-                                  fontWeight: 700,
-                                  fontSize: 13,
-                                  cursor: isSaving ? "not-allowed" : "pointer",
-                                }}
+                                variant="primary"
+                                size="sm"
+                                style={{ gap: 6 }}
                               >
                                 {isSaving ? (
                                   <>
-                                    <Loader
-                                      size={13}
-                                      style={{
-                                        animation: "spin 1s linear infinite",
-                                      }}
-                                    />
+                                    <Loader size="sm" />
                                     Saving…
                                   </>
                                 ) : (
@@ -1960,55 +1901,30 @@ export default function StudioPage() {
                                     Save to Library
                                   </>
                                 )}
-                              </button>
+                              </Button>
                             )}
-                            <button
+                            <Button
                               onClick={() => void handleDownloadSlideImage()}
                               disabled={isExporting}
                               title="Download current slide as PNG"
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 6,
-                                padding: "6px 14px",
-                                border: "2px solid var(--drp-black)",
-                                background: "transparent",
-                                color: "var(--drp-black)",
-                                fontWeight: 700,
-                                fontSize: 13,
-                                cursor: isExporting ? "not-allowed" : "pointer",
-                              }}
+                              variant="outline"
+                              size="sm"
+                              style={{ gap: 6 }}
                             >
                               <FileImage size={13} />
                               PNG
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                               onClick={() => void handleDownloadAllPdf()}
                               disabled={isExporting}
                               title="Download all slides as PDF"
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 6,
-                                padding: "6px 14px",
-                                background: isExporting
-                                  ? "#aaa"
-                                  : "var(--drp-black)",
-                                color: "white",
-                                border: "none",
-                                fontWeight: 700,
-                                fontSize: 13,
-                                cursor: isExporting ? "not-allowed" : "pointer",
-                              }}
+                              variant="primary"
+                              size="sm"
+                              style={{ gap: 6 }}
                             >
                               {isExporting ? (
                                 <>
-                                  <Loader
-                                    size={13}
-                                    style={{
-                                      animation: "spin 1s linear infinite",
-                                    }}
-                                  />
+                                  <Loader size="sm" />
                                   Exporting…
                                 </>
                               ) : (
@@ -2017,7 +1933,7 @@ export default function StudioPage() {
                                   PDF
                                 </>
                               )}
-                            </button>
+                            </Button>
                           </div>
                         </div>
 
@@ -2029,7 +1945,7 @@ export default function StudioPage() {
                             height: 520,
                             margin: "0 auto",
                             background:
-                              "linear-gradient(135deg, #631DED 0%, #9B59F5 100%)",
+                              "linear-gradient(135deg, var(--drp-purple) 0%, #9B59F5 100%)",
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "space-between",
@@ -2047,7 +1963,6 @@ export default function StudioPage() {
                               right: 20,
                               width: 36,
                               height: 36,
-                              borderRadius: "50%",
                               background: "rgba(255,255,255,0.2)",
                               display: "flex",
                               alignItems: "center",
@@ -2129,7 +2044,6 @@ export default function StudioPage() {
                                   style={{
                                     width: i === currentSlide ? 20 : 6,
                                     height: 6,
-                                    borderRadius: 3,
                                     background:
                                       i === currentSlide
                                         ? "white"
@@ -2152,18 +2066,15 @@ export default function StudioPage() {
                             marginTop: 16,
                           }}
                         >
-                          <button
+                          <Button
                             onClick={() =>
                               setCurrentSlide((s) => Math.max(0, s - 1))
                             }
                             disabled={currentSlide === 0}
+                            variant="outline"
                             style={{
                               width: 40,
                               height: 40,
-                              border: "2px solid var(--drp-black)",
-                              background: "var(--drp-cream)",
-                              cursor:
-                                currentSlide === 0 ? "not-allowed" : "pointer",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -2171,34 +2082,29 @@ export default function StudioPage() {
                             }}
                           >
                             <ChevronLeft size={20} />
-                          </button>
+                          </Button>
                           <span
                             style={{
                               fontSize: 13,
                               fontWeight: 700,
-                              color: "var(--drp-grey)",
+                              color: "var(--drp-text-muted)",
                               minWidth: 60,
                               textAlign: "center",
                             }}
                           >
                             {currentSlide + 1} / {totalSlides}
                           </span>
-                          <button
+                          <Button
                             onClick={() =>
                               setCurrentSlide((s) =>
                                 Math.min(totalSlides - 1, s + 1),
                               )
                             }
                             disabled={currentSlide === totalSlides - 1}
+                            variant="outline"
                             style={{
                               width: 40,
                               height: 40,
-                              border: "2px solid var(--drp-black)",
-                              background: "var(--drp-cream)",
-                              cursor:
-                                currentSlide === totalSlides - 1
-                                  ? "not-allowed"
-                                  : "pointer",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -2207,7 +2113,7 @@ export default function StudioPage() {
                             }}
                           >
                             <ChevronRight size={20} />
-                          </button>
+                          </Button>
                         </div>
 
                         {/* Thumbnail strip */}
@@ -2221,20 +2127,20 @@ export default function StudioPage() {
                           }}
                         >
                           {carouselSlides.map((slide, i) => (
-                            <button
+                            <Button
                               key={i}
                               onClick={() => setCurrentSlide(i)}
+                              variant="ghost"
                               style={{
                                 flexShrink: 0,
                                 width: 72,
                                 height: 72,
                                 background:
-                                  "linear-gradient(135deg, #631DED 0%, #9B59F5 100%)",
+                                  "linear-gradient(135deg, var(--drp-purple) 0%, #9B59F5 100%)",
                                 border:
                                   i === currentSlide
                                     ? "3px solid var(--drp-black)"
                                     : "3px solid transparent",
-                                cursor: "pointer",
                                 padding: 8,
                                 display: "flex",
                                 flexDirection: "column",
@@ -2269,7 +2175,7 @@ export default function StudioPage() {
                               >
                                 {slide.title}
                               </span>
-                            </button>
+                            </Button>
                           ))}
                         </div>
                       </div>
@@ -2315,22 +2221,22 @@ export default function StudioPage() {
                         {
                           label: "Angle",
                           value: strategy.angle,
-                          color: "#631DED",
+                          color: "var(--drp-purple)",
                         },
                         {
                           label: "Pillar",
                           value: strategy.pillar_name ?? strategy.pillar,
-                          color: "#00A896",
+                          color: "var(--drp-mint)",
                         },
                         {
                           label: "ICP",
                           value: strategy.icp_label,
-                          color: "#FF6C01",
+                          color: "var(--drp-orange)",
                         },
                         {
                           label: "Hook",
                           value: strategy.hook_type?.replace(/_/g, " "),
-                          color: "#D4A800",
+                          color: "var(--drp-yellow)",
                         },
                         {
                           label: "Word Target",
@@ -2411,80 +2317,58 @@ export default function StudioPage() {
                             <div
                               style={{
                                 display: "flex",
-                                border: "1px solid #e0e0e0",
+                                border: "1px solid var(--drp-border-color)",
                                 overflow: "hidden",
                               }}
                             >
-                              <button
+                              <Button
                                 onClick={() => {
                                   setPreviewMode("mobile");
                                   setShowMore(false);
                                 }}
+                                variant={
+                                  previewMode === "mobile" ? "primary" : "ghost"
+                                }
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
                                   gap: 4,
                                   padding: "5px 10px",
                                   fontSize: 12,
-                                  background:
-                                    previewMode === "mobile"
-                                      ? "var(--drp-purple)"
-                                      : "transparent",
-                                  color:
-                                    previewMode === "mobile"
-                                      ? "white"
-                                      : "var(--drp-grey)",
-                                  border: "none",
-                                  cursor: "pointer",
                                 }}
                               >
                                 <Smartphone size={12} />
                                 Mobile
-                              </button>
-                              <button
+                              </Button>
+                              <Button
                                 onClick={() => {
                                   setPreviewMode("desktop");
                                   setShowMore(false);
                                 }}
+                                variant={
+                                  previewMode === "desktop"
+                                    ? "primary"
+                                    : "ghost"
+                                }
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
                                   gap: 4,
                                   padding: "5px 10px",
                                   fontSize: 12,
-                                  background:
-                                    previewMode === "desktop"
-                                      ? "var(--drp-purple)"
-                                      : "transparent",
-                                  color:
-                                    previewMode === "desktop"
-                                      ? "white"
-                                      : "var(--drp-grey)",
-                                  border: "none",
-                                  cursor: "pointer",
                                 }}
                               >
                                 <Monitor size={12} />
                                 Desktop
-                              </button>
+                              </Button>
                             </div>
 
                             {/* Copy */}
-                            <button
+                            <Button
                               onClick={() => void handleCopy()}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 6,
-                                padding: "6px 14px",
-                                border: "2px solid var(--drp-black)",
-                                background: copied ? "#00A896" : "transparent",
-                                color: copied ? "white" : "var(--drp-black)",
-                                fontWeight: 700,
-                                fontSize: 13,
-                                cursor: "pointer",
-                                transition: "background 0.2s",
-                              }}
+                              variant={copied ? "primary" : "outline"}
+                              size="sm"
+                              style={{ gap: 6 }}
                             >
                               {copied ? (
                                 <Check size={14} />
@@ -2492,18 +2376,18 @@ export default function StudioPage() {
                                 <Copy size={14} />
                               )}
                               {copied ? "Copied!" : "Copy"}
-                            </button>
+                            </Button>
 
                             {/* Save / Library */}
                             {savedId ? (
-                              <a
+                              <Link
                                 href={`/library/${savedId}`}
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
                                   gap: 6,
                                   padding: "6px 14px",
-                                  background: "#00A896",
+                                  background: "var(--drp-mint)",
                                   color: "white",
                                   fontWeight: 700,
                                   fontSize: 13,
@@ -2512,34 +2396,18 @@ export default function StudioPage() {
                               >
                                 <CheckCircle size={14} />
                                 Saved
-                              </a>
+                              </Link>
                             ) : (
-                              <button
+                              <Button
                                 onClick={() => void handleManualSave()}
                                 disabled={isSaving}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 6,
-                                  padding: "6px 14px",
-                                  background: isSaving
-                                    ? "#aaa"
-                                    : "var(--drp-purple)",
-                                  color: "white",
-                                  border: "none",
-                                  fontWeight: 700,
-                                  fontSize: 13,
-                                  cursor: isSaving ? "not-allowed" : "pointer",
-                                }}
+                                variant="primary"
+                                size="sm"
+                                style={{ gap: 6 }}
                               >
                                 {isSaving ? (
                                   <>
-                                    <Loader
-                                      size={13}
-                                      style={{
-                                        animation: "spin 1s linear infinite",
-                                      }}
-                                    />
+                                    <Loader size="sm" />
                                     Saving…
                                   </>
                                 ) : (
@@ -2548,7 +2416,7 @@ export default function StudioPage() {
                                     Save to Library
                                   </>
                                 )}
-                              </button>
+                              </Button>
                             )}
                           </div>
                         </div>
@@ -2559,7 +2427,6 @@ export default function StudioPage() {
                             maxWidth: containerWidth,
                             margin: "0 auto",
                             background: "white",
-                            borderRadius: 8,
                             boxShadow:
                               "0 0 0 1px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.1)",
                             overflow: "hidden",
@@ -2578,7 +2445,6 @@ export default function StudioPage() {
                               style={{
                                 width: 48,
                                 height: 48,
-                                borderRadius: "50%",
                                 background: "var(--drp-purple)",
                                 display: "flex",
                                 alignItems: "center",
@@ -2596,7 +2462,7 @@ export default function StudioPage() {
                                 style={{
                                   fontWeight: 600,
                                   fontSize: 14,
-                                  color: "#191919",
+                                  color: "var(--drp-black)",
                                 }}
                               >
                                 Your Name
@@ -2604,13 +2470,18 @@ export default function StudioPage() {
                               <div
                                 style={{
                                   fontSize: 12,
-                                  color: "#666666",
+                                  color: "var(--drp-text-muted)",
                                   lineHeight: 1.3,
                                 }}
                               >
                                 Your headline here
                               </div>
-                              <div style={{ fontSize: 12, color: "#666666" }}>
+                              <div
+                                style={{
+                                  fontSize: 12,
+                                  color: "var(--drp-text-muted)",
+                                }}
+                              >
                                 Just now
                               </div>
                             </div>
@@ -2627,20 +2498,18 @@ export default function StudioPage() {
                                 fontFamily:
                                   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                                 margin: 0,
-                                color: "#191919",
+                                color: "var(--drp-black)",
                               }}
                             >
                               {displayContent || "(No content)"}
                               {isTruncated && !showMore && "..."}
                             </pre>
                             {isTruncated && !showMore && (
-                              <button
+                              <Button
                                 onClick={() => setShowMore(true)}
+                                variant="ghost"
                                 style={{
-                                  background: "none",
-                                  border: "none",
-                                  color: "#666666",
-                                  cursor: "pointer",
+                                  color: "var(--drp-text-muted)",
                                   fontSize: 14,
                                   fontWeight: 600,
                                   padding: "4px 0",
@@ -2648,16 +2517,14 @@ export default function StudioPage() {
                                 }}
                               >
                                 ...see more
-                              </button>
+                              </Button>
                             )}
                             {showMore && isTruncated && (
-                              <button
+                              <Button
                                 onClick={() => setShowMore(false)}
+                                variant="ghost"
                                 style={{
-                                  background: "none",
-                                  border: "none",
-                                  color: "#666666",
-                                  cursor: "pointer",
+                                  color: "var(--drp-text-muted)",
                                   fontSize: 14,
                                   fontWeight: 600,
                                   padding: "4px 0",
@@ -2665,7 +2532,7 @@ export default function StudioPage() {
                                 }}
                               >
                                 show less
-                              </button>
+                              </Button>
                             )}
                           </div>
 
@@ -2677,7 +2544,7 @@ export default function StudioPage() {
                               display: "flex",
                               justifyContent: "space-between",
                               fontSize: 12,
-                              color: "#666666",
+                              color: "var(--drp-text-muted)",
                             }}
                           >
                             <span>0 reactions</span>
@@ -2693,7 +2560,7 @@ export default function StudioPage() {
                               justifyContent: "space-around",
                               fontSize: 13,
                               fontWeight: 600,
-                              color: "#666666",
+                              color: "var(--drp-text-muted)",
                             }}
                           >
                             <span>Like</span>
@@ -2759,8 +2626,10 @@ export default function StudioPage() {
                               alignItems: "center",
                               gap: 4,
                               padding: "2px 10px",
-                              background: score.pass ? "#00A896" : "#FF6C01",
-                              color: "#fff",
+                              background: score.pass
+                                ? "var(--drp-mint)"
+                                : "var(--drp-orange)",
+                              color: "white",
                               fontWeight: 800,
                               fontSize: 11,
                               marginBottom: 6,
@@ -2801,10 +2670,10 @@ export default function StudioPage() {
                           const ratio = item.score / item.max;
                           const barColor =
                             ratio >= 0.75
-                              ? "#00A896"
+                              ? "var(--drp-mint)"
                               : ratio >= 0.6
-                                ? "#FF6C01"
-                                : "#E99898";
+                                ? "var(--drp-orange)"
+                                : "var(--drp-error-dark)";
                           return (
                             <div key={i}>
                               <div
@@ -2830,8 +2699,7 @@ export default function StudioPage() {
                               <div
                                 style={{
                                   height: 5,
-                                  background: "#eee",
-                                  borderRadius: 3,
+                                  background: "var(--drp-cream)",
                                   overflow: "hidden",
                                 }}
                               >
@@ -2871,7 +2739,7 @@ export default function StudioPage() {
                               fontWeight: 800,
                               textTransform: "uppercase",
                               letterSpacing: 0.5,
-                              color: "#00A896",
+                              color: "var(--drp-mint)",
                             }}
                           >
                             Strengths
@@ -2911,7 +2779,7 @@ export default function StudioPage() {
                               fontWeight: 800,
                               textTransform: "uppercase",
                               letterSpacing: 0.5,
-                              color: "#FF6C01",
+                              color: "var(--drp-orange)",
                             }}
                           >
                             Suggestions
@@ -2946,42 +2814,23 @@ export default function StudioPage() {
 
                 {/* Saved notice */}
                 {savedId && (
-                  <div
-                    style={{
-                      marginTop: 12,
-                      padding: "10px 14px",
-                      background: "rgba(0,168,150,0.06)",
-                      border: "1px solid rgba(0,168,150,0.25)",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <CheckCircle size={14} color="#00A896" />
-                    <span
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 700,
-                        color: "#00A896",
-                      }}
-                    >
-                      Saved to Library
-                    </span>
-                    <a
-                      href={`/library/${savedId}`}
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 700,
-                        color: "var(--drp-purple)",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 4,
-                        textDecoration: "none",
-                      }}
-                    >
-                      View post <ExternalLink size={12} />
-                    </a>
+                  <div style={{ marginTop: 12 }}>
+                    <Alert variant="success">
+                      Saved to Library.{" "}
+                      <Link
+                        href={`/library/${savedId}`}
+                        style={{
+                          fontWeight: 700,
+                          color: "var(--drp-purple)",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 4,
+                          textDecoration: "none",
+                        }}
+                      >
+                        View post <ExternalLink size={12} />
+                      </Link>
+                    </Alert>
                   </div>
                 )}
               </div>
@@ -2989,72 +2838,30 @@ export default function StudioPage() {
 
             {/* Error */}
             {error && (
-              <Card
-                variant="raised"
-                style={{ marginTop: 12, borderLeft: "4px solid #E99898" }}
-              >
-                <div
-                  style={{
-                    padding: 16,
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: 10,
-                  }}
-                >
-                  <AlertCircle
-                    size={16}
-                    color="#E99898"
-                    style={{ marginTop: 2, flexShrink: 0 }}
-                  />
-                  <div>
-                    <p
+              <div style={{ marginTop: 12 }}>
+                <Alert variant="error" title="Pipeline Error">
+                  {error}
+                  {(error.includes("API key") || error.includes("api key")) && (
+                    <Link
+                      href="/settings"
                       style={{
-                        fontWeight: 700,
-                        fontSize: 14,
-                        margin: "0 0 4px",
-                        color: "#E99898",
-                      }}
-                    >
-                      Pipeline Error
-                    </p>
-                    <p
-                      style={{
+                        display: "inline-block",
+                        marginTop: 8,
                         fontSize: 13,
-                        margin: 0,
-                        color: "var(--drp-black)",
+                        fontWeight: 700,
+                        color: "var(--drp-purple)",
+                        textDecoration: "none",
                       }}
                     >
-                      {error}
-                    </p>
-                    {(error.includes("API key") ||
-                      error.includes("api key")) && (
-                      <a
-                        href="/settings"
-                        style={{
-                          display: "inline-block",
-                          marginTop: 8,
-                          fontSize: 13,
-                          fontWeight: 700,
-                          color: "var(--drp-purple)",
-                          textDecoration: "none",
-                        }}
-                      >
-                        Go to Settings →
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </Card>
+                      Go to Settings →
+                    </Link>
+                  )}
+                </Alert>
+              </div>
             )}
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Alert, Button, Card } from "@doctorproject/react";
-import { ArrowRight, Loader, TrendingUp } from "lucide-react";
+import { Alert, Button, Card, Loader } from "@doctorproject/react";
+import { ArrowRight, TrendingUp } from "lucide-react";
 import PostTypeSelector from "@/components/factory/PostTypeSelector";
 import HookPatternSelector from "@/components/factory/HookPatternSelector";
 import ContentPillarSelector from "@/components/factory/ContentPillarSelector";
@@ -135,12 +135,10 @@ export default function CreatePostDialog({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "var(--drp-space-3)",
             minHeight: 120,
           }}
         >
-          <Loader size={20} className="animate-spin" />
-          <span>Loading post configuration...</span>
+          <Loader size="sm" label="Loading post configuration..." />
         </div>
       </Card>
     );
@@ -227,10 +225,7 @@ export default function CreatePostDialog({
         disabled={loadingRecommendation || !isFormComplete}
       >
         {loadingRecommendation ? (
-          <>
-            <Loader size={18} className="animate-spin" />
-            Getting Recommendations...
-          </>
+          "Getting Recommendations..."
         ) : (
           <>
             <ArrowRight size={18} />

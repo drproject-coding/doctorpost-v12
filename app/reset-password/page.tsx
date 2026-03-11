@@ -135,13 +135,15 @@ function ResetPasswordContent() {
           </div>
         )}
 
-        <button
-          onClick={() => router.push("/login")}
-          className="mt-4 text-sm font-medium hover:underline"
-          style={{ color: "var(--drp-purple)" }}
-        >
-          Back to login
-        </button>
+        <div style={{ marginTop: "var(--drp-space-4)", textAlign: "center" }}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push("/login")}
+          >
+            Back to login
+          </Button>
+        </div>
       </Card>
     </div>
   );

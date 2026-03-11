@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
+import { Button, Card, Input, Textarea } from "@doctorproject/react";
 import { ThumbsUp, ThumbsDown, Edit3, MessageSquare } from "lucide-react";
 
 interface PostReviewProps {
@@ -85,17 +85,8 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
       {/* Edit mode */}
       {action === "editing" && (
         <div style={{ marginBottom: "var(--drp-space-4)" }}>
-          <label
-            className="drp-field__label"
-            style={{
-              marginBottom: "var(--drp-space-2)",
-              display: "block",
-            }}
-          >
-            Edit Post
-          </label>
-          <textarea
-            className="drp-input"
+          <Textarea
+            label="Edit Post"
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
             style={{ minHeight: 300, fontFamily: "monospace" }}
@@ -116,26 +107,24 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
       {/* Feedback mode */}
       {action === "feedback" && (
         <div style={{ marginBottom: "var(--drp-space-4)" }}>
-          <label
-            className="drp-field__label"
+          <div
             style={{
-              marginBottom: "var(--drp-space-2)",
-              display: "block",
+              display: "flex",
+              gap: "var(--drp-space-2)",
+              alignItems: "flex-end",
             }}
           >
-            Feedback
-          </label>
-          <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
-            <input
-              className="drp-input"
-              value={feedbackText}
-              onChange={(e) => setFeedbackText(e.target.value)}
-              placeholder="Type feedback and press Add..."
-              onKeyDown={(e) => {
-                if (e.key === "Enter") addFeedback();
-              }}
-              style={{ flex: 1 }}
-            />
+            <div style={{ flex: 1 }}>
+              <Input
+                label="Feedback"
+                value={feedbackText}
+                onChange={(e) => setFeedbackText(e.target.value)}
+                placeholder="Type feedback and press Add..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") addFeedback();
+                }}
+              />
+            </div>
             <Button onClick={addFeedback}>Add</Button>
           </div>
         </div>
@@ -168,20 +157,15 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
                 }}
               >
                 <span>{fb}</span>
-                <button
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "var(--drp-text-xs)",
-                    color: "var(--drp-grey)",
-                  }}
+                <Button
+                  size="sm"
+                  variant="ghost"
                   onClick={() =>
                     setFeedbackList((prev) => prev.filter((_, j) => j !== i))
                   }
                 >
                   remove
-                </button>
+                </Button>
               </div>
             ))}
           </div>

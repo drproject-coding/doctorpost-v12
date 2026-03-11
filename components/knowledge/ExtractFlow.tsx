@@ -1,7 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
-import { ArrowLeft, Loader, Check, Scissors } from "lucide-react";
+import {
+  Alert,
+  Button,
+  Card,
+  Input,
+  Loader,
+  Textarea,
+} from "@doctorproject/react";
+import { ArrowLeft, Check, Scissors } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import type { DocumentCategory } from "@/lib/knowledge/types";
 
@@ -157,8 +164,7 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
             AI will deconstruct the post into a reusable template with hook
             patterns, structure, and closer patterns.
           </p>
-          <textarea
-            className="drp-input"
+          <Textarea
             value={postContent}
             onChange={(e) => setPostContent(e.target.value)}
             placeholder="Paste the full LinkedIn post here..."
@@ -179,18 +185,10 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
             </Button>
           </div>
           {feedback && (
-            <div
-              style={{
-                marginTop: "var(--drp-space-3)",
-                padding: "var(--drp-space-3)",
-                border: "var(--drp-border)",
-                fontSize: "var(--drp-text-md)",
-                fontWeight: 500,
-                background: "rgba(255, 68, 68, 0.12)",
-                color: "var(--drp-error-dark)",
-              }}
-            >
-              {feedback}
+            <div style={{ marginTop: "var(--drp-space-3)" }}>
+              <Alert variant="error" onClose={() => setFeedback(null)}>
+                {feedback}
+              </Alert>
             </div>
           )}
         </Card>
@@ -204,11 +202,15 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
             padding: "var(--drp-space-8)",
           }}
         >
-          <Loader
-            size={32}
-            className="animate-spin"
-            style={{ margin: "0 auto var(--drp-space-4)" }}
-          />
+          <div
+            style={{
+              margin: "0 auto var(--drp-space-4)",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Loader size="lg" />
+          </div>
           <h3 style={{ fontSize: "var(--drp-text-h5)", fontWeight: 700 }}>
             Analyzing post structure...
           </h3>
@@ -233,14 +235,11 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           </h3>
 
           <div className="drp-form-stack">
-            <div className="drp-field">
-              <label className="drp-field__label">Template Name</label>
-              <input
-                className="drp-input"
-                value={templateName}
-                onChange={(e) => setTemplateName(e.target.value)}
-              />
-            </div>
+            <Input
+              label="Template Name"
+              value={templateName}
+              onChange={(e) => setTemplateName(e.target.value)}
+            />
 
             <div className="drp-form-row">
               <div>
@@ -360,22 +359,13 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           </div>
 
           {feedback && (
-            <div
-              style={{
-                marginTop: "var(--drp-space-3)",
-                padding: "var(--drp-space-3)",
-                border: "var(--drp-border)",
-                fontSize: "var(--drp-text-md)",
-                fontWeight: 500,
-                background: feedback.startsWith("Error")
-                  ? "rgba(255, 68, 68, 0.12)"
-                  : "rgba(0, 170, 0, 0.12)",
-                color: feedback.startsWith("Error")
-                  ? "var(--drp-error-dark)"
-                  : "var(--drp-success-dark)",
-              }}
-            >
-              {feedback}
+            <div style={{ marginTop: "var(--drp-space-3)" }}>
+              <Alert
+                variant={feedback.startsWith("Error") ? "error" : "success"}
+                onClose={() => setFeedback(null)}
+              >
+                {feedback}
+              </Alert>
             </div>
           )}
         </Card>
@@ -389,11 +379,15 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
             padding: "var(--drp-space-8)",
           }}
         >
-          <Loader
-            size={32}
-            className="animate-spin"
-            style={{ margin: "0 auto var(--drp-space-4)" }}
-          />
+          <div
+            style={{
+              margin: "0 auto var(--drp-space-4)",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Loader size="lg" />
+          </div>
           <h3 style={{ fontSize: "var(--drp-text-h5)", fontWeight: 700 }}>
             Saving template...
           </h3>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@doctorproject/react";
+import { Button, Alert, Loader } from "@doctorproject/react";
 import {
   CheckCircle,
   Edit2,
@@ -11,7 +11,6 @@ import {
   Target,
   Users,
   Briefcase,
-  Loader,
 } from "lucide-react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import type { BrandProfile } from "@/lib/types";
@@ -50,7 +49,6 @@ function Tag({ label, color }: { label: string; color: string }) {
         lineHeight: 1.5,
         marginRight: 6,
         marginBottom: 6,
-        borderRadius: 0,
       }}
     >
       {label}
@@ -72,7 +70,6 @@ function IncompleteBadge() {
         color: "#92400E",
         border: "1.5px solid #F59E0B",
         letterSpacing: "0.04em",
-        borderRadius: 0,
       }}
     >
       INCOMPLETE
@@ -96,7 +93,6 @@ function CompleteBadge() {
         color: "#065F46",
         border: "1.5px solid #10B981",
         letterSpacing: "0.04em",
-        borderRadius: 0,
       }}
     >
       <CheckCircle size={11} />
@@ -130,7 +126,6 @@ function SectionCard({
       style={{
         border: "2px solid var(--drp-black)",
         borderLeft: `5px solid ${accentColor}`,
-        borderRadius: 0,
         background: "white",
         marginBottom: 16,
       }}
@@ -160,33 +155,14 @@ function SectionCard({
             {complete ? <CompleteBadge /> : <IncompleteBadge />}
           </span>
         </div>
-        <button
+        <Button
+          variant="ghost-bordered"
           onClick={onEdit}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 5,
-            background: "none",
-            border: "1.5px solid var(--drp-black)",
-            cursor: "pointer",
-            padding: "4px 12px",
-            fontSize: 12,
-            fontWeight: 600,
-            color: "var(--drp-black)",
-            borderRadius: 0,
-            transition: "background 0.12s",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background =
-              "var(--drp-cream)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "none";
-          }}
+          size="sm"
+          iconLeft={<Edit2 size={12} />}
         >
-          <Edit2 size={12} />
           Edit
-        </button>
+        </Button>
       </div>
 
       {/* Body */}
@@ -278,10 +254,9 @@ export default function OnboardingReviewPage() {
           fontSize: 14,
         }}
       >
-        <Loader
-          size={20}
-          style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
-        />
+        <span style={{ flexShrink: 0 }}>
+          <Loader size="sm" />
+        </span>
         Loading your profile…
       </div>
     );
@@ -293,20 +268,14 @@ export default function OnboardingReviewPage() {
         <p style={{ color: "var(--drp-grey)", fontSize: 14 }}>
           {error ?? "Could not load profile."}
         </p>
-        <button
-          onClick={() => router.push("/onboarding/wizard/1")}
-          style={{
-            marginTop: 16,
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "var(--drp-purple)",
-            fontWeight: 600,
-            fontSize: 14,
-          }}
-        >
-          ← Go to wizard
-        </button>
+        <div style={{ marginTop: 16 }}>
+          <Button
+            variant="ghost"
+            onClick={() => router.push("/onboarding/wizard/1")}
+          >
+            ← Go to wizard
+          </Button>
+        </div>
       </div>
     );
   }
@@ -593,18 +562,8 @@ export default function OnboardingReviewPage() {
 
       {/* Error */}
       {error && (
-        <div
-          style={{
-            padding: "10px 16px",
-            background: "#FEF2F2",
-            border: "1.5px solid #F87171",
-            color: "#B91C1C",
-            fontSize: 13,
-            marginBottom: 16,
-            borderRadius: 0,
-          }}
-        >
-          {error}
+        <div style={{ marginBottom: 16 }}>
+          <Alert variant="error">{error}</Alert>
         </div>
       )}
 
@@ -622,7 +581,6 @@ export default function OnboardingReviewPage() {
           onClick={handleSave}
           disabled={saving}
           style={{
-            borderRadius: 0,
             minWidth: 240,
             display: "flex",
             alignItems: "center",
@@ -632,48 +590,36 @@ export default function OnboardingReviewPage() {
             fontWeight: 700,
             padding: "12px 28px",
           }}
-        >
-          {saving ? (
-            <>
-              <Loader
-                size={16}
-                style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
-              />
-              Saving…
-            </>
-          ) : (
-            <>
+          iconLeft={
+            saving ? (
+              <span
+                style={{
+                  animation: "spin 1s linear infinite",
+                  display: "flex",
+                }}
+              >
+                <Loader size="sm" />
+              </span>
+            ) : (
               <CheckCircle size={16} />
-              Save &amp; Start Creating
-            </>
-          )}
+            )
+          }
+        >
+          {saving ? "Saving…" : "Save & Start Creating"}
         </Button>
 
-        <button
+        <Button
+          variant="ghost"
           onClick={() => router.push("/onboarding/wizard/5")}
           disabled={saving}
           style={{
-            background: "none",
-            border: "none",
-            cursor: saving ? "not-allowed" : "pointer",
             fontSize: 13,
             color: "var(--drp-grey)",
-            padding: "4px 0",
-            transition: "color 0.12s",
             opacity: saving ? 0.5 : 1,
-          }}
-          onMouseEnter={(e) => {
-            if (!saving)
-              (e.currentTarget as HTMLButtonElement).style.color =
-                "var(--drp-black)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.color =
-              "var(--drp-grey)";
           }}
         >
           ← Go back to wizard
-        </button>
+        </Button>
       </div>
 
       {/* Spin keyframes */}

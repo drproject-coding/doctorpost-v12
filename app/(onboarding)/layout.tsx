@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { useEffect } from "react";
-import { Loader } from "lucide-react";
+import { Loader, Button } from "@doctorproject/react";
 
 const stepLabels: Record<number, string> = {
   1: "Identity",
@@ -43,7 +43,9 @@ export default function OnboardingLayout({
           justifyContent: "center",
         }}
       >
-        <Loader size={24} style={{ animation: "spin 1s linear infinite" }} />
+        <span style={{ animation: "spin 1s linear infinite", display: "flex" }}>
+          <Loader size="sm" />
+        </span>
       </div>
     );
   }
@@ -66,18 +68,13 @@ export default function OnboardingLayout({
         }}
       >
         <span style={{ fontWeight: 700, fontSize: 18 }}>DoctorPost</span>
-        <button
+        <Button
+          variant="ghost"
           onClick={() => router.push("/dashboard")}
-          style={{
-            color: "var(--drp-grey)",
-            fontSize: 14,
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-          }}
+          style={{ color: "var(--drp-grey)", fontSize: 14 }}
         >
           Exit
-        </button>
+        </Button>
       </div>
 
       {/* Progress bar (wizard steps only) */}

@@ -13,8 +13,8 @@ import type {
   AiSettings,
 } from "@/lib/types";
 
-// Mock @bruddle/react components
-jest.mock("@bruddle/react", () => ({
+// Mock @doctorproject/react components
+jest.mock("@doctorproject/react", () => ({
   Alert: ({ variant, children }: any) => (
     <div data-testid="alert" data-variant={variant}>
       {children}
@@ -28,6 +28,12 @@ jest.mock("@bruddle/react", () => ({
   Card: ({ children, ...props }: any) => (
     <div data-testid="card" {...props}>
       {children}
+    </div>
+  ),
+  Loader: ({ size }: any) => <span data-testid="loader" data-size={size} />,
+  ProgressBar: ({ value, label }: any) => (
+    <div role="progressbar" aria-valuenow={value}>
+      {label}
     </div>
   ),
 }));
@@ -253,7 +259,7 @@ describe("PostGenerator", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("icon-loader")).toBeInTheDocument();
+      expect(screen.getByTestId("loader")).toBeInTheDocument();
       expect(screen.getByText(/Generating your post/i)).toBeInTheDocument();
     });
   });

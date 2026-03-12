@@ -3,7 +3,17 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Pictogram, type PictogramName } from "@doctorproject/react";
+import {
+  Book,
+  Factory,
+  Megaphone,
+  BookOpen,
+  Brain,
+  Palette,
+  Clapperboard,
+  ChevronLeft,
+} from "lucide-react";
+import { Icon } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 
 interface SidebarProps {
@@ -11,19 +21,33 @@ interface SidebarProps {
   onToggle: () => void;
 }
 
-const navItems: { name: string; path: string; icon: PictogramName }[] = [
-  { name: "Dashboard", path: "/dashboard", icon: "Layout" },
-  { name: "Studio", path: "/studio", icon: "Video" },
-  { name: "Create", path: "/create", icon: "Add" },
-  { name: "Factory", path: "/factory", icon: "Apps" },
-  { name: "Campaigns", path: "/campaigns", icon: "Hashtag" },
-  { name: "Calendar", path: "/calendar", icon: "Time" },
-  { name: "Knowledge", path: "/knowledge", icon: "Bookmark" },
-  { name: "Learning", path: "/learning", icon: "Info" },
-  { name: "Library", path: "/library", icon: "Folder" },
-  { name: "Analytics", path: "/analytics", icon: "Analytics" },
-  { name: "Brand", path: "/brand", icon: "Photo" },
-  { name: "Settings", path: "/settings", icon: "Filters" },
+type NavItem =
+  | {
+      name: string;
+      path: string;
+      dsIcon: "dashboard" | "analytics" | "settings" | "calendar" | "edit";
+      lucideIcon?: never;
+    }
+  | {
+      name: string;
+      path: string;
+      lucideIcon: React.ElementType;
+      dsIcon?: never;
+    };
+
+const navItems: NavItem[] = [
+  { name: "Dashboard", path: "/dashboard", dsIcon: "dashboard" },
+  { name: "Studio", path: "/studio", lucideIcon: Clapperboard },
+  { name: "Create", path: "/create", dsIcon: "edit" },
+  { name: "Factory", path: "/factory", lucideIcon: Factory },
+  { name: "Campaigns", path: "/campaigns", lucideIcon: Megaphone },
+  { name: "Calendar", path: "/calendar", dsIcon: "calendar" },
+  { name: "Knowledge", path: "/knowledge", lucideIcon: BookOpen },
+  { name: "Learning", path: "/learning", lucideIcon: Brain },
+  { name: "Library", path: "/library", lucideIcon: Book },
+  { name: "Analytics", path: "/analytics", dsIcon: "analytics" },
+  { name: "Brand", path: "/brand", lucideIcon: Palette },
+  { name: "Settings", path: "/settings", dsIcon: "settings" },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
@@ -53,7 +77,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                 className={`sidebar-nav-item${isActive ? " active" : ""}`}
               >
                 <span className="sidebar-nav-icon">
-                  <Pictogram name={item.icon} size={20} />
+                  {item.dsIcon ? (
+                    <Icon name={item.dsIcon} size="md" />
+                  ) : (
+                    <item.lucideIcon size={20} />
+                  )}
                 </span>
                 <span className="sidebar-nav-text">{item.name}</span>
               </Link>
@@ -68,11 +96,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         onClick={onToggle}
         aria-label="Toggle sidebar"
       >
-        <Pictogram
-          name="Right"
-          size={14}
-          className={collapsed ? "rotate-0" : "rotate-180"}
-        />
+        <ChevronLeft size={14} />
       </button>
 
       {/* User Profile */}

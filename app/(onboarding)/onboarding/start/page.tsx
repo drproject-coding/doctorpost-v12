@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { Button, Card } from "@doctorproject/react";
-import { Upload, Wand2 } from "lucide-react";
 
 interface OptionCardProps {
   icon: React.ReactNode;
@@ -145,14 +144,14 @@ export default function OnboardingStartPage() {
           }}
         >
           <OptionCard
-            icon={<Upload size={32} />}
+            icon="⬆"
             title="Upload brand files"
             description="Have existing brand docs? Upload PDFs, DOCX or text files and we'll extract your brand profile automatically."
             buttonLabel="Upload files"
             onClick={() => router.push("/onboarding/upload")}
           />
           <OptionCard
-            icon={<Wand2 size={32} />}
+            icon="✦"
             title="Build with the wizard"
             description="Answer a few questions to set up your brand profile step by step. Takes about 5 minutes."
             buttonLabel="Start wizard"

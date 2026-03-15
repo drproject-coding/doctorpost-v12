@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Loader } from "@doctorproject/react";
-import { Sparkles, Pencil, X, Check } from "lucide-react";
 
 interface BrandSectionProps {
   title: string;
@@ -108,11 +107,12 @@ const BrandSection: React.FC<BrandSectionProps> = ({
             <Button
               variant="ghost"
               size="sm"
+              iconLeft={aiLoading ? undefined : "✦"}
               onClick={handleAiGenerate}
               disabled={aiLoading}
               aria-label="AI Generate"
             >
-              {aiLoading ? <Loader size="sm" /> : <Sparkles size={13} />}
+              {aiLoading ? <Loader size="sm" /> : null}
               {aiLoading ? "Generating..." : "Generate"}
             </Button>
           )}
@@ -121,10 +121,10 @@ const BrandSection: React.FC<BrandSectionProps> = ({
             <Button
               variant="secondary"
               size="sm"
+              iconLeft="✎"
               onClick={handleEdit}
               aria-label="Edit section"
             >
-              <Pencil size={13} />
               Edit
             </Button>
           )}
@@ -134,11 +134,11 @@ const BrandSection: React.FC<BrandSectionProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
+                iconLeft="✕"
                 onClick={handleCancel}
                 disabled={saving}
                 aria-label="Cancel editing"
               >
-                <X size={13} />
                 Cancel
               </Button>
               <Button
@@ -148,7 +148,7 @@ const BrandSection: React.FC<BrandSectionProps> = ({
                 disabled={saving}
                 aria-label="Save section"
               >
-                {saving ? <Loader size="sm" /> : <Check size={13} />}
+                {saving ? <Loader size="sm" /> : null}
                 {saving ? "Saving..." : "Save"}
               </Button>
             </>

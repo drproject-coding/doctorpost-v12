@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import { Alert, Card } from "@doctorproject/react";
-import { Loader, Check, AlertCircle } from "lucide-react";
+import { Alert, Card, Heading } from "@doctorproject/react";
 
 const PILLAR_COLORS = [
   { bg: "#6B4FFF", text: "#fff" },
@@ -34,15 +33,9 @@ export function BatchProgress({
 
   return (
     <Card variant="raised">
-      <h3
-        style={{
-          fontSize: "var(--drp-text-h5)",
-          fontWeight: 700,
-          marginBottom: "var(--drp-space-4)",
-        }}
-      >
+      <Heading level="h3" style={{ marginBottom: "var(--drp-space-4)" }}>
         Campaign Progress
-      </h3>
+      </Heading>
 
       {/* Progress bar */}
       <div
@@ -78,14 +71,11 @@ export function BatchProgress({
         }}
       >
         {phase === "complete" ? (
-          <Check size={16} style={{ color: "var(--drp-success, #00AA00)" }} />
+          <span style={{ color: "var(--drp-success)" }}>✓</span>
         ) : phase === "error" ? (
-          <AlertCircle
-            size={16}
-            style={{ color: "var(--drp-error, #FF4444)" }}
-          />
+          <span style={{ color: "var(--drp-error)" }}>⚠</span>
         ) : phase !== "idle" ? (
-          <Loader size={16} className="animate-spin" />
+          <span>⟳</span>
         ) : null}
         <span
           style={{
@@ -113,15 +103,9 @@ export function BatchProgress({
       {/* Pillar distribution on complete */}
       {phase === "complete" && pillarDistribution && (
         <div>
-          <h4
-            style={{
-              fontSize: "var(--drp-text-md)",
-              fontWeight: 700,
-              marginBottom: "var(--drp-space-2)",
-            }}
-          >
+          <Heading level="h4" style={{ marginBottom: "var(--drp-space-2)" }}>
             Pillar Distribution
-          </h4>
+          </Heading>
           <div
             style={{
               display: "flex",
@@ -141,7 +125,6 @@ export function BatchProgress({
                   color: PILLAR_COLORS[i % PILLAR_COLORS.length].text,
                   fontSize: "var(--drp-text-xs)",
                   fontWeight: 600,
-                  borderRadius: 2,
                 }}
               >
                 <span
@@ -155,7 +138,6 @@ export function BatchProgress({
                 <span
                   style={{
                     background: "rgba(0,0,0,0.2)",
-                    borderRadius: "50%",
                     width: 18,
                     height: 18,
                     display: "flex",

@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card } from "@doctorproject/react";
+import { Card, Heading } from "@doctorproject/react";
 import type { CampaignPostStatus } from "@/lib/knowledge/types";
 import { IdeaStatusBadge } from "./IdeaStatusBadge";
 import { CampaignSummaryRow } from "./CampaignSummaryRow";
@@ -121,15 +121,9 @@ export function CampaignCalendar({
 
   return (
     <Card variant="raised">
-      <h3
-        style={{
-          fontSize: "var(--drp-text-h5)",
-          fontWeight: 700,
-          marginBottom: "var(--drp-space-3)",
-        }}
-      >
+      <Heading level="h3" style={{ marginBottom: "var(--drp-space-3)" }}>
         Campaign Calendar
-      </h3>
+      </Heading>
 
       <CampaignSummaryRow
         counts={statusCounts}
@@ -160,15 +154,12 @@ export function CampaignCalendar({
 
           return (
             <div key={`week-${wi}`}>
-              <h4
-                style={{
-                  fontSize: "var(--drp-text-md)",
-                  fontWeight: 700,
-                  marginBottom: "var(--drp-space-2)",
-                }}
+              <Heading
+                level="h4"
+                style={{ marginBottom: "var(--drp-space-2)" }}
               >
                 Week {wi + 1}
-              </h4>
+              </Heading>
               <div
                 style={{
                   display: "grid",

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { Button, EmptyState } from "@doctorproject/react";
+import { Button, EmptyState, Heading } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import {
@@ -244,15 +244,7 @@ export default function CampaignsPage() {
             marginBottom: "var(--drp-space-6)",
           }}
         >
-          <h1
-            style={{
-              fontSize: "var(--drp-text-h3)",
-              fontWeight: 700,
-              margin: 0,
-            }}
-          >
-            Campaigns
-          </h1>
+          <Heading level="h1">Campaigns</Heading>
           <Button onClick={handleNewCampaign}>New Campaign</Button>
         </div>
         <CampaignList
@@ -285,15 +277,7 @@ export default function CampaignsPage() {
             <Button variant="ghost" onClick={handleBackToList}>
               &larr;
             </Button>
-            <h1
-              style={{
-                fontSize: "var(--drp-text-h3)",
-                fontWeight: 700,
-                margin: 0,
-              }}
-            >
-              {selectedCampaign.name}
-            </h1>
+            <Heading level="h1">{selectedCampaign.name}</Heading>
           </div>
         </div>
         {slots.length > 0 && config && (
@@ -335,15 +319,7 @@ export default function CampaignsPage() {
           <Button variant="ghost" onClick={handleBackToList}>
             &larr;
           </Button>
-          <h1
-            style={{
-              fontSize: "var(--drp-text-h3)",
-              fontWeight: 700,
-              margin: 0,
-            }}
-          >
-            New Campaign
-          </h1>
+          <Heading level="h1">New Campaign</Heading>
         </div>
       </div>
 

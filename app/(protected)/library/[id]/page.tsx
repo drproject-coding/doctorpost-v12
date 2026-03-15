@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { ArrowLeft, Copy, Check, CheckCircle } from "lucide-react";
 import { Button, Loader, Alert, Tag } from "@doctorproject/react";
 
 interface Post {
@@ -53,8 +52,7 @@ function CopyButton({
       size="sm"
       style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
     >
-      {copied ? <Check size={13} /> : <Copy size={13} />}
-      {copied ? "Copied!" : "Copy"}
+      {copied ? "✓ Copied!" : "⧉ Copy"}
     </Button>
   );
 }
@@ -385,7 +383,7 @@ export default function PostDetailPage() {
             marginBottom: 16,
           }}
         >
-          <ArrowLeft size={16} /> Library
+          ‹ Library
         </Button>
         <Alert variant="error">{error ?? "Post not found"}</Alert>
       </div>
@@ -436,7 +434,7 @@ export default function PostDetailPage() {
             fontSize: 14,
           }}
         >
-          <ArrowLeft size={16} /> Library
+          ‹ Library
         </Button>
 
         <div
@@ -528,12 +526,8 @@ export default function PostDetailPage() {
               variant="outline"
               style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
             >
-              {markingPublished ? (
-                <Loader size="sm" />
-              ) : (
-                <CheckCircle size={14} />
-              )}
-              {markingPublished ? "Saving…" : "Mark as Published"}
+              {markingPublished ? <Loader size="sm" /> : null}
+              {markingPublished ? "Saving…" : "✓ Mark as Published"}
             </Button>
           )}
         </div>

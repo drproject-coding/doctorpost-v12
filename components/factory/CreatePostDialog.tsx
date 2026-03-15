@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Alert, Button, Card, Loader } from "@doctorproject/react";
-import { ArrowRight, TrendingUp } from "lucide-react";
 import PostTypeSelector from "@/components/factory/PostTypeSelector";
 import HookPatternSelector from "@/components/factory/HookPatternSelector";
 import ContentPillarSelector from "@/components/factory/ContentPillarSelector";
@@ -170,7 +169,7 @@ export default function CreatePostDialog({
               className="smart-choice-badge"
               style={{ marginTop: "var(--drp-space-1)" }}
             >
-              <TrendingUp size={12} /> Smart Choice
+              ↗ Smart Choice
             </span>
           )}
         </div>
@@ -186,7 +185,7 @@ export default function CreatePostDialog({
               className="smart-choice-badge"
               style={{ marginTop: "var(--drp-space-1)" }}
             >
-              <TrendingUp size={12} /> Smart Choice
+              ↗ Smart Choice
             </span>
           )}
         </div>
@@ -202,7 +201,7 @@ export default function CreatePostDialog({
               className="smart-choice-badge"
               style={{ marginTop: "var(--drp-space-1)" }}
             >
-              <TrendingUp size={12} /> Smart Choice
+              ↗ Smart Choice
             </span>
           )}
         </div>
@@ -224,14 +223,7 @@ export default function CreatePostDialog({
         block
         disabled={loadingRecommendation || !isFormComplete}
       >
-        {loadingRecommendation ? (
-          "Getting Recommendations..."
-        ) : (
-          <>
-            <ArrowRight size={18} />
-            Generate Post
-          </>
-        )}
+        {loadingRecommendation ? "Getting Recommendations..." : "Generate Post"}
       </Button>
     </div>
   );

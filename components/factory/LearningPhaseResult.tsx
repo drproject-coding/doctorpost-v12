@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Card, Button } from "@doctorproject/react";
-import { ChevronDown, ChevronUp, Brain, TrendingUp, Zap } from "lucide-react";
 import type { LearnerOutput, LearnerSignal } from "@/lib/agents/learner";
 
 interface LearningPhaseResultProps {
@@ -67,7 +66,9 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
             gap: "var(--drp-space-2)",
           }}
         >
-          <Brain size={18} style={{ color: "var(--drp-purple)" }} />
+          <span style={{ color: "var(--drp-purple)", fontSize: "18px" }}>
+            ◎
+          </span>
           <h3
             style={{
               fontSize: "var(--drp-text-h5)",
@@ -95,7 +96,7 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
             {output.signals.length} signal
             {output.signals.length !== 1 ? "s" : ""} captured
           </span>
-          {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          {expanded ? "▲" : "▼"}
         </div>
       </Button>
 
@@ -115,10 +116,9 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
                 fontSize: "var(--drp-text-sm)",
               }}
             >
-              <TrendingUp
-                size={14}
-                style={{ color: "var(--drp-purple)", flexShrink: 0 }}
-              />
+              <span style={{ color: "var(--drp-purple)", flexShrink: 0 }}>
+                ↗
+              </span>
               <div>
                 <strong style={{ color: "var(--drp-purple)" }}>
                   Pattern Detected:
@@ -142,13 +142,14 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
                 fontSize: "var(--drp-text-sm)",
               }}
             >
-              <Zap
-                size={14}
+              <span
                 style={{
                   color: "var(--drp-success-dark, #2d7a3a)",
                   flexShrink: 0,
                 }}
-              />
+              >
+                ⚡
+              </span>
               <span
                 style={{
                   color: "var(--drp-success-dark, #2d7a3a)",

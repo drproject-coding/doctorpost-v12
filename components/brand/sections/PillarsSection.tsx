@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Input } from "@doctorproject/react";
-import { Trash2 } from "lucide-react";
 import { enhancedContentPillars } from "@/lib/dropdownData";
 import { BrandProfile, CustomPillar } from "@/lib/types";
 import { useConfirm } from "@/components/ConfirmDialog";
@@ -168,7 +167,7 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
                   }}
                   aria-label="Remove pillar"
                 >
-                  <Trash2 size={13} />
+                  ×
                 </Button>
               )}
 

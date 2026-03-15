@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card, Input, Textarea } from "@doctorproject/react";
-import { Plus, Minus } from "lucide-react";
+import { Button, Card, Heading, Input, Textarea } from "@doctorproject/react";
 
 interface CampaignSetupProps {
   onSubmit: (config: CampaignConfig) => void;
@@ -78,15 +77,9 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
   return (
     <form onSubmit={handleSubmit}>
       <Card variant="raised">
-        <h3
-          style={{
-            fontSize: "var(--drp-text-h5)",
-            fontWeight: 700,
-            marginBottom: "var(--drp-space-4)",
-          }}
-        >
+        <Heading level="h3" style={{ marginBottom: "var(--drp-space-4)" }}>
           New Campaign
-        </h3>
+        </Heading>
 
         <div className="drp-form-stack">
           <Input
@@ -191,7 +184,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                     onClick={() => removePillar(pillar)}
                     style={{ padding: 2 }}
                   >
-                    <Minus size={12} />
+                    −
                   </Button>
                 </div>
               ))}
@@ -221,7 +214,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                   onClick={addPillar}
                   style={{ padding: 2 }}
                 >
-                  <Plus size={12} />
+                  +
                 </Button>
               </div>
             </div>

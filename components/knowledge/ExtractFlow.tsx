@@ -8,7 +8,6 @@ import {
   Loader,
   Textarea,
 } from "@doctorproject/react";
-import { ArrowLeft, Check, Scissors } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import type { DocumentCategory } from "@/lib/knowledge/types";
 
@@ -129,9 +128,7 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           marginBottom: "var(--drp-space-6)",
         }}
       >
-        <Button variant="ghost" onClick={onCancel}>
-          <ArrowLeft size={16} />
-        </Button>
+        <Button variant="ghost" iconLeft="‹" onClick={onCancel} />
         <h2
           style={{
             fontSize: "var(--drp-text-h4)",
@@ -177,10 +174,10 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
             <Button onClick={onCancel}>Cancel</Button>
             <Button
               variant="primary"
+              iconLeft="✂"
               onClick={handleExtract}
               disabled={!postContent.trim()}
             >
-              <Scissors size={14} />
               Extract Template
             </Button>
           </div>
@@ -350,10 +347,10 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
             <Button onClick={() => setStep("paste")}>Back</Button>
             <Button
               variant="primary"
+              iconLeft="✓"
               onClick={handleSave}
               disabled={!templateName.trim()}
             >
-              <Check size={14} />
               Save Template
             </Button>
           </div>

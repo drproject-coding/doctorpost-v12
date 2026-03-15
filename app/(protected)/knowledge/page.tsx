@@ -6,12 +6,12 @@ import {
   Button,
   Card,
   EmptyState,
+  Heading,
   Input,
   Loader,
   Tag,
 } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
-import { FileText, Upload, Scissors, Lock, GitFork } from "lucide-react";
 import type {
   KnowledgeDocument,
   DocumentCategory,
@@ -246,20 +246,10 @@ export default function KnowledgePage() {
           marginBottom: "var(--drp-space-6)",
         }}
       >
-        <h1
-          style={{ fontSize: "var(--drp-text-h3)", fontWeight: 700, margin: 0 }}
-        >
-          Knowledge Base
-        </h1>
+        <Heading level="h1">Knowledge Base</Heading>
         <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
-          <Button onClick={() => setView("import")}>
-            <Upload size={14} />
-            Import
-          </Button>
-          <Button onClick={() => setView("extract")}>
-            <Scissors size={14} />
-            Extract Template
-          </Button>
+          <Button onClick={() => setView("import")}>Import</Button>
+          <Button onClick={() => setView("extract")}>Extract Template</Button>
         </div>
       </div>
 
@@ -316,12 +306,7 @@ export default function KnowledgePage() {
           icon="📄"
           title="No documents found"
           description="Import brand files to get started."
-          action={
-            <Button onClick={() => setView("import")}>
-              <Upload size={14} />
-              Import
-            </Button>
-          }
+          action={<Button onClick={() => setView("import")}>Import</Button>}
         />
       ) : (
         <div
@@ -345,7 +330,6 @@ export default function KnowledgePage() {
                   gap: "var(--drp-space-3)",
                 }}
               >
-                <FileText size={20} style={{ flexShrink: 0, marginTop: 2 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <h4
                     style={{
@@ -371,9 +355,7 @@ export default function KnowledgePage() {
                       {doc.category}
                     </Tag>
                     {doc.source === "seed" && (
-                      <Badge variant="primary">
-                        <Lock size={9} style={{ marginRight: 3 }} /> System
-                      </Badge>
+                      <Badge variant="primary">System</Badge>
                     )}
                     {doc.subcategory && (
                       <span

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Button } from "@doctorproject/react";
-import { CheckCircle, XCircle, X } from "lucide-react";
 
 type ToastType = "success" | "error" | "info";
 
@@ -74,11 +73,11 @@ function ToastItem({
   const colors: Record<ToastType, { bg: string; icon: React.ReactNode }> = {
     success: {
       bg: "#e6f9ec",
-      icon: <CheckCircle size={16} color="#00aa00" />,
+      icon: <span style={{ color: "var(--drp-success)" }}>✓</span>,
     },
     error: {
       bg: "#fde8e8",
-      icon: <XCircle size={16} color="#cc0000" />,
+      icon: <span style={{ color: "var(--drp-error)" }}>✕</span>,
     },
     info: {
       bg: "var(--drp-cream, #fffdf4)",
@@ -115,7 +114,7 @@ function ToastItem({
         aria-label="Dismiss"
         style={{ flexShrink: 0, color: "var(--drp-grey)" }}
       >
-        <X size={14} />
+        ✕
       </Button>
       <style>{`
         @keyframes drp-toast-in {

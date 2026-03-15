@@ -3,8 +3,10 @@ import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Card,
+  Heading,
   Tabs,
   Tag,
+  Text,
   EmptyState,
   Pagination,
   Button,
@@ -14,7 +16,6 @@ import {
 import { getScheduledPosts, updatePost, deletePost } from "@/lib/api";
 import { useToast } from "@/components/Toast";
 import { ScheduledPost } from "@/lib/types";
-import { Calendar } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import PostEditorModal from "@/components/PostEditorModal";
 
@@ -172,15 +173,9 @@ export default function LibraryPage() {
     return (
       <div style={{ padding: "var(--drp-space-6)" }}>
         <div style={{ maxWidth: 1152, margin: "0 auto" }}>
-          <h1
-            style={{
-              fontSize: "var(--drp-text-h3)",
-              fontWeight: 700,
-              marginBottom: "var(--drp-space-6)",
-            }}
-          >
+          <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
             Content Library
-          </h1>
+          </Heading>
           <Card
             variant="raised"
             style={{
@@ -272,9 +267,9 @@ export default function LibraryPage() {
                     }}
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontWeight: 700, marginBottom: 4 }}>
+                      <Text weight="bold" style={{ marginBottom: 4 }}>
                         {post.title}
-                      </p>
+                      </Text>
                       {/* Badge row */}
                       <div
                         style={{
@@ -332,8 +327,7 @@ export default function LibraryPage() {
                               fontWeight: 700,
                             }}
                           >
-                            <Calendar size={11} />
-                            {dateLabel} {scheduledFmt}
+                            📅 {dateLabel} {scheduledFmt}
                           </span>
                         )}
                       </div>

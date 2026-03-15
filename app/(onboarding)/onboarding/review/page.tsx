@@ -3,15 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Alert, Loader } from "@doctorproject/react";
-import {
-  CheckCircle,
-  Edit2,
-  User,
-  Mic,
-  Target,
-  Users,
-  Briefcase,
-} from "lucide-react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import type { BrandProfile } from "@/lib/types";
 
@@ -95,8 +86,7 @@ function CompleteBadge() {
         letterSpacing: "0.04em",
       }}
     >
-      <CheckCircle size={11} />
-      COMPLETE
+      ✓ COMPLETE
     </span>
   );
 }
@@ -159,7 +149,7 @@ function SectionCard({
           variant="ghost-bordered"
           onClick={onEdit}
           size="sm"
-          iconLeft={<Edit2 size={12} />}
+          iconLeft="✎"
         >
           Edit
         </Button>
@@ -314,7 +304,7 @@ export default function OnboardingReviewPage() {
       {/* Section 1 — Identity */}
       <SectionCard
         title="Identity"
-        icon={<User size={16} />}
+        icon="◉"
         accentColor="#631DED"
         sectionIndex={1}
         complete={isComplete(profile, 1)}
@@ -329,7 +319,7 @@ export default function OnboardingReviewPage() {
       {/* Section 2 — Voice & Tone */}
       <SectionCard
         title="Voice & Tone"
-        icon={<Mic size={16} />}
+        icon="♪"
         accentColor="#FF6C01"
         sectionIndex={2}
         complete={isComplete(profile, 2)}
@@ -414,7 +404,7 @@ export default function OnboardingReviewPage() {
       {/* Section 3 — Content Strategy */}
       <SectionCard
         title="Content Strategy"
-        icon={<Target size={16} />}
+        icon="◎"
         accentColor="#00A896"
         sectionIndex={3}
         complete={isComplete(profile, 3)}
@@ -480,7 +470,7 @@ export default function OnboardingReviewPage() {
       {/* Section 4 — Audience */}
       <SectionCard
         title="Audience"
-        icon={<Users size={16} />}
+        icon="◈"
         accentColor="#B45309"
         sectionIndex={4}
         complete={isComplete(profile, 4)}
@@ -538,7 +528,7 @@ export default function OnboardingReviewPage() {
       {/* Section 5 — Positioning */}
       <SectionCard
         title="Positioning"
-        icon={<Briefcase size={16} />}
+        icon="▣"
         accentColor="#E99898"
         sectionIndex={5}
         complete={isComplete(profile, 5)}
@@ -590,22 +580,16 @@ export default function OnboardingReviewPage() {
             fontWeight: 700,
             padding: "12px 28px",
           }}
-          iconLeft={
-            saving ? (
-              <span
-                style={{
-                  animation: "spin 1s linear infinite",
-                  display: "flex",
-                }}
-              >
-                <Loader size="sm" />
-              </span>
-            ) : (
-              <CheckCircle size={16} />
-            )
-          }
         >
-          {saving ? "Saving…" : "Save & Start Creating"}
+          {saving ? (
+            <span
+              style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
+            >
+              <Loader size="sm" /> Saving…
+            </span>
+          ) : (
+            "✓ Save & Start Creating"
+          )}
         </Button>
 
         <Button
@@ -621,14 +605,6 @@ export default function OnboardingReviewPage() {
           ← Go back to wizard
         </Button>
       </div>
-
-      {/* Spin keyframes */}
-      <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }

@@ -4,8 +4,11 @@ import {
   Badge,
   Button,
   Card,
+  Heading,
+  Icon,
   Input,
   Loader as BruLoader,
+  Text,
 } from "@doctorproject/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import {
@@ -27,14 +30,6 @@ import {
   ONEFORALL_IMAGE_MODELS,
 } from "@/lib/ai/constants";
 import { StraicoModelPicker } from "@/components/settings/StraicoModelPicker";
-import {
-  CheckCircle,
-  XCircle,
-  ChevronDown,
-  ChevronRight,
-  Eye,
-  EyeOff,
-} from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 type ValidationState =
@@ -68,7 +63,11 @@ function StatusBadge({
 }) {
   return (
     <Badge variant={connected ? "mint" : "outline"}>
-      {connected ? <CheckCircle size={10} /> : <XCircle size={10} />}
+      {connected ? (
+        <Icon name="check" size="sm" />
+      ) : (
+        <Icon name="close" size="sm" />
+      )}
       {label || (connected ? "Connected" : "Not connected")}
     </Badge>
   );
@@ -132,7 +131,7 @@ function TestResultBlock({ test }: { test: TestState }) {
             gap: 6,
           }}
         >
-          <CheckCircle size={14} />
+          <Icon name="check" size="sm" />
           Text model working correctly!
         </div>
         <div
@@ -165,7 +164,7 @@ function TestResultBlock({ test }: { test: TestState }) {
             gap: 6,
           }}
         >
-          <CheckCircle size={14} />
+          <Icon name="check" size="sm" />
           Image model working correctly!
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -559,22 +558,16 @@ export default function SettingsPage() {
           minHeight: 200,
         }}
       >
-        <p>Loading settings...</p>
+        <Text>Loading settings...</Text>
       </Card>
     );
   }
 
   return (
     <>
-      <h1
-        style={{
-          fontSize: "var(--drp-text-h3)",
-          fontWeight: 700,
-          marginBottom: "var(--drp-space-6)",
-        }}
-      >
+      <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
         AI & Integrations
-      </h1>
+      </Heading>
 
       {/* Integration Status Overview Bar */}
       <div
@@ -643,26 +636,18 @@ export default function SettingsPage() {
 
       {/* ── Research APIs Card (Perplexity + Reddit) ── */}
       <Card variant="raised" style={{ marginBottom: "var(--drp-space-6)" }}>
-        <h2
-          style={{
-            fontSize: "var(--drp-text-h5)",
-            fontWeight: 700,
-            marginBottom: "var(--drp-space-2)",
-          }}
-        >
+        <Heading level="h5" style={{ marginBottom: "var(--drp-space-2)" }}>
           Research APIs
-        </h2>
-        <p
-          style={{
-            fontSize: "var(--drp-text-xs)",
-            color: "var(--drp-grey)",
-            marginBottom: "var(--drp-space-4)",
-          }}
+        </Heading>
+        <Text
+          size="xs"
+          color="secondary"
+          style={{ marginBottom: "var(--drp-space-4)", display: "block" }}
         >
           Optional keys for the Content Factory research pipeline. When
           configured, the researcher agent can pull real-time data from
           Perplexity and Reddit.
-        </p>
+        </Text>
 
         <div className="drp-form-stack">
           {/* Perplexity */}
@@ -687,7 +672,11 @@ export default function SettingsPage() {
                 padding: 0,
               }}
             >
-              {showPerplexityKey ? <EyeOff size={14} /> : <Eye size={14} />}
+              {showPerplexityKey ? (
+                <Icon name="eye-off" size="sm" />
+              ) : (
+                <Icon name="eye" size="sm" />
+              )}
             </Button>
           </div>
 
@@ -720,7 +709,11 @@ export default function SettingsPage() {
                 padding: 0,
               }}
             >
-              {showRedditSecret ? <EyeOff size={14} /> : <Eye size={14} />}
+              {showRedditSecret ? (
+                <Icon name="eye-off" size="sm" />
+              ) : (
+                <Icon name="eye" size="sm" />
+              )}
             </Button>
           </div>
         </div>
@@ -836,7 +829,11 @@ export default function SettingsPage() {
                   padding: 0,
                 }}
               >
-                {showClaudeKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showClaudeKey ? (
+                  <Icon name="eye-off" size="sm" />
+                ) : (
+                  <Icon name="eye" size="sm" />
+                )}
               </Button>
             </div>
             <Button
@@ -952,7 +949,11 @@ export default function SettingsPage() {
                   padding: 0,
                 }}
               >
-                {showStraicoKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showStraicoKey ? (
+                  <Icon name="eye-off" size="sm" />
+                ) : (
+                  <Icon name="eye" size="sm" />
+                )}
               </Button>
             </div>
             <Button
@@ -1002,9 +1003,13 @@ export default function SettingsPage() {
                       Model for Copy
                     </span>
                     {straicoModelOpen ? (
-                      <ChevronDown size={14} color="var(--drp-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▼
+                      </span>
                     ) : (
-                      <ChevronRight size={14} color="var(--drp-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▶
+                      </span>
                     )}
                   </Button>
                   {straicoModelOpen && (
@@ -1054,9 +1059,13 @@ export default function SettingsPage() {
                       Model for Image
                     </span>
                     {straicoImageOpen ? (
-                      <ChevronDown size={14} color="var(--drp-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▼
+                      </span>
                     ) : (
-                      <ChevronRight size={14} color="var(--drp-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▶
+                      </span>
                     )}
                   </Button>
                   {straicoImageOpen && (
@@ -1199,7 +1208,11 @@ export default function SettingsPage() {
                   padding: 0,
                 }}
               >
-                {showOneforallKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showOneforallKey ? (
+                  <Icon name="eye-off" size="sm" />
+                ) : (
+                  <Icon name="eye" size="sm" />
+                )}
               </Button>
             </div>
             <Button
@@ -1249,9 +1262,13 @@ export default function SettingsPage() {
                       Model for Copy
                     </span>
                     {oneforallModelOpen ? (
-                      <ChevronDown size={14} color="var(--drp-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▼
+                      </span>
                     ) : (
-                      <ChevronRight size={14} color="var(--drp-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▶
+                      </span>
                     )}
                   </Button>
                   {oneforallModelOpen && (
@@ -1300,9 +1317,13 @@ export default function SettingsPage() {
                       Model for Image
                     </span>
                     {oneforallImageOpen ? (
-                      <ChevronDown size={14} color="var(--drp-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▼
+                      </span>
                     ) : (
-                      <ChevronRight size={14} color="var(--drp-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▶
+                      </span>
                     )}
                   </Button>
                   {oneforallImageOpen && (

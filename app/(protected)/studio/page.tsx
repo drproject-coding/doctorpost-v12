@@ -2,21 +2,6 @@
 
 import React, { useState, useCallback, useRef } from "react";
 import { Card, Button, Textarea, Loader, Alert } from "@doctorproject/react";
-import {
-  Zap,
-  Copy,
-  Check,
-  RefreshCw,
-  CheckCircle,
-  AlertCircle,
-  ExternalLink,
-  Smartphone,
-  Monitor,
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  FileImage,
-} from "lucide-react";
 import Link from "next/link";
 import { parseSSEStream } from "@/lib/sse";
 
@@ -746,15 +731,11 @@ function StageCard({
                 color: copiedProp ? "var(--drp-mint)" : "var(--drp-text-muted)",
               }}
             >
-              {copiedProp ? <Check size={14} /> : <Copy size={14} />}
+              {copiedProp ? "✓" : "⎘"}
             </Button>
           )}
           {isComplete && (
-            <CheckCircle
-              size={15}
-              color="var(--drp-mint)"
-              style={{ flexShrink: 0 }}
-            />
+            <span style={{ color: "var(--drp-mint)", flexShrink: 0 }}>✓</span>
           )}
         </div>
 
@@ -867,11 +848,7 @@ function VisualStageCard({
             </span>
           )}
           {isComplete && (
-            <CheckCircle
-              size={15}
-              color="var(--drp-mint)"
-              style={{ flexShrink: 0 }}
-            />
+            <span style={{ color: "var(--drp-mint)", flexShrink: 0 }}>✓</span>
           )}
         </div>
 
@@ -1644,10 +1621,7 @@ export default function StudioPage() {
                       Running…
                     </>
                   ) : (
-                    <>
-                      <Zap size={15} />
-                      Generate
-                    </>
+                    <>⚡ Generate</>
                   )}
                 </Button>
 
@@ -1658,7 +1632,7 @@ export default function StudioPage() {
                     block
                     style={{ marginTop: 8, gap: 6 }}
                   >
-                    <RefreshCw size={13} /> New Post
+                    ↺ New Post
                   </Button>
                 )}
               </div>
@@ -1702,15 +1676,7 @@ export default function StudioPage() {
                           marginBottom: 6,
                         }}
                       >
-                        {score.pass ? (
-                          <>
-                            <CheckCircle size={11} /> PASS
-                          </>
-                        ) : (
-                          <>
-                            <AlertCircle size={11} /> NEEDS WORK
-                          </>
-                        )}
+                        {score.pass ? <>✓ PASS</> : <>⚠ NEEDS WORK</>}
                       </div>
                       <p
                         style={{
@@ -1740,7 +1706,11 @@ export default function StudioPage() {
                     color: "var(--drp-grey)",
                   }}
                 >
-                  <Zap size={48} style={{ marginBottom: 16, opacity: 0.25 }} />
+                  <div
+                    style={{ fontSize: 48, marginBottom: 16, opacity: 0.25 }}
+                  >
+                    ⚡
+                  </div>
                   <p
                     style={{
                       fontWeight: 700,
@@ -1879,8 +1849,7 @@ export default function StudioPage() {
                                   textDecoration: "none",
                                 }}
                               >
-                                <CheckCircle size={14} />
-                                Saved
+                                ✓ Saved
                               </Link>
                             ) : (
                               <Button
@@ -1896,10 +1865,7 @@ export default function StudioPage() {
                                     Saving…
                                   </>
                                 ) : (
-                                  <>
-                                    <ExternalLink size={13} />
-                                    Save to Library
-                                  </>
+                                  <>↗ Save to Library</>
                                 )}
                               </Button>
                             )}
@@ -1911,8 +1877,7 @@ export default function StudioPage() {
                               size="sm"
                               style={{ gap: 6 }}
                             >
-                              <FileImage size={13} />
-                              PNG
+                              🖼 PNG
                             </Button>
                             <Button
                               onClick={() => void handleDownloadAllPdf()}
@@ -1928,10 +1893,7 @@ export default function StudioPage() {
                                   Exporting…
                                 </>
                               ) : (
-                                <>
-                                  <Download size={13} />
-                                  PDF
-                                </>
+                                <>↓ PDF</>
                               )}
                             </Button>
                           </div>
@@ -2081,7 +2043,7 @@ export default function StudioPage() {
                               opacity: currentSlide === 0 ? 0.35 : 1,
                             }}
                           >
-                            <ChevronLeft size={20} />
+                            ‹
                           </Button>
                           <span
                             style={{
@@ -2112,7 +2074,7 @@ export default function StudioPage() {
                                 currentSlide === totalSlides - 1 ? 0.35 : 1,
                             }}
                           >
-                            <ChevronRight size={20} />
+                            ›
                           </Button>
                         </div>
 
@@ -2337,7 +2299,6 @@ export default function StudioPage() {
                                   fontSize: 12,
                                 }}
                               >
-                                <Smartphone size={12} />
                                 Mobile
                               </Button>
                               <Button
@@ -2358,7 +2319,6 @@ export default function StudioPage() {
                                   fontSize: 12,
                                 }}
                               >
-                                <Monitor size={12} />
                                 Desktop
                               </Button>
                             </div>
@@ -2370,12 +2330,7 @@ export default function StudioPage() {
                               size="sm"
                               style={{ gap: 6 }}
                             >
-                              {copied ? (
-                                <Check size={14} />
-                              ) : (
-                                <Copy size={14} />
-                              )}
-                              {copied ? "Copied!" : "Copy"}
+                              {copied ? "✓ Copied!" : "⎘ Copy"}
                             </Button>
 
                             {/* Save / Library */}
@@ -2394,8 +2349,7 @@ export default function StudioPage() {
                                   textDecoration: "none",
                                 }}
                               >
-                                <CheckCircle size={14} />
-                                Saved
+                                ✓ Saved
                               </Link>
                             ) : (
                               <Button
@@ -2411,10 +2365,7 @@ export default function StudioPage() {
                                     Saving…
                                   </>
                                 ) : (
-                                  <>
-                                    <ExternalLink size={13} />
-                                    Save to Library
-                                  </>
+                                  <>↗ Save to Library</>
                                 )}
                               </Button>
                             )}
@@ -2635,15 +2586,7 @@ export default function StudioPage() {
                               marginBottom: 6,
                             }}
                           >
-                            {score.pass ? (
-                              <>
-                                <CheckCircle size={11} /> PASS
-                              </>
-                            ) : (
-                              <>
-                                <AlertCircle size={11} /> NEEDS WORK
-                              </>
-                            )}
+                            {score.pass ? <>✓ PASS</> : <>⚠ NEEDS WORK</>}
                           </div>
                           <p
                             style={{
@@ -2828,7 +2771,7 @@ export default function StudioPage() {
                           textDecoration: "none",
                         }}
                       >
-                        View post <ExternalLink size={12} />
+                        View post ↗
                       </Link>
                     </Alert>
                   </div>

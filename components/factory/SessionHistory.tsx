@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button, Card } from "@doctorproject/react";
-import { Clock, Trash2, Play, RotateCcw } from "lucide-react";
 import {
   listSessions as listLocalSessions,
   deleteSession as deleteLocalSession,
@@ -124,7 +123,7 @@ export function SessionHistory({
             gap: "var(--drp-space-2)",
           }}
         >
-          <Clock size={16} style={{ color: "var(--drp-grey)" }} />
+          <span style={{ color: "var(--drp-grey)", fontSize: 16 }}>⏱</span>
           <h4
             style={{
               fontSize: "var(--drp-text-md)",
@@ -212,8 +211,8 @@ export function SessionHistory({
                       onRetryFromPhase(session.stateJson, errorAtPhase!)
                     }
                     style={{ flexShrink: 0 }}
+                    iconLeft="↻"
                   >
-                    <RotateCcw size={12} />
                     Retry {PHASE_LABELS[errorAtPhase] || errorAtPhase}
                   </Button>
                 ) : (
@@ -222,8 +221,8 @@ export function SessionHistory({
                     variant="primary"
                     onClick={() => onResume(session.stateJson)}
                     style={{ flexShrink: 0 }}
+                    iconLeft="▶"
                   >
-                    <Play size={12} />
                     Resume
                   </Button>
                 );
@@ -242,8 +241,8 @@ export function SessionHistory({
                 variant="primary"
                 onClick={() => onResume(session.stateJson)}
                 style={{ flexShrink: 0 }}
+                iconLeft="▶"
               >
-                <Play size={12} />
                 Resume
               </Button>
             )}
@@ -254,7 +253,7 @@ export function SessionHistory({
               style={{ flexShrink: 0, color: "var(--drp-grey)" }}
               title="Delete session"
             >
-              <Trash2 size={14} />
+              ×
             </Button>
           </div>
         ))}

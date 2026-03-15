@@ -2,17 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@doctorproject/react";
-import { FileText, BookOpen, Eye, MessageSquare, List } from "lucide-react";
 import { postStructureOptions } from "@/lib/dropdownData";
 
 const STORAGE_KEY = "doctorpost:lastPostStructure";
 
-const ICONS: Record<string, React.ReactNode> = {
-  opinionTake: <MessageSquare size={20} />,
-  howTo: <BookOpen size={20} />,
-  observation: <Eye size={20} />,
-  story: <FileText size={20} />,
-  list: <List size={20} />,
+const ICONS: Record<string, string> = {
+  opinionTake: "◈",
+  howTo: "◉",
+  observation: "⊙",
+  story: "✎",
+  list: "≡",
 };
 
 // ─── Section colour palette ──────────────────────────────────────────────────
@@ -403,7 +402,7 @@ export default function PostStructureCards({
                     : "var(--drp-grey, #888)",
                 }}
               >
-                {ICONS[option.id] ?? <FileText size={20} />}
+                {ICONS[option.id] ?? "◈"}
               </span>
               <span
                 style={{

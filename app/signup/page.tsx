@@ -11,7 +11,6 @@ import {
 } from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { Eye, EyeOff } from "lucide-react";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -128,7 +127,7 @@ export default function SignupPage() {
               onClick={() => setShowPassword((prev) => !prev)}
               style={{ position: "absolute", right: 6, bottom: 6 }}
             >
-              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              {showPassword ? "⊘" : "⊙"}
             </Button>
           </div>
 

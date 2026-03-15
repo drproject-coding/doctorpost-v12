@@ -1,38 +1,44 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Alert, Card, Loader, ProgressBar } from "@doctorproject/react";
+import {
+  Alert,
+  Card,
+  Heading,
+  Loader,
+  ProgressBar,
+  Text,
+} from "@doctorproject/react";
 import { getAnalytics } from "@/lib/api";
 import { AnalyticsData } from "@/lib/types";
-import { BarChart2, MessageSquare, ThumbsUp, TrendingUp } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 const StatCard = ({
   title,
   value,
-  icon,
 }: {
   title: string;
   value: string | number;
-  icon: React.ReactNode;
 }) => (
-  <Card variant="raised" className="flex flex-col items-start">
-    <div className="flex items-center mb-2">
-      <div
-        style={{
-          padding: "var(--drp-space-2)",
-          background: "var(--drp-purple)",
-          border: "2px solid black",
-          marginRight: "var(--drp-space-2)",
-        }}
-      >
-        {React.cloneElement(icon as React.ReactElement, {
-          size: 20,
-          className: "text-white",
-        })}
-      </div>
-      <h3 className="text-sm font-bold uppercase tracking-wider">{title}</h3>
-    </div>
-    <p className="mt-1 text-3xl font-bold">{value}</p>
+  <Card
+    variant="raised"
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+    }}
+  >
+    <Text
+      size="sm"
+      weight="bold"
+      style={{
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
+        marginBottom: "var(--drp-space-1)",
+      }}
+    >
+      {title}
+    </Text>
+    <Heading level="h2">{value}</Heading>
   </Card>
 );
 
@@ -57,12 +63,19 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Analytics</h1>
+      <div style={{ padding: "var(--drp-space-6)" }}>
+        <div style={{ maxWidth: 1152, margin: "0 auto" }}>
+          <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
+            Analytics
+          </Heading>
           <Card
             variant="raised"
-            className="flex items-center justify-center p-12"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "var(--drp-space-12)",
+            }}
           >
             <Loader label="Loading analytics dashboard..." />
           </Card>
@@ -73,9 +86,11 @@ export default function AnalyticsPage() {
 
   if (!data) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Analytics</h1>
+      <div style={{ padding: "var(--drp-space-6)" }}>
+        <div style={{ maxWidth: 1152, margin: "0 auto" }}>
+          <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
+            Analytics
+          </Heading>
           <Alert variant="error" title="Failed to load analytics data">
             Please refresh the page to try again.
           </Alert>
@@ -92,47 +107,60 @@ export default function AnalyticsPage() {
   return (
     <div className="p-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Performance Analytics</h1>
+        <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
+          Performance Analytics
+        </Heading>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+            gap: "var(--drp-space-6)",
+            marginBottom: "var(--drp-space-8)",
+          }}
+        >
           <StatCard
             title="Total Impressions"
             value={data.totalImpressions.toLocaleString()}
-            icon={<BarChart2 />}
           />
           <StatCard
             title="Total Reactions"
             value={data.totalReactions.toLocaleString()}
-            icon={<ThumbsUp />}
           />
           <StatCard
             title="Total Comments"
             value={data.totalComments.toLocaleString()}
-            icon={<MessageSquare />}
           />
-          <StatCard
-            title="Avg. CTR"
-            value={`${data.ctr}%`}
-            icon={<TrendingUp />}
-          />
+          <StatCard title="Avg. CTR" value={`${data.ctr}%`} />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))",
+            gap: "var(--drp-space-6)",
+          }}
+        >
           <Card variant="raised">
-            <h2 className="text-xl font-bold mb-4">
+            <Heading level="h2" style={{ marginBottom: "var(--drp-space-4)" }}>
               Top Performers &amp; Insights
-            </h2>
-            <div className="space-y-4">
-              <p style={{ color: "var(--drp-text)", fontWeight: 500 }}>
-                <span className="font-bold">Top Content Pillar:</span>{" "}
+            </Heading>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--drp-space-4)",
+              }}
+            >
+              <Text weight="bold">
+                <strong>Top Content Pillar:</strong>{" "}
                 {data.topPerformingPillar.name} (
                 {data.topPerformingPillar.value.toLocaleString()} impressions)
-              </p>
-              <p style={{ color: "var(--drp-text)", fontWeight: 500 }}>
-                <span className="font-bold">Top Hook Pattern:</span>{" "}
-                {data.topPerformingHook.name} (
-                {data.topPerformingHook.value.toLocaleString()} reactions)
-              </p>
+              </Text>
+              <Text weight="bold">
+                <strong>Top Hook Pattern:</strong> {data.topPerformingHook.name}{" "}
+                ({data.topPerformingHook.value.toLocaleString()} reactions)
+              </Text>
               <div
                 style={{
                   marginTop: "var(--drp-space-4)",
@@ -143,22 +171,36 @@ export default function AnalyticsPage() {
                   fontWeight: 500,
                 }}
               >
-                <p className="font-bold">Creator Engagement Insight:</p>
-                <p>
+                <Text weight="bold">Creator Engagement Insight:</Text>
+                <Text>
                   Posts with &quot;Educational/Framework&quot; hooks
                   consistently drive 15% higher comments. Consider creating more
                   how-to guides!
-                </p>
+                </Text>
               </div>
             </div>
           </Card>
 
           <Card variant="raised">
-            <h2 className="text-xl font-bold mb-4">Impressions by Pillar</h2>
-            <div className="space-y-4">
+            <Heading level="h2" style={{ marginBottom: "var(--drp-space-4)" }}>
+              Impressions by Pillar
+            </Heading>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--drp-space-4)",
+              }}
+            >
               {data.performanceByPillar.map((pillar) => (
                 <div key={pillar.name}>
-                  <div className="flex justify-between mb-1">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: "var(--drp-space-1)",
+                    }}
+                  >
                     <span
                       style={{
                         fontSize: "var(--drp-text-base)",

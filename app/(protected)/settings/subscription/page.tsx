@@ -5,10 +5,11 @@ import {
   Card,
   Alert,
   Button,
+  Heading,
   Loader as DSLoader,
   ProgressBar,
+  Text,
 } from "@doctorproject/react";
-import { CheckCircle, Zap, Crown } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 interface UserSettings {
@@ -147,19 +148,12 @@ export default function SettingsSubscriptionPage() {
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
-          <h1
-            style={{
-              fontSize: 26,
-              fontWeight: 800,
-              margin: "0 0 6px",
-              color: "var(--drp-black)",
-            }}
-          >
+          <Heading level="h1" style={{ marginBottom: "var(--drp-space-1)" }}>
             Subscription
-          </h1>
-          <p style={{ margin: 0, color: "var(--drp-grey)", fontSize: 14 }}>
+          </Heading>
+          <Text size="sm" style={{ color: "var(--drp-grey)" }}>
             Your current plan and usage
-          </p>
+          </Text>
         </div>
 
         {error && (
@@ -204,13 +198,7 @@ export default function SettingsSubscriptionPage() {
                   >
                     {planMeta.label}
                   </span>
-                  {tier === "power" && (
-                    <Crown
-                      size={20}
-                      color="var(--drp-orange)"
-                      fill="var(--drp-orange)"
-                    />
-                  )}
+                  {tier === "power" && <span style={{ fontSize: 20 }}>👑</span>}
                 </div>
                 <p
                   style={{
@@ -294,16 +282,9 @@ export default function SettingsSubscriptionPage() {
         {/* Plan comparison */}
         <Card variant="raised" style={{ marginBottom: 16 }}>
           <div style={{ padding: 24 }}>
-            <h2
-              style={{
-                fontWeight: 800,
-                fontSize: 15,
-                margin: "0 0 20px",
-                color: "var(--drp-black)",
-              }}
-            >
+            <Heading level="h2" style={{ marginBottom: "var(--drp-space-5)" }}>
               Plan Comparison
-            </h2>
+            </Heading>
 
             <div
               style={{
@@ -388,11 +369,16 @@ export default function SettingsSubscriptionPage() {
                             gap: 6,
                           }}
                         >
-                          <CheckCircle
-                            size={12}
-                            color={plan.color}
-                            style={{ marginTop: 2, flexShrink: 0 }}
-                          />
+                          <span
+                            style={{
+                              color: plan.color,
+                              flexShrink: 0,
+                              marginTop: 2,
+                              fontSize: 12,
+                            }}
+                          >
+                            ✓
+                          </span>
                           <span
                             style={{ fontSize: 12, color: "var(--drp-black)" }}
                           >
@@ -447,8 +433,8 @@ export default function SettingsSubscriptionPage() {
                 href="mailto:support@doctorpost.ai?subject=Upgrade%20Request"
                 style={{ textDecoration: "none", flexShrink: 0 }}
               >
-                <Button variant="primary" iconLeft={<Zap size={15} />}>
-                  {tier === "free" ? "Upgrade to Pro" : "Upgrade to Power"}
+                <Button variant="primary">
+                  ⚡ {tier === "free" ? "Upgrade to Pro" : "Upgrade to Power"}
                 </Button>
               </a>
             </div>

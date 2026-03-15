@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Card } from "@doctorproject/react";
-import { Copy, Check, Smartphone, Monitor, Save } from "lucide-react";
 import type { FormattedPost } from "@/lib/knowledge/types";
 
 type PreviewMode = "mobile" | "desktop";
@@ -81,7 +80,6 @@ export function FormattedOutput({
                 setShowMore(false);
               }}
             >
-              <Smartphone size={12} />
               Mobile
             </Button>
             <Button
@@ -92,7 +90,6 @@ export function FormattedOutput({
                 setShowMore(false);
               }}
             >
-              <Monitor size={12} />
               Desktop
             </Button>
           </div>
@@ -100,8 +97,7 @@ export function FormattedOutput({
             onClick={handleCopy}
             style={{ fontSize: "var(--drp-text-sm)" }}
           >
-            {copied ? <Check size={14} /> : <Copy size={14} />}
-            {copied ? "Copied!" : "Copy"}
+            {copied ? "✓" : "⎘"} {copied ? "Copied!" : "Copy"}
           </Button>
           {onSave && (
             <Button
@@ -109,7 +105,6 @@ export function FormattedOutput({
               disabled={isSaving}
               style={{ fontSize: "var(--drp-text-sm)" }}
             >
-              <Save size={14} />
               {isSaving ? "Saving..." : "Save to Library"}
             </Button>
           )}

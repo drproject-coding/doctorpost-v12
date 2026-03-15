@@ -3,16 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Book,
-  Factory,
-  Megaphone,
-  BookOpen,
-  Brain,
-  Palette,
-  Clapperboard,
-  ChevronLeft,
-} from "lucide-react";
 import { Icon } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 
@@ -26,27 +16,27 @@ type NavItem =
       name: string;
       path: string;
       dsIcon: "dashboard" | "analytics" | "settings" | "calendar" | "edit";
-      lucideIcon?: never;
+      emoji?: never;
     }
   | {
       name: string;
       path: string;
-      lucideIcon: React.ElementType;
+      emoji: string;
       dsIcon?: never;
     };
 
 const navItems: NavItem[] = [
   { name: "Dashboard", path: "/dashboard", dsIcon: "dashboard" },
-  { name: "Studio", path: "/studio", lucideIcon: Clapperboard },
+  { name: "Studio", path: "/studio", emoji: "▶" },
   { name: "Create", path: "/create", dsIcon: "edit" },
-  { name: "Factory", path: "/factory", lucideIcon: Factory },
-  { name: "Campaigns", path: "/campaigns", lucideIcon: Megaphone },
+  { name: "Factory", path: "/factory", emoji: "⚙" },
+  { name: "Campaigns", path: "/campaigns", emoji: "◎" },
   { name: "Calendar", path: "/calendar", dsIcon: "calendar" },
-  { name: "Knowledge", path: "/knowledge", lucideIcon: BookOpen },
-  { name: "Learning", path: "/learning", lucideIcon: Brain },
-  { name: "Library", path: "/library", lucideIcon: Book },
+  { name: "Knowledge", path: "/knowledge", emoji: "⊕" },
+  { name: "Learning", path: "/learning", emoji: "◈" },
+  { name: "Library", path: "/library", emoji: "⊞" },
   { name: "Analytics", path: "/analytics", dsIcon: "analytics" },
-  { name: "Brand", path: "/brand", lucideIcon: Palette },
+  { name: "Brand", path: "/brand", emoji: "◇" },
   { name: "Settings", path: "/settings", dsIcon: "settings" },
 ];
 
@@ -80,7 +70,9 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                   {item.dsIcon ? (
                     <Icon name={item.dsIcon} size="md" />
                   ) : (
-                    <item.lucideIcon size={20} />
+                    <span style={{ fontSize: "var(--drp-text-md)" }}>
+                      {item.emoji}
+                    </span>
                   )}
                 </span>
                 <span className="sidebar-nav-text">{item.name}</span>
@@ -96,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         onClick={onToggle}
         aria-label="Toggle sidebar"
       >
-        <ChevronLeft size={14} />
+        ‹
       </button>
 
       {/* User Profile */}

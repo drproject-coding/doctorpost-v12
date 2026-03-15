@@ -5,11 +5,9 @@ import {
   Button,
   Card,
   Input,
-  Loader,
   Select,
   Textarea,
 } from "@doctorproject/react";
-import { Upload, FileText, Check, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import type { DocumentCategory } from "@/lib/knowledge/types";
 
@@ -115,9 +113,7 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
           marginBottom: "var(--drp-space-6)",
         }}
       >
-        <Button variant="ghost" onClick={onCancel}>
-          <ArrowLeft size={16} />
-        </Button>
+        <Button variant="ghost" iconLeft="‹" onClick={onCancel} />
         <h2
           style={{
             fontSize: "var(--drp-text-h4)",
@@ -264,15 +260,7 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
               onClick={handleSave}
               disabled={!name.trim() || saving}
             >
-              {saving ? (
-                <>
-                  <Loader size="sm" /> Saving...
-                </>
-              ) : (
-                <>
-                  <Check size={14} /> Import Document
-                </>
-              )}
+              {saving ? "Saving..." : "✓ Import Document"}
             </Button>
           </div>
 

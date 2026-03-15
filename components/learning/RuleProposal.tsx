@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Alert, Badge, Button, Card } from "@doctorproject/react";
-import { Check, X } from "lucide-react";
 import type { RuleProposal, ProposalStatus } from "@/lib/knowledge/types";
 
 interface RuleProposalCardProps {
@@ -197,7 +196,7 @@ export function RuleProposalCard({
               fontSize: "var(--drp-text-sm)",
             }}
           >
-            <Check size={14} /> Approve
+            ✓ Approve
           </Button>
           <Button
             type="button"
@@ -210,7 +209,7 @@ export function RuleProposalCard({
               fontSize: "var(--drp-text-sm)",
             }}
           >
-            <X size={14} /> Reject
+            ✕ Reject
           </Button>
         </div>
       )}

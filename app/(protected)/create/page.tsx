@@ -5,6 +5,7 @@ import {
   Alert,
   Button,
   Card,
+  Icon,
   Input,
   Textarea,
   Loader as BruLoader,
@@ -27,17 +28,6 @@ import {
 } from "@/lib/api";
 import { postStructureOptions, contentAngleOptions } from "@/lib/dropdownData";
 import { getSmartDefaults } from "@/lib/post-creation/smartDefaults";
-import {
-  Search,
-  TrendingUp,
-  ArrowRight,
-  Loader,
-  ChevronDown,
-  ChevronUp,
-  Eye,
-} from "lucide-react";
-// Loader from lucide-react used only for inline icon buttons (search spinner, generate button)
-// BruLoader from @doctorproject/react used for full loading states
 import EnhancedDropdown from "@/components/EnhancedDropdown";
 import ContentAngleChips from "@/components/create/ContentAngleChips";
 import PostStructureCards from "@/components/create/PostStructureCards";
@@ -471,15 +461,7 @@ export default function CreatePage() {
                       padding: 4,
                     }}
                   >
-                    {loadingSubtopics ? (
-                      <Loader
-                        size={20}
-                        className="animate-spin"
-                        style={{ color: "var(--drp-purple)" }}
-                      />
-                    ) : (
-                      <Search size={20} style={{ color: "var(--drp-grey)" }} />
-                    )}
+                    {loadingSubtopics ? "…" : "⌕"}
                   </Button>
                 </div>
 
@@ -649,17 +631,13 @@ export default function CreatePage() {
                     }}
                   >
                     <span>
-                      <TrendingUp
-                        size={14}
-                        style={{ verticalAlign: "middle", marginRight: 4 }}
-                      />
                       AI Recommendations (
                       {Math.round(recommendation.confidence * 100)}% confidence)
                     </span>
                     {showRecommendationReasoning ? (
-                      <ChevronUp size={16} />
+                      <span>▲</span>
                     ) : (
-                      <ChevronDown size={16} />
+                      <span>▼</span>
                     )}
                   </Button>
 
@@ -711,13 +689,10 @@ export default function CreatePage() {
                 }
               >
                 {loadingRecommendation ? (
-                  <>
-                    <Loader size={18} className="animate-spin" />
-                    Getting Recommendations...
-                  </>
+                  "Getting Recommendations…"
                 ) : (
                   <>
-                    <ArrowRight size={18} />
+                    <Icon name="arrow-right" size="sm" />
                     Generate Post
                   </>
                 )}
@@ -735,7 +710,7 @@ export default function CreatePage() {
                     color: "var(--drp-grey)",
                   }}
                 >
-                  <Eye size={14} />
+                  <Icon name="eye" size="sm" />
                   <span>Preview tone prompt:</span>
                   {profile.tones.map((toneId) => {
                     const tone = enhancedToneOptions.find(
@@ -801,9 +776,6 @@ export default function CreatePage() {
                   style={{ flex: 1 }}
                   disabled={saving}
                 >
-                  {saving ? (
-                    <Loader size={16} className="animate-spin" />
-                  ) : null}
                   {saving ? "Saving…" : "Save to Library"}
                 </Button>
                 <Button

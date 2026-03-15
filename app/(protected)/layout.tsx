@@ -10,41 +10,19 @@ import type {
 } from "@doctorproject/react";
 import { ToastProvider } from "@/components/Toast";
 import { ConfirmProvider } from "@/components/ConfirmDialog";
-import {
-  LayoutDashboard,
-  PenSquare,
-  Calendar,
-  Book,
-  BarChart2,
-  Settings,
-  Factory,
-  Megaphone,
-  BookOpen,
-  Brain,
-  Palette,
-  Clapperboard,
-  Plus,
-  LogOut,
-} from "lucide-react";
-
 const NAV_ITEMS = [
-  {
-    id: "dashboard",
-    label: "Dashboard",
-    icon: LayoutDashboard,
-    path: "/dashboard",
-  },
-  { id: "studio", label: "Studio", icon: Clapperboard, path: "/studio" },
-  { id: "create", label: "Create", icon: PenSquare, path: "/create" },
-  { id: "factory", label: "Factory", icon: Factory, path: "/factory" },
-  { id: "campaigns", label: "Campaigns", icon: Megaphone, path: "/campaigns" },
-  { id: "calendar", label: "Calendar", icon: Calendar, path: "/calendar" },
-  { id: "knowledge", label: "Knowledge", icon: BookOpen, path: "/knowledge" },
-  { id: "learning", label: "Learning", icon: Brain, path: "/learning" },
-  { id: "library", label: "Library", icon: Book, path: "/library" },
-  { id: "analytics", label: "Analytics", icon: BarChart2, path: "/analytics" },
-  { id: "brand", label: "Brand", icon: Palette, path: "/brand" },
-  { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
+  { id: "dashboard", label: "Dashboard", icon: "◈", path: "/dashboard" },
+  { id: "studio", label: "Studio", icon: "▶", path: "/studio" },
+  { id: "create", label: "Create", icon: "✎", path: "/create" },
+  { id: "factory", label: "Factory", icon: "⚙", path: "/factory" },
+  { id: "campaigns", label: "Campaigns", icon: "📣", path: "/campaigns" },
+  { id: "calendar", label: "Calendar", icon: "📅", path: "/calendar" },
+  { id: "knowledge", label: "Knowledge", icon: "◉", path: "/knowledge" },
+  { id: "learning", label: "Learning", icon: "⬡", path: "/learning" },
+  { id: "library", label: "Library", icon: "▣", path: "/library" },
+  { id: "analytics", label: "Analytics", icon: "↗", path: "/analytics" },
+  { id: "brand", label: "Brand", icon: "◆", path: "/brand" },
+  { id: "settings", label: "Settings", icon: "⚙", path: "/settings" },
 ];
 
 const PAGE_TITLES: Record<string, string> = {
@@ -101,7 +79,7 @@ export default function ProtectedLayout({
       items: NAV_ITEMS.map((item) => ({
         id: item.id,
         label: item.label,
-        icon: <item.icon size={20} />,
+        icon: item.icon,
         active: pathname === item.path || pathname.startsWith(item.path + "/"),
         onClick: () => router.push(item.path),
       })),
@@ -135,7 +113,7 @@ export default function ProtectedLayout({
         variant="primary"
         size="sm"
         onClick={() => router.push("/create")}
-        iconLeft={<Plus size={16} />}
+        iconLeft="+"
       >
         Create Post
       </Button>
@@ -144,10 +122,9 @@ export default function ProtectedLayout({
         size="sm"
         icon
         aria-label="Sign out"
+        iconLeft="↩"
         onClick={() => void logout()}
-      >
-        <LogOut size={18} />
-      </Button>
+      />
     </div>
   );
 

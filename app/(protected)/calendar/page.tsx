@@ -4,11 +4,13 @@ import {
   Button,
   Card,
   EmptyState,
+  Heading,
   Input,
   Loader,
   Select,
   Tabs,
   Tag,
+  Text,
 } from "@doctorproject/react";
 import { getScheduledPosts, updatePost } from "@/lib/api";
 import { ScheduledPost, PostStatus } from "@/lib/types";
@@ -63,25 +65,20 @@ const ListView = ({
                   alignItems: "center",
                   justifyContent: "space-between",
                   padding: "var(--drp-space-4)",
-                  borderBottom: "1px solid var(--drp-border)",
+                  borderBottom: "var(--drp-border-thin)",
                 }}
               >
                 <div>
-                  <p style={{ fontWeight: 700 }}>
+                  <Text weight="bold">
                     {post.factoryScore != null && (
                       <ScoreBadge score={post.factoryScore} size="md" />
                     )}
                     {post.title}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: "var(--drp-text-sm)",
-                      color: "var(--drp-grey)",
-                    }}
-                  >
+                  </Text>
+                  <Text size="sm" color="secondary">
                     Pillar: {post.pillar} | Scheduled:{" "}
                     {new Date(post.scheduledAt).toLocaleString()}
-                  </p>
+                  </Text>
                 </div>
                 <div
                   style={{
@@ -175,15 +172,9 @@ export default function CalendarPage() {
     return (
       <div style={{ padding: "var(--drp-space-6)" }}>
         <div style={{ maxWidth: 1152, margin: "0 auto" }}>
-          <h1
-            style={{
-              fontSize: "var(--drp-text-h2)",
-              fontWeight: 700,
-              marginBottom: "var(--drp-space-6)",
-            }}
-          >
+          <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
             Content Calendar
-          </h1>
+          </Heading>
           <Card
             variant="raised"
             style={{
@@ -271,15 +262,9 @@ export default function CalendarPage() {
             marginBottom: "var(--drp-space-6)",
           }}
         >
-          <h3
-            style={{
-              fontSize: "var(--drp-text-md)",
-              fontWeight: 700,
-              marginBottom: "var(--drp-space-2)",
-            }}
-          >
+          <Heading level="h3" style={{ marginBottom: "var(--drp-space-2)" }}>
             Status Color Guide:
-          </h3>
+          </Heading>
           <div
             style={{
               display: "flex",

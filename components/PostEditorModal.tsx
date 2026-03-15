@@ -9,7 +9,6 @@ import {
   Loader,
 } from "@doctorproject/react";
 import { ScheduledPost, PostStatus, DropdownOption } from "@/lib/types";
-import { Save } from "lucide-react";
 
 interface PostEditorModalProps {
   isOpen: boolean;
@@ -286,9 +285,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
                 <Loader size="sm" /> Saving...
               </span>
             ) : (
-              <span className="flex items-center">
-                <Save size={16} className="mr-2" /> Save Changes
-              </span>
+              "Save Changes"
             )}
           </Button>
         </div>

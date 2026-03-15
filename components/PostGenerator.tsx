@@ -14,7 +14,6 @@ import {
   AiSettings,
   AiProgress,
 } from "@/lib/types";
-import { Clock, Copy, Download } from "lucide-react";
 
 interface PostGeneratorProps {
   parameters: PostGenerationParameters;
@@ -235,7 +234,7 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
                 gap: "var(--drp-space-1)",
               }}
             >
-              <Clock size={14} /> {estimatedReadTime} min read
+              ⏱ {estimatedReadTime} min read
             </div>
             <textarea
               ref={contentRef}
@@ -269,12 +268,10 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
               style={{ marginTop: "var(--drp-space-3)" }}
             >
               <Button size="sm" onClick={() => copyToClipboard()}>
-                <Copy size={14} />
-                {copied ? "Copied!" : "Copy"}
+                ⎘ {copied ? "Copied!" : "Copy"}
               </Button>
               <Button size="sm" onClick={downloadAsText}>
-                <Download size={14} />
-                Download
+                ↓ Download
               </Button>
             </div>
           </Card>

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Textarea } from "@doctorproject/react";
-import { Edit3, Wand2, RotateCcw } from "lucide-react";
 import type { GuardrailResult } from "@/lib/knowledge/types";
 
 interface GuardrailRecoveryProps {
@@ -161,8 +160,7 @@ export function GuardrailRecovery({
               border: isEditing ? "2px solid var(--drp-purple)" : undefined,
             }}
           >
-            <Edit3 size={14} />
-            Manual Edit
+            ✎ Manual Edit
           </Button>
 
           {retryCount < maxRetries && (
@@ -171,12 +169,7 @@ export function GuardrailRecovery({
               onClick={() => onAiFix(failedRules)}
               disabled={isFixing}
             >
-              {isFixing ? (
-                <RotateCcw size={14} className="animate-spin" />
-              ) : (
-                <Wand2 size={14} />
-              )}
-              {isFixing ? "Fixing..." : "Fix with AI"}
+              {isFixing ? "↻ Fixing..." : "✦ Fix with AI"}
             </Button>
           )}
 

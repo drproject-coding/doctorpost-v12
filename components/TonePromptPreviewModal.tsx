@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button, Card, Loader } from "@doctorproject/react";
-import { X, Eye } from "lucide-react";
 import { resolvePromptTemplate } from "@/lib/knowledge/resolvePromptTemplate";
 
 interface TonePromptPreviewModalProps {
@@ -66,7 +65,7 @@ export function TonePromptPreviewModal({
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <Eye size={18} />
+            <span>⊙</span>
             <h3
               style={{
                 fontSize: "var(--drp-text-h5)",
@@ -77,9 +76,7 @@ export function TonePromptPreviewModal({
               {toneName} — System Prompt
             </h3>
           </div>
-          <Button variant="ghost" onClick={onClose}>
-            <X size={16} />
-          </Button>
+          <Button variant="ghost" iconLeft="✕" onClick={onClose} />
         </div>
 
         {/* Content */}

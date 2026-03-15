@@ -1,33 +1,50 @@
 "use client";
 import React from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  RotateCcw,
-  CheckCircle,
-  XCircle,
-  Compass,
-  Search,
-  BookOpen,
-  PenTool,
-  Target,
-  Wand2,
-  Eye,
-  Lightbulb,
-} from "lucide-react";
 import { Button } from "@doctorproject/react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
 
 const STEPS: { phase: PipelinePhase; label: string; icon: React.ReactNode }[] =
   [
-    { phase: "direction", label: "Direction", icon: <Compass size={20} /> },
-    { phase: "discovery", label: "Discovery", icon: <Search size={20} /> },
-    { phase: "evidence", label: "Evidence", icon: <BookOpen size={20} /> },
-    { phase: "writing", label: "Writing", icon: <PenTool size={20} /> },
-    { phase: "scoring", label: "Scoring", icon: <Target size={20} /> },
-    { phase: "formatting", label: "Formatting", icon: <Wand2 size={20} /> },
-    { phase: "review", label: "Review", icon: <Eye size={20} /> },
-    { phase: "learning", label: "Learning", icon: <Lightbulb size={20} /> },
+    {
+      phase: "direction",
+      label: "Direction",
+      icon: <span style={{ fontSize: 20 }}>◈</span>,
+    },
+    {
+      phase: "discovery",
+      label: "Discovery",
+      icon: <span style={{ fontSize: 20 }}>⊕</span>,
+    },
+    {
+      phase: "evidence",
+      label: "Evidence",
+      icon: <span style={{ fontSize: 20 }}>◉</span>,
+    },
+    {
+      phase: "writing",
+      label: "Writing",
+      icon: <span style={{ fontSize: 20 }}>✎</span>,
+    },
+    {
+      phase: "scoring",
+      label: "Scoring",
+      icon: <span style={{ fontSize: 20 }}>◎</span>,
+    },
+    {
+      phase: "formatting",
+      label: "Formatting",
+      icon: <span style={{ fontSize: 20 }}>✦</span>,
+    },
+    {
+      phase: "review",
+      label: "Review",
+      icon: <span style={{ fontSize: 20 }}>⊙</span>,
+    },
+    {
+      phase: "learning",
+      label: "Learning",
+      icon: <span style={{ fontSize: 20 }}>◇</span>,
+    },
   ];
 
 const PHASE_ORDER: PipelinePhase[] = STEPS.map((s) => s.phase);
@@ -218,16 +235,24 @@ export function PipelineStepper({
                 </span>
                 {/* Phase status indicator */}
                 {metadata?.phaseStatus?.[step.phase] === "success" && (
-                  <CheckCircle
-                    size={14}
-                    style={{ color: "var(--drp-success-dark, #2d7a3a)" }}
-                  />
+                  <span
+                    style={{
+                      color: "var(--drp-success-dark, #2d7a3a)",
+                      fontSize: 14,
+                    }}
+                  >
+                    ✓
+                  </span>
                 )}
                 {metadata?.phaseStatus?.[step.phase] === "failed" && (
-                  <XCircle
-                    size={14}
-                    style={{ color: "var(--drp-error-dark, #c0392b)" }}
-                  />
+                  <span
+                    style={{
+                      color: "var(--drp-error-dark, #c0392b)",
+                      fontSize: 14,
+                    }}
+                  >
+                    ✕
+                  </span>
                 )}
                 {canRetry && (
                   <Button
@@ -244,7 +269,7 @@ export function PipelineStepper({
                       opacity: 0.7,
                     }}
                   >
-                    <RotateCcw size={12} />
+                    ↻
                   </Button>
                 )}
               </div>
@@ -268,7 +293,7 @@ export function PipelineStepper({
             size="sm"
             onClick={handlePrev}
             disabled={!canGoPrev}
-            iconLeft={<ChevronLeft size={14} />}
+            iconLeft="‹"
             style={{
               color: canGoPrev
                 ? "var(--drp-purple)"
@@ -307,7 +332,7 @@ export function PipelineStepper({
             size="sm"
             onClick={handleNext}
             disabled={!canGoNext}
-            iconRight={<ChevronRight size={14} />}
+            iconRight="›"
             style={{
               color: canGoNext
                 ? "var(--drp-purple)"

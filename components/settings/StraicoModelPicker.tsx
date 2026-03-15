@@ -2,18 +2,6 @@
 import type React from "react";
 import { useState, useMemo } from "react";
 import { Button, Input, Loader, Select } from "@doctorproject/react";
-import {
-  Search,
-  Star,
-  Coins,
-  ChevronDown,
-  ChevronUp,
-  Zap,
-  Image as ImageIcon,
-  Globe,
-  ThumbsUp,
-  ThumbsDown,
-} from "lucide-react";
 import type { AiModel, StraicoUserInfo } from "@/lib/types";
 
 type SortOption = "quality" | "price-asc" | "price-desc" | "newest";
@@ -45,18 +33,19 @@ function QualityBadge({ level }: { level: number }) {
       title={`Editor's choice: ${level}/3`}
     >
       {Array.from({ length: stars }, (_, i) => (
-        <Star key={i} size={10} fill="currentColor" />
+        <span key={i}>★</span>
       ))}
     </span>
   );
 }
 
+const featureIconMap: Record<string, string> = {
+  "Image input": "🖼",
+  "Web search": "🌐",
+};
+
 function FeatureBadge({ label }: { label: string }) {
-  const iconMap: Record<string, typeof Zap> = {
-    "Image input": ImageIcon,
-    "Web search": Globe,
-  };
-  const Icon = iconMap[label] || Zap;
+  const iconChar = featureIconMap[label] ?? "⚡";
   return (
     <span
       style={{
@@ -72,7 +61,7 @@ function FeatureBadge({ label }: { label: string }) {
         letterSpacing: "0.05em",
       }}
     >
-      <Icon size={10} />
+      <span>{iconChar}</span>
       {label}
     </span>
   );
@@ -165,7 +154,7 @@ export function StraicoModelPicker({
             border: "1px solid rgba(217, 119, 6, 0.25)",
           }}
         >
-          <Coins size={14} style={{ color: "#d97706" }} />
+          <span style={{ color: "#d97706" }}>🪙</span>
           <span style={{ fontSize: 12, fontWeight: 700, color: "#92400e" }}>
             {formatNumber(userInfo.coins)} coins
           </span>
@@ -194,23 +183,12 @@ export function StraicoModelPicker({
         }}
       >
         <div style={{ position: "relative" }}>
-          <Search
-            size={14}
-            style={{
-              position: "absolute",
-              left: 10,
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "var(--drp-grey)",
-              zIndex: 1,
-            }}
-          />
           <Input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search models..."
-            style={{ width: "100%", paddingLeft: 32, fontSize: 12 }}
+            style={{ width: "100%", fontSize: 12 }}
           />
         </div>
 
@@ -373,28 +351,12 @@ export function StraicoModelPicker({
                     >
                       {model.pricing && (
                         <span title="Cost per 100 words">
-                          <Coins
-                            size={10}
-                            style={{
-                              display: "inline",
-                              marginRight: 2,
-                              verticalAlign: "-1px",
-                            }}
-                          />
-                          {model.pricing.coins}/{model.pricing.words}w
+                          🪙 {model.pricing.coins}/{model.pricing.words}w
                         </span>
                       )}
                       {!model.pricing && model.creditsPerInputToken != null && (
                         <span title="Credits per token (in/out)">
-                          <Coins
-                            size={10}
-                            style={{
-                              display: "inline",
-                              marginRight: 2,
-                              verticalAlign: "-1px",
-                            }}
-                          />
-                          {model.creditsPerInputToken}↑ /{" "}
+                          🪙 {model.creditsPerInputToken}↑ /{" "}
                           {model.creditsPerOutputToken ?? 0}↓
                         </span>
                       )}
@@ -483,15 +445,7 @@ export function StraicoModelPicker({
                     height: "auto",
                   }}
                 >
-                  {isExpanded ? (
-                    <>
-                      Hide details <ChevronUp size={10} />
-                    </>
-                  ) : (
-                    <>
-                      Show details <ChevronDown size={10} />
-                    </>
-                  )}
+                  {isExpanded ? <>Hide details ▲</> : <>Show details ▼</>}
                 </Button>
               )}
 
@@ -521,30 +475,18 @@ export function StraicoModelPicker({
                   )}
                   {model.pricing && (
                     <p style={{ fontSize: 11, color: "var(--drp-grey)" }}>
-                      <Coins
-                        size={11}
-                        style={{
-                          display: "inline",
-                          marginRight: 4,
-                          verticalAlign: "-1px",
-                          color: "#d97706",
-                        }}
-                      />
+                      <span style={{ color: "#d97706", marginRight: 4 }}>
+                        🪙
+                      </span>
                       ~{model.pricing.coins} coins per {model.pricing.words}{" "}
                       words
                     </p>
                   )}
                   {!model.pricing && model.creditsPerInputToken != null && (
                     <p style={{ fontSize: 11, color: "var(--drp-grey)" }}>
-                      <Coins
-                        size={11}
-                        style={{
-                          display: "inline",
-                          marginRight: 4,
-                          verticalAlign: "-1px",
-                          color: "#d97706",
-                        }}
-                      />
+                      <span style={{ color: "#d97706", marginRight: 4 }}>
+                        🪙
+                      </span>
                       {model.creditsPerInputToken} credits/input token &middot;{" "}
                       {model.creditsPerOutputToken ?? 0} credits/output token
                     </p>
@@ -570,7 +512,7 @@ export function StraicoModelPicker({
                           marginBottom: 4,
                         }}
                       >
-                        <ThumbsUp size={10} /> Strengths
+                        ✓ Strengths
                       </p>
                       <ul
                         style={{
@@ -621,7 +563,7 @@ export function StraicoModelPicker({
                           marginBottom: 4,
                         }}
                       >
-                        <ThumbsDown size={10} /> Weaknesses
+                        ✕ Weaknesses
                       </p>
                       <ul
                         style={{

@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Button, Card } from "@doctorproject/react";
 import { ScheduledPost } from "@/lib/types";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getStatusColorClasses } from "@/lib/calendarUtils"; // Import from new utility file
 import ScoreBadge from "./ScoreBadge";
 
@@ -173,17 +172,15 @@ export default function CalendarView({
             variant="primary"
             className="p-2 flex items-center justify-center"
             aria-label="Previous month"
-          >
-            <ChevronLeft size={16} />
-          </Button>
+            iconLeft="‹"
+          />
           <Button
             onClick={nextMonth}
             variant="primary"
             className="p-2 flex items-center justify-center"
             aria-label="Next month"
-          >
-            <ChevronRight size={16} />
-          </Button>
+            iconLeft="›"
+          />
         </div>
       </div>
 

@@ -1,8 +1,7 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { Alert, Button, Card, Input, Loader } from "@doctorproject/react";
+import { Alert, Button, Card, Icon, Input, Loader } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
-import { Play, ArrowRight, RotateCcw } from "lucide-react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
 import type {
   TopicProposal,
@@ -851,8 +850,8 @@ export default function FactoryPage() {
                   onClick={() => handleRetryFromPhase(state.errorAtPhase!)}
                   disabled={running}
                 >
-                  <RotateCcw size={14} />
-                  Retry {PHASE_LABELS[state.errorAtPhase] || state.errorAtPhase}
+                  ↺ Retry{" "}
+                  {PHASE_LABELS[state.errorAtPhase] || state.errorAtPhase}
                 </Button>
               )}
               <Button size="sm" onClick={handleNewPost}>
@@ -895,7 +894,7 @@ export default function FactoryPage() {
               onClick={() => handleRetryFromPhase(state.phase as PipelinePhase)}
               disabled={running}
             >
-              <ArrowRight size={14} />
+              <Icon name="arrow-right" size="sm" />
               Continue
             </Button>
           </div>
@@ -971,8 +970,7 @@ export default function FactoryPage() {
                     handleResumeSession(incompleteSession.stateJson)
                   }
                 >
-                  <Play size={14} />
-                  Resume from{" "}
+                  ▶ Resume from{" "}
                   {PHASE_LABELS[incompleteSession.phase] ||
                     incompleteSession.phase}
                 </Button>
@@ -1044,8 +1042,7 @@ export default function FactoryPage() {
               />
             </div>
             <Button variant="primary" onClick={handleStart} disabled={running}>
-              <Play size={14} />
-              Start Pipeline
+              ▶ Start Pipeline
             </Button>
           </div>
         </Card>
@@ -1071,7 +1068,7 @@ export default function FactoryPage() {
                 }}
               >
                 <Button variant="primary" onClick={handleDiscover}>
-                  <ArrowRight size={14} />
+                  <Icon name="arrow-right" size="sm" />
                   Research This Topic
                 </Button>
               </div>
@@ -1097,7 +1094,7 @@ export default function FactoryPage() {
                 }}
               >
                 <Button variant="primary" onClick={handleEvidence}>
-                  <ArrowRight size={14} />
+                  <Icon name="arrow-right" size="sm" />
                   Gather Evidence
                 </Button>
               </div>
@@ -1139,7 +1136,7 @@ export default function FactoryPage() {
                   style={{ width: 200 }}
                 />
                 <Button variant="primary" onClick={handleWrite}>
-                  <ArrowRight size={14} />
+                  <Icon name="arrow-right" size="sm" />
                   Write Draft
                 </Button>
               </div>
@@ -1210,7 +1207,7 @@ export default function FactoryPage() {
                 onClick={handleFormat}
                 disabled={!allGuardrailsPassing()}
               >
-                <ArrowRight size={14} />
+                <Icon name="arrow-right" size="sm" />
                 Format for LinkedIn
               </Button>
             </div>

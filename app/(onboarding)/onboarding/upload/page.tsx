@@ -2,15 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card } from "@doctorproject/react";
-import {
-  Upload,
-  FileText,
-  X,
-  CheckCircle,
-  AlertCircle,
-  Loader,
-} from "lucide-react";
+import { Button, Card, Loader } from "@doctorproject/react";
 
 type FileStatus = "pending" | "uploading" | "ready" | "error";
 
@@ -87,16 +79,9 @@ function StatusBadge({ status }: StatusBadgeProps) {
         flexShrink: 0,
       }}
     >
-      {status === "uploading" && (
-        <Loader
-          size={10}
-          style={{
-            animation: "spin 1s linear infinite",
-          }}
-        />
-      )}
-      {status === "ready" && <CheckCircle size={10} />}
-      {status === "error" && <AlertCircle size={10} />}
+      {status === "uploading" && <span>⟳</span>}
+      {status === "ready" && <span>✓</span>}
+      {status === "error" && <span>⚠</span>}
       {s.label}
     </span>
   );
@@ -303,16 +288,19 @@ export default function OnboardingUploadPage() {
               userSelect: "none",
             }}
           >
-            <Upload
-              size={32}
+            <span
               style={{
+                fontSize: 32,
                 color: isDragging
                   ? "var(--drp-purple)"
                   : "var(--drp-grey, #999)",
                 marginBottom: "var(--drp-space-3, 12px)",
                 transition: "color 0.15s ease",
+                display: "block",
               }}
-            />
+            >
+              ⬆
+            </span>
             <p
               style={{
                 fontSize: "var(--drp-text-base, 15px)",
@@ -369,10 +357,15 @@ export default function OnboardingUploadPage() {
                           : "1px solid var(--drp-border-color, #e5e5e5)",
                     }}
                   >
-                    <FileText
-                      size={16}
-                      style={{ color: "var(--drp-grey)", flexShrink: 0 }}
-                    />
+                    <span
+                      style={{
+                        color: "var(--drp-grey)",
+                        flexShrink: 0,
+                        fontSize: 16,
+                      }}
+                    >
+                      ▣
+                    </span>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p
                         style={{
@@ -413,7 +406,7 @@ export default function OnboardingUploadPage() {
                           padding: 4,
                         }}
                       >
-                        <X size={14} />
+                        ✕
                       </Button>
                     )}
                   </div>
@@ -445,10 +438,7 @@ export default function OnboardingUploadPage() {
                     gap: 8,
                   }}
                 >
-                  <Loader
-                    size={14}
-                    style={{ animation: "spin 1s linear infinite" }}
-                  />
+                  <Loader size="sm" />
                   Processing…
                 </span>
               ) : allReady ? (

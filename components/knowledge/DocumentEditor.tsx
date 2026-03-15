@@ -1,7 +1,13 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { Alert, Badge, Button, Card, Input, Textarea } from "@doctorproject/react";
-import { Save, X, History, Lock, GitFork } from "lucide-react";
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Input,
+  Textarea,
+} from "@doctorproject/react";
 
 interface DocumentEditorProps {
   documentId: string;
@@ -83,32 +89,24 @@ export function DocumentEditor({
             <span>
               {category} &middot; v{version}
             </span>
-            {readOnly && (
-              <Badge variant="primary">
-                <Lock size={9} style={{ marginRight: 3 }} /> System
-              </Badge>
-            )}
+            {readOnly && <Badge variant="primary">System</Badge>}
           </div>
         </div>
         <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
           {readOnly && onFork && (
             <Button variant="primary" onClick={onFork}>
-              <GitFork size={14} />
               Fork & Customise
             </Button>
           )}
           {!readOnly && (
             <Button
               variant="ghost"
+              iconLeft="⏱"
               onClick={onShowHistory}
               title="Version history"
-            >
-              <History size={16} />
-            </Button>
+            />
           )}
-          <Button variant="ghost" onClick={onClose}>
-            <X size={16} />
-          </Button>
+          <Button variant="ghost" iconLeft="✕" onClick={onClose} />
         </div>
       </div>
 

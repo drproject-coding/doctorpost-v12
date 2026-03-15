@@ -8,7 +8,6 @@ import {
   Alert,
   Loader as DSLoader,
 } from "@doctorproject/react";
-import { Camera, Check } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 export default function SettingsProfilePage() {
@@ -169,8 +168,7 @@ export default function SettingsProfilePage() {
                     cursor: "not-allowed",
                   }}
                 >
-                  <Camera size={13} />
-                  Change Photo (coming soon)
+                  🖼 Change Photo (coming soon)
                 </div>
               </div>
             </div>
@@ -243,10 +241,7 @@ export default function SettingsProfilePage() {
                   Saving…
                 </>
               ) : saved ? (
-                <>
-                  <Check size={14} />
-                  Saved
-                </>
+                "✓ Saved"
               ) : (
                 "Save Changes"
               )}

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Card,
+  Container,
   Heading,
   Tabs,
   Tag,
@@ -171,224 +172,212 @@ export default function LibraryPage() {
 
   if (loading) {
     return (
-      <div style={{ padding: "var(--drp-space-6)" }}>
-        <div style={{ maxWidth: 1152, margin: "0 auto" }}>
-          <div style={{ marginBottom: "var(--drp-space-6)" }}>
-            <Heading level={1}>Content Library</Heading>
-          </div>
-          <Card
-            variant="raised"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "var(--drp-space-12)",
-            }}
-          >
-            <Loader label="Loading content library..." />
-          </Card>
+      <Container>
+        <div style={{ marginBottom: "var(--drp-space-6)" }}>
+          <Heading level={1}>Content Library</Heading>
         </div>
-      </div>
+        <Card
+          variant="raised"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "var(--drp-space-12)",
+          }}
+        >
+          <Loader label="Loading content library..." />
+        </Card>
+      </Container>
     );
   }
 
   return (
-    <div style={{ padding: "var(--drp-space-6)" }}>
-      <div style={{ maxWidth: 1152, margin: "0 auto" }}>
-        <h1
-          style={{
-            fontSize: "var(--drp-text-h3)",
-            fontWeight: 700,
-            marginBottom: "var(--drp-space-6)",
-          }}
-        >
-          Content Library
-        </h1>
+    <Container>
+      <div style={{ marginBottom: "var(--drp-space-6)" }}>
+        <Heading level={1}>Content Library</Heading>
+      </div>
 
-        {/* Status filter tabs */}
-        <div style={{ marginBottom: "var(--drp-space-4)" }}>
-          <Tabs
-            items={tabItems}
-            activeKey={filter}
-            onChange={(id) => setFilter(id as FilterId)}
-          />
-        </div>
+      {/* Status filter tabs */}
+      <div style={{ marginBottom: "var(--drp-space-4)" }}>
+        <Tabs
+          items={tabItems}
+          activeKey={filter}
+          onChange={(id) => setFilter(id as FilterId)}
+        />
+      </div>
 
-        {/* Search */}
-        <div style={{ marginBottom: "var(--drp-space-4)" }}>
-          <Input
-            label=""
-            type="text"
-            placeholder="Search by title, content or pillar…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ width: "100%" }}
-          />
-        </div>
+      {/* Search */}
+      <div style={{ marginBottom: "var(--drp-space-4)" }}>
+        <Input
+          label=""
+          type="text"
+          placeholder="Search by title, content or pillar…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: "100%" }}
+        />
+      </div>
 
-        <Card variant="raised">
-          {pagedPosts.length === 0 ? (
-            <div style={{ padding: "var(--drp-space-12) 0" }}>
-              <EmptyState
-                icon="📚"
-                title="No posts found"
-                description="Try a different filter or create your first post."
-                action={
-                  <Link href="/create">
-                    <Button variant="primary" size="sm">
-                      Create Post
-                    </Button>
-                  </Link>
-                }
-              />
-            </div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              {pagedPosts.map((post) => {
-                const src = getSource(post);
-                const showDate = DATED_STATUSES.has(post.status);
-                const dateLabel =
-                  post.status === "published" ? "Published" : "Planned";
-                const scheduledFmt = fmtDate(post.scheduledAt);
-                const createdFmt = fmtDate(post.createdAt);
-                const updatedFmt = fmtDate(post.updatedAt);
-                const showUpdated = updatedFmt && updatedFmt !== createdFmt;
+      <Card variant="raised">
+        {pagedPosts.length === 0 ? (
+          <div style={{ padding: "var(--drp-space-12) 0" }}>
+            <EmptyState
+              icon="📚"
+              title="No posts found"
+              description="Try a different filter or create your first post."
+              action={
+                <Link href="/create">
+                  <Button variant="primary" size="sm">
+                    Create Post
+                  </Button>
+                </Link>
+              }
+            />
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {pagedPosts.map((post) => {
+              const src = getSource(post);
+              const showDate = DATED_STATUSES.has(post.status);
+              const dateLabel =
+                post.status === "published" ? "Published" : "Planned";
+              const scheduledFmt = fmtDate(post.scheduledAt);
+              const createdFmt = fmtDate(post.createdAt);
+              const updatedFmt = fmtDate(post.updatedAt);
+              const showUpdated = updatedFmt && updatedFmt !== createdFmt;
 
-                return (
-                  <div
-                    key={post.id}
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      justifyContent: "space-between",
-                      padding: "var(--drp-space-4)",
-                      borderBottom: "1px solid var(--drp-border-color)",
-                      gap: 12,
-                    }}
-                  >
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <Text weight="bold">
-                        <span style={{ marginBottom: 4, display: "block" }}>
-                          {post.title}
-                        </span>
-                      </Text>
-                      {/* Badge row */}
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: 6,
-                          flexWrap: "wrap",
-                          alignItems: "center",
-                          marginBottom: 4,
-                        }}
-                      >
-                        <Tag color={SOURCE_TAG_COLOR[src] ?? "grey"} filled>
-                          {src}
-                        </Tag>
-                        {post.format && (
-                          <Tag
-                            color={FORMAT_TAG_COLOR[post.format] ?? "grey"}
-                            filled
-                          >
-                            {post.format}
-                          </Tag>
-                        )}
-                        {post.pillar && (
-                          <span
-                            style={{
-                              fontSize: 11,
-                              color: "var(--drp-text-muted)",
-                            }}
-                          >
-                            {post.pillar}
-                          </span>
-                        )}
-                      </div>
-                      {/* Date metadata row */}
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: 12,
-                          flexWrap: "wrap",
-                          fontSize: 11,
-                          color: "var(--drp-text-muted)",
-                        }}
-                      >
-                        {createdFmt && <span>Created {createdFmt}</span>}
-                        {showUpdated && <span>Updated {updatedFmt}</span>}
-                        {showDate && scheduledFmt && (
-                          <span
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 3,
-                              color:
-                                post.status === "published"
-                                  ? "var(--drp-mint)"
-                                  : "var(--drp-purple)",
-                              fontWeight: 700,
-                            }}
-                          >
-                            📅 {dateLabel} {scheduledFmt}
-                          </span>
-                        )}
-                      </div>
-                    </div>
+              return (
+                <div
+                  key={post.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                    padding: "var(--drp-space-4)",
+                    borderBottom: "1px solid var(--drp-border-color)",
+                    gap: 12,
+                  }}
+                >
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <Text weight="bold">
+                      <span style={{ marginBottom: 4, display: "block" }}>
+                        {post.title}
+                      </span>
+                    </Text>
+                    {/* Badge row */}
                     <div
                       style={{
                         display: "flex",
+                        gap: 6,
+                        flexWrap: "wrap",
                         alignItems: "center",
-                        gap: 8,
-                        flexShrink: 0,
+                        marginBottom: 4,
                       }}
                     >
-                      <span
-                        className={`drp-tag drp-tag--filled ${post.status}`}
-                      >
-                        {post.status.charAt(0).toUpperCase() +
-                          post.status.slice(1)}
-                      </span>
-                      <Link
-                        href={`/library/${post.uuid ?? post.id}`}
-                        style={{ textDecoration: "none" }}
-                      >
-                        <Button variant="outline" size="sm">
-                          View
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="ghost-bordered"
-                        size="sm"
-                        onClick={() => handleEditPost(post)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => handleDeletePost(post.id)}
-                      >
-                        Delete
-                      </Button>
+                      <Tag color={SOURCE_TAG_COLOR[src] ?? "grey"} filled>
+                        {src}
+                      </Tag>
+                      {post.format && (
+                        <Tag
+                          color={FORMAT_TAG_COLOR[post.format] ?? "grey"}
+                          filled
+                        >
+                          {post.format}
+                        </Tag>
+                      )}
+                      {post.pillar && (
+                        <span
+                          style={{
+                            fontSize: 11,
+                            color: "var(--drp-text-muted)",
+                          }}
+                        >
+                          {post.pillar}
+                        </span>
+                      )}
+                    </div>
+                    {/* Date metadata row */}
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 12,
+                        flexWrap: "wrap",
+                        fontSize: 11,
+                        color: "var(--drp-text-muted)",
+                      }}
+                    >
+                      {createdFmt && <span>Created {createdFmt}</span>}
+                      {showUpdated && <span>Updated {updatedFmt}</span>}
+                      {showDate && scheduledFmt && (
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 3,
+                            color:
+                              post.status === "published"
+                                ? "var(--drp-mint)"
+                                : "var(--drp-purple)",
+                            fontWeight: 700,
+                          }}
+                        >
+                          📅 {dateLabel} {scheduledFmt}
+                        </span>
+                      )}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </Card>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div style={{ marginTop: "var(--drp-space-6)" }}>
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={setPage}
-            />
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <span className={`drp-tag drp-tag--filled ${post.status}`}>
+                      {post.status.charAt(0).toUpperCase() +
+                        post.status.slice(1)}
+                    </span>
+                    <Link
+                      href={`/library/${post.uuid ?? post.id}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Button variant="outline" size="sm">
+                        View
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="ghost-bordered"
+                      size="sm"
+                      onClick={() => handleEditPost(post)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleDeletePost(post.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
-      </div>
+      </Card>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div style={{ marginTop: "var(--drp-space-6)" }}>
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        </div>
+      )}
 
       <PostEditorModal
         isOpen={isModalOpen}
@@ -396,6 +385,6 @@ export default function LibraryPage() {
         post={editingPost}
         onSave={handleSavePost}
       />
-    </div>
+    </Container>
   );
 }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import {
   Button,
   Card,
+  Heading,
   Input,
   Alert,
   Divider,
@@ -111,7 +112,7 @@ export default function LoginPage() {
         className="text-center"
         style={{ padding: "32px", maxWidth: "420px", width: "100%" }}
       >
-        <h1 className="text-3xl font-bold mb-6">Welcome to DoctorPost</h1>
+        <Heading level={1}>Welcome to DoctorPost</Heading>
 
         {loading ? (
           <div className="flex items-center justify-center py-4">

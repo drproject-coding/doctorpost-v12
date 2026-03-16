@@ -2,7 +2,14 @@
 
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Alert, Button, Card, Input, Loader } from "@doctorproject/react";
+import {
+  Alert,
+  Button,
+  Card,
+  Heading,
+  Input,
+  Loader,
+} from "@doctorproject/react";
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams();
@@ -80,9 +87,9 @@ function ResetPasswordContent() {
         className="text-center"
         style={{ padding: "32px", maxWidth: "420px", width: "100%" }}
       >
-        <h1 className="text-2xl font-bold mb-6">
+        <Heading level={1}>
           {token ? "Set New Password" : "Reset Password"}
-        </h1>
+        </Heading>
 
         {loading ? (
           <div className="flex items-center justify-center py-4">

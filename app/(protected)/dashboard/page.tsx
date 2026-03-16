@@ -8,6 +8,7 @@ import {
   ProgressBar,
   Card,
   CardHeader,
+  Container,
   Loader,
   EmptyState,
   Button,
@@ -101,7 +102,7 @@ export default function DashboardPage() {
     .slice(0, 3);
 
   return (
-    <div>
+    <Container>
       <div style={{ marginBottom: "var(--drp-space-6)" }}>
         <Heading level={1}>Dashboard</Heading>
       </div>
@@ -355,6 +356,6 @@ export default function DashboardPage() {
           </div>
         </Card>
       </div>
-    </div>
+    </Container>
   );
 }

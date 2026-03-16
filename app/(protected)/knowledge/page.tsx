@@ -5,6 +5,7 @@ import {
   Badge,
   Button,
   Card,
+  Container,
   EmptyState,
   Heading,
   Input,
@@ -236,7 +237,7 @@ export default function KnowledgePage() {
   }
 
   return (
-    <div>
+    <Container>
       {/* Header */}
       <div
         style={{
@@ -400,6 +401,6 @@ export default function KnowledgePage() {
           ))}
         </div>
       )}
-    </div>
+    </Container>
   );
 }

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import {
   Button,
   Card,
+  Container,
   EmptyState,
   Heading,
   Input,
@@ -170,185 +171,175 @@ export default function CalendarPage() {
 
   if (loading) {
     return (
-      <div style={{ padding: "var(--drp-space-6)" }}>
-        <div style={{ maxWidth: 1152, margin: "0 auto" }}>
-          <div style={{ marginBottom: "var(--drp-space-6)" }}>
-            <Heading level={1}>Content Calendar</Heading>
-          </div>
-          <Card
-            variant="raised"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "var(--drp-space-10)",
-            }}
-          >
-            <Loader label="Loading calendar..." />
-          </Card>
+      <Container>
+        <div style={{ marginBottom: "var(--drp-space-6)" }}>
+          <Heading level={1}>Content Calendar</Heading>
         </div>
-      </div>
+        <Card
+          variant="raised"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "var(--drp-space-10)",
+          }}
+        >
+          <Loader label="Loading calendar..." />
+        </Card>
+      </Container>
     );
   }
 
   return (
-    <div style={{ padding: "var(--drp-space-6)" }}>
-      <div style={{ maxWidth: 1152, margin: "0 auto" }}>
-        <h1
-          style={{
-            fontSize: "var(--drp-text-h2)",
-            fontWeight: 700,
-            marginBottom: "var(--drp-space-6)",
-          }}
-        >
-          Content Calendar
-        </h1>
+    <Container>
+      <div style={{ marginBottom: "var(--drp-space-6)" }}>
+        <Heading level={1}>Content Calendar</Heading>
+      </div>
 
-        {/* View Toggle, Date Picker and Filter */}
+      {/* View Toggle, Date Picker and Filter */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: "var(--drp-space-4)",
+          marginBottom: "var(--drp-space-6)",
+        }}
+      >
+        <Tabs
+          items={viewTabItems}
+          activeKey={view}
+          onChange={(id) => setView(id as "calendar" | "list")}
+        />
+
+        {/* Date Picker */}
+        <Input
+          type="date"
+          label="Select Date"
+          id="date-picker"
+          value={selectedDateFromPicker ?? ""}
+          onChange={(e) =>
+            setSelectedDateFromPicker(
+              (e as React.ChangeEvent<HTMLInputElement>).target.value,
+            )
+          }
+        />
+
+        <Select
+          label=""
+          value={filterStatus}
+          onChange={(e) =>
+            setFilterStatus(
+              (e as React.ChangeEvent<HTMLSelectElement>).target
+                .value as FilterStatus,
+            )
+          }
+        >
+          <option value="all">All Statuses</option>
+          <option value="past">Past Posts</option>
+          {statusOptions.map((option) => (
+            <option key={option.id} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+      </div>
+
+      {/* Color Guide Legend */}
+      <Card
+        variant="raised"
+        style={{
+          padding: "var(--drp-space-4)",
+          marginBottom: "var(--drp-space-6)",
+        }}
+      >
+        <div style={{ marginBottom: "var(--drp-space-2)" }}>
+          <Heading level={3}>Status Color Guide:</Heading>
+        </div>
         <div
           style={{
             display: "flex",
             flexWrap: "wrap",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "var(--drp-space-4)",
-            marginBottom: "var(--drp-space-6)",
+            gap: "var(--drp-space-4) var(--drp-space-3)",
           }}
         >
-          <Tabs
-            items={viewTabItems}
-            activeKey={view}
-            onChange={(id) => setView(id as "calendar" | "list")}
-          />
-
-          {/* Date Picker */}
-          <Input
-            type="date"
-            label="Select Date"
-            id="date-picker"
-            value={selectedDateFromPicker ?? ""}
-            onChange={(e) =>
-              setSelectedDateFromPicker(
-                (e as React.ChangeEvent<HTMLInputElement>).target.value,
-              )
-            }
-          />
-
-          <Select
-            label=""
-            value={filterStatus}
-            onChange={(e) =>
-              setFilterStatus(
-                (e as React.ChangeEvent<HTMLSelectElement>).target
-                  .value as FilterStatus,
-              )
-            }
+          {statusOptions.map((option) => (
+            <div
+              key={option.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                fontSize: "var(--drp-text-sm)",
+              }}
+            >
+              <span
+                className={`w-3 h-3 border-2 ${getStatusColorClasses(
+                  option.value as PostStatus,
+                )
+                  .split(" ")[0]
+                  .replace(
+                    "bg-",
+                    "border-",
+                  )} ${getStatusColorClasses(option.value as PostStatus).split(" ")[0]}`}
+                style={{
+                  marginRight: "var(--drp-space-2)",
+                  display: "inline-block",
+                }}
+              ></span>
+              {option.label}
+            </div>
+          ))}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              fontSize: "var(--drp-text-sm)",
+            }}
           >
-            <option value="all">All Statuses</option>
-            <option value="past">Past Posts</option>
-            {statusOptions.map((option) => (
-              <option key={option.id} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-        </div>
-
-        {/* Color Guide Legend */}
-        <Card
-          variant="raised"
-          style={{
-            padding: "var(--drp-space-4)",
-            marginBottom: "var(--drp-space-6)",
-          }}
-        >
-          <div style={{ marginBottom: "var(--drp-space-2)" }}>
-            <Heading level={3}>Status Color Guide:</Heading>
+            <span
+              style={{
+                width: "0.75rem",
+                height: "0.75rem",
+                border: "2px solid var(--drp-border)",
+                background: "var(--drp-purple-light, #ede9fe)",
+                marginRight: "var(--drp-space-2)",
+                display: "inline-block",
+              }}
+            ></span>
+            Today&apos;s Date
           </div>
           <div
             style={{
               display: "flex",
-              flexWrap: "wrap",
-              gap: "var(--drp-space-4) var(--drp-space-3)",
+              alignItems: "center",
+              fontSize: "var(--drp-text-sm)",
             }}
           >
-            {statusOptions.map((option) => (
-              <div
-                key={option.id}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  fontSize: "var(--drp-text-sm)",
-                }}
-              >
-                <span
-                  className={`w-3 h-3 border-2 ${getStatusColorClasses(
-                    option.value as PostStatus,
-                  )
-                    .split(" ")[0]
-                    .replace(
-                      "bg-",
-                      "border-",
-                    )} ${getStatusColorClasses(option.value as PostStatus).split(" ")[0]}`}
-                  style={{
-                    marginRight: "var(--drp-space-2)",
-                    display: "inline-block",
-                  }}
-                ></span>
-                {option.label}
-              </div>
-            ))}
-            <div
+            <span
               style={{
-                display: "flex",
-                alignItems: "center",
-                fontSize: "var(--drp-text-sm)",
+                width: "0.75rem",
+                height: "0.75rem",
+                border: "2px solid var(--drp-yellow)",
+                background: "var(--drp-yellow-light, #fef9c3)",
+                marginRight: "var(--drp-space-2)",
+                display: "inline-block",
               }}
-            >
-              <span
-                style={{
-                  width: "0.75rem",
-                  height: "0.75rem",
-                  border: "2px solid var(--drp-border)",
-                  background: "var(--drp-purple-light, #ede9fe)",
-                  marginRight: "var(--drp-space-2)",
-                  display: "inline-block",
-                }}
-              ></span>
-              Today&apos;s Date
-            </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                fontSize: "var(--drp-text-sm)",
-              }}
-            >
-              <span
-                style={{
-                  width: "0.75rem",
-                  height: "0.75rem",
-                  border: "2px solid var(--drp-yellow)",
-                  background: "var(--drp-yellow-light, #fef9c3)",
-                  marginRight: "var(--drp-space-2)",
-                  display: "inline-block",
-                }}
-              ></span>
-              Selected Date
-            </div>
+            ></span>
+            Selected Date
           </div>
-        </Card>
+        </div>
+      </Card>
 
-        {view === "calendar" ? (
-          <CalendarView
-            posts={filteredPosts}
-            onPostClick={handlePostClick}
-            selectedDateFromPicker={selectedDateFromPicker}
-          />
-        ) : (
-          <ListView posts={filteredPosts} onPostClick={handlePostClick} />
-        )}
-      </div>
+      {view === "calendar" ? (
+        <CalendarView
+          posts={filteredPosts}
+          onPostClick={handlePostClick}
+          selectedDateFromPicker={selectedDateFromPicker}
+        />
+      ) : (
+        <ListView posts={filteredPosts} onPostClick={handlePostClick} />
+      )}
 
       <PostEditorModal
         isOpen={isEditorModalOpen}
@@ -356,6 +347,6 @@ export default function CalendarPage() {
         post={selectedPostForEdit}
         onSave={handleSaveEditedPost}
       />
-    </div>
+    </Container>
   );
 }

@@ -1,6 +1,14 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { Alert, Button, EmptyState, Loader, Tabs } from "@doctorproject/react";
+import {
+  Alert,
+  Button,
+  Container,
+  EmptyState,
+  Heading,
+  Loader,
+  Tabs,
+} from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import { SignalCounts } from "@/components/learning/SignalCounts";
 import { PatternList } from "@/components/learning/PatternList";
@@ -95,7 +103,7 @@ export default function LearningPage() {
   const resolvedProposals = proposals.filter((p) => p.status !== "pending");
 
   return (
-    <div>
+    <Container>
       {/* Header */}
       <div
         style={{
@@ -105,15 +113,7 @@ export default function LearningPage() {
           marginBottom: "var(--drp-space-6)",
         }}
       >
-        <h1
-          style={{
-            fontSize: "var(--drp-text-h3)",
-            fontWeight: 700,
-            margin: 0,
-          }}
-        >
-          Learning
-        </h1>
+        <Heading level={1}>Learning</Heading>
         <Button onClick={fetchData} disabled={loading} variant="outline">
           {loading ? <Loader size="sm" label="Loading..." /> : "Refresh"}
         </Button>
@@ -157,15 +157,7 @@ export default function LearningPage() {
         <div style={{ display: "grid", gap: "var(--drp-space-4)" }}>
           {pendingProposals.length > 0 && (
             <div>
-              <h3
-                style={{
-                  fontSize: "var(--drp-text-md)",
-                  fontWeight: 700,
-                  marginBottom: "var(--drp-space-2)",
-                }}
-              >
-                Pending ({pendingProposals.length})
-              </h3>
+              <Heading level={3}>Pending ({pendingProposals.length})</Heading>
               <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
                 {pendingProposals.map((p) => (
                   <RuleProposalCard
@@ -180,15 +172,7 @@ export default function LearningPage() {
 
           {resolvedProposals.length > 0 && (
             <div>
-              <h3
-                style={{
-                  fontSize: "var(--drp-text-md)",
-                  fontWeight: 700,
-                  marginBottom: "var(--drp-space-2)",
-                }}
-              >
-                Resolved ({resolvedProposals.length})
-              </h3>
+              <Heading level={3}>Resolved ({resolvedProposals.length})</Heading>
               <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
                 {resolvedProposals.map((p) => (
                   <RuleProposalCard
@@ -212,6 +196,6 @@ export default function LearningPage() {
       )}
 
       {tab === "history" && <FeedbackHistory signals={signals} />}
-    </div>
+    </Container>
   );
 }

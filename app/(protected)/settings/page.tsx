@@ -4,6 +4,7 @@ import {
   Badge,
   Button,
   Card,
+  Container,
   Heading,
   Icon,
   Input,
@@ -549,22 +550,24 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <Card
-        variant="raised"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: 200,
-        }}
-      >
-        <Text>Loading settings...</Text>
-      </Card>
+      <Container>
+        <Card
+          variant="raised"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: 200,
+          }}
+        >
+          <Text>Loading settings...</Text>
+        </Card>
+      </Container>
     );
   }
 
   return (
-    <>
+    <Container>
       <div style={{ marginBottom: "var(--drp-space-6)" }}>
         <Heading level={1}>AI & Integrations</Heading>
       </div>
@@ -1424,6 +1427,6 @@ export default function SettingsPage() {
           )}
         </Button>
       </Card>
-    </>
+    </Container>
   );
 }

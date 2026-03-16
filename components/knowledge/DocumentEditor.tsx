@@ -104,9 +104,13 @@ export function DocumentEditor({
               iconLeft="⏱"
               onClick={onShowHistory}
               title="Version history"
-            />
+            >
+              {""}
+            </Button>
           )}
-          <Button variant="ghost" iconLeft="✕" onClick={onClose} />
+          <Button variant="ghost" iconLeft="✕" onClick={onClose}>
+            {""}
+          </Button>
         </div>
       </div>
 
@@ -152,7 +156,6 @@ export function DocumentEditor({
             onClick={handleSave}
             disabled={!hasChanges || saving}
           >
-            <Save size={14} />
             {saving ? "Saving..." : "Save"}
           </Button>
         </div>

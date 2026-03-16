@@ -128,7 +128,9 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
           marginBottom: "var(--drp-space-6)",
         }}
       >
-        <Button variant="ghost" iconLeft="‹" onClick={onCancel} />
+        <Button variant="ghost" iconLeft="‹" onClick={onCancel}>
+          {""}
+        </Button>
         <h2
           style={{
             fontSize: "var(--drp-text-h4)",

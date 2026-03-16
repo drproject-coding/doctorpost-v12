@@ -72,7 +72,9 @@ export function VersionHistory({
         >
           Version History
         </h3>
-        <Button variant="ghost" iconLeft="✕" onClick={onClose} />
+        <Button variant="ghost" iconLeft="✕" onClick={onClose}>
+          {""}
+        </Button>
       </div>
 
       {loading ? (

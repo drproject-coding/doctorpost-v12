@@ -76,7 +76,9 @@ export function TonePromptPreviewModal({
               {toneName} — System Prompt
             </h3>
           </div>
-          <Button variant="ghost" iconLeft="✕" onClick={onClose} />
+          <Button variant="ghost" iconLeft="✕" onClick={onClose}>
+            {""}
+          </Button>
         </div>
 
         {/* Content */}

@@ -18,7 +18,8 @@
     "test:performance": "jest --testPathPattern=performance",
     "test:validate": "node scripts/validate-test-coverage.js",
     "test:all": "npm run test && npm run test:e2e",
-    "security:check": "npm audit"
+    "security:check": "npm audit",
+    "postinstall": "mkdir -p node_modules/@doctorproject/react/src/fonts && cp public/fonts/*.otf public/fonts/*.ttf node_modules/@doctorproject/react/src/fonts/ 2>/dev/null || true"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",

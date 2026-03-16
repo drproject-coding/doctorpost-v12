@@ -21,6 +21,22 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════
+   DESIGN SYSTEM BASE RESTORE
+   Tailwind Preflight overrides body styles set in layout.css
+   because @tailwind base runs after our design system imports.
+   Re-apply here to win the cascade.
+   ═══════════════════════════════════════════════ */
+body {
+  font-family: var(--drp-font-primary) !important;
+  background: var(--drp-cream) !important;
+  color: var(--drp-black) !important;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════════
    GLOBAL: Force 0 border-radius everywhere
    The user requires sharp corners on all elements.
    ═══════════════════════════════════════════════ */

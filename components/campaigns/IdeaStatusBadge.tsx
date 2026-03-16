@@ -26,7 +26,7 @@ export function IdeaStatusBadge({ status, size = "sm" }: IdeaStatusBadgeProps) {
         display: "inline-flex",
         alignItems: "center",
         padding: size === "sm" ? "1px 6px" : "3px 10px",
-        fontSize: size === "sm" ? "var(--bru-text-xs)" : "var(--bru-text-sm)",
+        fontSize: size === "sm" ? "var(--drp-text-xs)" : "var(--drp-text-sm)",
         fontWeight: 600,
         background: cfg.bg,
         color: cfg.color,

@@ -1,32 +1,50 @@
 "use client";
 import React from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  RotateCcw,
-  CheckCircle,
-  XCircle,
-  Compass,
-  Search,
-  BookOpen,
-  PenTool,
-  Target,
-  Wand2,
-  Eye,
-  Lightbulb,
-} from "lucide-react";
+import { Button } from "@doctorproject/react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
 
 const STEPS: { phase: PipelinePhase; label: string; icon: React.ReactNode }[] =
   [
-    { phase: "direction", label: "Direction", icon: <Compass size={20} /> },
-    { phase: "discovery", label: "Discovery", icon: <Search size={20} /> },
-    { phase: "evidence", label: "Evidence", icon: <BookOpen size={20} /> },
-    { phase: "writing", label: "Writing", icon: <PenTool size={20} /> },
-    { phase: "scoring", label: "Scoring", icon: <Target size={20} /> },
-    { phase: "formatting", label: "Formatting", icon: <Wand2 size={20} /> },
-    { phase: "review", label: "Review", icon: <Eye size={20} /> },
-    { phase: "learning", label: "Learning", icon: <Lightbulb size={20} /> },
+    {
+      phase: "direction",
+      label: "Direction",
+      icon: <span style={{ fontSize: 20 }}>◈</span>,
+    },
+    {
+      phase: "discovery",
+      label: "Discovery",
+      icon: <span style={{ fontSize: 20 }}>⊕</span>,
+    },
+    {
+      phase: "evidence",
+      label: "Evidence",
+      icon: <span style={{ fontSize: 20 }}>◉</span>,
+    },
+    {
+      phase: "writing",
+      label: "Writing",
+      icon: <span style={{ fontSize: 20 }}>✎</span>,
+    },
+    {
+      phase: "scoring",
+      label: "Scoring",
+      icon: <span style={{ fontSize: 20 }}>◎</span>,
+    },
+    {
+      phase: "formatting",
+      label: "Formatting",
+      icon: <span style={{ fontSize: 20 }}>✦</span>,
+    },
+    {
+      phase: "review",
+      label: "Review",
+      icon: <span style={{ fontSize: 20 }}>⊙</span>,
+    },
+    {
+      phase: "learning",
+      label: "Learning",
+      icon: <span style={{ fontSize: 20 }}>◇</span>,
+    },
   ];
 
 const PHASE_ORDER: PipelinePhase[] = STEPS.map((s) => s.phase);
@@ -116,12 +134,12 @@ export function PipelineStepper({
   };
 
   return (
-    <div style={{ marginBottom: "var(--bru-space-6)" }}>
+    <div style={{ marginBottom: "var(--drp-space-6)" }}>
       {/* Phase bar */}
       <div
         style={{
           display: "flex",
-          gap: "var(--bru-space-1)",
+          gap: "var(--drp-space-1)",
           alignItems: "center",
         }}
       >
@@ -142,7 +160,7 @@ export function PipelineStepper({
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: "var(--bru-space-1)",
+                gap: "var(--drp-space-1)",
                 cursor: canClick ? "pointer" : "default",
                 position: "relative",
               }}
@@ -151,10 +169,10 @@ export function PipelineStepper({
               <div
                 style={{
                   color: isViewing
-                    ? "var(--bru-purple)"
+                    ? "var(--drp-purple)"
                     : isComplete || isCurrent
-                      ? "var(--bru-black)"
-                      : "var(--bru-grey)",
+                      ? "var(--drp-black)"
+                      : "var(--drp-grey)",
                   opacity: isComplete || isCurrent || isViewing ? 1 : 0.5,
                   transition: "all 0.2s ease",
                   display: "flex",
@@ -171,7 +189,7 @@ export function PipelineStepper({
                   height: isViewing ? 6 : 4,
                   background: isViewing
                     ? "rgba(124, 58, 237, 0.2)"
-                    : "var(--bru-border-color, #e0e0e0)",
+                    : "var(--drp-border-color, #e0e0e0)",
                   position: "relative",
                   overflow: "hidden",
                   transition: "height 0.2s ease",
@@ -186,8 +204,8 @@ export function PipelineStepper({
                         : "0%",
                     height: "100%",
                     background: isError
-                      ? "var(--bru-error, #FF4444)"
-                      : "var(--bru-purple)",
+                      ? "var(--drp-error, #FF4444)"
+                      : "var(--drp-purple)",
                     transition: "width 0.3s ease",
                   }}
                 />
@@ -197,18 +215,18 @@ export function PipelineStepper({
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "var(--bru-space-1)",
+                  gap: "var(--drp-space-1)",
                 }}
               >
                 <span
                   style={{
-                    fontSize: "var(--bru-text-xs)",
+                    fontSize: "var(--drp-text-xs)",
                     fontWeight: isCurrent || isViewing ? 700 : 400,
                     color: isViewing
-                      ? "var(--bru-purple)"
+                      ? "var(--drp-purple)"
                       : isComplete || isCurrent
-                        ? "var(--bru-black)"
-                        : "var(--bru-grey)",
+                        ? "var(--drp-black)"
+                        : "var(--drp-grey)",
                     whiteSpace: "nowrap",
                     textDecoration: canClick ? "underline" : "none",
                   }}
@@ -217,46 +235,42 @@ export function PipelineStepper({
                 </span>
                 {/* Phase status indicator */}
                 {metadata?.phaseStatus?.[step.phase] === "success" && (
-                  <CheckCircle
-                    size={14}
-                    style={{ color: "var(--bru-success-dark, #2d7a3a)" }}
-                  />
+                  <span
+                    style={{
+                      color: "var(--drp-success-dark, #2d7a3a)",
+                      fontSize: 14,
+                    }}
+                  >
+                    ✓
+                  </span>
                 )}
                 {metadata?.phaseStatus?.[step.phase] === "failed" && (
-                  <XCircle
-                    size={14}
-                    style={{ color: "var(--bru-error-dark, #c0392b)" }}
-                  />
+                  <span
+                    style={{
+                      color: "var(--drp-error-dark, #c0392b)",
+                      fontSize: 14,
+                    }}
+                  >
+                    ✕
+                  </span>
                 )}
                 {canRetry && (
-                  <button
+                  <Button
+                    variant="ghost"
+                    icon
+                    aria-label={`Reload ${step.label}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       onRetryPhase(step.phase);
                     }}
-                    title={`Reload ${step.label}`}
                     style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      color: "var(--bru-purple)",
+                      color: "var(--drp-purple)",
                       padding: "2px 4px",
-                      display: "flex",
-                      alignItems: "center",
                       opacity: 0.7,
-                      transition: "opacity 0.2s",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.opacity =
-                        "1";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.opacity =
-                        "0.7";
                     }}
                   >
-                    <RotateCcw size={12} />
-                  </button>
+                    ↻
+                  </Button>
                 )}
               </div>
             </div>
@@ -271,75 +285,62 @@ export function PipelineStepper({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: "var(--bru-space-2)",
+            marginTop: "var(--drp-space-2)",
           }}
         >
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={handlePrev}
             disabled={!canGoPrev}
+            iconLeft="‹"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-              background: "none",
-              border: "none",
-              cursor: canGoPrev ? "pointer" : "default",
-              fontSize: "var(--bru-text-xs)",
               color: canGoPrev
-                ? "var(--bru-purple)"
-                : "var(--bru-border-color, #e0e0e0)",
-              padding: "2px 0",
+                ? "var(--drp-purple)"
+                : "var(--drp-border-color, #e0e0e0)",
             }}
           >
-            <ChevronLeft size={14} />
             Previous
-          </button>
+          </Button>
 
           {isViewingPast && (
             <span
               style={{
-                fontSize: "var(--bru-text-xs)",
-                color: "var(--bru-purple)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-purple)",
                 fontWeight: 600,
               }}
             >
               Viewing: {STEPS[viewIdx]?.label}{" "}
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => onPhaseClick(currentPhase)}
                 style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--bru-grey)",
-                  fontSize: "var(--bru-text-xs)",
+                  color: "var(--drp-grey)",
+                  fontSize: "var(--drp-text-xs)",
                   textDecoration: "underline",
                 }}
               >
                 Return to current
-              </button>
+              </Button>
             </span>
           )}
 
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={handleNext}
             disabled={!canGoNext}
+            iconRight="›"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-              background: "none",
-              border: "none",
-              cursor: canGoNext ? "pointer" : "default",
-              fontSize: "var(--bru-text-xs)",
               color: canGoNext
-                ? "var(--bru-purple)"
-                : "var(--bru-border-color, #e0e0e0)",
-              padding: "2px 0",
+                ? "var(--drp-purple)"
+                : "var(--drp-border-color, #e0e0e0)",
             }}
           >
             Next
-            <ChevronRight size={14} />
-          </button>
+          </Button>
         </div>
       )}
 
@@ -348,13 +349,13 @@ export function PipelineStepper({
         <div
           style={{
             display: "flex",
-            gap: "var(--bru-space-3)",
+            gap: "var(--drp-space-3)",
             flexWrap: "wrap",
-            marginTop: "var(--bru-space-3)",
-            padding: "var(--bru-space-2) var(--bru-space-3)",
-            background: "var(--bru-cream, #faf8f5)",
-            border: "var(--bru-border)",
-            fontSize: "var(--bru-text-xs)",
+            marginTop: "var(--drp-space-3)",
+            padding: "var(--drp-space-2) var(--drp-space-3)",
+            background: "var(--drp-cream, #faf8f5)",
+            border: "var(--drp-border)",
+            fontSize: "var(--drp-text-xs)",
           }}
         >
           {metadata.postType && (
@@ -407,8 +408,8 @@ export function PipelineStepper({
 
 function MetadataTag({ label, value }: { label: string; value: string }) {
   return (
-    <span style={{ color: "var(--bru-grey)" }}>
-      <strong style={{ color: "var(--bru-black)" }}>{label}:</strong> {value}
+    <span style={{ color: "var(--drp-grey)" }}>
+      <strong style={{ color: "var(--drp-black)" }}>{label}:</strong> {value}
     </span>
   );
 }

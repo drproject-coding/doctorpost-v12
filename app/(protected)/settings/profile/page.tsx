@@ -1,8 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, Button } from "@bruddle/react";
-import { User, Mail, Camera, Check, Loader, AlertCircle } from "lucide-react";
+import {
+  Card,
+  Button,
+  Input,
+  Alert,
+  Loader as DSLoader,
+} from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 
 export default function SettingsProfilePage() {
@@ -60,7 +65,7 @@ export default function SettingsProfilePage() {
     <div
       style={{
         minHeight: "100vh",
-        background: "var(--bru-cream)",
+        background: "var(--drp-cream)",
         padding: 24,
       }}
     >
@@ -72,12 +77,12 @@ export default function SettingsProfilePage() {
               fontSize: 26,
               fontWeight: 800,
               margin: "0 0 6px",
-              color: "var(--bru-black)",
+              color: "var(--drp-black)",
             }}
           >
             Profile
           </h1>
-          <p style={{ margin: 0, color: "var(--bru-grey)", fontSize: 14 }}>
+          <p style={{ margin: 0, color: "var(--drp-grey)", fontSize: 14 }}>
             Manage your personal information
           </p>
         </div>
@@ -90,7 +95,7 @@ export default function SettingsProfilePage() {
                 fontWeight: 800,
                 fontSize: 15,
                 margin: "0 0 20px",
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
               }}
             >
               Profile Picture
@@ -102,14 +107,13 @@ export default function SettingsProfilePage() {
                 style={{
                   width: 80,
                   height: 80,
-                  borderRadius: "50%",
-                  background: "var(--bru-purple)",
+                  background: "var(--drp-purple)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   flexShrink: 0,
                   overflow: "hidden",
-                  border: "3px solid var(--bru-black)",
+                  border: "3px solid var(--drp-black)",
                 }}
               >
                 {user?.image ? (
@@ -137,7 +141,7 @@ export default function SettingsProfilePage() {
                     margin: "0 0 4px",
                     fontWeight: 700,
                     fontSize: 14,
-                    color: "var(--bru-black)",
+                    color: "var(--drp-black)",
                   }}
                 >
                   {user?.name ?? "Your Name"}
@@ -146,7 +150,7 @@ export default function SettingsProfilePage() {
                   style={{
                     margin: "0 0 12px",
                     fontSize: 13,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   {user?.email ?? ""}
@@ -160,12 +164,11 @@ export default function SettingsProfilePage() {
                     border: "2px solid #ccc",
                     fontSize: 12,
                     fontWeight: 700,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                     cursor: "not-allowed",
                   }}
                 >
-                  <Camera size={13} />
-                  Change Photo (coming soon)
+                  🖼 Change Photo (coming soon)
                 </div>
               </div>
             </div>
@@ -180,90 +183,37 @@ export default function SettingsProfilePage() {
                 fontWeight: 800,
                 fontSize: 15,
                 margin: "0 0 20px",
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
               }}
             >
               Personal Information
             </h2>
 
             {/* Display name */}
-            <div style={{ marginBottom: 20 }}>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  fontWeight: 700,
-                  fontSize: 12,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.5,
-                  marginBottom: 8,
-                  color: "var(--bru-black)",
-                }}
-              >
-                <User size={13} />
-                Display Name
-              </label>
-              <input
+            <div style={{ marginBottom: "var(--drp-space-5)" }}>
+              <Input
+                label="Display Name"
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 disabled={saving}
                 placeholder="Your full name"
-                style={{
-                  width: "100%",
-                  padding: "10px 14px",
-                  border: "2px solid var(--bru-black)",
-                  background: "var(--bru-cream)",
-                  fontFamily: "inherit",
-                  fontSize: 14,
-                  outline: "none",
-                  boxSizing: "border-box",
-                  color: "var(--bru-black)",
-                }}
               />
             </div>
 
             {/* Email (readonly) */}
-            <div style={{ marginBottom: 24 }}>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  fontWeight: 700,
-                  fontSize: 12,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.5,
-                  marginBottom: 8,
-                  color: "var(--bru-black)",
-                }}
-              >
-                <Mail size={13} />
-                Email Address
-              </label>
-              <input
+            <div style={{ marginBottom: "var(--drp-space-6)" }}>
+              <Input
+                label="Email Address"
                 type="email"
                 value={user?.email ?? ""}
                 disabled
-                style={{
-                  width: "100%",
-                  padding: "10px 14px",
-                  border: "2px solid #ccc",
-                  background: "#f5f5f5",
-                  fontFamily: "inherit",
-                  fontSize: 14,
-                  outline: "none",
-                  boxSizing: "border-box",
-                  color: "var(--bru-grey)",
-                  cursor: "not-allowed",
-                }}
               />
               <p
                 style={{
                   margin: "6px 0 0",
                   fontSize: 12,
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                 }}
               >
                 Email cannot be changed. Contact support if needed.
@@ -272,77 +222,33 @@ export default function SettingsProfilePage() {
 
             {/* Error */}
             {error && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "10px 14px",
-                  background: "rgba(233,152,152,0.1)",
-                  border: "1px solid #E99898",
-                  marginBottom: 16,
-                }}
-              >
-                <AlertCircle size={14} color="#E99898" />
-                <span style={{ fontSize: 13, color: "var(--bru-black)" }}>
-                  {error}
-                </span>
+              <div style={{ marginBottom: "var(--drp-space-4)" }}>
+                <Alert variant="error">{error}</Alert>
               </div>
             )}
 
             {/* Save button */}
-            <button
+            <Button
+              variant={saved ? "outline" : "primary"}
               onClick={() => void handleSave()}
               disabled={
                 saving || !displayName.trim() || displayName === user?.name
               }
-              style={{
-                padding: "11px 28px",
-                background: saved
-                  ? "#00A896"
-                  : saving || !displayName.trim() || displayName === user?.name
-                    ? "#aaa"
-                    : "var(--bru-purple)",
-                color: "#fff",
-                border: "none",
-                fontWeight: 800,
-                fontSize: 14,
-                cursor:
-                  saving || !displayName.trim() || displayName === user?.name
-                    ? "not-allowed"
-                    : "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                transition: "background 0.2s",
-              }}
             >
               {saving ? (
                 <>
-                  <Loader
-                    size={14}
-                    style={{ animation: "spin 1s linear infinite" }}
-                  />
+                  <DSLoader size="sm" />
                   Saving…
                 </>
               ) : saved ? (
-                <>
-                  <Check size={14} />
-                  Saved
-                </>
+                "✓ Saved"
               ) : (
                 "Save Changes"
               )}
-            </button>
+            </Button>
           </div>
         </Card>
       </div>
-
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }

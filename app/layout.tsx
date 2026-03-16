@@ -17,9 +17,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         style={{
-          fontFamily: "var(--bru-font-primary)",
-          background: "var(--bru-cream)",
-          color: "var(--bru-black)",
+          fontFamily: "var(--drp-font-primary)",
+          background: "var(--drp-cream)",
+          color: "var(--drp-black)",
         }}
       >
         <AuthProvider>{children}</AuthProvider>

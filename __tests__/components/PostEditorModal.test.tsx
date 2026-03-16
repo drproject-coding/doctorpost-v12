@@ -10,6 +10,44 @@ import "@testing-library/jest-dom";
 import PostEditorModal from "@/components/PostEditorModal";
 import { createMockScheduledPost } from "../utils/testUtils";
 
+// Mock @doctorproject/react components used by PostEditorModal
+jest.mock("@doctorproject/react", () => ({
+  Button: ({ children, onClick, disabled, ...props }: any) => (
+    <button onClick={onClick} disabled={disabled} {...props}>
+      {children}
+    </button>
+  ),
+  Alert: ({ variant, children }: any) => (
+    <div data-variant={variant}>{children}</div>
+  ),
+  Input: ({ label, id, ...props }: any) => (
+    <div>
+      {label && <label htmlFor={id}>{label}</label>}
+      <input id={id} {...props} />
+    </div>
+  ),
+  Textarea: ({ label, id, ...props }: any) => (
+    <div>
+      {label && <label htmlFor={id}>{label}</label>}
+      <textarea id={id} {...props} />
+    </div>
+  ),
+  Select: ({ label, id, children, ...props }: any) => (
+    <div>
+      {label && <label htmlFor={id}>{label}</label>}
+      <select id={id} {...props}>
+        {children}
+      </select>
+    </div>
+  ),
+  Loader: ({ size }: any) => <span data-testid="loader" data-size={size} />,
+}));
+
+// Mock lucide-react icons
+jest.mock("lucide-react", () => ({
+  Save: () => <span data-testid="icon-save">S</span>,
+}));
+
 // NOTE: The save button in PostEditorModal has onClick={void handleSave} which
 // evaluates to onClick={undefined} — a known component bug. The save button
 // cannot be triggered via click. Tests below cover what the component actually
@@ -71,10 +109,8 @@ describe("PostEditorModal", () => {
       />,
     );
 
-    // Close button renders with class "bru-modal__close" and has no accessible text name
-    const closeButton = document.querySelector(
-      ".bru-modal__close",
-    ) as HTMLElement;
+    // Close button is a Button with aria-label="Close"
+    const closeButton = screen.getByRole("button", { name: /close/i });
     fireEvent.click(closeButton);
 
     expect(mockOnClose).toHaveBeenCalled();

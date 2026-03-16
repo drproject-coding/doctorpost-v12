@@ -2,8 +2,14 @@
 
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Alert, Button, Card } from "@bruddle/react";
-import { Loader } from "lucide-react";
+import {
+  Alert,
+  Button,
+  Card,
+  Heading,
+  Input,
+  Loader,
+} from "@doctorproject/react";
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams();
@@ -74,34 +80,34 @@ function ResetPasswordContent() {
   return (
     <div
       className="flex items-center justify-center min-h-screen"
-      style={{ background: "var(--bru-cream)" }}
+      style={{ background: "var(--drp-cream)" }}
     >
       <Card
         variant="raised"
         className="text-center"
         style={{ padding: "32px", maxWidth: "420px", width: "100%" }}
       >
-        <h1 className="text-2xl font-bold mb-6">
+        <Heading level={1}>
           {token ? "Set New Password" : "Reset Password"}
-        </h1>
+        </Heading>
 
         {loading ? (
           <div className="flex items-center justify-center py-4">
-            <Loader size={24} className="animate-spin text-bru-purple" />
+            <Loader
+              label={token ? "Resetting password..." : "Sending reset link..."}
+            />
           </div>
         ) : token ? (
           <form
             onSubmit={(e) => void handleResetPassword(e)}
-            className="space-y-4"
+            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
           >
-            <input
+            <Input
+              label="New Password"
               type="password"
-              className="bru-input"
-              style={{ width: "100%" }}
               placeholder="New password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              required
             />
             <Button type="submit" variant="primary" block>
               Reset Password
@@ -110,16 +116,14 @@ function ResetPasswordContent() {
         ) : (
           <form
             onSubmit={(e) => void handleRequestReset(e)}
-            className="space-y-4"
+            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
           >
-            <input
+            <Input
+              label="Email"
               type="email"
-              className="bru-input"
-              style={{ width: "100%" }}
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
             <Button type="submit" variant="primary" block>
               Send Reset Link
@@ -128,22 +132,25 @@ function ResetPasswordContent() {
         )}
 
         {message && (
-          <div style={{ marginTop: "var(--bru-space-4)" }}>
+          <div style={{ marginTop: "var(--drp-space-4)" }}>
             <Alert variant="success">{message}</Alert>
           </div>
         )}
         {error && (
-          <div style={{ marginTop: "var(--bru-space-4)" }}>
+          <div style={{ marginTop: "var(--drp-space-4)" }}>
             <Alert variant="error">{error}</Alert>
           </div>
         )}
 
-        <button
-          onClick={() => router.push("/login")}
-          className="mt-4 text-sm text-bru-purple font-medium hover:underline"
-        >
-          Back to login
-        </button>
+        <div style={{ marginTop: "var(--drp-space-4)", textAlign: "center" }}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push("/login")}
+          >
+            Back to login
+          </Button>
+        </div>
       </Card>
     </div>
   );
@@ -154,10 +161,15 @@ export default function ResetPasswordPage() {
     <Suspense
       fallback={
         <div
-          className="flex items-center justify-center min-h-screen"
-          style={{ background: "var(--bru-cream)" }}
+          style={{
+            minHeight: "100vh",
+            background: "var(--drp-cream)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          <Loader size={24} className="animate-spin text-bru-purple" />
+          <Loader />
         </div>
       }
     >

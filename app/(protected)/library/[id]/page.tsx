@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { ArrowLeft, Copy, Check, CheckCircle, Loader } from "lucide-react";
+import { Button, Loader, Alert, Tag } from "@doctorproject/react";
 
 interface Post {
   id: string;
@@ -46,14 +46,14 @@ function CopyButton({
   onCopy: () => void;
 }) {
   return (
-    <button
+    <Button
       onClick={onCopy}
-      className="bru-btn bru-btn--outline bru-btn--sm"
+      variant="outline"
+      size="sm"
       style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
     >
-      {copied ? <Check size={13} /> : <Copy size={13} />}
-      {copied ? "Copied!" : "Copy"}
-    </button>
+      {copied ? "✓ Copied!" : "⧉ Copy"}
+    </Button>
   );
 }
 
@@ -82,7 +82,7 @@ function SimpleView({ post, copied, onCopy }: ViewProps) {
       </div>
       <div
         style={{
-          background: "#F9F9F9",
+          background: "var(--drp-cream)",
           border: "1px solid rgba(0,0,0,0.1)",
           padding: "16px 20px",
           whiteSpace: "pre-wrap",
@@ -149,7 +149,7 @@ function VisualView({ post, copied, onCopy }: ViewProps) {
       </div>
       <div
         style={{
-          background: "#F9F9F9",
+          background: "var(--drp-cream)",
           border: "1px solid rgba(0,0,0,0.1)",
           padding: "16px 20px",
           whiteSpace: "pre-wrap",
@@ -199,9 +199,9 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
                 key={slide.number}
                 style={{
                   border: "1px solid rgba(0,0,0,0.1)",
-                  borderLeft: "3px solid #631DED",
+                  borderLeft: "3px solid var(--drp-purple)",
                   padding: "12px 16px",
-                  background: "#F9F9F9",
+                  background: "var(--drp-cream)",
                 }}
               >
                 <div
@@ -216,7 +216,7 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
                     style={{
                       fontSize: 11,
                       fontWeight: 800,
-                      color: "#631DED",
+                      color: "var(--drp-purple)",
                       textTransform: "uppercase",
                       letterSpacing: 1,
                       flexShrink: 0,
@@ -233,7 +233,7 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
                     margin: 0,
                     fontSize: 14,
                     lineHeight: 1.6,
-                    color: "#444",
+                    color: "var(--drp-text-secondary)",
                   }}
                 >
                   {slide.body}
@@ -266,7 +266,7 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
       </div>
       <div
         style={{
-          background: "#F9F9F9",
+          background: "var(--drp-cream)",
           border: "1px solid rgba(0,0,0,0.1)",
           padding: "16px 20px",
           whiteSpace: "pre-wrap",
@@ -363,9 +363,7 @@ export default function PostDetailPage() {
       <div
         style={{ padding: 48, display: "flex", alignItems: "center", gap: 12 }}
       >
-        <Loader size={20} style={{ animation: "spin 1s linear infinite" }} />
-        <span>Loading…</span>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        <Loader label="Loading…" />
       </div>
     );
   }
@@ -373,25 +371,21 @@ export default function PostDetailPage() {
   if (error || !post) {
     return (
       <div style={{ padding: 24 }}>
-        <button
+        <Button
           onClick={() => router.push("/library")}
+          variant="ghost"
           style={{
             display: "flex",
             alignItems: "center",
             gap: 6,
-            background: "none",
-            border: "none",
-            cursor: "pointer",
             fontWeight: 700,
-            color: "var(--bru-purple)",
+            color: "var(--drp-purple)",
             marginBottom: 16,
           }}
         >
-          <ArrowLeft size={16} /> Library
-        </button>
-        <p style={{ color: "#E99898", fontWeight: 700 }}>
-          {error ?? "Post not found"}
-        </p>
+          ‹ Library
+        </Button>
+        <Alert variant="error">{error ?? "Post not found"}</Alert>
       </div>
     );
   }
@@ -403,11 +397,17 @@ export default function PostDetailPage() {
         ? "Factory"
         : "Create";
 
-  const sourceStyle = {
-    Studio: { bg: "#631DED1A", color: "#631DED" },
-    Factory: { bg: "#00A8961A", color: "#00A896" },
-    Create: { bg: "#FF6C011A", color: "#FF6C01" },
-  }[source];
+  const SOURCE_TAG_COLOR: Record<string, "purple" | "mint" | "yellow"> = {
+    Studio: "purple",
+    Factory: "mint",
+    Create: "yellow",
+  };
+
+  const FORMAT_TAG_COLOR: Record<string, "purple" | "yellow" | "grey"> = {
+    carousel: "purple",
+    visual: "yellow",
+    simple: "grey",
+  };
 
   const date = post.scheduled_at
     ? new Date(post.scheduled_at).toLocaleDateString("en-US", {
@@ -421,23 +421,21 @@ export default function PostDetailPage() {
     <div style={{ padding: "24px 24px 64px" }}>
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         {/* Header */}
-        <button
+        <Button
           onClick={() => router.push("/library")}
+          variant="ghost"
           style={{
             display: "flex",
             alignItems: "center",
             gap: 6,
-            background: "none",
-            border: "none",
-            cursor: "pointer",
             fontWeight: 700,
-            color: "var(--bru-purple)",
+            color: "var(--drp-purple)",
             marginBottom: 20,
             fontSize: 14,
           }}
         >
-          <ArrowLeft size={16} /> Library
-        </button>
+          ‹ Library
+        </Button>
 
         <div
           style={{
@@ -469,90 +467,30 @@ export default function PostDetailPage() {
               }}
             >
               {/* Source tag */}
-              <span
-                style={{
-                  padding: "2px 10px",
-                  background: sourceStyle.bg,
-                  color: sourceStyle.color,
-                  fontWeight: 800,
-                  fontSize: 10,
-                  textTransform: "uppercase",
-                  letterSpacing: 1,
-                }}
-              >
+              <Tag color={SOURCE_TAG_COLOR[source] ?? "grey"} filled>
                 {source}
-              </span>
+              </Tag>
               {/* Format tag */}
               {post.format && (
-                <span
-                  style={{
-                    padding: "2px 10px",
-                    background:
-                      post.format === "carousel"
-                        ? "#631DED1A"
-                        : post.format === "visual"
-                          ? "#D4A8001A"
-                          : "#1212120D",
-                    color:
-                      post.format === "carousel"
-                        ? "#631DED"
-                        : post.format === "visual"
-                          ? "#D4A800"
-                          : "#666",
-                    fontWeight: 800,
-                    fontSize: 10,
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                  }}
-                >
+                <Tag color={FORMAT_TAG_COLOR[post.format] ?? "grey"} filled>
                   {post.format}
-                </span>
+                </Tag>
               )}
-              {post.pillar && (
-                <span
-                  style={{
-                    padding: "2px 10px",
-                    border: "2px solid var(--bru-black)",
-                    fontWeight: 700,
-                    fontSize: 11,
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                  }}
-                >
-                  {post.pillar}
-                </span>
-              )}
+              {post.pillar && <Tag color="grey">{post.pillar}</Tag>}
               {date && (
-                <span style={{ fontSize: 13, color: "var(--bru-grey)" }}>
+                <span style={{ fontSize: 13, color: "var(--drp-text-muted)" }}>
                   {date}
                 </span>
               )}
               {post.score != null && (
-                <span
-                  style={{
-                    padding: "2px 10px",
-                    background: post.score >= 75 ? "#00A896" : "#FF6C01",
-                    color: "#fff",
-                    fontWeight: 800,
-                    fontSize: 11,
-                  }}
-                >
+                <Tag color={post.score >= 75 ? "mint" : "yellow"} filled>
                   {post.score}/100
-                </span>
+                </Tag>
               )}
               {post.status === "published" && (
-                <span
-                  style={{
-                    padding: "2px 8px",
-                    background: "#00A896",
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: 11,
-                    textTransform: "uppercase",
-                  }}
-                >
+                <Tag color="mint" filled>
                   Published
-                </span>
+                </Tag>
               )}
             </div>
           </div>
@@ -582,26 +520,18 @@ export default function PostDetailPage() {
         {/* Actions */}
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
           {post.status !== "published" && (
-            <button
+            <Button
               onClick={() => void handleMarkPublished()}
               disabled={markingPublished}
-              className="bru-btn bru-btn--outline"
+              variant="outline"
               style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
             >
-              {markingPublished ? (
-                <Loader
-                  size={14}
-                  style={{ animation: "spin 1s linear infinite" }}
-                />
-              ) : (
-                <CheckCircle size={14} />
-              )}
-              {markingPublished ? "Saving…" : "Mark as Published"}
-            </button>
+              {markingPublished ? <Loader size="sm" /> : null}
+              {markingPublished ? "Saving…" : "✓ Mark as Published"}
+            </Button>
           )}
         </div>
       </div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }

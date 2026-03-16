@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@doctorproject/react";
 import { contentAngleOptions } from "@/lib/dropdownData";
 
 interface ContentAngleChipsProps {
@@ -20,30 +21,23 @@ export default function ContentAngleChips({
         const isSuggested = suggested === option.value && !isSelected;
 
         return (
-          <button
-            key={option.id}
-            type="button"
-            onClick={() => onChange(option.value)}
-            title={option.description}
-            style={{
-              padding: "6px 14px",
-              fontSize: 13,
-              fontWeight: isSelected ? 700 : 500,
-              border: isSelected
-                ? "2px solid var(--bru-purple, #631DED)"
-                : isSuggested
-                  ? "2px dashed var(--bru-purple, #631DED)"
-                  : "2px solid rgba(0,0,0,0.12)",
-              background: isSelected
-                ? "var(--bru-purple, #631DED)"
-                : "transparent",
-              color: isSelected ? "#fff" : "inherit",
-              cursor: "pointer",
-              position: "relative",
-              transition: "all 0.15s ease",
-            }}
-          >
-            {option.label}
+          <span key={option.id} style={{ position: "relative" }}>
+            <Button
+              type="button"
+              variant={isSelected ? "primary" : "ghost-bordered"}
+              onClick={() => onChange(option.value)}
+              title={option.description}
+              style={
+                isSuggested
+                  ? {
+                      borderStyle: "dashed",
+                      borderColor: "var(--drp-purple, #631DED)",
+                    }
+                  : undefined
+              }
+            >
+              {option.label}
+            </Button>
             {isSuggested && (
               <span
                 style={{
@@ -52,17 +46,18 @@ export default function ContentAngleChips({
                   right: -6,
                   fontSize: 9,
                   fontWeight: 800,
-                  background: "var(--bru-purple, #631DED)",
+                  background: "var(--drp-purple, #631DED)",
                   color: "#fff",
                   padding: "1px 5px",
                   textTransform: "uppercase",
                   letterSpacing: 0.5,
+                  pointerEvents: "none",
                 }}
               >
                 AI
               </span>
             )}
-          </button>
+          </span>
         );
       })}
     </div>

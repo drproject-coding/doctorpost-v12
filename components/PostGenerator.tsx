@@ -7,14 +7,20 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import { Alert, Button, Card } from "@bruddle/react";
+import {
+  Alert,
+  Button,
+  Card,
+  Loader,
+  ProgressBar,
+  Textarea,
+} from "@doctorproject/react";
 import {
   PostGenerationParameters,
   BrandProfile,
   AiSettings,
   AiProgress,
 } from "@/lib/types";
-import { Loader, Clock, Copy, Download } from "lucide-react";
 
 interface PostGeneratorProps {
   parameters: PostGenerationParameters;
@@ -41,7 +47,11 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
     const [isContentSelected, setIsContentSelected] = useState<boolean>(false);
     const [aiProgress, setAiProgress] = useState<AiProgress | null>(null);
 
-    const contentRef = useRef<HTMLTextAreaElement>(null);
+    const contentContainerRef = useRef<HTMLDivElement>(null);
+    const getContentTextarea = () =>
+      contentContainerRef.current?.querySelector(
+        "textarea",
+      ) as HTMLTextAreaElement | null;
     const abortRef = useRef<AbortController | null>(null);
     const isGeneratingRef = useRef(false);
     const onContentGeneratedRef = useRef(onContentGenerated);
@@ -159,11 +169,12 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
     }, [triggerGeneration, generateContentEffect, parameters]);
 
     const copyToClipboard = async () => {
-      if (contentRef.current) {
+      const textarea = getContentTextarea();
+      if (textarea) {
         try {
-          contentRef.current.select();
-          contentRef.current.setSelectionRange(0, generatedContent.length);
-          contentRef.current.focus();
+          textarea.select();
+          textarea.setSelectionRange(0, generatedContent.length);
+          textarea.focus();
           setIsContentSelected(true);
           await navigator.clipboard.writeText(generatedContent);
           setCopied(true);
@@ -194,7 +205,7 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
     return (
       <div>
         {error && (
-          <div style={{ marginBottom: "var(--bru-space-4)" }}>
+          <div style={{ marginBottom: "var(--drp-space-4)" }}>
             <Alert variant="error">{error}</Alert>
           </div>
         )}
@@ -203,41 +214,23 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
           <div
             style={{
               minHeight: 256,
-              border: "2px dashed var(--bru-grey-85)",
+              border: "2px dashed var(--drp-grey-85)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              color: "var(--bru-grey)",
-              gap: "var(--bru-space-3)",
+              color: "var(--drp-grey)",
+              gap: "var(--drp-space-3)",
             }}
           >
-            <Loader
-              size={32}
-              className="animate-spin"
-              style={{ color: "var(--bru-purple)" }}
-            />
+            <Loader size="lg" />
             <p>{aiProgress?.step ?? "Generating your post..."}</p>
             {aiProgress && (
-              <div
-                style={{
-                  width: 192,
-                  height: 8,
-                  background: "rgba(0,0,0,0.1)",
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    width: `${aiProgress.percent}%`,
-                    height: "100%",
-                    background: "var(--bru-purple)",
-                    transition: "width 300ms ease",
-                  }}
-                />
+              <div style={{ width: 192 }}>
+                <ProgressBar value={aiProgress.percent} />
               </div>
             )}
-            <p style={{ fontSize: "var(--bru-text-sm)" }}>
+            <p style={{ fontSize: "var(--drp-text-sm)" }}>
               Using {aiSettings.activeProvider}
             </p>
           </div>
@@ -247,51 +240,47 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
               style={{
                 display: "flex",
                 alignItems: "center",
-                fontSize: "var(--bru-text-sm)",
-                color: "var(--bru-grey)",
-                marginBottom: "var(--bru-space-2)",
-                gap: "var(--bru-space-1)",
+                fontSize: "var(--drp-text-sm)",
+                color: "var(--drp-grey)",
+                marginBottom: "var(--drp-space-2)",
+                gap: "var(--drp-space-1)",
               }}
             >
-              <Clock size={14} /> {estimatedReadTime} min read
+              ⏱ {estimatedReadTime} min read
             </div>
-            <textarea
-              ref={contentRef}
-              style={{
-                width: "100%",
-                minHeight: 256,
-                resize: "vertical",
-                padding: "var(--bru-space-4)",
-                border: isContentSelected
-                  ? "2px solid var(--bru-purple)"
-                  : "var(--bru-border)",
-                boxShadow: isContentSelected
-                  ? "3px 3px 0 0 var(--bru-purple)"
-                  : "var(--bru-shadow-sm)",
-                background: "var(--bru-white)",
-                fontFamily: "var(--bru-font-mono)",
-                fontSize: "var(--bru-text-md)",
-                lineHeight: "var(--bru-leading-loose)",
-                color: "var(--bru-black)",
-                outline: "none",
-              }}
-              value={generatedContent}
-              onChange={(e) => {
-                setGeneratedContent(e.target.value);
-                onContentGenerated(e.target.value);
-              }}
-            />
+            <div ref={contentContainerRef}>
+              <Textarea
+                style={{
+                  width: "100%",
+                  minHeight: 256,
+                  resize: "vertical",
+                  border: isContentSelected
+                    ? "2px solid var(--drp-purple)"
+                    : "var(--drp-border)",
+                  boxShadow: isContentSelected
+                    ? "3px 3px 0 0 var(--drp-purple)"
+                    : "var(--drp-shadow-sm)",
+                  fontFamily: "var(--drp-font-mono)",
+                  fontSize: "var(--drp-text-md)",
+                  lineHeight: "var(--drp-leading-loose)",
+                  outline: "none",
+                }}
+                value={generatedContent}
+                onChange={(e) => {
+                  setGeneratedContent(e.target.value);
+                  onContentGenerated(e.target.value);
+                }}
+              />
+            </div>
             <div
-              className="bru-form-actions"
-              style={{ marginTop: "var(--bru-space-3)" }}
+              className="drp-form-actions"
+              style={{ marginTop: "var(--drp-space-3)" }}
             >
               <Button size="sm" onClick={() => copyToClipboard()}>
-                <Copy size={14} />
-                {copied ? "Copied!" : "Copy"}
+                ⎘ {copied ? "Copied!" : "Copy"}
               </Button>
               <Button size="sm" onClick={downloadAsText}>
-                <Download size={14} />
-                Download
+                ↓ Download
               </Button>
             </div>
           </Card>
@@ -299,12 +288,12 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
           <div
             style={{
               minHeight: 256,
-              border: "2px dashed var(--bru-grey-85)",
+              border: "2px dashed var(--drp-grey-85)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "var(--bru-grey)",
-              padding: "var(--bru-space-6)",
+              color: "var(--drp-grey)",
+              padding: "var(--drp-space-6)",
               textAlign: "center",
             }}
           >

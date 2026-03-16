@@ -1,5 +1,5 @@
 /* ============================================================
-   BRUDDLE DESIGN SYSTEM — TYPOGRAPHY
+   DOCTORPROJECT DESIGN SYSTEM — TYPOGRAPHY
    @font-face declarations + heading/text utility classes.
    ============================================================ */
 
@@ -11,42 +11,42 @@
 
 @font-face {
   font-family: "Roboto Flex";
-  src: url("/fonts/RobotoFlex-VariableFont.ttf") format("truetype");
+  src: url("../../public/fonts/RobotoFlex-VariableFont.ttf") format("truetype");
   font-weight: 100 1000;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Visby";
-  src: url("/fonts/VisbyRegular.otf") format("opentype");
+  src: url("../../public/fonts/VisbyRegular.otf") format("opentype");
   font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Visby";
-  src: url("/fonts/VisbyMedium.otf") format("opentype");
+  src: url("../../public/fonts/VisbyMedium.otf") format("opentype");
   font-weight: 500;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Visby";
-  src: url("/fonts/VisbySemibold.otf") format("opentype");
+  src: url("../../public/fonts/VisbySemibold.otf") format("opentype");
   font-weight: 600;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Visby";
-  src: url("/fonts/VisbyBold.otf") format("opentype");
+  src: url("../../public/fonts/VisbyBold.otf") format("opentype");
   font-weight: 700;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Visby";
-  src: url("/fonts/VisbyHeavy.otf") format("opentype");
+  src: url("../../public/fonts/VisbyHeavy.otf") format("opentype");
   font-weight: 800;
   font-display: swap;
 }
@@ -57,50 +57,50 @@
    Inverted variant: white text on black highlight.
    ────────────────────────────────────────────── */
 
-.bru-h1,
-.bru-h2,
-.bru-h3,
-.bru-h4,
-.bru-h5,
-.bru-h6 {
-  font-family: var(--bru-font-primary);
-  font-weight: var(--bru-weight-bold);
-  line-height: var(--bru-leading-tight);
-  letter-spacing: var(--bru-tracking-tight);
-  color: var(--bru-black);
+.drp-h1,
+.drp-h2,
+.drp-h3,
+.drp-h4,
+.drp-h5,
+.drp-h6 {
+  font-family: var(--drp-font-primary);
+  font-weight: var(--drp-weight-bold);
+  line-height: var(--drp-leading-tight);
+  letter-spacing: var(--drp-tracking-tight);
+  color: var(--drp-black);
   margin: 0;
 }
 
-.bru-h1 {
-  font-size: var(--bru-text-h1);
+.drp-h1 {
+  font-size: var(--drp-text-h1);
 }
-.bru-h2 {
-  font-size: var(--bru-text-h2);
+.drp-h2 {
+  font-size: var(--drp-text-h2);
 }
-.bru-h3 {
-  font-size: var(--bru-text-h3);
+.drp-h3 {
+  font-size: var(--drp-text-h3);
 }
-.bru-h4 {
-  font-size: var(--bru-text-h4);
+.drp-h4 {
+  font-size: var(--drp-text-h4);
 }
-.bru-h5 {
-  font-size: var(--bru-text-h5);
+.drp-h5 {
+  font-size: var(--drp-text-h5);
 }
-.bru-h6 {
-  font-size: var(--bru-text-h6);
+.drp-h6 {
+  font-size: var(--drp-text-h6);
 }
 
 /* Inverted headings (white on black highlight) */
-.bru-h1--inv,
-.bru-h2--inv,
-.bru-h3--inv,
-.bru-h4--inv,
-.bru-h5--inv,
-.bru-h6--inv {
-  font-family: var(--bru-font-primary);
-  font-weight: var(--bru-weight-bold);
-  line-height: var(--bru-leading-tight);
-  letter-spacing: var(--bru-tracking-tight);
+.drp-h1--inv,
+.drp-h2--inv,
+.drp-h3--inv,
+.drp-h4--inv,
+.drp-h5--inv,
+.drp-h6--inv {
+  font-family: var(--drp-font-primary);
+  font-weight: var(--drp-weight-bold);
+  line-height: var(--drp-leading-tight);
+  letter-spacing: var(--drp-tracking-tight);
   color: #ffffff;
   background: #000000;
   display: inline;
@@ -110,23 +110,23 @@
   -webkit-box-decoration-break: clone;
 }
 
-.bru-h1--inv {
-  font-size: var(--bru-text-h1);
+.drp-h1--inv {
+  font-size: var(--drp-text-h1);
 }
-.bru-h2--inv {
-  font-size: var(--bru-text-h2);
+.drp-h2--inv {
+  font-size: var(--drp-text-h2);
 }
-.bru-h3--inv {
-  font-size: var(--bru-text-h3);
+.drp-h3--inv {
+  font-size: var(--drp-text-h3);
 }
-.bru-h4--inv {
-  font-size: var(--bru-text-h4);
+.drp-h4--inv {
+  font-size: var(--drp-text-h4);
 }
-.bru-h5--inv {
-  font-size: var(--bru-text-h5);
+.drp-h5--inv {
+  font-size: var(--drp-text-h5);
 }
-.bru-h6--inv {
-  font-size: var(--bru-text-h6);
+.drp-h6--inv {
+  font-size: var(--drp-text-h6);
 }
 
 /* ──────────────────────────────────────────────
@@ -134,34 +134,34 @@
    Extra large for hero/splash usage.
    ────────────────────────────────────────────── */
 
-.bru-display-xl {
-  font-family: var(--bru-font-primary);
+.drp-display-xl {
+  font-family: var(--drp-font-primary);
   font-size: 4.5rem;
-  font-weight: var(--bru-weight-heavy);
+  font-weight: var(--drp-weight-heavy);
   line-height: 1.1;
   letter-spacing: -0.025em;
   text-transform: uppercase;
-  color: var(--bru-black);
+  color: var(--drp-black);
   margin: 0;
 }
 
-.bru-display-lg {
-  font-family: var(--bru-font-primary);
+.drp-display-lg {
+  font-family: var(--drp-font-primary);
   font-size: 3.5rem;
-  font-weight: var(--bru-weight-heavy);
+  font-weight: var(--drp-weight-heavy);
   line-height: 1.1;
   text-transform: uppercase;
-  color: var(--bru-black);
+  color: var(--drp-black);
   margin: 0;
 }
 
-.bru-display-md {
-  font-family: var(--bru-font-primary);
+.drp-display-md {
+  font-family: var(--drp-font-primary);
   font-size: 2.5rem;
-  font-weight: var(--bru-weight-heavy);
+  font-weight: var(--drp-weight-heavy);
   line-height: 1.1;
   text-transform: uppercase;
-  color: var(--bru-black);
+  color: var(--drp-black);
   margin: 0;
 }
 
@@ -172,56 +172,59 @@
    Three weights per size.
    ────────────────────────────────────────────── */
 
-.bru-text {
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-md);
-  font-weight: var(--bru-weight-regular);
-  line-height: var(--bru-leading-normal);
-  color: var(--bru-black);
+.drp-text {
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-md);
+  font-weight: var(--drp-weight-regular);
+  line-height: var(--drp-leading-normal);
+  color: var(--drp-black);
 }
 
-.bru-text--sm {
-  font-size: var(--bru-text-sm);
+.drp-text--xs {
+  font-size: var(--drp-text-xs, 11px);
 }
-.bru-text--lg {
-  font-size: var(--bru-text-lg);
+.drp-text--sm {
+  font-size: var(--drp-text-sm);
+}
+.drp-text--lg {
+  font-size: var(--drp-text-lg);
 }
 
-.bru-text--medium {
-  font-weight: var(--bru-weight-medium);
+.drp-text--medium {
+  font-weight: var(--drp-weight-medium);
 }
-.bru-text--semibold {
-  font-weight: var(--bru-weight-semibold);
+.drp-text--semibold {
+  font-weight: var(--drp-weight-semibold);
 }
-.bru-text--bold {
-  font-weight: var(--bru-weight-bold);
+.drp-text--bold {
+  font-weight: var(--drp-weight-bold);
 }
 
 /* Text colors */
-.bru-text--muted {
-  color: var(--bru-grey);
+.drp-text--muted {
+  color: var(--drp-grey);
 }
-.bru-text--purple {
-  color: var(--bru-purple);
+.drp-text--purple {
+  color: var(--drp-purple);
 }
-.bru-text--mint {
-  color: var(--bru-mint);
+.drp-text--mint {
+  color: var(--drp-mint);
 }
-.bru-text--pink {
-  color: var(--bru-pink);
+.drp-text--pink {
+  color: var(--drp-pink);
 }
-.bru-text--yellow {
-  color: var(--bru-yellow);
+.drp-text--yellow {
+  color: var(--drp-yellow);
 }
-.bru-text--error {
-  color: var(--bru-error-dark);
+.drp-text--error {
+  color: var(--drp-error-dark);
 }
-.bru-text--success {
-  color: var(--bru-success-dark);
+.drp-text--success {
+  color: var(--drp-success-dark);
 }
 
 /* Inverted text (white on black) */
-.bru-text--inv {
+.drp-text--inv {
   color: #ffffff;
   background: #000000;
   display: inline;
@@ -229,7 +232,7 @@
 }
 
 /* Inverted text 50% opacity */
-.bru-text--inv-50 {
+.drp-text--inv-50 {
   color: #ffffff;
   background: rgba(0, 0, 0, 0.5);
   display: inline;
@@ -242,20 +245,20 @@
    Uppercase, wide tracking.
    ────────────────────────────────────────────── */
 
-.bru-label {
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-xs);
-  font-weight: var(--bru-weight-semibold);
+.drp-label {
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-xs);
+  font-weight: var(--drp-weight-semibold);
   text-transform: uppercase;
-  letter-spacing: var(--bru-tracking-caps);
-  color: var(--bru-grey);
+  letter-spacing: var(--drp-tracking-caps);
+  color: var(--drp-grey);
   margin: 0;
 }
 
-.bru-label--purple {
-  color: var(--bru-purple);
+.drp-label--purple {
+  color: var(--drp-purple);
 }
-.bru-label--inv {
+.drp-label--inv {
   color: #ffffff;
   background: #000000;
   display: inline;
@@ -266,25 +269,25 @@
    BODY TEXT SIZES
    ────────────────────────────────────────────── */
 
-.bru-body-lg {
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-lg);
-  line-height: var(--bru-leading-loose);
-  color: var(--bru-black);
+.drp-body-lg {
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-lg);
+  line-height: var(--drp-leading-loose);
+  color: var(--drp-black);
 }
 
-.bru-body-md {
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-md);
-  line-height: var(--bru-leading-normal);
-  color: var(--bru-black);
+.drp-body-md {
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-md);
+  line-height: var(--drp-leading-normal);
+  color: var(--drp-black);
 }
 
-.bru-body-sm {
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-sm);
-  line-height: var(--bru-leading-normal);
-  color: var(--bru-black);
+.drp-body-sm {
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-sm);
+  line-height: var(--drp-leading-normal);
+  color: var(--drp-black);
 }
 
 /* ──────────────────────────────────────────────
@@ -292,10 +295,10 @@
    Monospace, small, uppercase — for metadata.
    ────────────────────────────────────────────── */
 
-.bru-caption {
-  font-family: var(--bru-font-mono);
-  font-size: var(--bru-text-xs);
+.drp-caption {
+  font-family: var(--drp-font-mono);
+  font-size: var(--drp-text-xs);
   text-transform: uppercase;
-  letter-spacing: var(--bru-tracking-widest);
-  color: var(--bru-text-muted);
+  letter-spacing: var(--drp-tracking-widest);
+  color: var(--drp-text-muted);
 }

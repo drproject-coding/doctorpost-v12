@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import { Alert, Card } from "@bruddle/react";
-import { Loader, Check, AlertCircle } from "lucide-react";
+import { Alert, Card, Heading } from "@doctorproject/react";
 
 const PILLAR_COLORS = [
   { bg: "#6B4FFF", text: "#fff" },
@@ -34,23 +33,17 @@ export function BatchProgress({
 
   return (
     <Card variant="raised">
-      <h3
-        style={{
-          fontSize: "var(--bru-text-h5)",
-          fontWeight: 700,
-          marginBottom: "var(--bru-space-4)",
-        }}
-      >
-        Campaign Progress
-      </h3>
+      <div style={{ marginBottom: "var(--drp-space-4)" }}>
+        <Heading level={3}>Campaign Progress</Heading>
+      </div>
 
       {/* Progress bar */}
       <div
         style={{
           width: "100%",
           height: 8,
-          background: "var(--bru-border-color, #e0e0e0)",
-          marginBottom: "var(--bru-space-3)",
+          background: "var(--drp-border-color, #e0e0e0)",
+          marginBottom: "var(--drp-space-3)",
         }}
       >
         <div
@@ -59,10 +52,10 @@ export function BatchProgress({
             height: "100%",
             background:
               phase === "error"
-                ? "var(--bru-error, #FF4444)"
+                ? "var(--drp-error, #FF4444)"
                 : phase === "complete"
-                  ? "var(--bru-success, #00AA00)"
-                  : "var(--bru-purple)",
+                  ? "var(--drp-success, #00AA00)"
+                  : "var(--drp-purple)",
             transition: "width 0.3s ease",
           }}
         />
@@ -73,23 +66,20 @@ export function BatchProgress({
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "var(--bru-space-2)",
-          marginBottom: "var(--bru-space-3)",
+          gap: "var(--drp-space-2)",
+          marginBottom: "var(--drp-space-3)",
         }}
       >
         {phase === "complete" ? (
-          <Check size={16} style={{ color: "var(--bru-success, #00AA00)" }} />
+          <span style={{ color: "var(--drp-success)" }}>✓</span>
         ) : phase === "error" ? (
-          <AlertCircle
-            size={16}
-            style={{ color: "var(--bru-error, #FF4444)" }}
-          />
+          <span style={{ color: "var(--drp-error)" }}>⚠</span>
         ) : phase !== "idle" ? (
-          <Loader size={16} className="animate-spin" />
+          <span>⟳</span>
         ) : null}
         <span
           style={{
-            fontSize: "var(--bru-text-md)",
+            fontSize: "var(--drp-text-md)",
             fontWeight: 500,
           }}
         >
@@ -105,7 +95,7 @@ export function BatchProgress({
 
       {/* Error */}
       {error && (
-        <div style={{ marginBottom: "var(--bru-space-3)" }}>
+        <div style={{ marginBottom: "var(--drp-space-3)" }}>
           <Alert variant="error">{error}</Alert>
         </div>
       )}
@@ -113,19 +103,13 @@ export function BatchProgress({
       {/* Pillar distribution on complete */}
       {phase === "complete" && pillarDistribution && (
         <div>
-          <h4
-            style={{
-              fontSize: "var(--bru-text-md)",
-              fontWeight: 700,
-              marginBottom: "var(--bru-space-2)",
-            }}
-          >
-            Pillar Distribution
-          </h4>
+          <div style={{ marginBottom: "var(--drp-space-2)" }}>
+            <Heading level={4}>Pillar Distribution</Heading>
+          </div>
           <div
             style={{
               display: "flex",
-              gap: "var(--bru-space-2)",
+              gap: "var(--drp-space-2)",
               flexWrap: "wrap",
             }}
           >
@@ -136,12 +120,11 @@ export function BatchProgress({
                   display: "flex",
                   alignItems: "center",
                   gap: 4,
-                  padding: "var(--bru-space-1) var(--bru-space-2)",
+                  padding: "var(--drp-space-1) var(--drp-space-2)",
                   background: PILLAR_COLORS[i % PILLAR_COLORS.length].bg,
                   color: PILLAR_COLORS[i % PILLAR_COLORS.length].text,
-                  fontSize: "var(--bru-text-xs)",
+                  fontSize: "var(--drp-text-xs)",
                   fontWeight: 600,
-                  borderRadius: 2,
                 }}
               >
                 <span
@@ -155,7 +138,6 @@ export function BatchProgress({
                 <span
                   style={{
                     background: "rgba(0,0,0,0.2)",
-                    borderRadius: "50%",
                     width: 18,
                     height: 18,
                     display: "flex",

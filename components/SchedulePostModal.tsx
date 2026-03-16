@@ -1,8 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button } from "@bruddle/react";
+import { Button, Input, Select } from "@doctorproject/react";
 import { PostStatus, DropdownOption } from "@/lib/types";
-import { X } from "lucide-react";
 
 interface SchedulePostModalProps {
   isOpen: boolean;
@@ -96,49 +95,48 @@ const SchedulePostModal: React.FC<SchedulePostModalProps> = ({
   };
 
   return (
-    <div className="bru-overlay">
-      <div className="bru-modal w-full max-w-md">
-        <div className="bru-modal__header">
-          <h2 className="bru-modal__title">Schedule Post</h2>
-          <button onClick={onClose} className="bru-modal__close">
-            <X size={20} />
-          </button>
+    <div className="drp-overlay">
+      <div className="drp-modal w-full max-w-md">
+        <div className="drp-modal__header">
+          <h2 className="drp-modal__title">Schedule Post</h2>
+          <Button
+            onClick={onClose}
+            variant="ghost"
+            size="sm"
+            aria-label="Close"
+          >
+            ✕
+          </Button>
         </div>
 
-        <div className="bru-modal__body">
+        <div className="drp-modal__body">
           <div className="mb-4">
-            <label htmlFor="schedule-date" className="bru-field__label">
-              Date
-            </label>
-            <input
+            <Input
+              label="Date"
               type="date"
               id="schedule-date"
-              className="bru-input"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
             />
           </div>
 
           <div className="mb-6">
-            <label htmlFor="schedule-status" className="bru-field__label">
-              Status
-            </label>
-            <select
+            <Select
+              label="Status"
               id="schedule-status"
-              className="bru-input"
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value as PostStatus)}
             >
-              {statusOptions.map((option) => (
-                <option key={option.id} value={option.value}>
-                  {option.label}
+              {statusOptions.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
 
-        <div className="bru-modal__footer">
+        <div className="drp-modal__footer">
           <Button onClick={onClose} variant="secondary">
             Cancel
           </Button>

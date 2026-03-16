@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card } from "@bruddle/react";
+import { Badge, Button, Card } from "@doctorproject/react";
 import { IdeaStatusBadge } from "./IdeaStatusBadge";
 import type { CampaignPostStatus } from "@/lib/knowledge/types";
 
@@ -71,66 +71,53 @@ export function IdeaInbox({ onSelect }: IdeaInboxProps) {
   return (
     <Card
       variant="flat"
-      style={{ marginBottom: "var(--bru-space-4)", overflow: "hidden" }}
+      style={{ marginBottom: "var(--drp-space-4)", overflow: "hidden" }}
     >
-      <button
+      <Button
+        variant="ghost"
         onClick={() => setOpen((v) => !v)}
         style={{
           width: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          padding: "var(--bru-space-3)",
-          fontFamily: "var(--bru-font-primary)",
+          padding: "var(--drp-space-3)",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
-          <span style={{ fontSize: "var(--bru-text-sm)", fontWeight: 700 }}>
+          <span style={{ fontSize: "var(--drp-text-sm)", fontWeight: 700 }}>
             Campaign Ideas Ready to Write
           </span>
-          <span
-            style={{
-              fontSize: "var(--bru-text-xs)",
-              fontWeight: 700,
-              background: "#0066CC",
-              color: "#fff",
-              padding: "1px 7px",
-              borderRadius: 2,
-            }}
-          >
-            {ideas.length}
-          </span>
+          <Badge variant="primary">{ideas.length}</Badge>
         </div>
         <span
-          style={{ fontSize: "var(--bru-text-xs)", color: "var(--bru-grey)" }}
+          style={{ fontSize: "var(--drp-text-xs)", color: "var(--drp-grey)" }}
         >
           {open ? "▲ Hide" : "▼ Show"}
         </span>
-      </button>
+      </Button>
 
       {open && (
         <div
           style={{
-            borderTop: "var(--bru-border)",
+            borderTop: "var(--drp-border)",
             display: "grid",
             gap: 1,
-            background: "var(--bru-border-color, #e0e0e0)",
+            background: "var(--drp-border-color, #e0e0e0)",
             maxHeight: 320,
             overflowY: "auto",
           }}
         >
           {ideas.map((idea) => (
-            <button
+            <Button
               key={idea.id}
+              variant="ghost"
               onClick={() => {
                 onSelect(idea);
                 setOpen(false);
@@ -138,20 +125,18 @@ export function IdeaInbox({ onSelect }: IdeaInboxProps) {
               style={{
                 display: "flex",
                 alignItems: "flex-start",
-                gap: "var(--bru-space-3)",
-                padding: "var(--bru-space-3)",
-                background: "var(--bru-bg, #fff)",
-                border: "none",
-                cursor: "pointer",
+                gap: "var(--drp-space-3)",
+                padding: "var(--drp-space-3)",
+                background: "var(--drp-bg, #fff)",
                 textAlign: "left",
-                fontFamily: "var(--bru-font-primary)",
                 width: "100%",
+                justifyContent: "flex-start",
               }}
             >
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div
                   style={{
-                    fontSize: "var(--bru-text-sm)",
+                    fontSize: "var(--drp-text-sm)",
                     fontWeight: 600,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -163,10 +148,10 @@ export function IdeaInbox({ onSelect }: IdeaInboxProps) {
                 </div>
                 <div
                   style={{
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                     display: "flex",
-                    gap: "var(--bru-space-2)",
+                    gap: "var(--drp-space-2)",
                     flexWrap: "wrap",
                   }}
                 >
@@ -193,7 +178,7 @@ export function IdeaInbox({ onSelect }: IdeaInboxProps) {
                 </div>
               </div>
               <IdeaStatusBadge status={idea.generationStatus} size="sm" />
-            </button>
+            </Button>
           ))}
         </div>
       )}

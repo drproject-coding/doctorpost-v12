@@ -1,9 +1,9 @@
 /* ============================================================
-   BRUDDLE DESIGN SYSTEM — ANIMATIONS
+   DOCTORPROJECT DESIGN SYSTEM — ANIMATIONS
    Keyframe definitions + utility classes.
    ============================================================ */
 
-@keyframes bru-slide-up {
+@keyframes drp-slide-up {
   from {
     transform: translateY(20px);
     opacity: 0;
@@ -14,7 +14,7 @@
   }
 }
 
-@keyframes bru-slide-down {
+@keyframes drp-slide-down {
   from {
     transform: translateY(-20px);
     opacity: 0;
@@ -25,7 +25,7 @@
   }
 }
 
-@keyframes bru-scale-in {
+@keyframes drp-scale-in {
   from {
     transform: scale(0.8);
     opacity: 0;
@@ -36,7 +36,7 @@
   }
 }
 
-@keyframes bru-glitch {
+@keyframes drp-glitch {
   0%,
   100% {
     transform: translate(0);
@@ -55,7 +55,7 @@
   }
 }
 
-@keyframes bru-bounce {
+@keyframes drp-bounce {
   0%,
   100% {
     transform: translateY(0);
@@ -65,7 +65,7 @@
   }
 }
 
-@keyframes bru-pulse {
+@keyframes drp-pulse {
   0%,
   100% {
     transform: scale(1);
@@ -75,7 +75,7 @@
   }
 }
 
-@keyframes bru-shake {
+@keyframes drp-shake {
   0%,
   100% {
     transform: translateX(0);
@@ -88,52 +88,50 @@
   }
 }
 
-@keyframes bru-shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(300%);
-  }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* ──────────────────────────────────────────────
    UTILITY CLASSES
    ────────────────────────────────────────────── */
 
-.bru-anim-slide-up {
-  animation: bru-slide-up var(--bru-duration-normal) var(--bru-ease);
+.drp-anim-slide-up {
+  animation: drp-slide-up var(--drp-duration-normal) var(--drp-ease);
 }
 
-.bru-anim-slide-down {
-  animation: bru-slide-down var(--bru-duration-normal) var(--bru-ease);
+.drp-anim-slide-down {
+  animation: drp-slide-down var(--drp-duration-normal) var(--drp-ease);
 }
 
-.bru-anim-scale-in {
-  animation: bru-scale-in var(--bru-duration-normal) var(--bru-ease);
+.drp-anim-scale-in {
+  animation: drp-scale-in var(--drp-duration-normal) var(--drp-ease);
 }
 
-.bru-anim-glitch {
-  animation: bru-glitch var(--bru-duration-fast) steps(2, end);
+.drp-anim-glitch {
+  animation: drp-glitch var(--drp-duration-fast) steps(2, end);
 }
 
-.bru-anim-bounce {
-  animation: bru-bounce 1s ease infinite;
+.drp-anim-bounce {
+  animation: drp-bounce 1s ease infinite;
 }
 
-.bru-anim-pulse {
-  animation: bru-pulse 2s ease infinite;
+.drp-anim-pulse {
+  animation: drp-pulse 2s ease infinite;
 }
 
-.bru-anim-shake {
-  animation: bru-shake var(--bru-duration-fast) ease infinite;
+.drp-anim-shake {
+  animation: drp-shake var(--drp-duration-fast) ease infinite;
+}
+
+/* ──────────────────────────────────────────────
+   PREFERS-REDUCED-MOTION
+   ────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .drp-anim-slide-up,
+  .drp-anim-slide-down,
+  .drp-anim-scale-in,
+  .drp-anim-glitch,
+  .drp-anim-bounce,
+  .drp-anim-pulse,
+  .drp-anim-shake {
+    animation: none !important;
+  }
 }

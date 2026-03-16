@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@bruddle/react";
-import { Plus, Minus } from "lucide-react";
+import { Button, Card, Heading, Input, Textarea } from "@doctorproject/react";
 
 interface CampaignSetupProps {
   onSubmit: (config: CampaignConfig) => void;
@@ -78,116 +77,94 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
   return (
     <form onSubmit={handleSubmit}>
       <Card variant="raised">
-        <h3
-          style={{
-            fontSize: "var(--bru-text-h5)",
-            fontWeight: 700,
-            marginBottom: "var(--bru-space-4)",
-          }}
-        >
-          New Campaign
-        </h3>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
+          <Heading level={3}>New Campaign</Heading>
+        </div>
 
-        <div className="bru-form-stack">
-          <div className="bru-field">
-            <label className="bru-field__label">Campaign Name</label>
-            <input
-              className="bru-input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Q2 2026 Authority Building"
-              required
+        <div className="drp-form-stack">
+          <Input
+            label="Campaign Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. Q2 2026 Authority Building"
+            required
+          />
+
+          <div className="drp-form-row">
+            <Input
+              label="Duration (weeks)"
+              type="number"
+              min={1}
+              max={52}
+              step={1}
+              value={String(durationWeeks)}
+              onChange={(e) => setDurationWeeks(Number(e.target.value))}
+            />
+            <Input
+              label="Posts per week"
+              type="number"
+              min={1}
+              max={7}
+              step={1}
+              value={String(postsPerWeek)}
+              onChange={(e) => setPostsPerWeek(Number(e.target.value))}
+            />
+            <Input
+              label="Start Date"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
 
-          <div className="bru-form-row">
-            <div className="bru-field">
-              <label className="bru-field__label">Duration (weeks)</label>
-              <input
-                className="bru-input"
-                type="number"
-                min={1}
-                max={52}
-                step={1}
-                value={durationWeeks}
-                onChange={(e) => setDurationWeeks(Number(e.target.value))}
-              />
-            </div>
-            <div className="bru-field">
-              <label className="bru-field__label">Posts per week</label>
-              <input
-                className="bru-input"
-                type="number"
-                min={1}
-                max={7}
-                step={1}
-                value={postsPerWeek}
-                onChange={(e) => setPostsPerWeek(Number(e.target.value))}
-              />
-            </div>
-            <div className="bru-field">
-              <label className="bru-field__label">Start Date</label>
-              <input
-                className="bru-input"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="bru-field">
-            <label className="bru-field__label">Goals</label>
-            <textarea
-              className="bru-input"
-              value={goals}
-              onChange={(e) => setGoals(e.target.value)}
-              placeholder="What do you want to achieve with this campaign?"
-              style={{ minHeight: 80 }}
-            />
-          </div>
+          <Textarea
+            label="Goals"
+            value={goals}
+            onChange={(e) => setGoals(e.target.value)}
+            placeholder="What do you want to achieve with this campaign?"
+            style={{ minHeight: 80 }}
+          />
 
           {/* Pillar Weights */}
-          <div className="bru-field">
-            <label className="bru-field__label">
+          <div className="drp-field">
+            <label className="drp-field__label">
               Pillar Weights (total: {totalWeight}%)
             </label>
             {totalWeight !== 100 && (
               <div
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-error-dark)",
-                  marginBottom: "var(--bru-space-2)",
+                  fontSize: "var(--drp-text-xs)",
+                  color: "var(--drp-error-dark)",
+                  marginBottom: "var(--drp-space-2)",
                 }}
               >
                 Weights should sum to 100%
               </div>
             )}
-            <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
+            <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
               {Object.entries(pillars).map(([pillar, weight]) => (
                 <div
                   key={pillar}
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "var(--bru-space-2)",
+                    gap: "var(--drp-space-2)",
                   }}
                 >
                   <span
                     style={{
                       width: 120,
-                      fontSize: "var(--bru-text-sm)",
+                      fontSize: "var(--drp-text-sm)",
                       fontWeight: 500,
                     }}
                   >
                     {pillar}
                   </span>
-                  <input
-                    className="bru-input"
+                  <Input
                     type="number"
                     min={0}
                     max={100}
-                    value={weight}
+                    value={String(weight)}
                     onChange={(e) =>
                       handlePillarWeight(pillar, Number(e.target.value))
                     }
@@ -195,8 +172,8 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                   />
                   <span
                     style={{
-                      fontSize: "var(--bru-text-xs)",
-                      color: "var(--bru-grey)",
+                      fontSize: "var(--drp-text-xs)",
+                      color: "var(--drp-grey)",
                     }}
                   >
                     %
@@ -207,7 +184,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                     onClick={() => removePillar(pillar)}
                     style={{ padding: 2 }}
                   >
-                    <Minus size={12} />
+                    −
                   </Button>
                 </div>
               ))}
@@ -216,11 +193,10 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "var(--bru-space-2)",
+                  gap: "var(--drp-space-2)",
                 }}
               >
-                <input
-                  className="bru-input"
+                <Input
                   value={newPillar}
                   onChange={(e) => setNewPillar(e.target.value)}
                   placeholder="New pillar..."
@@ -238,7 +214,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                   onClick={addPillar}
                   style={{ padding: 2 }}
                 >
-                  <Plus size={12} />
+                  +
                 </Button>
               </div>
             </div>
@@ -246,11 +222,11 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
 
           <div
             style={{
-              fontSize: "var(--bru-text-sm)",
-              color: "var(--bru-grey)",
-              padding: "var(--bru-space-2)",
-              background: "var(--bru-cream)",
-              border: "var(--bru-border)",
+              fontSize: "var(--drp-text-sm)",
+              color: "var(--drp-grey)",
+              padding: "var(--drp-space-2)",
+              background: "var(--drp-cream)",
+              border: "var(--drp-border)",
             }}
           >
             Total posts: {durationWeeks * postsPerWeek}
@@ -258,8 +234,8 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
         </div>
 
         <div
-          className="bru-form-actions"
-          style={{ marginTop: "var(--bru-space-4)" }}
+          className="drp-form-actions"
+          style={{ marginTop: "var(--drp-space-4)" }}
         >
           <Button
             type="submit"

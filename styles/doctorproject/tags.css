@@ -1,0 +1,518 @@
+/* ============================================================
+   DOCTORPROJECT DESIGN SYSTEM — TAGS, BADGES, TABS, PROGRESS BARS
+   Matching DoctorProject "Tabs, Tags, and Badges" specification.
+
+   TABS:
+     .drp-tabs              Tab container
+     .drp-tab               Individual tab
+     .drp-tab--active       Active state (filled black)
+
+   TAGS:
+     .drp-tag               Base tag (outlined)
+     .drp-tag--filled       Solid background variant
+     .drp-tag--purple       Purple color
+     .drp-tag--mint         Mint/green color
+     .drp-tag--pink         Pink/red color
+     .drp-tag--yellow       Yellow color
+     .drp-tag--grey         Grey color
+     .drp-tag--closeable    With close/X button
+     .drp-tag--dot          With leading dot indicator
+
+   BADGES:
+     .drp-badge             Small count badge
+
+   PROGRESS:
+     .drp-progress          Progress bar container
+     .drp-progress__bar     Filled bar
+   ============================================================ */
+
+/* ──────────────────────────────────────────────
+   TABS
+   ────────────────────────────────────────────── */
+
+.drp-tabs {
+  display: inline-flex;
+  gap: 0;
+  border: var(--drp-border);
+  border-radius: 0;
+  overflow: hidden;
+  background: var(--drp-white);
+}
+
+.drp-tab {
+  padding: 8px 18px;
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-sm);
+  font-weight: var(--drp-weight-bold);
+  color: var(--drp-black);
+  background: transparent;
+  border: none;
+  border-right: var(--drp-border);
+  cursor: pointer;
+  transition: background var(--drp-duration-fast) var(--drp-ease);
+}
+
+.drp-tab:last-child {
+  border-right: none;
+}
+
+.drp-tab:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.drp-tab--active,
+.drp-tab.active {
+  background: #000000;
+  color: #ffffff;
+}
+
+body.dark-mode .drp-tab--active,
+body.dark-mode .drp-tab.active {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* Underline tab variant (for page-level navigation) */
+.drp-tabs--underline {
+  border: none;
+  border-radius: 0;
+  gap: var(--drp-space-4);
+  border-bottom: var(--drp-border);
+  background: transparent;
+}
+
+.drp-tabs--underline .drp-tab {
+  border-right: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  padding: 8px 4px;
+  color: var(--drp-grey);
+}
+
+.drp-tabs--underline .drp-tab:hover {
+  background: transparent;
+  color: var(--drp-black);
+}
+
+.drp-tabs--underline .drp-tab--active,
+.drp-tabs--underline .drp-tab.active {
+  background: transparent;
+  color: var(--drp-purple);
+  border-bottom-color: var(--drp-purple);
+}
+
+/* ──────────────────────────────────────────────
+   TAGS — BASE
+   ────────────────────────────────────────────── */
+
+.drp-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--drp-space-1);
+  padding: 4px 12px;
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-sm);
+  font-weight: var(--drp-weight-bold);
+  color: var(--drp-black);
+  background: transparent;
+  border: 1px solid var(--drp-black);
+  border-radius: 0;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+/* ──────────────────────────────────────────────
+   TAGS — COLOR VARIANTS (outlined)
+   ────────────────────────────────────────────── */
+
+.drp-tag--purple {
+  border-color: var(--drp-purple);
+  color: var(--drp-purple);
+}
+
+.drp-tag--mint {
+  border-color: var(--drp-mint);
+  color: var(--drp-success-dark);
+}
+
+.drp-tag--pink {
+  border-color: var(--drp-pink);
+  color: var(--drp-error-dark);
+}
+
+.drp-tag--yellow {
+  border-color: var(--drp-yellow);
+  color: var(--drp-warning-dark);
+}
+
+.drp-tag--grey {
+  border-color: var(--drp-grey-85);
+  color: var(--drp-grey);
+}
+
+.drp-tag--orange {
+  border-color: var(--drp-orange);
+  color: var(--drp-orange-dark);
+}
+
+.drp-tag--light {
+  border-color: #e8e8f0;
+  color: var(--drp-grey);
+  background: #f5f5fa;
+}
+
+.drp-tag--teal {
+  border-color: #5fdcb3;
+  color: #1a7a5a;
+}
+
+.drp-tag--black {
+  border-color: var(--drp-black);
+  color: var(--drp-black);
+}
+
+/* ──────────────────────────────────────────────
+   TAGS — FILLED VARIANTS
+   ────────────────────────────────────────────── */
+
+.drp-tag--filled {
+  background: var(--drp-black);
+  color: #ffffff;
+  border-color: var(--drp-black);
+}
+
+body.dark-mode .drp-tag--filled {
+  background: #ffffff;
+  color: #000000;
+}
+
+.drp-tag--filled.drp-tag--purple {
+  background: var(--drp-purple);
+  color: #ffffff;
+  border-color: var(--drp-purple);
+}
+
+.drp-tag--filled.drp-tag--mint {
+  background: var(--drp-mint);
+  color: var(--drp-success-dark);
+  border-color: var(--drp-mint);
+}
+
+.drp-tag--filled.drp-tag--pink {
+  background: var(--drp-pink);
+  color: var(--drp-error-dark);
+  border-color: var(--drp-pink);
+}
+
+.drp-tag--filled.drp-tag--yellow {
+  background: var(--drp-yellow);
+  color: var(--drp-warning-dark);
+  border-color: var(--drp-yellow);
+}
+
+.drp-tag--filled.drp-tag--orange {
+  background: var(--drp-orange);
+  color: #ffffff;
+  border-color: var(--drp-orange);
+}
+
+.drp-tag--filled.drp-tag--teal {
+  background: #5fdcb3;
+  color: #1a7a5a;
+  border-color: #5fdcb3;
+}
+
+.drp-tag--filled.drp-tag--black {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+/* ──────────────────────────────────────────────
+   TAGS — DARK VARIANT (black bg)
+   ────────────────────────────────────────────── */
+
+.drp-tag--dark {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+.drp-tag--dark.drp-tag--purple {
+  background: #000000;
+  color: var(--drp-purple);
+  border-color: var(--drp-purple);
+}
+
+.drp-tag--dark.drp-tag--mint {
+  background: #000000;
+  color: var(--drp-mint);
+  border-color: var(--drp-mint);
+}
+
+.drp-tag--dark.drp-tag--pink {
+  background: #000000;
+  color: var(--drp-pink);
+  border-color: var(--drp-pink);
+}
+
+/* ──────────────────────────────────────────────
+   TAG — CLOSEABLE (with X button)
+   ────────────────────────────────────────────── */
+
+.drp-tag--closeable {
+  padding-right: 6px;
+}
+
+.drp-tag__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity var(--drp-duration-fast) var(--drp-ease);
+}
+
+.drp-tag__close:hover {
+  opacity: 1;
+}
+
+/* ──────────────────────────────────────────────
+   TAG — DOT INDICATOR
+   ────────────────────────────────────────────── */
+
+.drp-tag--dot::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 0;
+  background: var(--drp-purple);
+  flex-shrink: 0;
+}
+
+.drp-tag--dot.drp-tag--mint::before {
+  background: var(--drp-mint);
+}
+.drp-tag--dot.drp-tag--pink::before {
+  background: var(--drp-pink);
+}
+.drp-tag--dot.drp-tag--yellow::before {
+  background: var(--drp-yellow);
+}
+
+.drp-tag--dot.drp-tag--orange::before {
+  background: var(--drp-orange);
+}
+
+.drp-tag--dot.drp-tag--teal::before {
+  background: #5fdcb3;
+}
+
+.drp-tag--dot.drp-tag--black::before {
+  background: var(--drp-black);
+}
+
+/* ──────────────────────────────────────────────
+   BADGES
+   Small count indicators.
+   ────────────────────────────────────────────── */
+
+.drp-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-sm);
+  font-weight: var(--drp-weight-bold);
+  color: var(--drp-black);
+  background: var(--drp-purple-20);
+  border: 1px solid var(--drp-purple);
+  border-radius: 0;
+  line-height: 1;
+}
+
+.drp-badge--filled {
+  background: var(--drp-purple);
+  color: #ffffff;
+}
+
+.drp-badge--mint {
+  background: rgba(152, 233, 171, 0.2);
+  border-color: var(--drp-mint);
+  color: var(--drp-success-dark);
+}
+
+.drp-badge--pink {
+  background: rgba(233, 152, 152, 0.2);
+  border-color: var(--drp-pink);
+  color: var(--drp-error-dark);
+}
+
+/* ──────────────────────────────────────────────
+   BADGE VARIANTS (DP-style)
+   ────────────────────────────────────────────── */
+
+.drp-badge--primary {
+  background: var(--drp-purple);
+  color: #ffffff;
+  border-color: var(--drp-purple);
+}
+
+.drp-badge--secondary {
+  background: var(--drp-orange);
+  color: #ffffff;
+  border-color: var(--drp-orange);
+}
+
+.drp-badge--outline {
+  background: transparent;
+  color: var(--drp-black);
+  border-color: var(--drp-black);
+}
+
+/* ──────────────────────────────────────────────
+   PROGRESS BARS
+   Thin colored bars with DoctorProject styling.
+   ────────────────────────────────────────────── */
+
+.drp-progress {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.drp-progress__bar {
+  height: 100%;
+  background: var(--drp-purple);
+  border-radius: 0;
+  transition: width var(--drp-duration-slow) var(--drp-ease);
+}
+
+/* Color variants */
+.drp-progress--mint .drp-progress__bar {
+  background: var(--drp-mint);
+}
+.drp-progress--pink .drp-progress__bar {
+  background: var(--drp-pink);
+}
+.drp-progress--yellow .drp-progress__bar {
+  background: var(--drp-yellow);
+}
+.drp-progress--grey .drp-progress__bar {
+  background: var(--drp-grey);
+}
+
+/* Size variants */
+.drp-progress--sm {
+  height: 4px;
+}
+.drp-progress--lg {
+  height: 10px;
+}
+
+/* With label */
+.drp-progress-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--drp-space-1);
+}
+
+.drp-progress-group__label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-xs);
+  font-weight: var(--drp-weight-semibold);
+  color: var(--drp-grey);
+}
+
+body.dark-mode .drp-progress {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ──────────────────────────────────────────────
+   STATUS INDICATOR DOT
+   Small colored dot for inline status.
+   ────────────────────────────────────────────── */
+
+.drp-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 0;
+  background: var(--drp-grey);
+  flex-shrink: 0;
+}
+
+.drp-dot--purple {
+  background: var(--drp-purple);
+}
+.drp-dot--mint {
+  background: var(--drp-mint);
+}
+.drp-dot--pink {
+  background: var(--drp-pink);
+}
+.drp-dot--yellow {
+  background: var(--drp-yellow);
+}
+.drp-dot--pulse {
+  animation: drp-pulse 2s ease-in-out infinite;
+}
+
+@keyframes drp-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* ──────────────────────────────────────────────
+   RESPONSIVE — TABS & TAGS
+   ────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .drp-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .drp-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .drp-tab {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 390px) {
+  .drp-tab {
+    padding: 8px 12px;
+    font-size: var(--drp-text-xs);
+  }
+
+  .drp-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+}

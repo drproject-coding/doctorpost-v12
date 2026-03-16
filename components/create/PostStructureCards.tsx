@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FileText, BookOpen, Eye, MessageSquare, List } from "lucide-react";
+import { Button } from "@doctorproject/react";
 import { postStructureOptions } from "@/lib/dropdownData";
 
 const STORAGE_KEY = "doctorpost:lastPostStructure";
 
-const ICONS: Record<string, React.ReactNode> = {
-  opinionTake: <MessageSquare size={20} />,
-  howTo: <BookOpen size={20} />,
-  observation: <Eye size={20} />,
-  story: <FileText size={20} />,
-  list: <List size={20} />,
+const ICONS: Record<string, string> = {
+  opinionTake: "◈",
+  howTo: "◉",
+  observation: "⊙",
+  story: "✎",
+  list: "≡",
 };
 
 // ─── Section colour palette ──────────────────────────────────────────────────
@@ -306,7 +306,7 @@ function PostPreview({ structureId }: { structureId: string }) {
                     fontSize: 12,
                     lineHeight: 1.6,
                     color: "#1a1a1a",
-                    fontFamily: "var(--bru-font-mono, monospace)",
+                    fontFamily: "var(--drp-font-mono, monospace)",
                   }}
                 >
                   {line}
@@ -369,9 +369,10 @@ export default function PostStructureCards({
           const isPreviewing = previewId === option.id;
 
           return (
-            <button
+            <Button
               key={option.id}
               type="button"
+              variant={isSelected ? "primary" : "ghost-bordered"}
               onClick={() => handleSelect(option.value)}
               style={{
                 display: "flex",
@@ -379,36 +380,35 @@ export default function PostStructureCards({
                 alignItems: "center",
                 gap: 6,
                 padding: "14px 10px 10px",
-                border: isSelected
-                  ? "2px solid var(--bru-purple, #631DED)"
-                  : isPreviewing
-                    ? "2px solid rgba(99,29,237,0.3)"
-                    : "2px solid rgba(0,0,0,0.1)",
                 background: isSelected
                   ? "#631DED0D"
                   : isPreviewing
                     ? "#631DED05"
                     : "transparent",
-                cursor: "pointer",
+                borderColor: isSelected
+                  ? "var(--drp-purple, #631DED)"
+                  : isPreviewing
+                    ? "rgba(99,29,237,0.3)"
+                    : "rgba(0,0,0,0.1)",
                 textAlign: "center",
-                transition: "all 0.15s ease",
+                height: "auto",
                 position: "relative",
               }}
             >
               <span
                 style={{
                   color: isSelected
-                    ? "var(--bru-purple, #631DED)"
-                    : "var(--bru-grey, #888)",
+                    ? "var(--drp-purple, #631DED)"
+                    : "var(--drp-grey, #888)",
                 }}
               >
-                {ICONS[option.id] ?? <FileText size={20} />}
+                {ICONS[option.id] ?? "◈"}
               </span>
               <span
                 style={{
                   fontWeight: isSelected ? 700 : 600,
                   fontSize: 13,
-                  color: isSelected ? "var(--bru-purple, #631DED)" : "inherit",
+                  color: isSelected ? "var(--drp-purple, #631DED)" : "inherit",
                 }}
               >
                 {option.label}
@@ -416,7 +416,7 @@ export default function PostStructureCards({
               <span
                 style={{
                   fontSize: 11,
-                  color: "var(--bru-grey, #888)",
+                  color: "var(--drp-grey, #888)",
                   lineHeight: 1.3,
                 }}
               >
@@ -445,7 +445,7 @@ export default function PostStructureCards({
               >
                 {isPreviewing ? "▲ hide" : "▼ example"}
               </span>
-            </button>
+            </Button>
           );
         })}
       </div>

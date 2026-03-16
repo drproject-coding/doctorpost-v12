@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Loader, Sparkles, Pencil, X, Check } from "lucide-react";
+import { Button, Loader } from "@doctorproject/react";
 
 interface BrandSectionProps {
   title: string;
@@ -48,8 +48,8 @@ const BrandSection: React.FC<BrandSectionProps> = ({
     <div
       style={{
         borderLeft: `3px solid ${color}`,
-        background: "var(--bru-white)",
-        border: "var(--bru-border-thin)",
+        background: "var(--drp-white)",
+        border: "var(--drp-border-thin)",
         borderLeftColor: color,
         borderLeftWidth: "3px",
         borderLeftStyle: "solid",
@@ -60,8 +60,8 @@ const BrandSection: React.FC<BrandSectionProps> = ({
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "12px",
-          padding: "12px 16px",
+          gap: "var(--drp-space-3)",
+          padding: "var(--drp-space-3) var(--drp-space-4)",
           borderBottom: "1px solid rgba(0,0,0,0.08)",
         }}
       >
@@ -71,11 +71,11 @@ const BrandSection: React.FC<BrandSectionProps> = ({
             backgroundColor: `${color}1A`,
             color: color,
             padding: "2px 8px",
-            fontSize: "var(--bru-text-xs)",
-            fontWeight: "var(--bru-weight-heavy)",
-            letterSpacing: "var(--bru-tracking-caps)",
+            fontSize: "var(--drp-text-xs)",
+            fontWeight: "var(--drp-weight-heavy)",
+            letterSpacing: "var(--drp-tracking-caps)",
             textTransform: "uppercase" as const,
-            fontFamily: "var(--bru-font-primary)",
+            fontFamily: "var(--drp-font-primary)",
             flexShrink: 0,
           }}
         >
@@ -85,10 +85,10 @@ const BrandSection: React.FC<BrandSectionProps> = ({
         {/* Title */}
         <span
           style={{
-            fontFamily: "var(--bru-font-primary)",
-            fontWeight: "var(--bru-weight-bold)",
-            fontSize: "var(--bru-text-lg)",
-            color: "var(--bru-black)",
+            fontFamily: "var(--drp-font-primary)",
+            fontWeight: "var(--drp-weight-bold)",
+            fontSize: "var(--drp-text-lg)",
+            color: "var(--drp-black)",
             flex: 1,
           }}
         >
@@ -96,69 +96,68 @@ const BrandSection: React.FC<BrandSectionProps> = ({
         </span>
 
         {/* Action buttons */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--drp-space-2)",
+          }}
+        >
           {!editing && onAiGenerate && (
-            <button
-              type="button"
-              className="bru-btn bru-btn--sm bru-btn--ghost bru-btn--purple"
+            <Button
+              variant="ghost"
+              size="sm"
+              iconLeft={aiLoading ? undefined : "✦"}
               onClick={handleAiGenerate}
               disabled={aiLoading}
               aria-label="AI Generate"
             >
-              {aiLoading ? (
-                <Loader size={13} className="animate-spin" />
-              ) : (
-                <Sparkles size={13} />
-              )}
+              {aiLoading ? <Loader size="sm" /> : null}
               {aiLoading ? "Generating..." : "Generate"}
-            </button>
+            </Button>
           )}
 
           {!editing && (
-            <button
-              type="button"
-              className="bru-btn bru-btn--sm bru-btn--outline"
+            <Button
+              variant="secondary"
+              size="sm"
+              iconLeft="✎"
               onClick={handleEdit}
               aria-label="Edit section"
             >
-              <Pencil size={13} />
               Edit
-            </button>
+            </Button>
           )}
 
           {editing && (
             <>
-              <button
-                type="button"
-                className="bru-btn bru-btn--sm bru-btn--ghost"
+              <Button
+                variant="ghost"
+                size="sm"
+                iconLeft="✕"
                 onClick={handleCancel}
                 disabled={saving}
                 aria-label="Cancel editing"
               >
-                <X size={13} />
                 Cancel
-              </button>
-              <button
-                type="button"
-                className="bru-btn bru-btn--sm bru-btn--primary"
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
                 onClick={handleSave}
                 disabled={saving}
                 aria-label="Save section"
               >
-                {saving ? (
-                  <Loader size={13} className="animate-spin" />
-                ) : (
-                  <Check size={13} />
-                )}
+                {saving ? <Loader size="sm" /> : null}
                 {saving ? "Saving..." : "Save"}
-              </button>
+              </Button>
             </>
           )}
         </div>
       </div>
 
       {/* Content area */}
-      <div style={{ padding: "16px" }}>{children(editing)}</div>
+      <div style={{ padding: "var(--drp-space-4)" }}>{children(editing)}</div>
     </div>
   );
 };

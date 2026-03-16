@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Alert, Button, Card } from "@bruddle/react";
-import { Check, X } from "lucide-react";
+import { Alert, Badge, Button, Card } from "@doctorproject/react";
 import type { RuleProposal, ProposalStatus } from "@/lib/knowledge/types";
 
 interface RuleProposalCardProps {
@@ -31,48 +30,39 @@ export function RuleProposalCard({
 
   const isPending = proposal.status === "pending";
 
+  const statusVariant =
+    proposal.status === "approved"
+      ? "mint"
+      : proposal.status === "rejected"
+        ? "pink"
+        : "primary";
+
   return (
-    <Card variant="flat" style={{ padding: "var(--bru-space-3)" }}>
+    <Card variant="flat" style={{ padding: "var(--drp-space-3)" }}>
       {/* Header */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-2)",
+          marginBottom: "var(--drp-space-2)",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
-          <span
-            style={{
-              fontSize: "var(--bru-text-xs)",
-              fontWeight: 700,
-              textTransform: "uppercase",
-              padding: "0 4px",
-              background:
-                proposal.status === "approved"
-                  ? "var(--bru-success, #00AA00)"
-                  : proposal.status === "rejected"
-                    ? "var(--bru-error, #FF4444)"
-                    : "var(--bru-purple)",
-              color: "white",
-            }}
-          >
-            {proposal.status}
-          </span>
-          <span style={{ fontSize: "var(--bru-text-sm)", fontWeight: 700 }}>
+          <Badge variant={statusVariant}>{proposal.status}</Badge>
+          <span style={{ fontSize: "var(--drp-text-sm)", fontWeight: 700 }}>
             {proposal.proposalType}
           </span>
           <span
             style={{
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-grey)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-grey)",
             }}
           >
             Target: {proposal.targetDocument}
@@ -80,8 +70,8 @@ export function RuleProposalCard({
         </div>
         <span
           style={{
-            fontSize: "var(--bru-text-xs)",
-            color: "var(--bru-grey)",
+            fontSize: "var(--drp-text-xs)",
+            color: "var(--drp-grey)",
           }}
         >
           Confidence: {Math.round(proposal.confidence * 100)}%
@@ -91,8 +81,8 @@ export function RuleProposalCard({
       {/* Reasoning */}
       <div
         style={{
-          fontSize: "var(--bru-text-sm)",
-          marginBottom: "var(--bru-space-2)",
+          fontSize: "var(--drp-text-sm)",
+          marginBottom: "var(--drp-space-2)",
         }}
       >
         {proposal.reasoning}
@@ -101,9 +91,9 @@ export function RuleProposalCard({
       {/* Evidence */}
       <div
         style={{
-          fontSize: "var(--bru-text-xs)",
-          color: "var(--bru-grey)",
-          marginBottom: "var(--bru-space-2)",
+          fontSize: "var(--drp-text-xs)",
+          color: "var(--drp-grey)",
+          marginBottom: "var(--drp-space-2)",
         }}
       >
         Based on {proposal.evidenceSignals.length} signal
@@ -116,32 +106,32 @@ export function RuleProposalCard({
         variant="ghost"
         onClick={() => setShowDiff(!showDiff)}
         style={{
-          fontSize: "var(--bru-text-xs)",
-          marginBottom: showDiff ? "var(--bru-space-2)" : 0,
+          fontSize: "var(--drp-text-xs)",
+          marginBottom: showDiff ? "var(--drp-space-2)" : 0,
         }}
       >
         {showDiff ? "Hide diff" : "Show diff"}
       </Button>
 
       {showDiff && (
-        <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
+        <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
           <div>
             <div
               style={{
-                fontSize: "var(--bru-text-xs)",
+                fontSize: "var(--drp-text-xs)",
                 fontWeight: 700,
                 marginBottom: 4,
-                color: "var(--bru-error, #FF4444)",
+                color: "var(--drp-error-dark)",
               }}
             >
               Current
             </div>
             <pre
               style={{
-                fontSize: "var(--bru-text-xs)",
+                fontSize: "var(--drp-text-xs)",
                 background: "rgba(255, 68, 68, 0.08)",
-                padding: "var(--bru-space-2)",
-                border: "var(--bru-border)",
+                padding: "var(--drp-space-2)",
+                border: "var(--drp-border)",
                 whiteSpace: "pre-wrap",
                 wordBreak: "break-word",
                 margin: 0,
@@ -153,20 +143,20 @@ export function RuleProposalCard({
           <div>
             <div
               style={{
-                fontSize: "var(--bru-text-xs)",
+                fontSize: "var(--drp-text-xs)",
                 fontWeight: 700,
                 marginBottom: 4,
-                color: "var(--bru-success, #00AA00)",
+                color: "var(--drp-success-dark)",
               }}
             >
               Proposed
             </div>
             <pre
               style={{
-                fontSize: "var(--bru-text-xs)",
+                fontSize: "var(--drp-text-xs)",
                 background: "rgba(0, 170, 0, 0.08)",
-                padding: "var(--bru-space-2)",
-                border: "var(--bru-border)",
+                padding: "var(--drp-space-2)",
+                border: "var(--drp-border)",
                 whiteSpace: "pre-wrap",
                 wordBreak: "break-word",
                 margin: 0,
@@ -180,7 +170,7 @@ export function RuleProposalCard({
 
       {/* Error */}
       {error && (
-        <div style={{ marginTop: "var(--bru-space-2)" }}>
+        <div style={{ marginTop: "var(--drp-space-2)" }}>
           <Alert variant="error">{error}</Alert>
         </div>
       )}
@@ -190,8 +180,8 @@ export function RuleProposalCard({
         <div
           style={{
             display: "flex",
-            gap: "var(--bru-space-2)",
-            marginTop: "var(--bru-space-3)",
+            gap: "var(--drp-space-2)",
+            marginTop: "var(--drp-space-3)",
           }}
         >
           <Button
@@ -203,10 +193,10 @@ export function RuleProposalCard({
               display: "flex",
               alignItems: "center",
               gap: 4,
-              fontSize: "var(--bru-text-sm)",
+              fontSize: "var(--drp-text-sm)",
             }}
           >
-            <Check size={14} /> Approve
+            ✓ Approve
           </Button>
           <Button
             type="button"
@@ -216,10 +206,10 @@ export function RuleProposalCard({
               display: "flex",
               alignItems: "center",
               gap: 4,
-              fontSize: "var(--bru-text-sm)",
+              fontSize: "var(--drp-text-sm)",
             }}
           >
-            <X size={14} /> Reject
+            ✕ Reject
           </Button>
         </div>
       )}

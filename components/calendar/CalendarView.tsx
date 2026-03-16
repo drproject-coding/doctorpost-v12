@@ -1,8 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { ScheduledPost } from "@/lib/types";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getStatusColorClasses } from "@/lib/calendarUtils"; // Import from new utility file
 import ScoreBadge from "./ScoreBadge";
 
@@ -67,7 +66,11 @@ export default function CalendarView({
       days.push(
         <div
           key={`empty-${i}`}
-          className="h-24 border-2 border-black bg-gray-50"
+          className="h-24"
+          style={{
+            border: "var(--drp-border)",
+            background: "var(--drp-surface)",
+          }}
         ></div>,
       );
     }
@@ -93,15 +96,15 @@ export default function CalendarView({
       let cellClasses = "bg-white";
       let cellStyle: React.CSSProperties = {};
       if (isToday) {
-        cellClasses = "bg-bru-purple/10"; // Highlight for today
+        cellClasses = "bg-drp-purple/10"; // Highlight for today
       }
       if (isSelected) {
-        cellClasses = "bg-bru-yellow/20 border-bru-yellow"; // Highlight for selected date
+        cellClasses = "bg-drp-yellow/20 border-drp-yellow"; // Highlight for selected date
       }
       if (isToday && isSelected) {
-        cellClasses = "bg-bru-yellow/20 border-bru-yellow ring-2"; // Both today and selected
+        cellClasses = "bg-drp-yellow/20 border-drp-yellow ring-2"; // Both today and selected
         cellStyle = {
-          "--tw-ring-color": "var(--bru-purple)",
+          "--tw-ring-color": "var(--drp-purple)",
         } as React.CSSProperties;
       }
 
@@ -112,16 +115,18 @@ export default function CalendarView({
           style={cellStyle}
         >
           <div
-            className={`font-bold text-sm mb-1 ${isToday ? "text-bru-purple" : isSelected ? "text-bru-yellow" : ""}`}
+            className={`font-bold text-sm mb-1 ${isToday ? "text-drp-purple" : isSelected ? "text-drp-yellow" : ""}`}
           >
             {day}
           </div>
           {dayPosts.length > 0 ? (
             <div className="space-y-1">
               {dayPosts.map((post) => (
-                <button
+                <Button
                   key={post.id}
-                  className={`block w-full text-left px-2 py-1 text-xs rounded-bru-md border-2 truncate ${getStatusColorClasses(post.status)} hover:opacity-80 transition-opacity`}
+                  variant="ghost"
+                  size="sm"
+                  className={`block w-full text-left px-2 py-1 text-xs border-2 truncate ${getStatusColorClasses(post.status)} hover:opacity-80 transition-opacity`}
                   title={post.title}
                   onClick={() => onPostClick(post)}
                 >
@@ -129,7 +134,7 @@ export default function CalendarView({
                     <ScoreBadge score={post.factoryScore} />
                   )}
                   {post.title}
-                </button>
+                </Button>
               ))}
             </div>
           ) : null}
@@ -167,16 +172,18 @@ export default function CalendarView({
             variant="primary"
             className="p-2 flex items-center justify-center"
             aria-label="Previous month"
+            iconLeft="‹"
           >
-            <ChevronLeft size={16} />
+            ‹
           </Button>
           <Button
             onClick={nextMonth}
             variant="primary"
             className="p-2 flex items-center justify-center"
             aria-label="Next month"
+            iconLeft="›"
           >
-            <ChevronRight size={16} />
+            ›
           </Button>
         </div>
       </div>

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { Loader } from "lucide-react";
+import { Loader } from "@doctorproject/react";
 
 export default function AuthCallback() {
   const router = useRouter();
@@ -18,11 +18,10 @@ export default function AuthCallback() {
   return (
     <div
       className="flex items-center justify-center min-h-screen"
-      style={{ background: "var(--bru-cream)" }}
+      style={{ background: "var(--drp-cream)" }}
     >
       <div className="flex items-center gap-2">
-        <Loader size={24} className="animate-spin text-bru-purple" />
-        <span className="font-medium">Authenticating...</span>
+        <Loader label="Authenticating..." />
       </div>
     </div>
   );

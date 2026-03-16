@@ -1,10 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Card } from "@bruddle/react";
+import {
+  Button,
+  Card,
+  Heading,
+  Input,
+  Alert,
+  Divider,
+  Loader,
+} from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { Loader, Eye, EyeOff } from "lucide-react";
 
 interface Providers {
   email?: boolean;
@@ -82,10 +89,15 @@ export default function LoginPage() {
   if (loadingAuth || !providers) {
     return (
       <div
-        className="flex items-center justify-center"
-        style={{ minHeight: "100vh", background: "var(--bru-cream)" }}
+        style={{
+          minHeight: "100vh",
+          background: "var(--drp-cream)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        <Loader size={32} className="animate-spin text-bru-purple" />
+        <Loader />
       </div>
     );
   }
@@ -93,19 +105,18 @@ export default function LoginPage() {
   return (
     <div
       className="flex items-center justify-center"
-      style={{ minHeight: "100vh", background: "var(--bru-cream)" }}
+      style={{ minHeight: "100vh", background: "var(--drp-cream)" }}
     >
       <Card
         variant="raised"
         className="text-center"
         style={{ padding: "32px", maxWidth: "420px", width: "100%" }}
       >
-        <h1 className="text-3xl font-bold mb-6">Welcome to DoctorPost</h1>
+        <Heading level={1}>Welcome to DoctorPost</Heading>
 
         {loading ? (
           <div className="flex items-center justify-center py-4">
-            <Loader size={24} className="animate-spin mr-2 text-bru-purple" />
-            <span className="font-medium">Signing in...</span>
+            <Loader label="Signing in..." />
           </div>
         ) : (
           <>
@@ -136,19 +147,7 @@ export default function LoginPage() {
                   </svg>
                   Continue with Google
                 </Button>
-                <div className="relative my-6">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-300"></div>
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span
-                      className="px-2 text-gray-500"
-                      style={{ background: "var(--bru-cream)" }}
-                    >
-                      or
-                    </span>
-                  </div>
-                </div>
+                <Divider label="or" />
               </>
             )}
 
@@ -156,75 +155,86 @@ export default function LoginPage() {
               <>
                 <form
                   onSubmit={(e) => void handleEmailSubmit(e)}
-                  className="space-y-4"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "16px",
+                    marginTop: "16px",
+                  }}
                 >
-                  <div>
-                    <input
-                      type="email"
-                      className="bru-input"
-                      style={{ width: "100%" }}
-                      placeholder="Email address"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <div className="relative">
-                    <input
+                  <Input
+                    label="Email"
+                    type="email"
+                    placeholder="Email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <div style={{ position: "relative" }}>
+                    <Input
+                      label="Password"
                       type={showPassword ? "text" : "password"}
-                      className="bru-input pr-10"
-                      style={{ width: "100%" }}
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="sm"
+                      icon
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      style={{ position: "absolute", right: 6, bottom: 6 }}
                     >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
+                      {showPassword ? "⊘" : "⊙"}
+                    </Button>
                   </div>
                   <Button type="submit" variant="primary" block>
                     Sign In
                   </Button>
                 </form>
 
-                <button
-                  onClick={() => router.push("/signup")}
-                  className="mt-4 text-sm text-bru-purple font-medium hover:underline"
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "var(--drp-space-1)",
+                    marginTop: "var(--drp-space-4)",
+                  }}
                 >
-                  Don&apos;t have an account? <strong>Sign up</strong>
-                </button>
-
-                <button
-                  onClick={() => router.push("/forgot-password")}
-                  className="block mx-auto mt-2 text-sm text-gray-500 hover:text-bru-purple"
-                >
-                  Forgot password?
-                </button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => router.push("/signup")}
+                  >
+                    Don&apos;t have an account? Sign up
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => router.push("/forgot-password")}
+                  >
+                    Forgot password?
+                  </Button>
+                </div>
               </>
             )}
           </>
         )}
 
         {error && (
-          <div
-            style={{
-              marginTop: "24px",
-              padding: "12px",
-              background: "rgba(233,152,152,0.2)",
-              border: "2px solid var(--bru-pink)",
-              color: "#991B1B",
-              fontSize: "14px",
-              fontWeight: 500,
-            }}
-          >
-            {error}
+          <div style={{ marginTop: "16px" }}>
+            <Alert variant="error">{error}</Alert>
           </div>
         )}
 
-        <p className="text-xs text-gray-500 mt-8">
+        <p
+          className="text-xs mt-8"
+          style={{ color: "var(--drp-text-muted, #6b7280)" }}
+        >
           By signing in, you agree to our Terms of Service and Privacy Policy.
         </p>
       </Card>

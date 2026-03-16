@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card } from "@bruddle/react";
+import { Card, Heading } from "@doctorproject/react";
 import type { CampaignPostStatus } from "@/lib/knowledge/types";
 import { IdeaStatusBadge } from "./IdeaStatusBadge";
 import { CampaignSummaryRow } from "./CampaignSummaryRow";
@@ -121,15 +121,9 @@ export function CampaignCalendar({
 
   return (
     <Card variant="raised">
-      <h3
-        style={{
-          fontSize: "var(--bru-text-h5)",
-          fontWeight: 700,
-          marginBottom: "var(--bru-space-3)",
-        }}
-      >
-        Campaign Calendar
-      </h3>
+      <div style={{ marginBottom: "var(--drp-space-3)" }}>
+        <Heading level={3}>Campaign Calendar</Heading>
+      </div>
 
       <CampaignSummaryRow
         counts={statusCounts}
@@ -149,8 +143,8 @@ export function CampaignCalendar({
       <div
         style={{
           display: "grid",
-          gap: "var(--bru-space-3)",
-          marginTop: "var(--bru-space-4)",
+          gap: "var(--drp-space-3)",
+          marginTop: "var(--drp-space-4)",
         }}
       >
         {weeks.map((weekSlots, wi) => {
@@ -160,20 +154,14 @@ export function CampaignCalendar({
 
           return (
             <div key={`week-${wi}`}>
-              <h4
-                style={{
-                  fontSize: "var(--bru-text-md)",
-                  fontWeight: 700,
-                  marginBottom: "var(--bru-space-2)",
-                }}
-              >
-                Week {wi + 1}
-              </h4>
+              <div style={{ marginBottom: "var(--drp-space-2)" }}>
+                <Heading level={4}>Week {wi + 1}</Heading>
+              </div>
               <div
                 style={{
                   display: "grid",
                   gridTemplateColumns: `repeat(${postsPerWeek}, minmax(0, 1fr))`,
-                  gap: "var(--bru-space-2)",
+                  gap: "var(--drp-space-2)",
                 }}
               >
                 {weekSlots.map((slot, si) => {
@@ -187,7 +175,7 @@ export function CampaignCalendar({
                       key={`slot-${wi}-${si}`}
                       variant="flat"
                       style={{
-                        padding: "var(--bru-space-2)",
+                        padding: "var(--drp-space-2)",
                         cursor: "pointer",
                         overflow: "hidden",
                         opacity: !isVisible ? 0.15 : isRejected ? 0.5 : 1,
@@ -200,13 +188,13 @@ export function CampaignCalendar({
                           display: "flex",
                           justifyContent: "space-between",
                           alignItems: "center",
-                          marginBottom: "var(--bru-space-1)",
+                          marginBottom: "var(--drp-space-1)",
                         }}
                       >
                         <span
                           style={{
-                            fontSize: "var(--bru-text-xs)",
-                            color: "var(--bru-grey)",
+                            fontSize: "var(--drp-text-xs)",
+                            color: "var(--drp-grey)",
                           }}
                         >
                           {formatDate(slot.slotDate)}
@@ -215,9 +203,9 @@ export function CampaignCalendar({
                       </div>
                       <div
                         style={{
-                          fontSize: "var(--bru-text-sm)",
+                          fontSize: "var(--drp-text-sm)",
                           fontWeight: 700,
-                          marginBottom: "var(--bru-space-1)",
+                          marginBottom: "var(--drp-space-1)",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
@@ -228,14 +216,14 @@ export function CampaignCalendar({
                       <div
                         style={{
                           display: "flex",
-                          gap: "var(--bru-space-1)",
+                          gap: "var(--drp-space-1)",
                           flexWrap: "wrap",
                           alignItems: "center",
                         }}
                       >
                         <span
                           style={{
-                            fontSize: "var(--bru-text-xs)",
+                            fontSize: "var(--drp-text-xs)",
                             fontWeight: 700,
                             textTransform: "uppercase",
                             padding: "1px 6px",
@@ -250,8 +238,8 @@ export function CampaignCalendar({
                         {slot.topicCard.templateRecommendation && (
                           <span
                             style={{
-                              fontSize: "var(--bru-text-xs)",
-                              color: "var(--bru-grey)",
+                              fontSize: "var(--drp-text-xs)",
+                              color: "var(--drp-grey)",
                               overflow: "hidden",
                               textOverflow: "ellipsis",
                               whiteSpace: "nowrap",

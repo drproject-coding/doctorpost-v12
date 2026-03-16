@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Card } from "@bruddle/react";
+import { Card } from "@doctorproject/react";
 import type { ScoreResult } from "@/lib/knowledge/types";
 import { RewriteInstructions } from "./RewriteInstructions";
 
@@ -13,9 +13,9 @@ interface ScorecardProps {
 
 function scoreColor(score: number, max: number): string {
   const pct = (score / max) * 100;
-  if (pct >= 80) return "var(--bru-success-dark, #2d7a3a)";
-  if (pct >= 60) return "var(--bru-warning-dark, #b8860b)";
-  return "var(--bru-error-dark, #c0392b)";
+  if (pct >= 80) return "var(--drp-success-dark, #2d7a3a)";
+  if (pct >= 60) return "var(--drp-warning-dark, #b8860b)";
+  return "var(--drp-error-dark, #c0392b)";
 }
 
 function verdictColor(verdict: ScoreResult["verdict"]): string {
@@ -44,12 +44,12 @@ export function Scorecard({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         <h3
           style={{
-            fontSize: "var(--bru-text-h5)",
+            fontSize: "var(--drp-text-h5)",
             fontWeight: 700,
             margin: 0,
           }}
@@ -60,12 +60,12 @@ export function Scorecard({
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
           <span
             style={{
-              fontSize: "var(--bru-text-h4)",
+              fontSize: "var(--drp-text-h4)",
               fontWeight: 700,
               color: scoreColor(score.totalScore, 100),
             }}
@@ -73,7 +73,7 @@ export function Scorecard({
             {score.totalScore}
           </span>
           <span
-            style={{ fontSize: "var(--bru-text-sm)", color: "var(--bru-grey)" }}
+            style={{ fontSize: "var(--drp-text-sm)", color: "var(--drp-grey)" }}
           >
             / 100
           </span>
@@ -84,12 +84,12 @@ export function Scorecard({
       <div
         style={{
           display: "inline-block",
-          padding: "var(--bru-space-1) var(--bru-space-3)",
+          padding: "var(--drp-space-1) var(--drp-space-3)",
           background: verdictColor(score.verdict),
           fontWeight: 700,
-          fontSize: "var(--bru-text-sm)",
+          fontSize: "var(--drp-text-sm)",
           textTransform: "uppercase",
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         {score.verdict}
@@ -97,7 +97,7 @@ export function Scorecard({
 
       {/* Criteria breakdown */}
       {criteria && (
-        <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
+        <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
           <CriteriaRow
             label="Hook"
             score={criteria.hook?.score ?? 0}
@@ -142,10 +142,10 @@ export function Scorecard({
         criteria?.bonusPenalty?.score !== undefined && (
           <div
             style={{
-              marginTop: "var(--bru-space-3)",
-              padding: "var(--bru-space-2)",
-              border: "var(--bru-border)",
-              fontSize: "var(--bru-text-sm)",
+              marginTop: "var(--drp-space-3)",
+              padding: "var(--drp-space-2)",
+              border: "var(--drp-border)",
+              fontSize: "var(--drp-text-sm)",
             }}
           >
             <strong>
@@ -157,10 +157,10 @@ export function Scorecard({
               criteria.bonusPenalty.details.length > 0 && (
                 <ul
                   style={{
-                    margin: "var(--bru-space-1) 0 0",
-                    paddingLeft: "var(--bru-space-4)",
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    margin: "var(--drp-space-1) 0 0",
+                    paddingLeft: "var(--drp-space-4)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   {criteria.bonusPenalty.details.map((d) => (
@@ -175,10 +175,10 @@ export function Scorecard({
       {score?.checklistScore !== undefined && (
         <div
           style={{
-            marginTop: "var(--bru-space-3)",
-            padding: "var(--bru-space-2)",
-            border: "var(--bru-border)",
-            fontSize: "var(--bru-text-sm)",
+            marginTop: "var(--drp-space-3)",
+            padding: "var(--drp-space-2)",
+            border: "var(--drp-border)",
+            fontSize: "var(--drp-text-sm)",
             display: "flex",
             justifyContent: "space-between",
           }}
@@ -219,8 +219,8 @@ function CriteriaRow({
       style={{
         display: "flex",
         alignItems: "center",
-        gap: "var(--bru-space-2)",
-        fontSize: "var(--bru-text-sm)",
+        gap: "var(--drp-space-2)",
+        fontSize: "var(--drp-text-sm)",
         minWidth: 0,
       }}
     >
@@ -244,7 +244,7 @@ function CriteriaRow({
           flex: 1,
           minWidth: 60,
           height: 6,
-          background: "var(--bru-border-color, #e0e0e0)",
+          background: "var(--drp-border-color, #e0e0e0)",
           position: "relative",
           overflow: "hidden",
         }}
@@ -267,7 +267,7 @@ function CriteriaRow({
           textAlign: "right",
           fontWeight: 700,
           color: scoreColor(score, max),
-          fontSize: "var(--bru-text-xs)",
+          fontSize: "var(--drp-text-xs)",
         }}
       >
         {score}/{max}
@@ -278,8 +278,8 @@ function CriteriaRow({
         style={{
           flex: 1,
           minWidth: 0,
-          fontSize: "var(--bru-text-xs)",
-          color: "var(--bru-grey)",
+          fontSize: "var(--drp-text-xs)",
+          color: "var(--drp-grey)",
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",

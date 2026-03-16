@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Button, Input, Radio } from "@doctorproject/react";
 import { BrandProfile, AiProviderType } from "@/lib/types";
 
 interface AiToolsSectionProps {
@@ -36,41 +36,36 @@ function KeyField({
 }) {
   const [show, setShow] = useState(false);
   return (
-    <div className="bru-field">
-      <label className="bru-field__label" htmlFor={id}>
-        {label}
-      </label>
+    <div className="drp-field">
       <div
         style={{ position: "relative", display: "flex", alignItems: "center" }}
       >
-        <input
+        <Input
           id={id}
+          label={label}
           type={show ? "text" : "password"}
-          className="bru-input"
           style={{ width: "100%", paddingRight: "40px" }}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder ?? "Enter API key"}
           autoComplete="off"
         />
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           type="button"
           onClick={() => setShow((s) => !s)}
           style={{
             position: "absolute",
             right: "10px",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
+            bottom: "6px",
             padding: 0,
-            display: "flex",
-            alignItems: "center",
-            color: "var(--bru-grey)",
+            color: "var(--drp-grey)",
           }}
           aria-label={show ? "Hide API key" : "Show API key"}
         >
-          {show ? <EyeOff size={16} /> : <Eye size={16} />}
-        </button>
+          {show ? "⊘" : "⊙"}
+        </Button>
       </div>
     </div>
   );
@@ -79,28 +74,28 @@ function KeyField({
 const ROW_STYLE: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "140px 1fr",
-  gap: "8px",
+  gap: "var(--drp-space-2)",
   alignItems: "baseline",
 };
 
 const VALUE_STYLE: React.CSSProperties = {
-  fontFamily: "var(--bru-font-primary)",
-  fontSize: "var(--bru-text-md)",
-  color: "var(--bru-black)",
+  fontFamily: "var(--drp-font-primary)",
+  fontSize: "var(--drp-text-md)",
+  color: "var(--drp-black)",
 };
 
 const MONO_STYLE: React.CSSProperties = {
   fontFamily: "monospace",
-  fontSize: "var(--bru-text-sm)",
-  color: "var(--bru-grey)",
+  fontSize: "var(--drp-text-sm)",
+  color: "var(--drp-grey)",
 };
 
 const NOT_SET = (
   <span
     style={{
-      color: "var(--bru-grey-85)",
+      color: "var(--drp-grey-85)",
       fontStyle: "italic",
-      fontSize: "var(--bru-text-sm)",
+      fontSize: "var(--drp-text-sm)",
     }}
   >
     Not configured
@@ -119,17 +114,17 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
       PROVIDER_LABELS[profile.aiProvider] ?? profile.aiProvider;
 
     return (
-      <div className="bru-form-stack">
+      <div className="drp-form-stack">
         {/* Active provider */}
         <div style={ROW_STYLE}>
-          <span className="bru-field__label">Provider</span>
+          <span className="drp-field__label">Provider</span>
           <span>
             <span
               style={{
                 display: "inline-block",
-                background: "var(--bru-purple)",
-                color: "#fff",
-                fontSize: "var(--bru-text-xs)",
+                background: "var(--drp-purple)",
+                color: "var(--drp-white)",
+                fontSize: "var(--drp-text-xs)",
                 fontWeight: 700,
                 padding: "2px 8px",
                 textTransform: "uppercase",
@@ -143,7 +138,7 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
 
         {/* Claude API key */}
         <div style={ROW_STYLE}>
-          <span className="bru-field__label">Claude key</span>
+          <span className="drp-field__label">Claude key</span>
           <span style={profile.claudeApiKey ? MONO_STYLE : VALUE_STYLE}>
             {profile.claudeApiKey ? maskKey(profile.claudeApiKey) : NOT_SET}
           </span>
@@ -151,7 +146,7 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
 
         {/* Straico API key */}
         <div style={ROW_STYLE}>
-          <span className="bru-field__label">Straico key</span>
+          <span className="drp-field__label">Straico key</span>
           <span style={profile.straicoApiKey ? MONO_STYLE : VALUE_STYLE}>
             {profile.straicoApiKey ? maskKey(profile.straicoApiKey) : NOT_SET}
           </span>
@@ -160,14 +155,14 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
         {/* Straico model (only if set) */}
         {profile.straicoModel && (
           <div style={ROW_STYLE}>
-            <span className="bru-field__label">Straico model</span>
+            <span className="drp-field__label">Straico model</span>
             <span style={VALUE_STYLE}>{profile.straicoModel}</span>
           </div>
         )}
 
         {/* 1ForAll API key */}
         <div style={ROW_STYLE}>
-          <span className="bru-field__label">1ForAll key</span>
+          <span className="drp-field__label">1ForAll key</span>
           <span style={profile.oneforallApiKey ? MONO_STYLE : VALUE_STYLE}>
             {profile.oneforallApiKey
               ? maskKey(profile.oneforallApiKey)
@@ -178,14 +173,14 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
         {/* 1ForAll model (only if set) */}
         {profile.oneforallModel && (
           <div style={ROW_STYLE}>
-            <span className="bru-field__label">1ForAll model</span>
+            <span className="drp-field__label">1ForAll model</span>
             <span style={VALUE_STYLE}>{profile.oneforallModel}</span>
           </div>
         )}
 
         {/* Perplexity API key */}
         <div style={ROW_STYLE}>
-          <span className="bru-field__label">Perplexity key</span>
+          <span className="drp-field__label">Perplexity key</span>
           <span style={profile.perplexityApiKey ? MONO_STYLE : VALUE_STYLE}>
             {profile.perplexityApiKey
               ? maskKey(profile.perplexityApiKey)
@@ -198,34 +193,27 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
 
   // Edit mode
   return (
-    <div className="bru-form-stack">
+    <div className="drp-form-stack">
       {/* Provider selector */}
-      <div className="bru-field">
-        <label className="bru-field__label">AI Provider</label>
-        <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+      <div className="drp-field">
+        <label className="drp-field__label">AI Provider</label>
+        <div
+          style={{
+            display: "flex",
+            gap: "var(--drp-space-4)",
+            flexWrap: "wrap",
+          }}
+        >
           {PROVIDERS.map((p) => (
-            <label
+            <Radio
               key={p}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                cursor: "pointer",
-                fontFamily: "var(--bru-font-primary)",
-                fontSize: "var(--bru-text-md)",
-                fontWeight: profile.aiProvider === p ? 700 : 400,
-              }}
-            >
-              <input
-                type="radio"
-                name="aiProvider"
-                value={p}
-                checked={profile.aiProvider === p}
-                onChange={() => onChange({ aiProvider: p })}
-                style={{ accentColor: "var(--bru-purple)", cursor: "pointer" }}
-              />
-              {PROVIDER_LABELS[p]}
-            </label>
+              name="aiProvider"
+              value={p}
+              checked={profile.aiProvider === p}
+              onChange={() => onChange({ aiProvider: p })}
+              label={PROVIDER_LABELS[p]}
+              color="purple"
+            />
           ))}
         </div>
       </div>
@@ -247,20 +235,14 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
         onChange={(v) => onChange({ straicoApiKey: v })}
         placeholder="Straico API key"
       />
-      <div className="bru-field">
-        <label className="bru-field__label" htmlFor="ai-straico-model">
-          Straico model
-        </label>
-        <input
-          id="ai-straico-model"
-          type="text"
-          className="bru-input"
-          style={{ width: "100%" }}
-          value={profile.straicoModel}
-          onChange={(e) => onChange({ straicoModel: e.target.value })}
-          placeholder="e.g. openai/gpt-4o-mini"
-        />
-      </div>
+      <Input
+        id="ai-straico-model"
+        label="Straico model"
+        type="text"
+        value={profile.straicoModel}
+        onChange={(e) => onChange({ straicoModel: e.target.value })}
+        placeholder="e.g. openai/gpt-4o-mini"
+      />
 
       {/* 1ForAll */}
       <KeyField
@@ -270,20 +252,14 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
         onChange={(v) => onChange({ oneforallApiKey: v })}
         placeholder="1ForAll API key"
       />
-      <div className="bru-field">
-        <label className="bru-field__label" htmlFor="ai-oneforall-model">
-          1ForAll model
-        </label>
-        <input
-          id="ai-oneforall-model"
-          type="text"
-          className="bru-input"
-          style={{ width: "100%" }}
-          value={profile.oneforallModel}
-          onChange={(e) => onChange({ oneforallModel: e.target.value })}
-          placeholder="e.g. anthropic/claude-4-sonnet"
-        />
-      </div>
+      <Input
+        id="ai-oneforall-model"
+        label="1ForAll model"
+        type="text"
+        value={profile.oneforallModel}
+        onChange={(e) => onChange({ oneforallModel: e.target.value })}
+        placeholder="e.g. anthropic/claude-4-sonnet"
+      />
 
       {/* Perplexity */}
       <KeyField

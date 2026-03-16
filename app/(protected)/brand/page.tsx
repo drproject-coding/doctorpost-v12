@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Loader } from "lucide-react";
+import { Loader, Alert, Button, Heading } from "@doctorproject/react";
 import {
   getBrandProfile,
   updateBrandProfile,
@@ -137,10 +137,16 @@ export default function BrandPage() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-center py-24">
-          <Loader size={32} className="animate-spin text-bru-purple" />
-        </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: 300,
+        }}
+      >
+        <Loader label="Loading brand profile..." />
       </div>
     );
   }
@@ -149,7 +155,7 @@ export default function BrandPage() {
     return (
       <div className="p-6">
         <div className="max-w-6xl mx-auto">
-          <p className="text-red-600 font-medium">{error}</p>
+          <Alert variant="error">{error}</Alert>
         </div>
       </div>
     );
@@ -161,26 +167,35 @@ export default function BrandPage() {
         {/* Page header */}
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-1">Brand</h1>
-            <p className="text-gray-600 font-medium">
+            <Heading level={1}>Brand</Heading>
+            <p style={{ color: "var(--drp-grey)", fontWeight: 500 }}>
               Your brand identity, voice, and strategy in one place.
             </p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <button
-              className="bru-btn bru-btn--primary bru-btn--sm"
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "var(--drp-space-2)",
+            }}
+          >
+            <Button
+              variant="primary"
+              size="sm"
               onClick={() => void handleAudit()}
               disabled={auditing || !aiSettings}
             >
               {auditing ? "Auditing..." : "✦ Audit Brand"}
-            </button>
+            </Button>
             <div style={{ position: "relative" }} ref={exportRef}>
-              <button
-                className="bru-btn bru-btn--secondary bru-btn--sm"
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => setExportOpen((o) => !o)}
               >
                 Export ↓
-              </button>
+              </Button>
               {exportOpen && profile && (
                 <div
                   style={{
@@ -188,8 +203,8 @@ export default function BrandPage() {
                     right: 0,
                     top: "100%",
                     marginTop: 4,
-                    background: "white",
-                    border: "1px solid #121212",
+                    background: "var(--drp-white)",
+                    border: "1px solid var(--drp-black)",
                     zIndex: 50,
                     minWidth: 180,
                   }}
@@ -209,16 +224,14 @@ export default function BrandPage() {
                     },
                     { label: "Print / PDF", action: () => triggerPrint() },
                   ].map((item) => (
-                    <button
+                    <Button
                       key={item.label}
+                      variant="ghost"
                       style={{
                         display: "block",
                         width: "100%",
                         textAlign: "left",
-                        padding: "8px 12px",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
+                        padding: "var(--drp-space-2) var(--drp-space-3)",
                       }}
                       onClick={() => {
                         item.action();
@@ -226,7 +239,7 @@ export default function BrandPage() {
                       }}
                     >
                       {item.label}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               )}
@@ -238,31 +251,29 @@ export default function BrandPage() {
         {auditOpen && (
           <div
             style={{
-              border: "1px solid #121212",
-              padding: 16,
-              marginBottom: 24,
-              background: "#F2F2F2",
+              border: "1px solid var(--drp-black)",
+              padding: "var(--drp-space-4)",
+              marginBottom: "var(--drp-space-6)",
+              background: "var(--drp-cream)",
             }}
           >
             <div
               style={{
                 display: "flex",
+                flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: 12,
+                marginBottom: "var(--drp-space-3)",
               }}
             >
               <strong>Brand Audit</strong>
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setAuditOpen(false)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
               >
                 ✕
-              </button>
+              </Button>
             </div>
             {auditing ? (
               <div>Analyzing your brand...</div>
@@ -271,11 +282,13 @@ export default function BrandPage() {
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr 1fr",
-                  gap: 16,
+                  gap: "var(--drp-space-4)",
                 }}
               >
                 <div>
-                  <strong style={{ color: "#00AA00" }}>Strengths</strong>
+                  <strong style={{ color: "var(--drp-success-dark)" }}>
+                    Strengths
+                  </strong>
                   <ul>
                     {auditResult.strengths.map((s, i) => (
                       <li key={i}>{s}</li>
@@ -283,7 +296,9 @@ export default function BrandPage() {
                   </ul>
                 </div>
                 <div>
-                  <strong style={{ color: "#FF4444" }}>Gaps</strong>
+                  <strong style={{ color: "var(--drp-error-dark)" }}>
+                    Gaps
+                  </strong>
                   <ul>
                     {auditResult.gaps.map((g, i) => (
                       <li key={i}>{g}</li>
@@ -291,7 +306,9 @@ export default function BrandPage() {
                   </ul>
                 </div>
                 <div>
-                  <strong style={{ color: "#631DED" }}>Suggestions</strong>
+                  <strong style={{ color: "var(--drp-purple)" }}>
+                    Suggestions
+                  </strong>
                   <ul>
                     {auditResult.suggestions.map((s, i) => (
                       <li key={i}>{s}</li>
@@ -310,7 +327,7 @@ export default function BrandPage() {
             <BrandSection
               title="Profile"
               tag="PROFILE"
-              color="#631DED"
+              color="var(--drp-purple)"
               onSave={() => handleSave("profile", draft ? { ...draft } : {})}
               saving={savingSection === "profile"}
               onAiGenerate={() => handleAiGenerate("Profile")}

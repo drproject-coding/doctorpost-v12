@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import { Card } from "@bruddle/react";
-import { Check } from "lucide-react";
+import { Card } from "@doctorproject/react";
 import type { TopicProposal } from "@/lib/knowledge/types";
 import type { StrategistOutput } from "@/lib/agents/strategist";
 
@@ -20,9 +19,9 @@ export function TopicProposals({
     <Card variant="raised">
       <h3
         style={{
-          fontSize: "var(--bru-text-h5)",
+          fontSize: "var(--drp-text-h5)",
           fontWeight: 700,
-          marginBottom: "var(--bru-space-2)",
+          marginBottom: "var(--drp-space-2)",
         }}
       >
         Topic Proposals
@@ -30,9 +29,9 @@ export function TopicProposals({
       {output.pillarAssessment && (
         <p
           style={{
-            fontSize: "var(--bru-text-sm)",
-            color: "var(--bru-grey)",
-            marginBottom: "var(--bru-space-4)",
+            fontSize: "var(--drp-text-sm)",
+            color: "var(--drp-grey)",
+            marginBottom: "var(--drp-space-4)",
           }}
         >
           {output.pillarAssessment}
@@ -42,7 +41,7 @@ export function TopicProposals({
       <div
         style={{
           display: "grid",
-          gap: "var(--bru-space-3)",
+          gap: "var(--drp-space-3)",
         }}
       >
         {output.proposals.map((topic, idx) => {
@@ -56,8 +55,8 @@ export function TopicProposals({
               style={{
                 cursor: "pointer",
                 border: isSelected
-                  ? "2px solid var(--bru-purple)"
-                  : "var(--bru-border)",
+                  ? "2px solid var(--drp-purple)"
+                  : "var(--drp-border)",
               }}
               onClick={() => onSelect(topic)}
             >
@@ -71,7 +70,7 @@ export function TopicProposals({
                 <div style={{ flex: 1 }}>
                   <h4
                     style={{
-                      fontSize: "var(--bru-text-md)",
+                      fontSize: "var(--drp-text-md)",
                       fontWeight: 700,
                       margin: 0,
                     }}
@@ -81,18 +80,18 @@ export function TopicProposals({
                   <div
                     style={{
                       display: "flex",
-                      gap: "var(--bru-space-2)",
-                      marginTop: "var(--bru-space-1)",
+                      gap: "var(--drp-space-2)",
+                      marginTop: "var(--drp-space-1)",
                       flexWrap: "wrap",
                     }}
                   >
                     <span
                       style={{
-                        fontSize: "var(--bru-text-xs)",
+                        fontSize: "var(--drp-text-xs)",
                         fontWeight: 700,
                         textTransform: "uppercase",
                         padding: "1px 6px",
-                        background: "var(--bru-purple)",
+                        background: "var(--drp-purple)",
                         color: "white",
                       }}
                     >
@@ -101,8 +100,8 @@ export function TopicProposals({
                     {topic.templateRecommendation && (
                       <span
                         style={{
-                          fontSize: "var(--bru-text-xs)",
-                          color: "var(--bru-grey)",
+                          fontSize: "var(--drp-text-xs)",
+                          color: "var(--drp-grey)",
                         }}
                       >
                         Template: {topic.templateRecommendation}
@@ -111,9 +110,9 @@ export function TopicProposals({
                   </div>
                   <p
                     style={{
-                      fontSize: "var(--bru-text-sm)",
-                      color: "var(--bru-grey)",
-                      margin: "var(--bru-space-2) 0 0",
+                      fontSize: "var(--drp-text-sm)",
+                      color: "var(--drp-grey)",
+                      margin: "var(--drp-space-2) 0 0",
                     }}
                   >
                     {topic.angle}
@@ -121,9 +120,9 @@ export function TopicProposals({
                   {topic.reasoning && (
                     <p
                       style={{
-                        fontSize: "var(--bru-text-xs)",
-                        color: "var(--bru-grey)",
-                        margin: "var(--bru-space-1) 0 0",
+                        fontSize: "var(--drp-text-xs)",
+                        color: "var(--drp-grey)",
+                        margin: "var(--drp-space-1) 0 0",
                         fontStyle: "italic",
                       }}
                     >
@@ -132,10 +131,9 @@ export function TopicProposals({
                   )}
                 </div>
                 {isSelected && (
-                  <Check
-                    size={20}
-                    style={{ color: "var(--bru-purple)", flexShrink: 0 }}
-                  />
+                  <span style={{ color: "var(--drp-purple)", flexShrink: 0 }}>
+                    ✓
+                  </span>
                 )}
               </div>
             </Card>

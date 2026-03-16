@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Card } from "@bruddle/react";
+import { Card } from "@doctorproject/react";
 import type { CampaignPostStatus } from "@/lib/knowledge/types";
 
 interface CampaignAnalyticsProps {
@@ -8,12 +8,13 @@ interface CampaignAnalyticsProps {
   total: number;
 }
 
-const FUNNEL: { status: CampaignPostStatus; label: string; color: string }[] = [
-  { status: "waiting_review", label: "Generated", color: "#e0e0e0" },
-  { status: "validated", label: "Validated", color: "#0066CC" },
-  { status: "in_progress", label: "Writing", color: "#E85D04" },
-  { status: "published", label: "Published", color: "#00AA66" },
-];
+const funnelColors = {
+  generated: "var(--drp-text-muted)",
+  reviewed: "var(--drp-text-secondary)",
+  validated: "var(--drp-purple)",
+  writing: "#E85D04",
+  published: "var(--drp-success-dark)",
+};
 
 export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
   if (total === 0) return null;
@@ -25,37 +26,41 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
     (counts.published || 0);
 
   const funnelData = [
-    { label: "Generated", count: total, color: "#888" },
-    { label: "Reviewed", count: reviewed, color: "#555" },
+    { label: "Generated", count: total, color: funnelColors.generated },
+    { label: "Reviewed", count: reviewed, color: funnelColors.reviewed },
     {
       label: "Validated",
       count:
         (counts.validated || 0) +
         (counts.in_progress || 0) +
         (counts.published || 0),
-      color: "#0066CC",
+      color: funnelColors.validated,
     },
     {
       label: "Writing",
       count: (counts.in_progress || 0) + (counts.published || 0),
-      color: "#E85D04",
+      color: funnelColors.writing,
     },
-    { label: "Published", count: counts.published || 0, color: "#00AA66" },
+    {
+      label: "Published",
+      count: counts.published || 0,
+      color: funnelColors.published,
+    },
   ];
 
   return (
     <Card
       variant="flat"
-      style={{ marginTop: "var(--bru-space-4)", padding: "var(--bru-space-4)" }}
+      style={{ marginTop: "var(--drp-space-4)", padding: "var(--drp-space-4)" }}
     >
       <div
         style={{
-          fontSize: "var(--bru-text-xs)",
+          fontSize: "var(--drp-text-xs)",
           fontWeight: 700,
           textTransform: "uppercase",
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           letterSpacing: "0.05em",
-          marginBottom: "var(--bru-space-3)",
+          marginBottom: "var(--drp-space-3)",
         }}
       >
         Idea Funnel
@@ -63,7 +68,7 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
       <div
         style={{
           display: "flex",
-          gap: "var(--bru-space-2)",
+          gap: "var(--drp-space-2)",
           alignItems: "flex-end",
           flexWrap: "wrap",
         }}
@@ -86,8 +91,8 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
               {i > 0 && (
                 <div
                   style={{
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                     alignSelf: "flex-start",
                     marginBottom: 2,
                   }}
@@ -101,15 +106,14 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
                   height: barHeight,
                   background: step.color,
                   opacity: step.count === 0 ? 0.2 : 1,
-                  borderRadius: 2,
                   minHeight: 4,
                 }}
               />
               <div
                 style={{
-                  fontSize: "var(--bru-text-xs)",
+                  fontSize: "var(--drp-text-xs)",
                   fontWeight: 700,
-                  color: step.count > 0 ? step.color : "var(--bru-grey)",
+                  color: step.count > 0 ? step.color : "var(--drp-grey)",
                 }}
               >
                 {step.count}
@@ -117,7 +121,7 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
               <div
                 style={{
                   fontSize: 10,
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                   textAlign: "center",
                   whiteSpace: "nowrap",
                 }}
@@ -127,7 +131,7 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
               <div
                 style={{
                   fontSize: 10,
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                 }}
               >
                 {pct}%
@@ -139,9 +143,9 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
       {counts.rejected > 0 && (
         <div
           style={{
-            marginTop: "var(--bru-space-3)",
-            fontSize: "var(--bru-text-xs)",
-            color: "#990000",
+            marginTop: "var(--drp-space-3)",
+            fontSize: "var(--drp-text-xs)",
+            color: "var(--drp-error-dark)",
           }}
         >
           {counts.rejected} idea{counts.rejected !== 1 ? "s" : ""} rejected

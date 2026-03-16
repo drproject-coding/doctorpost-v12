@@ -5,6 +5,21 @@ import {
   type CalendarSlot,
 } from "../../components/campaigns/CampaignCalendar";
 
+// Mock next/navigation
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({ push: jest.fn() }),
+}));
+
+// Mock @doctorproject/react components used by CampaignCalendar and sub-components
+jest.mock("@doctorproject/react", () => ({
+  Card: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  Button: ({ children, onClick, ...props }: any) => (
+    <button onClick={onClick} {...props}>
+      {children}
+    </button>
+  ),
+}));
+
 describe("CampaignCalendar", () => {
   const defaultTopicCard = {
     headline: "Test Topic",
@@ -67,7 +82,8 @@ describe("CampaignCalendar", () => {
     );
 
     expect(screen.getByText("How to Build Authority")).toBeInTheDocument();
-    expect(screen.getByText("Authority")).toBeInTheDocument();
+    // "Authority" appears in both filter button and slot card
+    expect(screen.getAllByText("Authority").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText(/Tue, Mar 10/i)).toBeInTheDocument();
   });
 
@@ -108,7 +124,8 @@ describe("CampaignCalendar", () => {
     );
 
     expect(screen.getByText("Topic Without Template")).toBeInTheDocument();
-    expect(screen.getByText("Education")).toBeInTheDocument();
+    // "Education" appears in both filter button and slot card
+    expect(screen.getAllByText("Education").length).toBeGreaterThanOrEqual(1);
   });
 
   it("correctly groups slots by week", () => {
@@ -164,8 +181,9 @@ describe("CampaignCalendar", () => {
       <CampaignCalendar slots={slots} durationWeeks={1} postsPerWeek={3} />,
     );
 
-    expect(screen.getByText("Authority")).toBeInTheDocument();
-    expect(screen.getByText("Engagement")).toBeInTheDocument();
-    expect(screen.getByText("Trust")).toBeInTheDocument();
+    // Pillar names appear in both filter buttons and slot cards
+    expect(screen.getAllByText("Authority").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Engagement").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Trust").length).toBeGreaterThanOrEqual(1);
   });
 });

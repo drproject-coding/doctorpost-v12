@@ -1,7 +1,17 @@
 "use client";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import { Alert, Button, Card } from "@bruddle/react";
+import {
+  Alert,
+  Button,
+  Card,
+  Heading,
+  Icon,
+  Input,
+  Tabs,
+  Textarea,
+  Loader as BruLoader,
+} from "@doctorproject/react";
 import {
   BrandProfile,
   SubtopicSuggestion,
@@ -20,15 +30,6 @@ import {
 } from "@/lib/api";
 import { postStructureOptions, contentAngleOptions } from "@/lib/dropdownData";
 import { getSmartDefaults } from "@/lib/post-creation/smartDefaults";
-import {
-  Search,
-  TrendingUp,
-  ArrowRight,
-  Loader,
-  ChevronDown,
-  ChevronUp,
-  Eye,
-} from "lucide-react";
 import EnhancedDropdown from "@/components/EnhancedDropdown";
 import ContentAngleChips from "@/components/create/ContentAngleChips";
 import PostStructureCards from "@/components/create/PostStructureCards";
@@ -358,7 +359,7 @@ export default function CreatePage() {
           minHeight: 200,
         }}
       >
-        <p>Loading brand profile...</p>
+        <BruLoader label="Loading brand profile..." />
       </Card>
     );
   }
@@ -380,36 +381,20 @@ export default function CreatePage() {
 
   return (
     <>
-      <h1
-        style={{
-          fontSize: "var(--bru-text-h3)",
-          fontWeight: 700,
-          marginBottom: "var(--bru-space-6)",
-        }}
-      >
-        Create New Post
-      </h1>
+      <div style={{ marginBottom: "var(--drp-space-6)" }}>
+        <Heading level={1}>Create New Post</Heading>
+      </div>
 
       {/* Sub-navigation tabs */}
-      <div
-        style={{
-          display: "flex",
-          gap: "var(--bru-space-2)",
-          marginBottom: "var(--bru-space-6)",
-        }}
-      >
-        <Button
-          onClick={() => setActiveSubNav("generate-post")}
-          variant={activeSubNav === "generate-post" ? "primary" : undefined}
-        >
-          Generate Post
-        </Button>
-        <Button
-          onClick={() => setActiveSubNav("content-strategy")}
-          variant={activeSubNav === "content-strategy" ? "primary" : undefined}
-        >
-          Content Strategy
-        </Button>
+      <div style={{ marginBottom: "var(--drp-space-6)" }}>
+        <Tabs
+          items={[
+            { label: "Generate Post", key: "generate-post" },
+            { label: "Content Strategy", key: "content-strategy" },
+          ]}
+          activeKey={activeSubNav}
+          onChange={setActiveSubNav}
+        />
       </div>
 
       {activeSubNav === "generate-post" && (
@@ -417,111 +402,89 @@ export default function CreatePage() {
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gap: "var(--bru-space-6)",
+            gap: "var(--drp-space-6)",
           }}
           className="create-grid"
         >
           {/* Left Column: Input Form */}
           <Card variant="raised">
-            <h2
-              style={{
-                fontSize: "var(--bru-text-h5)",
-                fontWeight: 700,
-                marginBottom: "var(--bru-space-4)",
-              }}
-            >
-              Post Details
-            </h2>
+            <div style={{ marginBottom: "var(--drp-space-4)" }}>
+              <Heading level={2}>Post Details</Heading>
+            </div>
 
-            <div className="bru-form-stack">
+            <div className="drp-form-stack">
               {/* Topic field */}
-              <div className="bru-field bru-field--has-icon">
-                <label htmlFor="topic-input" className="bru-field__label">
-                  Topic
-                </label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type="text"
-                    id="topic-input"
-                    className="bru-input"
-                    style={{ width: "100%", paddingRight: 40 }}
-                    value={topic}
-                    onChange={handleTopicChange}
-                    placeholder="e.g., 'AI in healthcare'"
-                  />
-                  <button
-                    onClick={() => void handleFindSubtopics()}
-                    disabled={loadingSubtopics || !topic.trim()}
-                    aria-label="Find Subtopics"
-                    style={{
-                      position: "absolute",
-                      right: 8,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: 4,
-                    }}
-                  >
-                    {loadingSubtopics ? (
-                      <Loader
-                        size={20}
-                        className="animate-spin"
-                        style={{ color: "var(--bru-purple)" }}
-                      />
-                    ) : (
-                      <Search size={20} style={{ color: "var(--bru-grey)" }} />
-                    )}
-                  </button>
-                </div>
+              <div style={{ position: "relative" }}>
+                <Input
+                  label="Topic"
+                  id="topic-input"
+                  type="text"
+                  style={{ width: "100%", paddingRight: 40 }}
+                  value={topic}
+                  onChange={handleTopicChange}
+                  placeholder="e.g., 'AI in healthcare'"
+                />
+                <Button
+                  onClick={() => void handleFindSubtopics()}
+                  disabled={loadingSubtopics || !topic.trim()}
+                  aria-label="Find Subtopics"
+                  variant="ghost"
+                  style={{
+                    position: "absolute",
+                    right: 8,
+                    bottom: 8,
+                    padding: 4,
+                  }}
+                >
+                  {loadingSubtopics ? "…" : "⌕"}
+                </Button>
 
                 {subtopics.length > 0 && (
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: "var(--bru-space-2)",
-                      marginTop: "var(--bru-space-3)",
+                      gap: "var(--drp-space-2)",
+                      marginTop: "var(--drp-space-3)",
                     }}
                   >
-                    <span className="bru-field__label">
+                    <span className="drp-field__label">
                       Subtopic Suggestions
                     </span>
                     {subtopics.map((sub) => (
-                      <button
+                      <Button
                         key={sub.id}
                         type="button"
                         onClick={() => void handleSelectSubtopic(sub)}
+                        variant="ghost"
                         style={{
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "space-between",
-                          padding: "var(--bru-space-2) var(--bru-space-3)",
+                          padding: "var(--drp-space-2) var(--drp-space-3)",
                           border:
                             selectedSubtopic?.id === sub.id
-                              ? "2px solid var(--bru-purple)"
-                              : "var(--bru-border)",
+                              ? "2px solid var(--drp-purple)"
+                              : "var(--drp-border)",
                           background:
                             selectedSubtopic?.id === sub.id
-                              ? "var(--bru-purple-20)"
-                              : "var(--bru-cream)",
-                          cursor: "pointer",
+                              ? "var(--drp-purple-20)"
+                              : "var(--drp-cream)",
                           textAlign: "left",
                           width: "100%",
-                          fontFamily: "var(--bru-font-primary)",
-                          fontSize: "var(--bru-text-md)",
+                          fontFamily: "var(--drp-font-primary)",
+                          fontSize: "var(--drp-text-md)",
                         }}
                       >
                         <span style={{ fontWeight: 500 }}>{sub.text}</span>
                         <span
-                          className="bru-tag bru-tag--filled"
+                          className="drp-tag drp-tag--filled"
                           style={{
                             fontSize: 11,
                             padding: "2px 8px",
                             background:
                               sub.source === "google_trends"
-                                ? "var(--bru-purple-20)"
+                                ? "var(--drp-purple-20)"
                                 : sub.source === "google_questions"
                                   ? "rgba(0, 170, 0, 0.12)"
                                   : "rgba(255, 170, 0, 0.15)",
@@ -529,54 +492,44 @@ export default function CreatePage() {
                         >
                           {getSourceBadgeLabel(sub.source)}
                         </span>
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 )}
               </div>
 
               {/* Core Takeaway */}
-              <div className="bru-field">
-                <label htmlFor="coreTakeaway" className="bru-field__label">
-                  Core Takeaway (Optional)
-                </label>
-                <textarea
-                  id="coreTakeaway"
-                  className="bru-input"
-                  style={{ width: "100%", minHeight: 80, resize: "vertical" }}
-                  value={coreTakeaway}
-                  onChange={(e) => setCoreTakeaway(e.target.value)}
-                  placeholder="What's the single most important thing readers should remember?"
-                />
-              </div>
+              <Textarea
+                label="Core Takeaway (Optional)"
+                id="coreTakeaway"
+                style={{ width: "100%", minHeight: 80, resize: "vertical" }}
+                value={coreTakeaway}
+                onChange={(e) => setCoreTakeaway(e.target.value)}
+                placeholder="What's the single most important thing readers should remember?"
+              />
 
               {/* CTA Goal */}
-              <div className="bru-field">
-                <label htmlFor="ctaGoal" className="bru-field__label">
-                  Call to Action Goal (Optional)
-                </label>
-                <input
-                  type="text"
-                  id="ctaGoal"
-                  className="bru-input"
-                  style={{ width: "100%" }}
-                  value={ctaGoal}
-                  onChange={(e) => setCtaGoal(e.target.value)}
-                  placeholder="e.g., 'Visit my website', 'Share your thoughts'"
-                />
-              </div>
+              <Input
+                label="Call to Action Goal (Optional)"
+                id="ctaGoal"
+                type="text"
+                style={{ width: "100%" }}
+                value={ctaGoal}
+                onChange={(e) => setCtaGoal(e.target.value)}
+                placeholder="e.g., 'Visit my website', 'Share your thoughts'"
+              />
 
               {/* Post Structure */}
               <div
-                className="bru-field"
+                className="drp-field"
                 style={{
-                  borderLeft: "3px solid #631DED",
-                  paddingLeft: "var(--bru-space-3)",
+                  borderLeft: "3px solid var(--drp-purple)",
+                  paddingLeft: "var(--drp-space-3)",
                 }}
               >
                 <label
-                  className="bru-field__label"
-                  style={{ color: "#631DED" }}
+                  className="drp-field__label"
+                  style={{ color: "var(--drp-purple)" }}
                 >
                   Post Structure
                 </label>
@@ -588,15 +541,15 @@ export default function CreatePage() {
 
               {/* Content Angle */}
               <div
-                className="bru-field"
+                className="drp-field"
                 style={{
-                  borderLeft: "3px solid #00A896",
-                  paddingLeft: "var(--bru-space-3)",
+                  borderLeft: "3px solid var(--drp-mint)",
+                  paddingLeft: "var(--drp-space-3)",
                 }}
               >
                 <label
-                  className="bru-field__label"
-                  style={{ color: "#00A896" }}
+                  className="drp-field__label"
+                  style={{ color: "var(--drp-mint)" }}
                 >
                   Content Angle
                 </label>
@@ -611,10 +564,10 @@ export default function CreatePage() {
 
               {/* Content Pillar */}
               <div
-                className="bru-field"
+                className="drp-field"
                 style={{
-                  borderLeft: "3px solid #059669",
-                  paddingLeft: "var(--bru-space-3)",
+                  borderLeft: "3px solid var(--drp-success-dark)",
+                  paddingLeft: "var(--drp-space-3)",
                 }}
               >
                 <EnhancedDropdown
@@ -633,51 +586,44 @@ export default function CreatePage() {
                   style={{
                     border: "1px solid rgba(99,29,237,0.2)",
                     background: "rgba(99,29,237,0.03)",
-                    padding: "var(--bru-space-3)",
+                    padding: "var(--drp-space-3)",
                   }}
                 >
-                  <button
+                  <Button
                     type="button"
                     onClick={() => setShowRecommendationReasoning((v) => !v)}
+                    variant="ghost"
                     style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
                       width: "100%",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
                       padding: 0,
-                      fontFamily: "var(--bru-font-primary)",
-                      fontSize: "var(--bru-text-sm)",
+                      fontSize: "var(--drp-text-sm)",
                       fontWeight: 600,
-                      color: "var(--bru-purple)",
+                      color: "var(--drp-purple)",
                     }}
                   >
                     <span>
-                      <TrendingUp
-                        size={14}
-                        style={{ verticalAlign: "middle", marginRight: 4 }}
-                      />
                       AI Recommendations (
                       {Math.round(recommendation.confidence * 100)}% confidence)
                     </span>
                     {showRecommendationReasoning ? (
-                      <ChevronUp size={16} />
+                      <span>▲</span>
                     ) : (
-                      <ChevronDown size={16} />
+                      <span>▼</span>
                     )}
-                  </button>
+                  </Button>
 
                   {showRecommendationReasoning && (
                     <div
                       style={{
-                        marginTop: "var(--bru-space-3)",
+                        marginTop: "var(--drp-space-3)",
                         display: "flex",
                         flexDirection: "column",
-                        gap: "var(--bru-space-2)",
-                        fontSize: "var(--bru-text-sm)",
-                        color: "var(--bru-grey)",
+                        gap: "var(--drp-space-2)",
+                        fontSize: "var(--drp-text-sm)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       {recommendation.reasoning.contentAngle && (
@@ -717,13 +663,10 @@ export default function CreatePage() {
                 }
               >
                 {loadingRecommendation ? (
-                  <>
-                    <Loader size={18} className="animate-spin" />
-                    Getting Recommendations...
-                  </>
+                  "Getting Recommendations…"
                 ) : (
                   <>
-                    <ArrowRight size={18} />
+                    <Icon name="arrow-right" size="sm" />
                     Generate Post
                   </>
                 )}
@@ -735,37 +678,34 @@ export default function CreatePage() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "var(--bru-space-2)",
+                    gap: "var(--drp-space-2)",
                     flexWrap: "wrap",
-                    fontSize: "var(--bru-text-sm)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-sm)",
+                    color: "var(--drp-grey)",
                   }}
                 >
-                  <Eye size={14} />
+                  <Icon name="eye" size="sm" />
                   <span>Preview tone prompt:</span>
                   {profile.tones.map((toneId) => {
                     const tone = enhancedToneOptions.find(
                       (t) => t.id === toneId,
                     );
                     return (
-                      <button
+                      <Button
                         key={toneId}
                         type="button"
                         onClick={() => setPreviewToneId(toneId)}
+                        variant="ghost"
                         style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          fontFamily: "var(--bru-font-primary)",
-                          fontSize: "var(--bru-text-sm)",
-                          color: "var(--bru-purple)",
+                          fontSize: "var(--drp-text-sm)",
+                          color: "var(--drp-purple)",
                           fontWeight: 600,
                           textDecoration: "underline",
                           padding: 0,
                         }}
                       >
                         {tone?.label ?? toneId}
-                      </button>
+                      </Button>
                     );
                   })}
                 </div>
@@ -791,7 +731,7 @@ export default function CreatePage() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "var(--bru-space-4)",
+              gap: "var(--drp-space-4)",
             }}
           >
             <PostGenerator
@@ -803,15 +743,13 @@ export default function CreatePage() {
               onContentGenerated={handleContentGenerated}
             />
             {generatedContent && (
-              <div className="bru-form-actions">
+              <div className="drp-form-actions">
                 <Button
                   onClick={() => void handleSaveDraft()}
+                  variant="outline"
                   style={{ flex: 1 }}
                   disabled={saving}
                 >
-                  {saving ? (
-                    <Loader size={16} className="animate-spin" />
-                  ) : null}
                   {saving ? "Saving…" : "Save to Library"}
                 </Button>
                 <Button
@@ -830,67 +768,67 @@ export default function CreatePage() {
 
       {activeSubNav === "content-strategy" && (
         <Card variant="raised">
-          <h2
-            style={{
-              fontSize: "var(--bru-text-h5)",
-              fontWeight: 700,
-              marginBottom: "var(--bru-space-4)",
-            }}
-          >
-            Your Content Strategy
-          </h2>
-          <div className="bru-form-stack">
-            <div className="bru-field">
-              <h3 className="bru-field__label">Content Strategy Overview</h3>
+          <div style={{ marginBottom: "var(--drp-space-4)" }}>
+            <Heading level={2}>Your Content Strategy</Heading>
+          </div>
+          <div className="drp-form-stack">
+            <div className="drp-field">
+              <h3 className="drp-field__label">Content Strategy Overview</h3>
               <p>
                 {profile.contentStrategy ??
                   "No content strategy defined yet. Go to Settings to add one."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Brand Definition</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Brand Definition</h3>
               <p>
                 {profile.definition ??
                   "No brand definition provided. Go to Settings to add one."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Copy Guidelines</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Copy Guidelines</h3>
               <p>
                 {profile.copyGuideline ??
                   "No copy guidelines set. Go to Settings to add them."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Audience</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Audience</h3>
               <p>
                 {profile.audience.join(", ") ||
                   "No audience defined. Go to Settings to add one."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Tones</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Tones</h3>
               <p>
                 {profile.tones.join(", ") ||
                   "No tones defined. Go to Settings to add them."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Offers</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Offers</h3>
               <p>
                 {profile.offers.join(", ") ||
                   "No offers defined. Go to Settings to add them."}
               </p>
             </div>
-            <div className="bru-field">
-              <h3 className="bru-field__label">Taboos</h3>
+            <div className="drp-field">
+              <h3 className="drp-field__label">Taboos</h3>
               <p>
                 {profile.taboos.join(", ") ||
                   "No taboo topics defined. Go to Settings to add them."}
               </p>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Link href="/settings" className="bru-btn">
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Link href="/settings" className="drp-btn">
                 Edit Strategy in Settings
               </Link>
             </div>

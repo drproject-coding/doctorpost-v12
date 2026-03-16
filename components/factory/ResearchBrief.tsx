@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Card } from "@bruddle/react";
+import { Card } from "@doctorproject/react";
 import type { DiscoveryBrief, TopicProposal } from "@/lib/knowledge/types";
 
 interface ResearchBriefProps {
@@ -13,9 +13,9 @@ export function ResearchBrief({ brief, refinedTopic }: ResearchBriefProps) {
     <Card variant="raised">
       <h3
         style={{
-          fontSize: "var(--bru-text-h5)",
+          fontSize: "var(--drp-text-h5)",
           fontWeight: 700,
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         Research Brief
@@ -24,24 +24,24 @@ export function ResearchBrief({ brief, refinedTopic }: ResearchBriefProps) {
       {refinedTopic && (
         <div
           style={{
-            padding: "var(--bru-space-3)",
-            background: "var(--bru-cream)",
-            border: "var(--bru-border)",
-            marginBottom: "var(--bru-space-4)",
+            padding: "var(--drp-space-3)",
+            background: "var(--drp-cream)",
+            border: "var(--drp-border)",
+            marginBottom: "var(--drp-space-4)",
           }}
         >
           <h4
             style={{
-              fontSize: "var(--bru-text-md)",
+              fontSize: "var(--drp-text-md)",
               fontWeight: 700,
-              margin: "0 0 var(--bru-space-1)",
+              margin: "0 0 var(--drp-space-1)",
             }}
           >
             Refined Topic
           </h4>
           <p
             style={{
-              fontSize: "var(--bru-text-sm)",
+              fontSize: "var(--drp-text-sm)",
               fontWeight: 700,
               margin: 0,
             }}
@@ -50,9 +50,9 @@ export function ResearchBrief({ brief, refinedTopic }: ResearchBriefProps) {
           </p>
           <p
             style={{
-              fontSize: "var(--bru-text-sm)",
-              color: "var(--bru-grey)",
-              margin: "var(--bru-space-1) 0 0",
+              fontSize: "var(--drp-text-sm)",
+              color: "var(--drp-grey)",
+              margin: "var(--drp-space-1) 0 0",
             }}
           >
             {refinedTopic.angle}
@@ -62,32 +62,32 @@ export function ResearchBrief({ brief, refinedTopic }: ResearchBriefProps) {
 
       {/* Subtopic Angles */}
       {brief.subtopicAngles.length > 0 && (
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <h4
             style={{
-              fontSize: "var(--bru-text-md)",
+              fontSize: "var(--drp-text-md)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-2)",
+              marginBottom: "var(--drp-space-2)",
             }}
           >
             Subtopic Angles
           </h4>
-          <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
+          <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
             {brief.subtopicAngles.map((a, i) => (
               <div
                 key={`angle-${i}`}
                 style={{
-                  padding: "var(--bru-space-2)",
-                  border: "var(--bru-border)",
-                  fontSize: "var(--bru-text-sm)",
+                  padding: "var(--drp-space-2)",
+                  border: "var(--drp-border)",
+                  fontSize: "var(--drp-text-sm)",
                 }}
               >
                 <strong>{a.angle}</strong>
                 <span
                   style={{
-                    marginLeft: "var(--bru-space-2)",
-                    color: "var(--bru-grey)",
-                    fontSize: "var(--bru-text-xs)",
+                    marginLeft: "var(--drp-space-2)",
+                    color: "var(--drp-grey)",
+                    fontSize: "var(--drp-text-xs)",
                   }}
                 >
                   {a.source} — {a.relevance}
@@ -100,12 +100,12 @@ export function ResearchBrief({ brief, refinedTopic }: ResearchBriefProps) {
 
       {/* Pain Points */}
       {brief.painPoints.length > 0 && (
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <h4
             style={{
-              fontSize: "var(--bru-text-md)",
+              fontSize: "var(--drp-text-md)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-2)",
+              marginBottom: "var(--drp-space-2)",
             }}
           >
             Pain Points
@@ -114,18 +114,18 @@ export function ResearchBrief({ brief, refinedTopic }: ResearchBriefProps) {
             <div
               key={`pain-${i}`}
               style={{
-                padding: "var(--bru-space-2)",
-                border: "var(--bru-border)",
-                fontSize: "var(--bru-text-sm)",
-                marginBottom: "var(--bru-space-2)",
+                padding: "var(--drp-space-2)",
+                border: "var(--drp-border)",
+                fontSize: "var(--drp-text-sm)",
+                marginBottom: "var(--drp-space-2)",
               }}
             >
               <em>&ldquo;{p.quote}&rdquo;</em>
               <div
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-grey)",
-                  marginTop: "var(--bru-space-1)",
+                  fontSize: "var(--drp-text-xs)",
+                  color: "var(--drp-grey)",
+                  marginTop: "var(--drp-space-1)",
                 }}
               >
                 {p.source} — {p.context}
@@ -137,20 +137,20 @@ export function ResearchBrief({ brief, refinedTopic }: ResearchBriefProps) {
 
       {/* Current Debates */}
       {brief.currentDebates.length > 0 && (
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <h4
             style={{
-              fontSize: "var(--bru-text-md)",
+              fontSize: "var(--drp-text-md)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-2)",
+              marginBottom: "var(--drp-space-2)",
             }}
           >
             Current Debates
           </h4>
           <ul
             style={{
-              paddingLeft: "var(--bru-space-4)",
-              fontSize: "var(--bru-text-sm)",
+              paddingLeft: "var(--drp-space-4)",
+              fontSize: "var(--drp-text-sm)",
               margin: 0,
             }}
           >
@@ -166,17 +166,17 @@ export function ResearchBrief({ brief, refinedTopic }: ResearchBriefProps) {
         <div>
           <h4
             style={{
-              fontSize: "var(--bru-text-md)",
+              fontSize: "var(--drp-text-md)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-2)",
+              marginBottom: "var(--drp-space-2)",
             }}
           >
             Questions People Are Asking
           </h4>
           <ul
             style={{
-              paddingLeft: "var(--bru-space-4)",
-              fontSize: "var(--bru-text-sm)",
+              paddingLeft: "var(--drp-space-4)",
+              fontSize: "var(--drp-text-sm)",
               margin: 0,
             }}
           >

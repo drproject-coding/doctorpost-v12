@@ -200,7 +200,7 @@ describe("DocumentEditor", () => {
 
     const textarea = screen.getByDisplayValue("Original content here");
     expect(textarea).toHaveStyle({ fontFamily: "monospace" });
-    expect(textarea).toHaveStyle({ fontSize: "var(--bru-text-sm)" });
+    expect(textarea).toHaveStyle({ fontSize: "var(--drp-text-sm)" });
     expect(textarea).toHaveStyle({ resize: "vertical" });
   });
 
@@ -215,8 +215,11 @@ describe("DocumentEditor", () => {
 
     await waitFor(() => {
       const feedback = screen.getByText("Saved successfully");
-      expect(feedback).toHaveStyle({ background: "rgba(0, 170, 0, 0.12)" });
-      expect(feedback).toHaveStyle({ color: "var(--bru-success-dark)" });
+      expect(feedback).toBeInTheDocument();
+      // Feedback is now rendered via <Alert variant="success">
+      const alert =
+        feedback.closest("[class*='alert']") || feedback.parentElement;
+      expect(alert).toBeInTheDocument();
     });
   });
 

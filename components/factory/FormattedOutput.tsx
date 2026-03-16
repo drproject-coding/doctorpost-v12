@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@bruddle/react";
-import { Copy, Check, Smartphone, Monitor, Save } from "lucide-react";
+import { Button, Card } from "@doctorproject/react";
 import type { FormattedPost } from "@/lib/knowledge/types";
 
 type PreviewMode = "mobile" | "desktop";
@@ -15,7 +14,11 @@ interface FormattedOutputProps {
   isSaving?: boolean;
 }
 
-export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps) {
+export function FormattedOutput({
+  post,
+  onSave,
+  isSaving,
+}: FormattedOutputProps) {
   const [copied, setCopied] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile");
   const [showMore, setShowMore] = useState(false);
@@ -54,88 +57,54 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         <h3
           style={{
-            fontSize: "var(--bru-text-h5)",
+            fontSize: "var(--drp-text-h5)",
             fontWeight: 700,
             margin: 0,
           }}
         >
           Formatted Post
         </h3>
-        <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
+        <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
           {/* Preview mode toggle */}
-          <div
-            style={{
-              display: "flex",
-              border: "1px solid var(--bru-border-color, #e0e0e0)",
-              overflow: "hidden",
-            }}
-          >
-            <button
+          <div style={{ display: "flex", gap: "var(--drp-space-1)" }}>
+            <Button
+              size="sm"
+              variant={previewMode === "mobile" ? "primary" : "ghost"}
               onClick={() => {
                 setPreviewMode("mobile");
                 setShowMore(false);
               }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 4,
-                padding: "4px 8px",
-                fontSize: "var(--bru-text-xs)",
-                background:
-                  previewMode === "mobile"
-                    ? "var(--bru-purple)"
-                    : "transparent",
-                color: previewMode === "mobile" ? "white" : "var(--bru-grey)",
-                border: "none",
-                cursor: "pointer",
-              }}
             >
-              <Smartphone size={12} />
               Mobile
-            </button>
-            <button
+            </Button>
+            <Button
+              size="sm"
+              variant={previewMode === "desktop" ? "primary" : "ghost"}
               onClick={() => {
                 setPreviewMode("desktop");
                 setShowMore(false);
               }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 4,
-                padding: "4px 8px",
-                fontSize: "var(--bru-text-xs)",
-                background:
-                  previewMode === "desktop"
-                    ? "var(--bru-purple)"
-                    : "transparent",
-                color: previewMode === "desktop" ? "white" : "var(--bru-grey)",
-                border: "none",
-                cursor: "pointer",
-              }}
             >
-              <Monitor size={12} />
               Desktop
-            </button>
+            </Button>
           </div>
           <Button
             onClick={handleCopy}
-            style={{ fontSize: "var(--bru-text-sm)" }}
+            style={{ fontSize: "var(--drp-text-sm)" }}
           >
-            {copied ? <Check size={14} /> : <Copy size={14} />}
-            {copied ? "Copied!" : "Copy"}
+            {copied ? "✓" : "⎘"} {copied ? "Copied!" : "Copy"}
           </Button>
           {onSave && (
             <Button
               onClick={onSave}
               disabled={isSaving}
-              style={{ fontSize: "var(--bru-text-sm)" }}
+              style={{ fontSize: "var(--drp-text-sm)" }}
             >
-              <Save size={14} />
               {isSaving ? "Saving..." : "Save to Library"}
             </Button>
           )}
@@ -148,7 +117,6 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
           maxWidth: containerWidth,
           margin: "0 auto",
           background: "white",
-          borderRadius: 8,
           boxShadow: "0 0 0 1px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.1)",
           overflow: "hidden",
         }}
@@ -167,7 +135,7 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
               width: 48,
               height: 48,
               borderRadius: "50%",
-              background: "var(--bru-purple)",
+              background: "var(--drp-purple)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -180,13 +148,27 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
             Y
           </div>
           <div>
-            <div style={{ fontWeight: 600, fontSize: 14, color: "#191919" }}>
+            <div
+              style={{
+                fontWeight: 600,
+                fontSize: 14,
+                color: "var(--drp-black)",
+              }}
+            >
               Your Name
             </div>
-            <div style={{ fontSize: 12, color: "#666666", lineHeight: 1.3 }}>
+            <div
+              style={{
+                fontSize: 12,
+                color: "var(--drp-text-muted)",
+                lineHeight: 1.3,
+              }}
+            >
               Your headline here
             </div>
-            <div style={{ fontSize: 12, color: "#666666" }}>Just now</div>
+            <div style={{ fontSize: 12, color: "var(--drp-text-muted)" }}>
+              Just now
+            </div>
           </div>
         </div>
 
@@ -201,45 +183,31 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
               fontFamily:
                 '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
               margin: 0,
-              color: "#191919",
+              color: "var(--drp-black)",
             }}
           >
             {displayContent || "(No content)"}
             {isTruncated && !showMore && "..."}
           </pre>
           {isTruncated && !showMore && (
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setShowMore(true)}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#666666",
-                cursor: "pointer",
-                fontSize: 14,
-                fontWeight: 600,
-                padding: "4px 0",
-                display: "block",
-              }}
+              style={{ padding: "4px 0", display: "block" }}
             >
               ...see more
-            </button>
+            </Button>
           )}
           {showMore && isTruncated && (
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setShowMore(false)}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#666666",
-                cursor: "pointer",
-                fontSize: 14,
-                fontWeight: 600,
-                padding: "4px 0",
-                display: "block",
-              }}
+              style={{ padding: "4px 0", display: "block" }}
             >
               show less
-            </button>
+            </Button>
           )}
         </div>
 
@@ -247,11 +215,11 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
         <div
           style={{
             padding: "8px 16px",
-            borderTop: "1px solid #e0e0e0",
+            borderTop: "var(--drp-border)",
             display: "flex",
             justifyContent: "space-between",
             fontSize: 12,
-            color: "#666666",
+            color: "var(--drp-text-muted)",
           }}
         >
           <span>0 reactions</span>
@@ -262,12 +230,12 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
         <div
           style={{
             padding: "4px 16px 8px",
-            borderTop: "1px solid #e0e0e0",
+            borderTop: "var(--drp-border)",
             display: "flex",
             justifyContent: "space-around",
             fontSize: 13,
             fontWeight: 600,
-            color: "#666666",
+            color: "var(--drp-text-muted)",
           }}
         >
           <span>Like</span>
@@ -280,18 +248,18 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
       {/* Hook position indicator */}
       <div
         style={{
-          marginTop: "var(--bru-space-3)",
+          marginTop: "var(--drp-space-3)",
           textAlign: "center",
-          fontSize: "var(--bru-text-xs)",
-          color: "var(--bru-grey)",
+          fontSize: "var(--drp-text-xs)",
+          color: "var(--drp-grey)",
         }}
       >
         Hook is{" "}
         <strong
           style={{
             color: postHookBeforeFold[previewMode]
-              ? "var(--bru-success-dark, #2d7a3a)"
-              : "var(--bru-error-dark, #c0392b)",
+              ? "var(--drp-success-dark, #2d7a3a)"
+              : "var(--drp-error-dark, #c0392b)",
           }}
         >
           {postHookBeforeFold[previewMode] ? "above" : "below"}
@@ -302,10 +270,10 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
       {/* Metadata */}
       <div
         style={{
-          marginTop: "var(--bru-space-4)",
+          marginTop: "var(--drp-space-4)",
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-          gap: "var(--bru-space-2)",
+          gap: "var(--drp-space-2)",
         }}
       >
         <MetaStat label="Characters" value={String(postCharCount)} />
@@ -326,22 +294,22 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
       {postPinnedComment && (
         <div
           style={{
-            marginTop: "var(--bru-space-4)",
-            padding: "var(--bru-space-3)",
-            background: "var(--bru-cream)",
-            border: "var(--bru-border)",
+            marginTop: "var(--drp-space-4)",
+            padding: "var(--drp-space-3)",
+            background: "var(--drp-cream)",
+            border: "var(--drp-border)",
           }}
         >
           <h4
             style={{
-              fontSize: "var(--bru-text-sm)",
+              fontSize: "var(--drp-text-sm)",
               fontWeight: 700,
-              margin: "0 0 var(--bru-space-1)",
+              margin: "0 0 var(--drp-space-1)",
             }}
           >
             Suggested Pinned Comment
           </h4>
-          <p style={{ fontSize: "var(--bru-text-sm)", margin: 0 }}>
+          <p style={{ fontSize: "var(--drp-text-sm)", margin: 0 }}>
             {postPinnedComment}
           </p>
         </div>
@@ -354,12 +322,12 @@ function MetaStat({ label, value }: { label: string; value: string }) {
   return (
     <div
       style={{
-        padding: "var(--bru-space-2)",
-        border: "var(--bru-border)",
-        fontSize: "var(--bru-text-xs)",
+        padding: "var(--drp-space-2)",
+        border: "var(--drp-border)",
+        fontSize: "var(--drp-text-xs)",
       }}
     >
-      <div style={{ color: "var(--bru-grey)" }}>{label}</div>
+      <div style={{ color: "var(--drp-grey)" }}>{label}</div>
       <div style={{ fontWeight: 700 }}>{value}</div>
     </div>
   );

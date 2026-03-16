@@ -1,24 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import {
-  ChevronDown,
-  Check,
-  Info,
-  XCircle,
-  AlertTriangle,
-  Book,
-  BarChart,
-  MessageSquare,
-  Target,
-  Sparkles,
-  TrendingUp,
-  Heart,
-  UserCheck,
-  Smile,
-  BookOpen,
-  Zap,
-  Loader,
-} from "lucide-react";
+import { Button, Loader } from "@doctorproject/react";
 import {
   DropdownOption,
   CompatibilityMap,
@@ -35,26 +17,26 @@ interface EnhancedDropdownProps {
   loading?: boolean;
 }
 
-const categoryIcons: Record<string, React.ReactNode> = {
-  "Educational Content": <Book size={16} />,
-  "Data-Driven Content": <BarChart size={16} />,
-  "Engagement Content": <MessageSquare size={16} />,
-  "Authority Content": <Target size={16} />,
-  "Intrigue & Discovery": <Sparkles size={16} />,
-  "Pain & Solution": <AlertTriangle size={16} />,
-  "Credibility & Trust": <Check size={16} />,
-  "Challenge & Debate": <XCircle size={16} />,
-  "Expertise & Value": <Info size={16} />,
-  "Learning & Guidance": <Book size={16} />,
-  "Market & Future": <TrendingUp size={16} />,
-  "Personal Wellbeing": <Heart size={16} />,
-  "Proof & Results": <BarChart size={16} />,
-  "Formal & Expert": <UserCheck size={16} />,
-  "Informal & Engaging": <Smile size={16} />,
-  Storytelling: <BookOpen size={16} />,
-  "Emotional & Relatable": <Heart size={16} />,
-  Visionary: <Zap size={16} />,
-  "Niche & Specific": <Target size={16} />,
+const categoryIcons: Record<string, string> = {
+  "Educational Content": "◈",
+  "Data-Driven Content": "◈",
+  "Engagement Content": "◈",
+  "Authority Content": "◈",
+  "Intrigue & Discovery": "✦",
+  "Pain & Solution": "⚠",
+  "Credibility & Trust": "✓",
+  "Challenge & Debate": "✕",
+  "Expertise & Value": "◈",
+  "Learning & Guidance": "◈",
+  "Market & Future": "↗",
+  "Personal Wellbeing": "◈",
+  "Proof & Results": "◈",
+  "Formal & Expert": "◈",
+  "Informal & Engaging": "◈",
+  Storytelling: "◈",
+  "Emotional & Relatable": "◈",
+  Visionary: "⚡",
+  "Niche & Specific": "◈",
 };
 
 // PerformanceBadge removed — performance claims were inaccurate
@@ -68,23 +50,23 @@ const CompatibilityBadge: React.FC<{
 
   const baseClasses = "text-xs font-bold py-0.5 px-1.5 border ml-1";
   let statusClasses = "";
-  let statusIcon: React.ReactNode = null;
+  let statusIcon: string = "";
   let statusLabel = "";
 
   switch (status) {
     case "recommended":
       statusClasses = "badge-compatibility-recommended";
-      statusIcon = <Check size={12} />;
+      statusIcon = "✓";
       statusLabel = "Recommended";
       break;
     case "caution":
       statusClasses = "badge-compatibility-caution";
-      statusIcon = <AlertTriangle size={12} />;
+      statusIcon = "⚠";
       statusLabel = "Caution";
       break;
     case "not-recommended":
       statusClasses = "badge-compatibility-not-recommended";
-      statusIcon = <XCircle size={12} />;
+      statusIcon = "✕";
       statusLabel = "Not Recommended";
       break;
   }
@@ -186,13 +168,14 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
 
   return (
     <div className="enhanced-dropdown-container" ref={dropdownRef}>
-      <label htmlFor={`dropdown-${label}`} className="bru-field__label">
+      <label htmlFor={`dropdown-${label}`} className="drp-field__label">
         {label}
       </label>
+      {/* Keep raw button — DS Button would override the drp-input dropdown trigger styling */}
       <button
         id={`dropdown-${label}`}
         type="button"
-        className="enhanced-dropdown-trigger bru-input"
+        className="enhanced-dropdown-trigger drp-input"
         onClick={toggleDropdown}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -203,7 +186,10 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             <>
               {selectedOption.category &&
                 categoryIcons[selectedOption.category] && (
-                  <span className="shrink-0 text-gray-500">
+                  <span
+                    className="shrink-0"
+                    style={{ color: "var(--drp-grey)" }}
+                  >
                     {categoryIcons[selectedOption.category]}
                   </span>
                 )}
@@ -214,28 +200,36 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
               />
             </>
           ) : (
-            <span className="text-gray-500">{placeholder}</span>
+            <span style={{ color: "var(--drp-grey)" }}>{placeholder}</span>
           )}
         </span>
-        <ChevronDown
-          size={16}
-          className={`shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-        />
+        <span
+          style={{
+            display: "inline-block",
+            transform: isOpen ? "rotate(180deg)" : "none",
+            transition: "transform 200ms",
+            flexShrink: 0,
+          }}
+        >
+          ▼
+        </span>
       </button>
 
       {isOpen && (
         <div className="enhanced-dropdown-content">
           <div className="enhanced-dropdown-search">
+            {/* Keep raw input — DS Input wrapper would break the custom dropdown layout */}
             <input
               type="text"
               placeholder="Search options..."
-              className="bru-input"
+              className="drp-input"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-label={`Search ${label} options`}
             />
           </div>
           <div className="enhanced-dropdown-filters">
+            {/* Keep raw button — DS Button would override filter tag chip styling */}
             {filterTags.map((tag) => (
               <button
                 key={tag.id}
@@ -251,7 +245,14 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             ))}
           </div>
           {Object.keys(filteredOptions).length === 0 ? (
-            <div className="p-3 text-center text-gray-500 text-sm">
+            <div
+              style={{
+                padding: "var(--drp-space-3)",
+                textAlign: "center",
+                color: "var(--drp-grey)",
+                fontSize: "var(--drp-text-sm)",
+              }}
+            >
               No options found.
             </div>
           ) : (
@@ -259,7 +260,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
               <div key={category}>
                 <div className="enhanced-dropdown-category-header flex items-center gap-1.5">
                   {categoryIcons[category] && (
-                    <span className="text-gray-400">
+                    <span style={{ color: "var(--drp-text-muted)" }}>
                       {categoryIcons[category]}
                     </span>
                   )}
@@ -276,7 +277,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                     <div className="enhanced-dropdown-option-content">
                       <span className="shrink-0 w-4">
                         {option.value === value && (
-                          <Check size={14} className="text-bru-purple" />
+                          <span style={{ color: "var(--drp-purple)" }}>✓</span>
                         )}
                       </span>
                       <span className="flex-1 text-sm leading-tight">
@@ -302,7 +303,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
 
       {loading && (
         <div className="recommendation-loading">
-          <Loader size={24} className="animate-spin text-bru-purple" />
+          <Loader />
         </div>
       )}
     </div>

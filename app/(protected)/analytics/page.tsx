@@ -1,31 +1,45 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Alert, Card } from "@bruddle/react";
+import {
+  Alert,
+  Card,
+  Container,
+  Heading,
+  Loader,
+  ProgressBar,
+  Text,
+} from "@doctorproject/react";
 import { getAnalytics } from "@/lib/api";
 import { AnalyticsData } from "@/lib/types";
-import { BarChart2, MessageSquare, ThumbsUp, TrendingUp } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 const StatCard = ({
   title,
   value,
-  icon,
 }: {
   title: string;
   value: string | number;
-  icon: React.ReactNode;
 }) => (
-  <Card variant="raised" className="flex flex-col items-start">
-    <div className="flex items-center mb-2">
-      <div className="p-2 bg-bru-purple rounded-bru-md border-2 border-black mr-2">
-        {React.cloneElement(icon as React.ReactElement, {
-          size: 20,
-          className: "text-white",
-        })}
-      </div>
-      <h3 className="text-sm font-bold uppercase tracking-wider">{title}</h3>
-    </div>
-    <p className="mt-1 text-3xl font-bold">{value}</p>
+  <Card
+    variant="raised"
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+    }}
+  >
+    <Text size="sm" weight="bold">
+      <span
+        style={{
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
+          marginBottom: "var(--drp-space-1)",
+        }}
+      >
+        {title}
+      </span>
+    </Text>
+    <Heading level={2}>{value}</Heading>
   </Card>
 );
 
@@ -50,30 +64,35 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Analytics</h1>
-          <Card
-            variant="raised"
-            className="flex items-center justify-center p-12"
-          >
-            <p>Loading analytics dashboard...</p>
-          </Card>
+      <Container>
+        <div style={{ marginBottom: "var(--drp-space-6)" }}>
+          <Heading level={1}>Analytics</Heading>
         </div>
-      </div>
+        <Card
+          variant="raised"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "var(--drp-space-12)",
+          }}
+        >
+          <Loader label="Loading analytics dashboard..." />
+        </Card>
+      </Container>
     );
   }
 
   if (!data) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Analytics</h1>
-          <Alert variant="error" title="Failed to load analytics data">
-            Please refresh the page to try again.
-          </Alert>
+      <Container>
+        <div style={{ marginBottom: "var(--drp-space-6)" }}>
+          <Heading level={1}>Analytics</Heading>
         </div>
-      </div>
+        <Alert variant="error" title="Failed to load analytics data">
+          Please refresh the page to try again.
+        </Alert>
+      </Container>
     );
   }
 
@@ -83,87 +102,130 @@ export default function AnalyticsPage() {
   );
 
   return (
-    <div className="p-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Performance Analytics</h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <StatCard
-            title="Total Impressions"
-            value={data.totalImpressions.toLocaleString()}
-            icon={<BarChart2 />}
-          />
-          <StatCard
-            title="Total Reactions"
-            value={data.totalReactions.toLocaleString()}
-            icon={<ThumbsUp />}
-          />
-          <StatCard
-            title="Total Comments"
-            value={data.totalComments.toLocaleString()}
-            icon={<MessageSquare />}
-          />
-          <StatCard
-            title="Avg. CTR"
-            value={`${data.ctr}%`}
-            icon={<TrendingUp />}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card variant="raised">
-            <h2 className="text-xl font-bold mb-4">
-              Top Performers &amp; Insights
-            </h2>
-            <div className="space-y-4">
-              <p className="text-gray-700 font-medium">
-                <span className="font-bold">Top Content Pillar:</span>{" "}
-                {data.topPerformingPillar.name} (
-                {data.topPerformingPillar.value.toLocaleString()} impressions)
-              </p>
-              <p className="text-gray-700 font-medium">
-                <span className="font-bold">Top Hook Pattern:</span>{" "}
-                {data.topPerformingHook.name} (
-                {data.topPerformingHook.value.toLocaleString()} reactions)
-              </p>
-              <div className="mt-4 p-3 bg-blue-50 border-2 border-black rounded-bru-md text-blue-800 font-medium">
-                <p className="font-bold">Creator Engagement Insight:</p>
-                <p>
-                  Posts with &quot;Educational/Framework&quot; hooks
-                  consistently drive 15% higher comments. Consider creating more
-                  how-to guides!
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card variant="raised">
-            <h2 className="text-xl font-bold mb-4">Impressions by Pillar</h2>
-            <div className="space-y-4">
-              {data.performanceByPillar.map((pillar) => (
-                <div key={pillar.name}>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-base font-bold text-gray-700">
-                      {pillar.name}
-                    </span>
-                    <span className="text-sm font-bold text-gray-500">
-                      {pillar.impressions.toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-bru-md border border-black h-3">
-                    <div
-                      className="bg-bru-purple h-3 rounded-bru-md"
-                      style={{
-                        width: `${(pillar.impressions / maxImpressions) * 100}%`,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+    <Container>
+      <div style={{ marginBottom: "var(--drp-space-6)" }}>
+        <Heading level={1}>Performance Analytics</Heading>
       </div>
-    </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+          gap: "var(--drp-space-6)",
+          marginBottom: "var(--drp-space-8)",
+        }}
+      >
+        <StatCard
+          title="Total Impressions"
+          value={data.totalImpressions.toLocaleString()}
+        />
+        <StatCard
+          title="Total Reactions"
+          value={data.totalReactions.toLocaleString()}
+        />
+        <StatCard
+          title="Total Comments"
+          value={data.totalComments.toLocaleString()}
+        />
+        <StatCard title="Avg. CTR" value={`${data.ctr}%`} />
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))",
+          gap: "var(--drp-space-6)",
+        }}
+      >
+        <Card variant="raised">
+          <div style={{ marginBottom: "var(--drp-space-4)" }}>
+            <Heading level={2}>Top Performers &amp; Insights</Heading>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--drp-space-4)",
+            }}
+          >
+            <Text weight="bold">
+              <strong>Top Content Pillar:</strong>{" "}
+              {data.topPerformingPillar.name} (
+              {data.topPerformingPillar.value.toLocaleString()} impressions)
+            </Text>
+            <Text weight="bold">
+              <strong>Top Hook Pattern:</strong> {data.topPerformingHook.name} (
+              {data.topPerformingHook.value.toLocaleString()} reactions)
+            </Text>
+            <div
+              style={{
+                marginTop: "var(--drp-space-4)",
+                padding: "var(--drp-space-3)",
+                background: "var(--drp-purple-light, #ede9fe)",
+                border: "2px solid black",
+                color: "var(--drp-purple)",
+                fontWeight: 500,
+              }}
+            >
+              <Text weight="bold">Creator Engagement Insight:</Text>
+              <Text>
+                Posts with &quot;Educational/Framework&quot; hooks consistently
+                drive 15% higher comments. Consider creating more how-to guides!
+              </Text>
+            </div>
+          </div>
+        </Card>
+
+        <Card variant="raised">
+          <div style={{ marginBottom: "var(--drp-space-4)" }}>
+            <Heading level={2}>Impressions by Pillar</Heading>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--drp-space-4)",
+            }}
+          >
+            {data.performanceByPillar.map((pillar) => (
+              <div key={pillar.name}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: "var(--drp-space-1)",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "var(--drp-text-base)",
+                      fontWeight: 700,
+                      color: "var(--drp-text)",
+                    }}
+                  >
+                    {pillar.name}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "var(--drp-text-sm)",
+                      fontWeight: 700,
+                      color: "var(--drp-grey)",
+                    }}
+                  >
+                    {pillar.impressions.toLocaleString()}
+                  </span>
+                </div>
+                <ProgressBar
+                  value={Math.round(
+                    (pillar.impressions / maxImpressions) * 100,
+                  )}
+                  color="mint"
+                />
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+    </Container>
   );
 }

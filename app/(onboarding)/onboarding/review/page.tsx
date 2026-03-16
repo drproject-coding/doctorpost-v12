@@ -2,17 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@bruddle/react";
-import {
-  CheckCircle,
-  Edit2,
-  User,
-  Mic,
-  Target,
-  Users,
-  Briefcase,
-  Loader,
-} from "lucide-react";
+import { Button, Alert, Loader } from "@doctorproject/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import type { BrandProfile } from "@/lib/types";
 
@@ -50,7 +40,6 @@ function Tag({ label, color }: { label: string; color: string }) {
         lineHeight: 1.5,
         marginRight: 6,
         marginBottom: 6,
-        borderRadius: 0,
       }}
     >
       {label}
@@ -72,7 +61,6 @@ function IncompleteBadge() {
         color: "#92400E",
         border: "1.5px solid #F59E0B",
         letterSpacing: "0.04em",
-        borderRadius: 0,
       }}
     >
       INCOMPLETE
@@ -96,11 +84,9 @@ function CompleteBadge() {
         color: "#065F46",
         border: "1.5px solid #10B981",
         letterSpacing: "0.04em",
-        borderRadius: 0,
       }}
     >
-      <CheckCircle size={11} />
-      COMPLETE
+      ✓ COMPLETE
     </span>
   );
 }
@@ -128,9 +114,8 @@ function SectionCard({
   return (
     <div
       style={{
-        border: "2px solid var(--bru-black)",
+        border: "2px solid var(--drp-black)",
         borderLeft: `5px solid ${accentColor}`,
-        borderRadius: 0,
         background: "white",
         marginBottom: 16,
       }}
@@ -151,7 +136,7 @@ function SectionCard({
             style={{
               fontWeight: 700,
               fontSize: 15,
-              color: "var(--bru-black)",
+              color: "var(--drp-black)",
             }}
           >
             {title}
@@ -160,33 +145,14 @@ function SectionCard({
             {complete ? <CompleteBadge /> : <IncompleteBadge />}
           </span>
         </div>
-        <button
+        <Button
+          variant="ghost-bordered"
           onClick={onEdit}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 5,
-            background: "none",
-            border: "1.5px solid var(--bru-black)",
-            cursor: "pointer",
-            padding: "4px 12px",
-            fontSize: 12,
-            fontWeight: 600,
-            color: "var(--bru-black)",
-            borderRadius: 0,
-            transition: "background 0.12s",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background =
-              "var(--bru-cream)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "none";
-          }}
+          size="sm"
+          iconLeft="✎"
         >
-          <Edit2 size={12} />
           Edit
-        </button>
+        </Button>
       </div>
 
       {/* Body */}
@@ -200,7 +166,7 @@ function SectionCard({
 function EmptyValue({ label }: { label: string }) {
   return (
     <span
-      style={{ color: "var(--bru-grey)", fontSize: 13, fontStyle: "italic" }}
+      style={{ color: "var(--drp-grey)", fontSize: 13, fontStyle: "italic" }}
     >
       {label}
     </span>
@@ -216,7 +182,7 @@ function FieldRow({ label, value }: { label: string; value: string }) {
         style={{
           fontSize: 12,
           fontWeight: 700,
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           minWidth: 120,
           textTransform: "uppercase",
           letterSpacing: "0.04em",
@@ -226,7 +192,7 @@ function FieldRow({ label, value }: { label: string; value: string }) {
         {label}
       </span>
       <span
-        style={{ fontSize: 13, color: "var(--bru-black)", lineHeight: 1.5 }}
+        style={{ fontSize: 13, color: "var(--drp-black)", lineHeight: 1.5 }}
       >
         {value || <EmptyValue label="Not set" />}
       </span>
@@ -274,14 +240,13 @@ export default function OnboardingReviewPage() {
           justifyContent: "center",
           minHeight: "40vh",
           gap: 10,
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           fontSize: 14,
         }}
       >
-        <Loader
-          size={20}
-          style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
-        />
+        <span style={{ flexShrink: 0 }}>
+          <Loader size="sm" />
+        </span>
         Loading your profile…
       </div>
     );
@@ -290,23 +255,17 @@ export default function OnboardingReviewPage() {
   if (!profile) {
     return (
       <div style={{ textAlign: "center", padding: "40px 0" }}>
-        <p style={{ color: "var(--bru-grey)", fontSize: 14 }}>
+        <p style={{ color: "var(--drp-grey)", fontSize: 14 }}>
           {error ?? "Could not load profile."}
         </p>
-        <button
-          onClick={() => router.push("/onboarding/wizard/1")}
-          style={{
-            marginTop: 16,
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "var(--bru-purple)",
-            fontWeight: 600,
-            fontSize: 14,
-          }}
-        >
-          ← Go to wizard
-        </button>
+        <div style={{ marginTop: 16 }}>
+          <Button
+            variant="ghost"
+            onClick={() => router.push("/onboarding/wizard/1")}
+          >
+            ← Go to wizard
+          </Button>
+        </div>
       </div>
     );
   }
@@ -324,7 +283,7 @@ export default function OnboardingReviewPage() {
             margin: "0 0 8px",
             fontSize: "clamp(22px, 4vw, 30px)",
             fontWeight: 800,
-            color: "var(--bru-black)",
+            color: "var(--drp-black)",
             lineHeight: 1.15,
           }}
         >
@@ -334,7 +293,7 @@ export default function OnboardingReviewPage() {
           style={{
             margin: 0,
             fontSize: 15,
-            color: "var(--bru-grey)",
+            color: "var(--drp-grey)",
             lineHeight: 1.5,
           }}
         >
@@ -345,7 +304,7 @@ export default function OnboardingReviewPage() {
       {/* Section 1 — Identity */}
       <SectionCard
         title="Identity"
-        icon={<User size={16} />}
+        icon="◉"
         accentColor="#631DED"
         sectionIndex={1}
         complete={isComplete(profile, 1)}
@@ -360,7 +319,7 @@ export default function OnboardingReviewPage() {
       {/* Section 2 — Voice & Tone */}
       <SectionCard
         title="Voice & Tone"
-        icon={<Mic size={16} />}
+        icon="♪"
         accentColor="#FF6C01"
         sectionIndex={2}
         complete={isComplete(profile, 2)}
@@ -372,7 +331,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -398,7 +357,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -420,7 +379,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 4,
@@ -432,7 +391,7 @@ export default function OnboardingReviewPage() {
               style={{
                 margin: 0,
                 fontSize: 13,
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
                 lineHeight: 1.6,
               }}
             >
@@ -445,7 +404,7 @@ export default function OnboardingReviewPage() {
       {/* Section 3 — Content Strategy */}
       <SectionCard
         title="Content Strategy"
-        icon={<Target size={16} />}
+        icon="◎"
         accentColor="#00A896"
         sectionIndex={3}
         complete={isComplete(profile, 3)}
@@ -457,7 +416,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 4,
@@ -469,7 +428,7 @@ export default function OnboardingReviewPage() {
               style={{
                 margin: 0,
                 fontSize: 13,
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
                 lineHeight: 1.6,
               }}
             >
@@ -486,7 +445,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 4,
@@ -498,7 +457,7 @@ export default function OnboardingReviewPage() {
               style={{
                 margin: 0,
                 fontSize: 13,
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
                 lineHeight: 1.6,
               }}
             >
@@ -511,7 +470,7 @@ export default function OnboardingReviewPage() {
       {/* Section 4 — Audience */}
       <SectionCard
         title="Audience"
-        icon={<Users size={16} />}
+        icon="◈"
         accentColor="#B45309"
         sectionIndex={4}
         complete={isComplete(profile, 4)}
@@ -523,7 +482,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -549,7 +508,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -569,7 +528,7 @@ export default function OnboardingReviewPage() {
       {/* Section 5 — Positioning */}
       <SectionCard
         title="Positioning"
-        icon={<Briefcase size={16} />}
+        icon="▣"
         accentColor="#E99898"
         sectionIndex={5}
         complete={isComplete(profile, 5)}
@@ -580,7 +539,7 @@ export default function OnboardingReviewPage() {
             style={{
               margin: 0,
               fontSize: 13,
-              color: "var(--bru-black)",
+              color: "var(--drp-black)",
               lineHeight: 1.6,
             }}
           >
@@ -593,18 +552,8 @@ export default function OnboardingReviewPage() {
 
       {/* Error */}
       {error && (
-        <div
-          style={{
-            padding: "10px 16px",
-            background: "#FEF2F2",
-            border: "1.5px solid #F87171",
-            color: "#B91C1C",
-            fontSize: 13,
-            marginBottom: 16,
-            borderRadius: 0,
-          }}
-        >
-          {error}
+        <div style={{ marginBottom: 16 }}>
+          <Alert variant="error">{error}</Alert>
         </div>
       )}
 
@@ -622,7 +571,6 @@ export default function OnboardingReviewPage() {
           onClick={handleSave}
           disabled={saving}
           style={{
-            borderRadius: 0,
             minWidth: 240,
             display: "flex",
             alignItems: "center",
@@ -634,55 +582,29 @@ export default function OnboardingReviewPage() {
           }}
         >
           {saving ? (
-            <>
-              <Loader
-                size={16}
-                style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
-              />
-              Saving…
-            </>
+            <span
+              style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
+            >
+              <Loader size="sm" /> Saving…
+            </span>
           ) : (
-            <>
-              <CheckCircle size={16} />
-              Save &amp; Start Creating
-            </>
+            "✓ Save & Start Creating"
           )}
         </Button>
 
-        <button
+        <Button
+          variant="ghost"
           onClick={() => router.push("/onboarding/wizard/5")}
           disabled={saving}
           style={{
-            background: "none",
-            border: "none",
-            cursor: saving ? "not-allowed" : "pointer",
             fontSize: 13,
-            color: "var(--bru-grey)",
-            padding: "4px 0",
-            transition: "color 0.12s",
+            color: "var(--drp-grey)",
             opacity: saving ? 0.5 : 1,
-          }}
-          onMouseEnter={(e) => {
-            if (!saving)
-              (e.currentTarget as HTMLButtonElement).style.color =
-                "var(--bru-black)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.color =
-              "var(--bru-grey)";
           }}
         >
           ← Go back to wizard
-        </button>
+        </Button>
       </div>
-
-      {/* Spin keyframes */}
-      <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }

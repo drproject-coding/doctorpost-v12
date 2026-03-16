@@ -1,20 +1,7 @@
 "use client";
 import type React from "react";
 import { useState, useMemo } from "react";
-import { Select } from "@bruddle/react";
-import {
-  Search,
-  Star,
-  Coins,
-  ChevronDown,
-  ChevronUp,
-  Zap,
-  Image as ImageIcon,
-  Globe,
-  ThumbsUp,
-  ThumbsDown,
-  Loader,
-} from "lucide-react";
+import { Button, Input, Loader, Select } from "@doctorproject/react";
 import type { AiModel, StraicoUserInfo } from "@/lib/types";
 
 type SortOption = "quality" | "price-asc" | "price-desc" | "newest";
@@ -46,18 +33,19 @@ function QualityBadge({ level }: { level: number }) {
       title={`Editor's choice: ${level}/3`}
     >
       {Array.from({ length: stars }, (_, i) => (
-        <Star key={i} size={10} fill="currentColor" />
+        <span key={i}>★</span>
       ))}
     </span>
   );
 }
 
+const featureIconMap: Record<string, string> = {
+  "Image input": "🖼",
+  "Web search": "🌐",
+};
+
 function FeatureBadge({ label }: { label: string }) {
-  const iconMap: Record<string, typeof Zap> = {
-    "Image input": ImageIcon,
-    "Web search": Globe,
-  };
-  const Icon = iconMap[label] || Zap;
+  const iconChar = featureIconMap[label] ?? "⚡";
   return (
     <span
       style={{
@@ -65,19 +53,26 @@ function FeatureBadge({ label }: { label: string }) {
         alignItems: "center",
         gap: 4,
         padding: "2px 6px",
-        background: "var(--bru-purple-20)",
-        color: "var(--bru-purple)",
+        background: "var(--drp-purple-20)",
+        color: "var(--drp-purple)",
         fontSize: 10,
         fontWeight: 700,
         textTransform: "uppercase",
         letterSpacing: "0.05em",
       }}
     >
-      <Icon size={10} />
+      <span>{iconChar}</span>
       {label}
     </span>
   );
 }
+
+const sortOptions = [
+  { value: "quality", label: "Sort: Quality Rating" },
+  { value: "price-asc", label: "Sort: Price (low to high)" },
+  { value: "price-desc", label: "Sort: Price (high to low)" },
+  { value: "newest", label: "Sort: Newest First" },
+];
 
 export function StraicoModelPicker({
   models,
@@ -139,33 +134,12 @@ export function StraicoModelPicker({
 
   const selectedModel = models.find((m) => m.id === selectedModelId);
 
-  const chipBase: React.CSSProperties = {
-    padding: "2px 8px",
-    fontSize: 10,
-    fontWeight: 700,
-    textTransform: "uppercase",
-    letterSpacing: "0.05em",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: "rgba(0,0,0,0.15)",
-    cursor: "pointer",
-    background: "var(--bru-white)",
-    color: "var(--bru-black)",
-  };
-
-  const chipActive: React.CSSProperties = {
-    ...chipBase,
-    borderColor: "var(--bru-purple)",
-    background: "var(--bru-purple)",
-    color: "var(--bru-white)",
-  };
-
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: "var(--bru-space-3)",
+        gap: "var(--drp-space-3)",
       }}
     >
       {/* Account Bar */}
@@ -174,13 +148,13 @@ export function StraicoModelPicker({
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-3)",
-            padding: "var(--bru-space-2)",
+            gap: "var(--drp-space-3)",
+            padding: "var(--drp-space-2)",
             background: "rgba(217, 119, 6, 0.08)",
             border: "1px solid rgba(217, 119, 6, 0.25)",
           }}
         >
-          <Coins size={14} style={{ color: "#d97706" }} />
+          <span style={{ color: "#d97706" }}>🪙</span>
           <span style={{ fontSize: 12, fontWeight: 700, color: "#92400e" }}>
             {formatNumber(userInfo.coins)} coins
           </span>
@@ -205,51 +179,42 @@ export function StraicoModelPicker({
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "var(--bru-space-2)",
+          gap: "var(--drp-space-2)",
         }}
       >
         <div style={{ position: "relative" }}>
-          <Search
-            size={14}
-            style={{
-              position: "absolute",
-              left: 10,
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "var(--bru-grey)",
-            }}
-          />
-          <input
+          <Input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search models..."
-            className="bru-input"
-            style={{ width: "100%", paddingLeft: 32, fontSize: 12 }}
+            style={{ width: "100%", fontSize: 12 }}
           />
         </div>
 
         {/* Provider chips */}
         {providers.length > 0 && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-            <button
+            <Button
               type="button"
+              size="sm"
+              variant={!providerFilter ? "primary" : "ghost-bordered"}
               onClick={() => setProviderFilter(null)}
-              style={!providerFilter ? chipActive : chipBase}
             >
               All
-            </button>
+            </Button>
             {providers.map((p) => (
-              <button
+              <Button
                 type="button"
+                size="sm"
                 key={p}
+                variant={providerFilter === p ? "primary" : "ghost-bordered"}
                 onClick={() =>
                   setProviderFilter(providerFilter === p ? null : p)
                 }
-                style={providerFilter === p ? chipActive : chipBase}
               >
                 {p}
-              </button>
+              </Button>
             ))}
           </div>
         )}
@@ -260,10 +225,11 @@ export function StraicoModelPicker({
           onChange={(e) => setSort(e.target.value as SortOption)}
           style={{ width: "100%", fontSize: 12 }}
         >
-          <option value="quality">Sort: Quality Rating</option>
-          <option value="price-asc">Sort: Price (low to high)</option>
-          <option value="price-desc">Sort: Price (high to low)</option>
-          <option value="newest">Sort: Newest First</option>
+          {sortOptions.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
         </Select>
       </div>
 
@@ -274,13 +240,13 @@ export function StraicoModelPicker({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "var(--bru-space-4) 0",
-            gap: "var(--bru-space-2)",
+            padding: "var(--drp-space-4) 0",
+            gap: "var(--drp-space-2)",
             fontSize: 12,
-            color: "var(--bru-grey)",
+            color: "var(--drp-grey)",
           }}
         >
-          <Loader size={14} className="animate-spin" />
+          <Loader size="sm" />
           Loading models...
         </div>
       )}
@@ -302,21 +268,23 @@ export function StraicoModelPicker({
 
           return (
             <div key={model.id}>
-              <button
+              <Button
                 type="button"
+                variant={isSelected ? "ghost-bordered" : "ghost-bordered"}
                 onClick={() => onSelectModel(model.id)}
                 style={{
                   width: "100%",
                   textAlign: "left",
                   padding: 10,
-                  border: isSelected
-                    ? "2px solid var(--bru-purple)"
-                    : "var(--bru-border)",
+                  borderColor: isSelected
+                    ? "var(--drp-purple)"
+                    : "rgba(0,0,0,0.12)",
+                  borderWidth: isSelected ? 2 : 1,
                   background: isSelected
                     ? "rgba(99, 29, 237, 0.05)"
-                    : "var(--bru-white)",
-                  cursor: "pointer",
-                  fontFamily: "var(--bru-font-primary)",
+                    : "var(--drp-white)",
+                  height: "auto",
+                  justifyContent: "flex-start",
                 }}
               >
                 <div
@@ -378,33 +346,17 @@ export function StraicoModelPicker({
                         gap: 12,
                         marginTop: 4,
                         fontSize: 10,
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       {model.pricing && (
                         <span title="Cost per 100 words">
-                          <Coins
-                            size={10}
-                            style={{
-                              display: "inline",
-                              marginRight: 2,
-                              verticalAlign: "-1px",
-                            }}
-                          />
-                          {model.pricing.coins}/{model.pricing.words}w
+                          🪙 {model.pricing.coins}/{model.pricing.words}w
                         </span>
                       )}
                       {!model.pricing && model.creditsPerInputToken != null && (
                         <span title="Credits per token (in/out)">
-                          <Coins
-                            size={10}
-                            style={{
-                              display: "inline",
-                              marginRight: 2,
-                              verticalAlign: "-1px",
-                            }}
-                          />
-                          {model.creditsPerInputToken}↑ /{" "}
+                          🪙 {model.creditsPerInputToken}↑ /{" "}
                           {model.creditsPerOutputToken ?? 0}↓
                         </span>
                       )}
@@ -423,7 +375,7 @@ export function StraicoModelPicker({
                       <p
                         style={{
                           fontSize: 10,
-                          color: "var(--bru-grey)",
+                          color: "var(--drp-grey)",
                           marginTop: 4,
                           lineHeight: 1.4,
                           overflow: "hidden",
@@ -466,11 +418,12 @@ export function StraicoModelPicker({
                     </div>
                   </div>
                 </div>
-              </button>
+              </Button>
 
               {isSelected && (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
                   onClick={(e) => {
                     e.stopPropagation();
                     setExpandedModelId(isExpanded ? null : model.id);
@@ -483,34 +436,25 @@ export function StraicoModelPicker({
                     gap: 4,
                     padding: "4px 0",
                     fontSize: 10,
-                    color: "var(--bru-purple)",
+                    color: "var(--drp-purple)",
                     fontWeight: 700,
-                    borderLeft: "2px solid var(--bru-purple)",
-                    borderRight: "2px solid var(--bru-purple)",
-                    borderBottom: "2px solid var(--bru-purple)",
+                    borderLeft: "2px solid var(--drp-purple)",
+                    borderRight: "2px solid var(--drp-purple)",
+                    borderBottom: "2px solid var(--drp-purple)",
                     background: "rgba(99, 29, 237, 0.05)",
-                    cursor: "pointer",
-                    fontFamily: "var(--bru-font-primary)",
+                    height: "auto",
                   }}
                 >
-                  {isExpanded ? (
-                    <>
-                      Hide details <ChevronUp size={10} />
-                    </>
-                  ) : (
-                    <>
-                      Show details <ChevronDown size={10} />
-                    </>
-                  )}
-                </button>
+                  {isExpanded ? <>Hide details ▲</> : <>Show details ▼</>}
+                </Button>
               )}
 
               {isSelected && isExpanded && (
                 <div
                   style={{
-                    borderLeft: "2px solid var(--bru-purple)",
-                    borderRight: "2px solid var(--bru-purple)",
-                    borderBottom: "2px solid var(--bru-purple)",
+                    borderLeft: "2px solid var(--drp-purple)",
+                    borderRight: "2px solid var(--drp-purple)",
+                    borderBottom: "2px solid var(--drp-purple)",
                     background: "rgba(99, 29, 237, 0.05)",
                     padding: "0 12px 12px",
                     display: "flex",
@@ -522,7 +466,7 @@ export function StraicoModelPicker({
                     <p
                       style={{
                         fontSize: 11,
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                         lineHeight: 1.4,
                       }}
                     >
@@ -530,37 +474,25 @@ export function StraicoModelPicker({
                     </p>
                   )}
                   {model.pricing && (
-                    <p style={{ fontSize: 11, color: "var(--bru-grey)" }}>
-                      <Coins
-                        size={11}
-                        style={{
-                          display: "inline",
-                          marginRight: 4,
-                          verticalAlign: "-1px",
-                          color: "#d97706",
-                        }}
-                      />
+                    <p style={{ fontSize: 11, color: "var(--drp-grey)" }}>
+                      <span style={{ color: "#d97706", marginRight: 4 }}>
+                        🪙
+                      </span>
                       ~{model.pricing.coins} coins per {model.pricing.words}{" "}
                       words
                     </p>
                   )}
                   {!model.pricing && model.creditsPerInputToken != null && (
-                    <p style={{ fontSize: 11, color: "var(--bru-grey)" }}>
-                      <Coins
-                        size={11}
-                        style={{
-                          display: "inline",
-                          marginRight: 4,
-                          verticalAlign: "-1px",
-                          color: "#d97706",
-                        }}
-                      />
+                    <p style={{ fontSize: 11, color: "var(--drp-grey)" }}>
+                      <span style={{ color: "#d97706", marginRight: 4 }}>
+                        🪙
+                      </span>
                       {model.creditsPerInputToken} credits/input token &middot;{" "}
                       {model.creditsPerOutputToken ?? 0} credits/output token
                     </p>
                   )}
                   {model.maxTokens && (
-                    <p style={{ fontSize: 11, color: "var(--bru-grey)" }}>
+                    <p style={{ fontSize: 11, color: "var(--drp-grey)" }}>
                       This model supports up to{" "}
                       <strong>{model.maxTokens.max.toLocaleString()}</strong>{" "}
                       output tokens
@@ -576,11 +508,11 @@ export function StraicoModelPicker({
                           gap: 4,
                           fontSize: 10,
                           fontWeight: 700,
-                          color: "#16a34a",
+                          color: "var(--drp-success-dark)",
                           marginBottom: 4,
                         }}
                       >
-                        <ThumbsUp size={10} /> Strengths
+                        ✓ Strengths
                       </p>
                       <ul
                         style={{
@@ -597,7 +529,7 @@ export function StraicoModelPicker({
                             key={i}
                             style={{
                               fontSize: 11,
-                              color: "var(--bru-grey)",
+                              color: "var(--drp-grey)",
                               paddingLeft: 12,
                               position: "relative",
                             }}
@@ -606,7 +538,7 @@ export function StraicoModelPicker({
                               style={{
                                 position: "absolute",
                                 left: 0,
-                                color: "#22c55e",
+                                color: "var(--drp-success-dark)",
                               }}
                             >
                               &bull;
@@ -627,11 +559,11 @@ export function StraicoModelPicker({
                           gap: 4,
                           fontSize: 10,
                           fontWeight: 700,
-                          color: "#ef4444",
+                          color: "var(--drp-error-dark)",
                           marginBottom: 4,
                         }}
                       >
-                        <ThumbsDown size={10} /> Weaknesses
+                        ✕ Weaknesses
                       </p>
                       <ul
                         style={{
@@ -648,7 +580,7 @@ export function StraicoModelPicker({
                             key={i}
                             style={{
                               fontSize: 11,
-                              color: "var(--bru-grey)",
+                              color: "var(--drp-grey)",
                               paddingLeft: 12,
                               position: "relative",
                             }}
@@ -657,7 +589,7 @@ export function StraicoModelPicker({
                               style={{
                                 position: "absolute",
                                 left: 0,
-                                color: "#f87171",
+                                color: "var(--drp-error-dark)",
                               }}
                             >
                               &bull;
@@ -678,9 +610,9 @@ export function StraicoModelPicker({
           <p
             style={{
               fontSize: 12,
-              color: "var(--bru-grey)",
+              color: "var(--drp-grey)",
               textAlign: "center",
-              padding: "var(--bru-space-4) 0",
+              padding: "var(--drp-space-4) 0",
             }}
           >
             No models match your filters
@@ -692,13 +624,13 @@ export function StraicoModelPicker({
       {selectedModel && (
         <div
           style={{
-            paddingTop: "var(--bru-space-2)",
-            borderTop: "var(--bru-border)",
+            paddingTop: "var(--drp-space-2)",
+            borderTop: "var(--drp-border)",
           }}
         >
-          <p style={{ fontSize: 10, color: "var(--bru-grey)" }}>
+          <p style={{ fontSize: 10, color: "var(--drp-grey)" }}>
             Selected:{" "}
-            <span style={{ fontWeight: 700, color: "var(--bru-black)" }}>
+            <span style={{ fontWeight: 700, color: "var(--drp-black)" }}>
               {selectedModel.label}
             </span>
             {selectedModel.pricing && (

@@ -1,8 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card } from "@bruddle/react";
-import { CheckCircle, Zap, Loader, AlertCircle, Crown } from "lucide-react";
+import {
+  Card,
+  Alert,
+  Button,
+  Heading,
+  Loader as DSLoader,
+  ProgressBar,
+  Text,
+} from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 
 interface UserSettings {
@@ -24,7 +31,7 @@ const PLAN_FEATURES: Record<
 > = {
   free: {
     label: "Free",
-    color: "#888",
+    color: "var(--drp-text-muted)",
     limit: "5 posts/month",
     features: [
       "5 AI-generated posts per month",
@@ -35,7 +42,7 @@ const PLAN_FEATURES: Record<
   },
   pro: {
     label: "Pro",
-    color: "var(--bru-purple)",
+    color: "var(--drp-purple)",
     limit: "30 posts/month",
     features: [
       "30 AI-generated posts per month",
@@ -47,7 +54,7 @@ const PLAN_FEATURES: Record<
   },
   power: {
     label: "Power",
-    color: "#FF6C01",
+    color: "var(--drp-orange)",
     limit: "Unlimited",
     features: [
       "Unlimited AI-generated posts",
@@ -95,17 +102,13 @@ export default function SettingsSubscriptionPage() {
       <div
         style={{
           minHeight: "100vh",
-          background: "var(--bru-cream)",
+          background: "var(--drp-cream)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Loader size={20} style={{ animation: "spin 1s linear infinite" }} />
-          <span style={{ fontWeight: 600 }}>Loading…</span>
-        </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        <DSLoader label="Loading…" />
       </div>
     );
   }
@@ -119,12 +122,12 @@ export default function SettingsSubscriptionPage() {
   const usagePct = limit !== null ? Math.min(100, (used / limit) * 100) : 0;
   const usageColor =
     limit === null
-      ? "#00A896"
+      ? "var(--drp-success)"
       : usagePct >= 90
-        ? "#E99898"
+        ? "var(--drp-error-dark)"
         : usagePct >= 70
-          ? "#FF6C01"
-          : "#00A896";
+          ? "var(--drp-orange)"
+          : "var(--drp-success)";
 
   const formattedReset = resetDate
     ? new Date(resetDate).toLocaleDateString("en-US", {
@@ -138,42 +141,26 @@ export default function SettingsSubscriptionPage() {
     <div
       style={{
         minHeight: "100vh",
-        background: "var(--bru-cream)",
+        background: "var(--drp-cream)",
         padding: 24,
       }}
     >
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
-          <h1
-            style={{
-              fontSize: 26,
-              fontWeight: 800,
-              margin: "0 0 6px",
-              color: "var(--bru-black)",
-            }}
-          >
-            Subscription
-          </h1>
-          <p style={{ margin: 0, color: "var(--bru-grey)", fontSize: 14 }}>
-            Your current plan and usage
-          </p>
+          <div style={{ marginBottom: "var(--drp-space-1)" }}>
+            <Heading level={1}>Subscription</Heading>
+          </div>
+          <Text size="sm">
+            <span style={{ color: "var(--drp-grey)" }}>
+              Your current plan and usage
+            </span>
+          </Text>
         </div>
 
         {error && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "12px 16px",
-              background: "rgba(233,152,152,0.1)",
-              border: "1px solid #E99898",
-              marginBottom: 16,
-            }}
-          >
-            <AlertCircle size={15} color="#E99898" />
-            <span style={{ fontSize: 13 }}>{error}</span>
+          <div style={{ marginBottom: "var(--drp-space-4)" }}>
+            <Alert variant="error">{error}</Alert>
           </div>
         )}
 
@@ -198,7 +185,7 @@ export default function SettingsSubscriptionPage() {
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: 0.5,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   Current Plan
@@ -213,15 +200,13 @@ export default function SettingsSubscriptionPage() {
                   >
                     {planMeta.label}
                   </span>
-                  {tier === "power" && (
-                    <Crown size={20} color="#FF6C01" fill="#FF6C01" />
-                  )}
+                  {tier === "power" && <span style={{ fontSize: 20 }}>👑</span>}
                 </div>
                 <p
                   style={{
                     margin: "4px 0 0",
                     fontSize: 14,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   {planMeta.limit}
@@ -276,22 +261,8 @@ export default function SettingsSubscriptionPage() {
               </div>
 
               {limit !== null && (
-                <div
-                  style={{
-                    height: 10,
-                    background: "#eee",
-                    position: "relative",
-                    marginBottom: 8,
-                  }}
-                >
-                  <div
-                    style={{
-                      height: "100%",
-                      width: `${usagePct}%`,
-                      background: usageColor,
-                      transition: "width 0.4s ease",
-                    }}
-                  />
+                <div style={{ marginBottom: 8 }}>
+                  <ProgressBar value={usagePct} />
                 </div>
               )}
 
@@ -300,7 +271,7 @@ export default function SettingsSubscriptionPage() {
                   style={{
                     margin: 0,
                     fontSize: 12,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   Resets on {formattedReset}
@@ -313,16 +284,9 @@ export default function SettingsSubscriptionPage() {
         {/* Plan comparison */}
         <Card variant="raised" style={{ marginBottom: 16 }}>
           <div style={{ padding: 24 }}>
-            <h2
-              style={{
-                fontWeight: 800,
-                fontSize: 15,
-                margin: "0 0 20px",
-                color: "var(--bru-black)",
-              }}
-            >
-              Plan Comparison
-            </h2>
+            <div style={{ marginBottom: "var(--drp-space-5)" }}>
+              <Heading level={2}>Plan Comparison</Heading>
+            </div>
 
             <div
               style={{
@@ -344,7 +308,7 @@ export default function SettingsSubscriptionPage() {
                         : "2px solid #e5e5e5",
                       background: isCurrent
                         ? `${plan.color}08`
-                        : "var(--bru-cream)",
+                        : "var(--drp-cream)",
                       position: "relative",
                     }}
                   >
@@ -383,7 +347,7 @@ export default function SettingsSubscriptionPage() {
                         style={{
                           margin: 0,
                           fontSize: 12,
-                          color: "var(--bru-grey)",
+                          color: "var(--drp-grey)",
                           fontWeight: 600,
                         }}
                       >
@@ -407,13 +371,18 @@ export default function SettingsSubscriptionPage() {
                             gap: 6,
                           }}
                         >
-                          <CheckCircle
-                            size={12}
-                            color={plan.color}
-                            style={{ marginTop: 2, flexShrink: 0 }}
-                          />
                           <span
-                            style={{ fontSize: 12, color: "var(--bru-black)" }}
+                            style={{
+                              color: plan.color,
+                              flexShrink: 0,
+                              marginTop: 2,
+                              fontSize: 12,
+                            }}
+                          >
+                            ✓
+                          </span>
+                          <span
+                            style={{ fontSize: 12, color: "var(--drp-black)" }}
                           >
                             {feature}
                           </span>
@@ -446,7 +415,7 @@ export default function SettingsSubscriptionPage() {
                     margin: "0 0 4px",
                     fontWeight: 800,
                     fontSize: 16,
-                    color: "var(--bru-black)",
+                    color: "var(--drp-black)",
                   }}
                 >
                   Ready to upgrade?
@@ -455,7 +424,7 @@ export default function SettingsSubscriptionPage() {
                   style={{
                     margin: 0,
                     fontSize: 14,
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   Get more posts, advanced features, and unlimited creation.
@@ -464,32 +433,16 @@ export default function SettingsSubscriptionPage() {
 
               <a
                 href="mailto:support@doctorpost.ai?subject=Upgrade%20Request"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "12px 24px",
-                  background: "var(--bru-purple)",
-                  color: "#fff",
-                  fontWeight: 800,
-                  fontSize: 14,
-                  textDecoration: "none",
-                  flexShrink: 0,
-                }}
+                style={{ textDecoration: "none", flexShrink: 0 }}
               >
-                <Zap size={15} />
-                {tier === "free" ? "Upgrade to Pro" : "Upgrade to Power"}
+                <Button variant="primary">
+                  ⚡ {tier === "free" ? "Upgrade to Pro" : "Upgrade to Power"}
+                </Button>
               </a>
             </div>
           </Card>
         )}
       </div>
-
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }

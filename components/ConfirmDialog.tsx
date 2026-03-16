@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useCallback, useRef } from "react";
+import { Button, Modal } from "@doctorproject/react";
 
 interface ConfirmOptions {
   title?: string;
@@ -45,90 +46,47 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
     <ConfirmContext.Provider value={{ confirm }}>
       {children}
       {state && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "rgba(0,0,0,0.35)",
-          }}
-          onClick={() => handleClose(false)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "white",
-              border: "1px solid #121212",
-              padding: "24px",
-              minWidth: 320,
-              maxWidth: 480,
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-            }}
-          >
-            {state.title && (
-              <p
-                style={{
-                  margin: 0,
-                  fontFamily: "var(--bru-font-primary)",
-                  fontWeight: "var(--bru-weight-heavy)",
-                  fontSize: "var(--bru-text-base)",
-                  color: "var(--bru-black)",
-                }}
-              >
-                {state.title}
-              </p>
-            )}
-            <p
-              style={{
-                margin: 0,
-                fontFamily: "var(--bru-font-primary)",
-                fontSize: "var(--bru-text-sm)",
-                color: "var(--bru-muted, #555)",
-                lineHeight: 1.5,
-              }}
-            >
-              {state.message}
-            </p>
+        <Modal
+          open={true}
+          onClose={() => handleClose(false)}
+          title={state.title ?? "Confirm"}
+          footer={
             <div
               style={{
                 display: "flex",
-                gap: "8px",
+                gap: "var(--drp-space-2)",
                 justifyContent: "flex-end",
               }}
             >
-              <button
-                className="bru-btn bru-btn--secondary bru-btn--sm"
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => handleClose(false)}
               >
                 {state.cancelLabel ?? "Cancel"}
-              </button>
-              <button
-                className="bru-btn bru-btn--sm"
-                style={
-                  state.danger
-                    ? {
-                        background: "#c0392b",
-                        color: "white",
-                        border: "1px solid #c0392b",
-                      }
-                    : {
-                        background: "#121212",
-                        color: "white",
-                        border: "1px solid #121212",
-                      }
-                }
+              </Button>
+              <Button
+                variant={state.danger ? "danger" : "primary"}
+                size="sm"
                 onClick={() => handleClose(true)}
               >
                 {state.confirmLabel ?? "Confirm"}
-              </button>
+              </Button>
             </div>
-          </div>
-        </div>
+          }
+        >
+          <p
+            style={{
+              margin: 0,
+              fontFamily: "var(--drp-font-primary)",
+              fontSize: "var(--drp-text-sm)",
+              color: "var(--drp-muted, #555)",
+              lineHeight: 1.5,
+            }}
+          >
+            {state.message}
+          </p>
+        </Modal>
       )}
     </ConfirmContext.Provider>
   );

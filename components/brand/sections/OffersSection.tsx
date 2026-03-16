@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Button, Input } from "@doctorproject/react";
 import { BrandProfile } from "@/lib/types";
 
 interface OffersSectionProps {
@@ -38,13 +39,15 @@ const OffersSection: React.FC<OffersSectionProps> = ({
 
   if (!editing) {
     return (
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+      <div
+        style={{ display: "flex", flexWrap: "wrap", gap: "var(--drp-space-2)" }}
+      >
         {offers.length === 0 ? (
           <span
             style={{
-              color: "var(--bru-muted, #888)",
-              fontSize: "var(--bru-text-sm)",
-              fontFamily: "var(--bru-font-primary)",
+              color: "var(--drp-text-muted)",
+              fontSize: "var(--drp-text-sm)",
+              fontFamily: "var(--drp-font-primary)",
             }}
           >
             No offers added yet
@@ -55,10 +58,10 @@ const OffersSection: React.FC<OffersSectionProps> = ({
               key={i}
               style={{
                 backgroundColor: "#FAE8A4",
-                color: "#121212",
+                color: "var(--drp-black)",
                 padding: "4px 12px",
-                fontSize: "var(--bru-text-sm)",
-                fontFamily: "var(--bru-font-primary)",
+                fontSize: "var(--drp-text-sm)",
+                fontFamily: "var(--drp-font-primary)",
                 fontWeight: "500",
                 borderRadius: 0,
               }}
@@ -72,9 +75,21 @@ const OffersSection: React.FC<OffersSectionProps> = ({
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--drp-space-3)",
+      }}
+    >
       {offers.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "var(--drp-space-2)",
+          }}
+        >
           {offers.map((offer, i) => (
             <span
               key={i}
@@ -83,55 +98,52 @@ const OffersSection: React.FC<OffersSectionProps> = ({
                 alignItems: "center",
                 gap: "6px",
                 backgroundColor: "#FAE8A4",
-                color: "#121212",
+                color: "var(--drp-black)",
                 padding: "4px 10px",
-                fontSize: "var(--bru-text-sm)",
-                fontFamily: "var(--bru-font-primary)",
+                fontSize: "var(--drp-text-sm)",
+                fontFamily: "var(--drp-font-primary)",
                 fontWeight: "500",
                 borderRadius: 0,
               }}
             >
               {offer}
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => handleRemove(i)}
                 aria-label={`Remove ${offer}`}
                 style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
                   padding: "0",
                   lineHeight: 1,
-                  color: "#121212",
+                  color: "var(--drp-black)",
                   fontWeight: "700",
                   fontSize: "14px",
+                  minWidth: "auto",
                 }}
               >
                 ×
-              </button>
+              </Button>
             </span>
           ))}
         </div>
       )}
 
-      <div style={{ display: "flex", gap: "8px" }}>
-        <input
-          type="text"
-          className="bru-input"
+      <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
+        <Input
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Add an offer..."
           style={{ flex: 1 }}
         />
-        <button
-          type="button"
-          className="bru-btn bru-btn--primary bru-btn--sm"
+        <Button
+          variant="primary"
+          size="sm"
           onClick={handleAdd}
           disabled={!inputValue.trim()}
         >
           Add
-        </button>
+        </Button>
       </div>
     </div>
   );

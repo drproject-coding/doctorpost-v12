@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Card, Alert } from "@bruddle/react";
+import { Button, Card, Alert, Loader } from "@doctorproject/react";
 import { IdeaStatusBadge } from "@/components/campaigns/IdeaStatusBadge";
 import type { CampaignPostStatus } from "@/lib/knowledge/types";
 
@@ -144,19 +144,19 @@ export default function IdeaDetailPage({ params }: Props) {
     return (
       <div
         style={{
-          textAlign: "center",
-          padding: "var(--bru-space-8)",
-          color: "var(--bru-grey)",
+          display: "flex",
+          justifyContent: "center",
+          padding: "var(--drp-space-8)",
         }}
       >
-        Loading idea...
+        <Loader label="Loading idea..." />
       </div>
     );
   }
 
   if (error && !idea) {
     return (
-      <div style={{ padding: "var(--bru-space-6)" }}>
+      <div style={{ padding: "var(--drp-space-6)" }}>
         <Alert variant="error">{error}</Alert>
       </div>
     );
@@ -173,28 +173,21 @@ export default function IdeaDetailPage({ params }: Props) {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "var(--bru-space-3)",
-          marginBottom: "var(--bru-space-6)",
+          gap: "var(--drp-space-3)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
-        <button
+        <Button
+          variant="ghost"
           onClick={() => router.push(`/campaigns/${campaignId}`)}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "var(--bru-text-md)",
-            color: "var(--bru-grey)",
-            padding: 0,
-          }}
         >
           &larr;
-        </button>
+        </Button>
         <div style={{ flex: 1 }}>
           <div
             style={{
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-grey)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-grey)",
               marginBottom: 2,
             }}
           >
@@ -202,7 +195,7 @@ export default function IdeaDetailPage({ params }: Props) {
           </div>
           <h1
             style={{
-              fontSize: "var(--bru-text-h3)",
+              fontSize: "var(--drp-text-h3)",
               fontWeight: 700,
               margin: 0,
               lineHeight: 1.2,
@@ -216,14 +209,14 @@ export default function IdeaDetailPage({ params }: Props) {
 
       {/* Error */}
       {error && (
-        <div style={{ marginBottom: "var(--bru-space-3)" }}>
+        <div style={{ marginBottom: "var(--drp-space-3)" }}>
           <Alert variant="error">{error}</Alert>
         </div>
       )}
 
       {/* Topic card details */}
-      <Card variant="raised" style={{ marginBottom: "var(--bru-space-4)" }}>
-        <div style={{ display: "grid", gap: "var(--bru-space-3)" }}>
+      <Card variant="raised" style={{ marginBottom: "var(--drp-space-4)" }}>
+        <div style={{ display: "grid", gap: "var(--drp-space-3)" }}>
           <Field label="Pillar" value={idea.topicCard.pillar} />
           {idea.topicCard.angle && (
             <Field label="Angle" value={String(idea.topicCard.angle)} />
@@ -256,61 +249,28 @@ export default function IdeaDetailPage({ params }: Props) {
       <div
         style={{
           display: "flex",
-          gap: "var(--bru-space-2)",
+          gap: "var(--drp-space-2)",
           flexWrap: "wrap",
           alignItems: "center",
         }}
       >
         {/* Write this post — only for validated */}
         {idea.generationStatus === "validated" && (
-          <button
-            onClick={handleWritePost}
-            disabled={saving}
-            style={{
-              padding: "var(--bru-space-2) var(--bru-space-4)",
-              background: "var(--bru-black, #000)",
-              color: "#fff",
-              border: "none",
-              fontWeight: 700,
-              fontSize: "var(--bru-text-sm)",
-              cursor: saving ? "not-allowed" : "pointer",
-              opacity: saving ? 0.6 : 1,
-            }}
-          >
+          <Button variant="primary" onClick={handleWritePost} disabled={saving}>
             Write this post →
-          </button>
+          </Button>
         )}
 
         {/* Status change buttons */}
         {actions.map((action) => (
-          <button
+          <Button
             key={action.next}
+            variant={action.variant}
             onClick={() => handleStatusChange(action.next)}
             disabled={saving}
-            style={{
-              padding: "var(--bru-space-2) var(--bru-space-4)",
-              background:
-                action.variant === "danger"
-                  ? "#FFCCCC"
-                  : action.variant === "primary"
-                    ? "#0066CC"
-                    : "transparent",
-              color:
-                action.variant === "danger"
-                  ? "#990000"
-                  : action.variant === "primary"
-                    ? "#fff"
-                    : "var(--bru-grey)",
-              border:
-                action.variant === "secondary" ? "var(--bru-border)" : "none",
-              fontWeight: 600,
-              fontSize: "var(--bru-text-sm)",
-              cursor: saving ? "not-allowed" : "pointer",
-              opacity: saving ? 0.6 : 1,
-            }}
           >
             {saving ? "Saving..." : action.label}
-          </button>
+          </Button>
         ))}
       </div>
     </div>
@@ -322,17 +282,17 @@ function Field({ label, value }: { label: string; value: string }) {
     <div>
       <div
         style={{
-          fontSize: "var(--bru-text-xs)",
+          fontSize: "var(--drp-text-xs)",
           fontWeight: 700,
           textTransform: "uppercase",
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           letterSpacing: "0.05em",
           marginBottom: 2,
         }}
       >
         {label}
       </div>
-      <div style={{ fontSize: "var(--bru-text-sm)" }}>{value}</div>
+      <div style={{ fontSize: "var(--drp-text-sm)" }}>{value}</div>
     </div>
   );
 }

@@ -1,146 +1,144 @@
 /* ============================================================
-   BRUDDLE DESIGN SYSTEM — PAGINATION
+   DOCTORPROJECT DESIGN SYSTEM — PAGINATION
    ============================================================ */
-
 
 /* ──────────────────────────────────────────────
    PAGINATION — CENTERED NUMBERS
    ────────────────────────────────────────────── */
 
-.bru-pagination {
+.drp-pagination {
   display: inline-flex;
   align-items: center;
   gap: 0;
-  border: var(--bru-border);
+  border: var(--drp-border);
   border-radius: 0;
   overflow: hidden;
-  background: var(--bru-white);
+  background: var(--drp-white);
 }
 
-.bru-pagination__btn {
+.drp-pagination__btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   background: transparent;
   border: none;
-  border-right: var(--bru-border);
+  border-right: var(--drp-border);
   cursor: pointer;
   font-size: 16px;
-  color: var(--bru-black);
-  transition: background var(--bru-duration-fast) var(--bru-ease);
+  color: var(--drp-black);
+  transition: background var(--drp-duration-fast) var(--drp-ease);
 }
 
-.bru-pagination__btn:last-child {
+.drp-pagination__btn:last-child {
   border-right: none;
-  border-left: var(--bru-border);
+  border-left: var(--drp-border);
 }
 
-.bru-pagination__btn:hover {
+.drp-pagination__btn:hover {
   background: rgba(0, 0, 0, 0.04);
 }
 
-.bru-pagination__btn:disabled {
+.drp-pagination__btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
 
-.bru-pagination__page {
+.drp-pagination__page {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 36px;
-  height: 36px;
+  min-width: 44px;
+  height: 44px;
   padding: 0 4px;
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-sm);
-  font-weight: var(--bru-weight-bold);
-  color: var(--bru-black);
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-sm);
+  font-weight: var(--drp-weight-bold);
+  color: var(--drp-black);
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: background var(--bru-duration-fast) var(--bru-ease);
+  transition: background var(--drp-duration-fast) var(--drp-ease);
 }
 
-.bru-pagination__page:hover {
+.drp-pagination__page:hover {
   background: rgba(0, 0, 0, 0.04);
 }
 
-.bru-pagination__page--active,
-.bru-pagination__page.active {
-  background: var(--bru-purple);
-  color: #FFFFFF;
+.drp-pagination__page--active,
+.drp-pagination__page.active {
+  background: var(--drp-purple);
+  color: #ffffff;
 }
 
-.bru-pagination__info {
-  padding: 0 var(--bru-space-3);
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-sm);
-  font-weight: var(--bru-weight-bold);
-  color: var(--bru-black);
+.drp-pagination__info {
+  padding: 0 var(--drp-space-3);
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-sm);
+  font-weight: var(--drp-weight-bold);
+  color: var(--drp-black);
   white-space: nowrap;
 }
 
 /* Dark variant */
-.bru-pagination--dark {
+.drp-pagination--dark {
   background: #000000;
-  border-color: #FFFFFF;
+  border-color: #ffffff;
 }
 
-.bru-pagination--dark .bru-pagination__btn {
-  color: #FFFFFF;
+.drp-pagination--dark .drp-pagination__btn {
+  color: #ffffff;
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.bru-pagination--dark .bru-pagination__page {
-  color: #FFFFFF;
+.drp-pagination--dark .drp-pagination__page {
+  color: #ffffff;
 }
 
-.bru-pagination--dark .bru-pagination__page--active {
-  background: var(--bru-purple);
+.drp-pagination--dark .drp-pagination__page--active {
+  background: var(--drp-purple);
 }
 
-.bru-pagination--dark .bru-pagination__info {
-  color: #FFFFFF;
+.drp-pagination--dark .drp-pagination__info {
+  color: #ffffff;
 }
 
 /* Transparent variant (no outer border) */
-.bru-pagination--transparent {
+.drp-pagination--transparent {
   border: none;
   background: transparent;
-  gap: var(--bru-space-1);
+  gap: var(--drp-space-1);
 }
 
-.bru-pagination--transparent .bru-pagination__btn {
-  border: var(--bru-border);
+.drp-pagination--transparent .drp-pagination__btn {
+  border: var(--drp-border);
   border-radius: 0;
 }
 
-.bru-pagination--transparent .bru-pagination__page {
+.drp-pagination--transparent .drp-pagination__page {
   border-radius: 0;
 }
-
 
 /* ──────────────────────────────────────────────
    RESPONSIVE — PAGINATION
    ────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
-  .bru-pagination {
+  .drp-pagination {
     flex-wrap: wrap;
     justify-content: center;
   }
 }
 
 @media (max-width: 390px) {
-  .bru-pagination__btn {
+  .drp-pagination__btn {
     width: 32px;
     height: 32px;
-    font-size: var(--bru-text-xs);
+    font-size: var(--drp-text-xs);
   }
 
-  .bru-pagination__btn--nav {
+  .drp-pagination__btn--nav {
     padding: 0 8px;
   }
 }

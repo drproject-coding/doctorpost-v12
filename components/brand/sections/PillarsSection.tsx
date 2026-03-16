@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Button, Input } from "@doctorproject/react";
 import { enhancedContentPillars } from "@/lib/dropdownData";
 import { BrandProfile, CustomPillar } from "@/lib/types";
 import { useConfirm } from "@/components/ConfirmDialog";
@@ -13,7 +13,7 @@ interface PillarsSectionProps {
 }
 
 const MINT = "#98E9AB";
-const CREAM = "#F2F2F2";
+const CREAM = "var(--drp-cream)";
 
 const PillarsSection: React.FC<PillarsSectionProps> = ({
   profile,
@@ -104,12 +104,18 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
     : allPillars.filter((p) => selectedIds.includes(p.id));
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--drp-space-3)",
+      }}
+    >
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-          gap: "12px",
+          gap: "var(--drp-space-3)",
         }}
       >
         {visiblePillars.map((pillar) => {
@@ -144,8 +150,9 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
             >
               {/* Trash button — only in edit mode */}
               {editing && (
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     void deletePillar(pillar.id, pillar.label);
@@ -155,17 +162,13 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
                     position: "absolute",
                     top: 8,
                     right: 8,
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
                     padding: 2,
-                    color: "var(--bru-muted, #888)",
-                    display: "flex",
-                    alignItems: "center",
+                    color: "var(--drp-text-muted)",
                   }}
+                  aria-label="Remove pillar"
                 >
-                  <Trash2 size={13} />
-                </button>
+                  ×
+                </Button>
               )}
 
               {/* Label row */}
@@ -178,10 +181,10 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
               >
                 <span
                   style={{
-                    fontFamily: "var(--bru-font-primary)",
-                    fontWeight: "var(--bru-weight-heavy)",
-                    fontSize: "var(--bru-text-sm)",
-                    color: "var(--bru-black)",
+                    fontFamily: "var(--drp-font-primary)",
+                    fontWeight: "var(--drp-weight-heavy)",
+                    fontSize: "var(--drp-text-sm)",
+                    color: "var(--drp-black)",
                     lineHeight: 1.3,
                   }}
                 >
@@ -203,12 +206,12 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
                 style={{
                   display: "inline-block",
                   backgroundColor: "rgba(0,0,0,0.07)",
-                  color: "var(--bru-black)",
+                  color: "var(--drp-black)",
                   padding: "1px 7px",
-                  fontSize: "var(--bru-text-xs)",
-                  fontFamily: "var(--bru-font-primary)",
+                  fontSize: "var(--drp-text-xs)",
+                  fontFamily: "var(--drp-font-primary)",
                   fontWeight: "500",
-                  letterSpacing: "var(--bru-tracking-caps)",
+                  letterSpacing: "var(--drp-tracking-caps)",
                   textTransform: "uppercase" as const,
                   alignSelf: "flex-start",
                 }}
@@ -221,9 +224,9 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
                 <p
                   style={{
                     margin: 0,
-                    fontFamily: "var(--bru-font-primary)",
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-muted, #666)",
+                    fontFamily: "var(--drp-font-primary)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-text-muted)",
                     lineHeight: 1.5,
                   }}
                 >
@@ -237,27 +240,29 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
 
       {/* Add custom pillar — full-width row below grid */}
       {editing && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <input
-              type="text"
-              className="bru-input"
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--drp-space-2)",
+          }}
+        >
+          <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
+            <Input
               value={newPillarLabel}
               onChange={(e) => setNewPillarLabel(e.target.value)}
               placeholder="Pillar name..."
               style={{ flex: 1 }}
             />
-            <input
-              type="text"
-              className="bru-input"
+            <Input
               value={newPillarDesc}
               onChange={(e) => setNewPillarDesc(e.target.value)}
               placeholder="Description..."
               style={{ flex: 2 }}
             />
-            <button
-              type="button"
-              className="bru-btn bru-btn--secondary bru-btn--sm"
+            <Button
+              variant="secondary"
+              size="sm"
               disabled={!newPillarLabel.trim()}
               onClick={() => {
                 const label = newPillarLabel.trim();
@@ -280,7 +285,7 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
               }}
             >
               Add
-            </button>
+            </Button>
           </div>
         </div>
       )}

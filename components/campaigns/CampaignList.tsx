@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card } from "@bruddle/react";
+import { Badge, Button, Card } from "@doctorproject/react";
 import type { Campaign } from "@/lib/knowledge/types";
 
 interface CampaignListProps {
@@ -50,8 +50,8 @@ export function CampaignList({ onSelect, onNewCampaign }: CampaignListProps) {
       <div
         style={{
           textAlign: "center",
-          padding: "var(--bru-space-6)",
-          color: "var(--bru-grey)",
+          padding: "var(--drp-space-6)",
+          color: "var(--drp-grey)",
         }}
       >
         Loading campaigns...
@@ -63,43 +63,32 @@ export function CampaignList({ onSelect, onNewCampaign }: CampaignListProps) {
     return (
       <Card
         variant="raised"
-        style={{ textAlign: "center", padding: "var(--bru-space-8)" }}
+        style={{ textAlign: "center", padding: "var(--drp-space-8)" }}
       >
         <p
           style={{
-            fontSize: "var(--bru-text-md)",
-            color: "var(--bru-grey)",
-            marginBottom: "var(--bru-space-4)",
+            fontSize: "var(--drp-text-md)",
+            color: "var(--drp-grey)",
+            marginBottom: "var(--drp-space-4)",
           }}
         >
           No campaigns yet. Create your first one to start brainstorming content
           ideas.
         </p>
-        <button
-          onClick={onNewCampaign}
-          style={{
-            padding: "var(--bru-space-2) var(--bru-space-4)",
-            background: "var(--bru-black, #000)",
-            color: "#fff",
-            border: "none",
-            fontWeight: 700,
-            fontSize: "var(--bru-text-sm)",
-            cursor: "pointer",
-          }}
-        >
+        <Button variant="primary" onClick={onNewCampaign}>
           NEW CAMPAIGN
-        </button>
+        </Button>
       </Card>
     );
   }
 
   return (
-    <div style={{ display: "grid", gap: "var(--bru-space-3)" }}>
+    <div style={{ display: "grid", gap: "var(--drp-space-3)" }}>
       {campaigns.map((c) => (
         <Card
           key={c.id}
           variant="flat"
-          style={{ padding: "var(--bru-space-3)", cursor: "pointer" }}
+          style={{ padding: "var(--drp-space-3)", cursor: "pointer" }}
           onClick={() => onSelect(c)}
         >
           <div
@@ -110,13 +99,13 @@ export function CampaignList({ onSelect, onNewCampaign }: CampaignListProps) {
             }}
           >
             <div>
-              <div style={{ fontWeight: 700, fontSize: "var(--bru-text-md)" }}>
+              <div style={{ fontWeight: 700, fontSize: "var(--drp-text-md)" }}>
                 {c.name}
               </div>
               <div
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-grey)",
+                  fontSize: "var(--drp-text-xs)",
+                  color: "var(--drp-grey)",
                   marginTop: 2,
                 }}
               >
@@ -124,18 +113,9 @@ export function CampaignList({ onSelect, onNewCampaign }: CampaignListProps) {
                 {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : ""}
               </div>
             </div>
-            <span
-              style={{
-                fontSize: "var(--bru-text-xs)",
-                fontWeight: 600,
-                padding: "2px 8px",
-                background: c.status === "planning" ? "#E85D04" : "#00AA66",
-                color: "#fff",
-                borderRadius: 2,
-              }}
-            >
+            <Badge variant={c.status === "planning" ? "pink" : "mint"}>
               {c.status}
-            </span>
+            </Badge>
           </div>
         </Card>
       ))}

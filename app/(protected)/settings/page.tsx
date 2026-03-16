@@ -1,6 +1,16 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Card } from "@bruddle/react";
+import {
+  Badge,
+  Button,
+  Card,
+  Container,
+  Heading,
+  Icon,
+  Input,
+  Loader as BruLoader,
+  Text,
+} from "@doctorproject/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import {
   BrandProfile,
@@ -21,18 +31,6 @@ import {
   ONEFORALL_IMAGE_MODELS,
 } from "@/lib/ai/constants";
 import { StraicoModelPicker } from "@/components/settings/StraicoModelPicker";
-import {
-  Loader,
-  CheckCircle,
-  XCircle,
-  ChevronDown,
-  ChevronRight,
-  Eye,
-  EyeOff,
-  Key,
-  ShieldCheck,
-  AlertCircle,
-} from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 type ValidationState =
@@ -45,65 +43,16 @@ function ValidationBadge({ status }: { status: ValidationState }) {
   if (status.state === "idle") return null;
   if (status.state === "validating") {
     return (
-      <span
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 4,
-          padding: "2px 8px",
-          fontSize: 10,
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "0.05em",
-          background: "rgba(59, 130, 246, 0.1)",
-          color: "#2563eb",
-        }}
-      >
-        <Loader size={10} className="animate-spin" />
-        Verifying
-      </span>
+      <Badge variant="outline">
+        <BruLoader size="sm" /> Verifying...
+      </Badge>
     );
   }
   if (status.state === "valid") {
-    return (
-      <span
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 4,
-          padding: "2px 8px",
-          fontSize: 10,
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "0.05em",
-          background: "rgba(22, 163, 74, 0.1)",
-          color: "#16a34a",
-        }}
-      >
-        <ShieldCheck size={10} />
-        Verified
-      </span>
-    );
+    return <Badge variant="mint">✓ Verified</Badge>;
   }
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 4,
-        padding: "2px 8px",
-        fontSize: 10,
-        fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "0.05em",
-        background: "rgba(239, 68, 68, 0.1)",
-        color: "#dc2626",
-      }}
-    >
-      <AlertCircle size={10} />
-      Invalid
-    </span>
-  );
+  // error state:
+  return <Badge variant="pink">{status.message ?? "Invalid"}</Badge>;
 }
 
 function StatusBadge({
@@ -114,23 +63,14 @@ function StatusBadge({
   label?: string;
 }) {
   return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 4,
-        padding: "2px 8px",
-        fontSize: 10,
-        fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "0.05em",
-        background: connected ? "rgba(22, 163, 74, 0.1)" : "rgba(0,0,0,0.05)",
-        color: connected ? "#16a34a" : "var(--bru-grey)",
-      }}
-    >
-      {connected ? <CheckCircle size={10} /> : <XCircle size={10} />}
+    <Badge variant={connected ? "mint" : "outline"}>
+      {connected ? (
+        <Icon name="check" size="sm" />
+      ) : (
+        <Icon name="close" size="sm" />
+      )}
       {label || (connected ? "Connected" : "Not connected")}
-    </span>
+    </Badge>
   );
 }
 
@@ -151,11 +91,11 @@ function TestResultBlock({ test }: { test: TestState }) {
           alignItems: "center",
           gap: 6,
           fontSize: 12,
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           padding: "8px 0",
         }}
       >
-        <Loader size={12} className="animate-spin" />
+        <BruLoader size="sm" />
         {test.testType === "text"
           ? "Generating text..."
           : "Generating image (may take ~30s)..."}
@@ -170,7 +110,7 @@ function TestResultBlock({ test }: { test: TestState }) {
           border: "1px solid rgba(220, 38, 38, 0.2)",
           padding: "8px 12px",
           fontSize: 12,
-          color: "#dc2626",
+          color: "var(--drp-error, #dc2626)",
         }}
       >
         {test.message}
@@ -186,22 +126,22 @@ function TestResultBlock({ test }: { test: TestState }) {
             border: "1px solid rgba(22, 163, 74, 0.2)",
             padding: "6px 12px",
             fontSize: 12,
-            color: "#166534",
+            color: "var(--drp-success-dark, #166534)",
             display: "flex",
             alignItems: "center",
             gap: 6,
           }}
         >
-          <CheckCircle size={14} />
+          <Icon name="check" size="sm" />
           Text model working correctly!
         </div>
         <div
           style={{
-            background: "var(--bru-bg-2, #f5f5f5)",
+            background: "var(--drp-bg-2, #f5f5f5)",
             border: "1px solid rgba(0,0,0,0.1)",
             padding: "10px 14px",
             fontSize: 13,
-            color: "var(--bru-text, #111)",
+            color: "var(--drp-text, #111)",
             fontStyle: "italic",
           }}
         >
@@ -219,13 +159,13 @@ function TestResultBlock({ test }: { test: TestState }) {
             border: "1px solid rgba(22, 163, 74, 0.2)",
             padding: "6px 12px",
             fontSize: 12,
-            color: "#166534",
+            color: "var(--drp-success-dark, #166534)",
             display: "flex",
             alignItems: "center",
             gap: 6,
           }}
         >
-          <CheckCircle size={14} />
+          <Icon name="check" size="sm" />
           Image model working correctly!
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -610,53 +550,49 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <Card
-        variant="raised"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: 200,
-        }}
-      >
-        <p>Loading settings...</p>
-      </Card>
+      <Container>
+        <Card
+          variant="raised"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: 200,
+          }}
+        >
+          <Text>Loading settings...</Text>
+        </Card>
+      </Container>
     );
   }
 
   return (
-    <>
-      <h1
-        style={{
-          fontSize: "var(--bru-text-h3)",
-          fontWeight: 700,
-          marginBottom: "var(--bru-space-6)",
-        }}
-      >
-        AI & Integrations
-      </h1>
+    <Container>
+      <div style={{ marginBottom: "var(--drp-space-6)" }}>
+        <Heading level={1}>AI & Integrations</Heading>
+      </div>
 
       {/* Integration Status Overview Bar */}
       <div
         style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: "var(--bru-space-4)",
-          padding: "var(--bru-space-3)",
-          border: "var(--bru-border)",
-          background: "var(--bru-white)",
-          marginBottom: "var(--bru-space-6)",
+          gap: "var(--drp-space-4)",
+          padding: "var(--drp-space-3)",
+          border: "var(--drp-border)",
+          background: "var(--drp-white)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
           <span
-            style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}
+            style={{ fontSize: 12, fontWeight: 700, color: "var(--drp-grey)" }}
           >
             Claude:
           </span>
@@ -669,11 +605,11 @@ export default function SettingsPage() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
           <span
-            style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}
+            style={{ fontSize: 12, fontWeight: 700, color: "var(--drp-grey)" }}
           >
             Straico:
           </span>
@@ -686,11 +622,11 @@ export default function SettingsPage() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
           <span
-            style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}
+            style={{ fontSize: 12, fontWeight: 700, color: "var(--drp-grey)" }}
           >
             1ForAll:
           </span>
@@ -702,140 +638,136 @@ export default function SettingsPage() {
       </div>
 
       {/* ── Research APIs Card (Perplexity + Reddit) ── */}
-      <Card variant="raised" style={{ marginBottom: "var(--bru-space-6)" }}>
-        <h2
-          style={{
-            fontSize: "var(--bru-text-h5)",
-            fontWeight: 700,
-            marginBottom: "var(--bru-space-2)",
-          }}
-        >
-          Research APIs
-        </h2>
-        <p
-          style={{
-            fontSize: "var(--bru-text-xs)",
-            color: "var(--bru-grey)",
-            marginBottom: "var(--bru-space-4)",
-          }}
-        >
-          Optional keys for the Content Factory research pipeline. When
-          configured, the researcher agent can pull real-time data from
-          Perplexity and Reddit.
-        </p>
+      <Card variant="raised" style={{ marginBottom: "var(--drp-space-6)" }}>
+        <div style={{ marginBottom: "var(--drp-space-2)" }}>
+          <Heading level={5}>Research APIs</Heading>
+        </div>
+        <Text size="xs">
+          <span
+            style={{ marginBottom: "var(--drp-space-4)", display: "block" }}
+          >
+            Optional keys for the Content Factory research pipeline. When
+            configured, the researcher agent can pull real-time data from
+            Perplexity and Reddit.
+          </span>
+        </Text>
 
-        <div className="bru-form-stack">
+        <div className="drp-form-stack">
           {/* Perplexity */}
-          <div className="bru-field">
-            <label className="bru-field__label">Perplexity API Key</label>
-            <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
-              <input
-                className="bru-input"
-                type={showPerplexityKey ? "text" : "password"}
-                value={perplexityApiKey}
-                onChange={(e) => setPerplexityApiKey(e.target.value)}
-                onBlur={() => void saveProfileSilent()}
-                placeholder="pplx-..."
-                style={{ flex: 1 }}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => setShowPerplexityKey((p) => !p)}
-                style={{ padding: "4px 8px" }}
-              >
-                {showPerplexityKey ? <EyeOff size={14} /> : <Eye size={14} />}
-              </Button>
-            </div>
+          <div style={{ position: "relative" }}>
+            <Input
+              label="Perplexity API Key"
+              type={showPerplexityKey ? "text" : "password"}
+              value={perplexityApiKey}
+              onChange={(e) => setPerplexityApiKey(e.target.value)}
+              onBlur={() => void saveProfileSilent()}
+              placeholder="pplx-..."
+            />
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={() => setShowPerplexityKey((p) => !p)}
+              style={{
+                position: "absolute",
+                right: 10,
+                top: "50%",
+                transform: "translateY(-50%)",
+                padding: 0,
+              }}
+            >
+              {showPerplexityKey ? (
+                <Icon name="eye-off" size="sm" />
+              ) : (
+                <Icon name="eye" size="sm" />
+              )}
+            </Button>
           </div>
 
           {/* Reddit */}
-          <div className="bru-field">
-            <label className="bru-field__label">Reddit Client ID</label>
-            <input
-              className="bru-input"
-              value={redditClientId}
-              onChange={(e) => setRedditClientId(e.target.value)}
+          <Input
+            label="Reddit Client ID"
+            value={redditClientId}
+            onChange={(e) => setRedditClientId(e.target.value)}
+            onBlur={() => void saveProfileSilent()}
+            placeholder="Reddit app client ID"
+          />
+          <div style={{ position: "relative" }}>
+            <Input
+              label="Reddit Client Secret"
+              type={showRedditSecret ? "text" : "password"}
+              value={redditClientSecret}
+              onChange={(e) => setRedditClientSecret(e.target.value)}
               onBlur={() => void saveProfileSilent()}
-              placeholder="Reddit app client ID"
+              placeholder="Reddit app client secret"
             />
-          </div>
-          <div className="bru-field">
-            <label className="bru-field__label">Reddit Client Secret</label>
-            <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
-              <input
-                className="bru-input"
-                type={showRedditSecret ? "text" : "password"}
-                value={redditClientSecret}
-                onChange={(e) => setRedditClientSecret(e.target.value)}
-                onBlur={() => void saveProfileSilent()}
-                placeholder="Reddit app client secret"
-                style={{ flex: 1 }}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => setShowRedditSecret((p) => !p)}
-                style={{ padding: "4px 8px" }}
-              >
-                {showRedditSecret ? <EyeOff size={14} /> : <Eye size={14} />}
-              </Button>
-            </div>
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={() => setShowRedditSecret((p) => !p)}
+              style={{
+                position: "absolute",
+                right: 10,
+                top: "50%",
+                transform: "translateY(-50%)",
+                padding: 0,
+              }}
+            >
+              {showRedditSecret ? (
+                <Icon name="eye-off" size="sm" />
+              ) : (
+                <Icon name="eye" size="sm" />
+              )}
+            </Button>
           </div>
         </div>
       </Card>
 
       {/* ── AI Providers Section (full width) ── */}
-      <Card variant="raised" style={{ marginBottom: "var(--bru-space-6)" }}>
+      <Card variant="raised" style={{ marginBottom: "var(--drp-space-6)" }}>
         {/* Tab Navigation */}
         <div
           style={{
             display: "flex",
             borderBottom: "2px solid rgba(0,0,0,0.08)",
-            marginBottom: "var(--bru-space-5)",
+            marginBottom: "var(--drp-space-5)",
           }}
         >
           {[
             {
               id: "claude" as AiProviderType,
               label: "Claude",
-              color: "#7C3AED",
+              color: "var(--drp-purple)",
             },
             {
               id: "straico" as AiProviderType,
               label: "Straico",
-              color: "#F59E0B",
+              color: "var(--drp-yellow)",
             },
             {
               id: "1forall" as AiProviderType,
               label: "1ForAll",
-              color: "#0EA5E9",
+              color: "var(--drp-blue)",
             },
           ].map(({ id, label, color }) => {
             const isActive = expandedProvider === id;
             return (
-              <button
+              <Button
                 key={id}
-                type="button"
+                variant="ghost"
                 onClick={() => setExpandedProvider(id)}
                 style={{
-                  padding: "10px 20px",
-                  background: "none",
-                  border: "none",
+                  padding: "var(--drp-space-2) var(--drp-space-5)",
                   borderBottom: isActive
                     ? `3px solid ${color}`
                     : "3px solid transparent",
-                  cursor: "pointer",
-                  fontFamily: "var(--bru-font-primary)",
-                  fontSize: "var(--bru-text-md)",
                   fontWeight: isActive ? 700 : 400,
-                  color: isActive ? color : "var(--bru-grey)",
+                  color: isActive ? color : "var(--drp-grey)",
                   marginBottom: -2,
                   transition: "color 0.15s, border-color 0.15s",
                 }}
               >
                 {label}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -846,35 +778,21 @@ export default function SettingsPage() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "var(--bru-space-3)",
+              gap: "var(--drp-space-3)",
             }}
           >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "var(--bru-space-3)",
+                gap: "var(--drp-space-3)",
               }}
             >
               <ValidationBadge status={claudeValidation} />
               {isClaude && (
-                <span
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: claudeReady
-                      ? "#7C3AED"
-                      : "var(--bru-error, #FF4444)",
-                    background: claudeReady
-                      ? "rgba(124, 58, 237, 0.1)"
-                      : "rgba(231, 76, 60, 0.1)",
-                    padding: "2px 6px",
-                  }}
-                >
+                <Badge variant={claudeReady ? "primary" : "pink"}>
                   {claudeReady ? "Active" : "No Key"}
-                </span>
+                </Badge>
               )}
               {!isClaude && (
                 <Button
@@ -887,57 +805,39 @@ export default function SettingsPage() {
                 </Button>
               )}
             </div>
-            <div>
-              <label
+            <div style={{ position: "relative" }}>
+              <Input
+                label="API Key"
+                type={showClaudeKey ? "text" : "password"}
+                value={claudeApiKey}
+                onChange={(e) => {
+                  setClaudeApiKey(e.target.value);
+                  setClaudeValidation({ state: "idle" });
+                }}
+                placeholder="sk-ant-..."
+                error={
+                  claudeValidation.state === "error" &&
+                  !!claudeValidation.message
+                }
+              />
+              <Button
+                variant="ghost"
+                type="button"
+                onClick={() => setShowClaudeKey((v) => !v)}
                 style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "var(--bru-grey)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  marginBottom: "var(--bru-space-2)",
+                  position: "absolute",
+                  right: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  padding: 0,
                 }}
               >
-                <Key size={12} /> API Key
-              </label>
-              <div style={{ position: "relative" }}>
-                <input
-                  type={showClaudeKey ? "text" : "password"}
-                  value={claudeApiKey}
-                  onChange={(e) => {
-                    setClaudeApiKey(e.target.value);
-                    setClaudeValidation({ state: "idle" });
-                  }}
-                  placeholder="sk-ant-..."
-                  className="bru-input"
-                  style={{ width: "100%", paddingRight: 40 }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowClaudeKey((v) => !v)}
-                  style={{
-                    position: "absolute",
-                    right: 10,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "var(--bru-grey)",
-                    padding: 0,
-                  }}
-                >
-                  {showClaudeKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-              {claudeValidation.state === "error" && (
-                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
-                  {claudeValidation.message}
-                </p>
-              )}
+                {showClaudeKey ? (
+                  <Icon name="eye-off" size="sm" />
+                ) : (
+                  <Icon name="eye" size="sm" />
+                )}
+              </Button>
             </div>
             <Button
               size="sm"
@@ -948,14 +848,14 @@ export default function SettingsPage() {
             >
               {claudeValidation.state === "validating" ? (
                 <>
-                  <Loader size={12} className="animate-spin" />
+                  <BruLoader size="sm" />
                   Validating...
                 </>
               ) : (
                 "Validate Key"
               )}
             </Button>
-            <p style={{ fontSize: 10, color: "var(--bru-grey)" }}>
+            <p style={{ fontSize: 10, color: "var(--drp-grey)" }}>
               Claude uses direct browser API — model selection is automatic
               (Claude Sonnet 4.5).
             </p>
@@ -980,7 +880,7 @@ export default function SettingsPage() {
                   {claudeTest.state === "loading" &&
                   claudeTest.testType === "text" ? (
                     <>
-                      <Loader size={12} className="animate-spin" /> Testing...
+                      <BruLoader size="sm" /> Testing...
                     </>
                   ) : (
                     "Test Text Model"
@@ -998,35 +898,21 @@ export default function SettingsPage() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "var(--bru-space-3)",
+              gap: "var(--drp-space-3)",
             }}
           >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "var(--bru-space-3)",
+                gap: "var(--drp-space-3)",
               }}
             >
               <ValidationBadge status={straicoValidation} />
               {isStraico && (
-                <span
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: straicoReady
-                      ? "#F59E0B"
-                      : "var(--bru-error, #FF4444)",
-                    background: straicoReady
-                      ? "rgba(245, 158, 11, 0.1)"
-                      : "rgba(231, 76, 60, 0.1)",
-                    padding: "2px 6px",
-                  }}
-                >
+                <Badge variant={straicoReady ? "secondary" : "pink"}>
                   {straicoReady ? "Active" : "No Key"}
-                </span>
+                </Badge>
               )}
               {!isStraico && (
                 <Button
@@ -1039,57 +925,39 @@ export default function SettingsPage() {
                 </Button>
               )}
             </div>
-            <div>
-              <label
+            <div style={{ position: "relative" }}>
+              <Input
+                label="API Key"
+                type={showStraicoKey ? "text" : "password"}
+                value={straicoApiKey}
+                onChange={(e) => {
+                  setStraicoApiKey(e.target.value);
+                  setStraicoValidation({ state: "idle" });
+                }}
+                placeholder="Your Straico API key"
+                error={
+                  straicoValidation.state === "error" &&
+                  !!straicoValidation.message
+                }
+              />
+              <Button
+                variant="ghost"
+                type="button"
+                onClick={() => setShowStraicoKey((v) => !v)}
                 style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "var(--bru-grey)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  marginBottom: "var(--bru-space-2)",
+                  position: "absolute",
+                  right: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  padding: 0,
                 }}
               >
-                <Key size={12} /> API Key
-              </label>
-              <div style={{ position: "relative" }}>
-                <input
-                  type={showStraicoKey ? "text" : "password"}
-                  value={straicoApiKey}
-                  onChange={(e) => {
-                    setStraicoApiKey(e.target.value);
-                    setStraicoValidation({ state: "idle" });
-                  }}
-                  placeholder="Your Straico API key"
-                  className="bru-input"
-                  style={{ width: "100%", paddingRight: 40 }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowStraicoKey((v) => !v)}
-                  style={{
-                    position: "absolute",
-                    right: 10,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "var(--bru-grey)",
-                    padding: 0,
-                  }}
-                >
-                  {showStraicoKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-              {straicoValidation.state === "error" && (
-                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
-                  {straicoValidation.message}
-                </p>
-              )}
+                {showStraicoKey ? (
+                  <Icon name="eye-off" size="sm" />
+                ) : (
+                  <Icon name="eye" size="sm" />
+                )}
+              </Button>
             </div>
             <Button
               size="sm"
@@ -1100,7 +968,7 @@ export default function SettingsPage() {
             >
               {straicoValidation.state === "validating" ? (
                 <>
-                  <Loader size={12} className="animate-spin" />
+                  <BruLoader size="sm" />
                   Validating...
                 </>
               ) : (
@@ -1110,8 +978,9 @@ export default function SettingsPage() {
             {straicoApiKey.trim() && (
               <>
                 {/* Model for Copy dropdown */}
-                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
-                  <button
+                <div style={{ border: "var(--drp-border)" }}>
+                  <Button
+                    variant="ghost"
                     type="button"
                     onClick={() => setStraicoModelOpen((v) => !v)}
                     style={{
@@ -1119,13 +988,10 @@ export default function SettingsPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "10px 14px",
+                      padding: "var(--drp-space-2) var(--drp-space-3)",
                       background: straicoModelOpen
                         ? "rgba(245, 158, 11, 0.05)"
                         : "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "var(--bru-font-primary)",
                     }}
                   >
                     <span
@@ -1134,17 +1000,21 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       Model for Copy
                     </span>
                     {straicoModelOpen ? (
-                      <ChevronDown size={14} color="var(--bru-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▼
+                      </span>
                     ) : (
-                      <ChevronRight size={14} color="var(--bru-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▶
+                      </span>
                     )}
-                  </button>
+                  </Button>
                   {straicoModelOpen && (
                     <div
                       style={{
@@ -1164,8 +1034,9 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Model for Image dropdown */}
-                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
-                  <button
+                <div style={{ border: "var(--drp-border)" }}>
+                  <Button
+                    variant="ghost"
                     type="button"
                     onClick={() => setStraicoImageOpen((v) => !v)}
                     style={{
@@ -1173,13 +1044,10 @@ export default function SettingsPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "10px 14px",
+                      padding: "var(--drp-space-2) var(--drp-space-3)",
                       background: straicoImageOpen
                         ? "rgba(245, 158, 11, 0.05)"
                         : "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "var(--bru-font-primary)",
                     }}
                   >
                     <span
@@ -1188,17 +1056,21 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       Model for Image
                     </span>
                     {straicoImageOpen ? (
-                      <ChevronDown size={14} color="var(--bru-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▼
+                      </span>
                     ) : (
-                      <ChevronRight size={14} color="var(--bru-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▶
+                      </span>
                     )}
-                  </button>
+                  </Button>
                   {straicoImageOpen && (
                     <div
                       style={{
@@ -1242,7 +1114,7 @@ export default function SettingsPage() {
                     {straicoTest.state === "loading" &&
                     straicoTest.testType === "text" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <BruLoader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Text Model"
@@ -1266,7 +1138,7 @@ export default function SettingsPage() {
                     {straicoTest.state === "loading" &&
                     straicoTest.testType === "image" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <BruLoader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Image Model"
@@ -1285,35 +1157,21 @@ export default function SettingsPage() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "var(--bru-space-3)",
+              gap: "var(--drp-space-3)",
             }}
           >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "var(--bru-space-3)",
+                gap: "var(--drp-space-3)",
               }}
             >
               <ValidationBadge status={oneforallValidation} />
               {isOneforall && (
-                <span
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: oneforallReady
-                      ? "#0EA5E9"
-                      : "var(--bru-error, #FF4444)",
-                    background: oneforallReady
-                      ? "rgba(14, 165, 233, 0.1)"
-                      : "rgba(231, 76, 60, 0.1)",
-                    padding: "2px 6px",
-                  }}
-                >
+                <Badge variant={oneforallReady ? "filled" : "pink"}>
                   {oneforallReady ? "Active" : "No Key"}
-                </span>
+                </Badge>
               )}
               {!isOneforall && (
                 <Button
@@ -1326,57 +1184,39 @@ export default function SettingsPage() {
                 </Button>
               )}
             </div>
-            <div>
-              <label
+            <div style={{ position: "relative" }}>
+              <Input
+                label="API Key"
+                type={showOneforallKey ? "text" : "password"}
+                value={oneforallApiKey}
+                onChange={(e) => {
+                  setOneforallApiKey(e.target.value);
+                  setOneforallValidation({ state: "idle" });
+                }}
+                placeholder="Your 1ForAll API key"
+                error={
+                  oneforallValidation.state === "error" &&
+                  !!oneforallValidation.message
+                }
+              />
+              <Button
+                variant="ghost"
+                type="button"
+                onClick={() => setShowOneforallKey((v) => !v)}
                 style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "var(--bru-grey)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  marginBottom: "var(--bru-space-2)",
+                  position: "absolute",
+                  right: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  padding: 0,
                 }}
               >
-                <Key size={12} /> API Key
-              </label>
-              <div style={{ position: "relative" }}>
-                <input
-                  type={showOneforallKey ? "text" : "password"}
-                  value={oneforallApiKey}
-                  onChange={(e) => {
-                    setOneforallApiKey(e.target.value);
-                    setOneforallValidation({ state: "idle" });
-                  }}
-                  placeholder="Your 1ForAll API key"
-                  className="bru-input"
-                  style={{ width: "100%", paddingRight: 40 }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowOneforallKey((v) => !v)}
-                  style={{
-                    position: "absolute",
-                    right: 10,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "var(--bru-grey)",
-                    padding: 0,
-                  }}
-                >
-                  {showOneforallKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-              {oneforallValidation.state === "error" && (
-                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
-                  {oneforallValidation.message}
-                </p>
-              )}
+                {showOneforallKey ? (
+                  <Icon name="eye-off" size="sm" />
+                ) : (
+                  <Icon name="eye" size="sm" />
+                )}
+              </Button>
             </div>
             <Button
               size="sm"
@@ -1387,7 +1227,7 @@ export default function SettingsPage() {
             >
               {oneforallValidation.state === "validating" ? (
                 <>
-                  <Loader size={12} className="animate-spin" />
+                  <BruLoader size="sm" />
                   Validating...
                 </>
               ) : (
@@ -1397,8 +1237,9 @@ export default function SettingsPage() {
             {oneforallApiKey.trim() && (
               <>
                 {/* Model for Copy dropdown */}
-                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
-                  <button
+                <div style={{ border: "var(--drp-border)" }}>
+                  <Button
+                    variant="ghost"
                     type="button"
                     onClick={() => setOneforallModelOpen((v) => !v)}
                     style={{
@@ -1406,13 +1247,10 @@ export default function SettingsPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "10px 14px",
+                      padding: "var(--drp-space-2) var(--drp-space-3)",
                       background: oneforallModelOpen
                         ? "rgba(14, 165, 233, 0.05)"
                         : "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "var(--bru-font-primary)",
                     }}
                   >
                     <span
@@ -1421,17 +1259,21 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       Model for Copy
                     </span>
                     {oneforallModelOpen ? (
-                      <ChevronDown size={14} color="var(--bru-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▼
+                      </span>
                     ) : (
-                      <ChevronRight size={14} color="var(--bru-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▶
+                      </span>
                     )}
-                  </button>
+                  </Button>
                   {oneforallModelOpen && (
                     <div
                       style={{
@@ -1450,8 +1292,9 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Model for Image dropdown */}
-                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
-                  <button
+                <div style={{ border: "var(--drp-border)" }}>
+                  <Button
+                    variant="ghost"
                     type="button"
                     onClick={() => setOneforallImageOpen((v) => !v)}
                     style={{
@@ -1459,13 +1302,10 @@ export default function SettingsPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "10px 14px",
+                      padding: "var(--drp-space-2) var(--drp-space-3)",
                       background: oneforallImageOpen
                         ? "rgba(14, 165, 233, 0.05)"
                         : "none",
-                      border: "none",
-                      cursor: "pointer",
-                      fontFamily: "var(--bru-font-primary)",
                     }}
                   >
                     <span
@@ -1474,17 +1314,21 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       Model for Image
                     </span>
                     {oneforallImageOpen ? (
-                      <ChevronDown size={14} color="var(--bru-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▼
+                      </span>
                     ) : (
-                      <ChevronRight size={14} color="var(--bru-grey)" />
+                      <span style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+                        ▶
+                      </span>
                     )}
-                  </button>
+                  </Button>
                   {oneforallImageOpen && (
                     <div
                       style={{
@@ -1528,7 +1372,7 @@ export default function SettingsPage() {
                     {oneforallTest.state === "loading" &&
                     oneforallTest.testType === "text" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <BruLoader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Text Model"
@@ -1552,7 +1396,7 @@ export default function SettingsPage() {
                     {oneforallTest.state === "loading" &&
                     oneforallTest.testType === "image" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <BruLoader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Image Model"
@@ -1569,13 +1413,13 @@ export default function SettingsPage() {
         <Button
           variant="primary"
           block
-          style={{ marginTop: "var(--bru-space-6)" }}
+          style={{ marginTop: "var(--drp-space-6)" }}
           onClick={() => void handleSaveAll()}
           disabled={saving}
         >
           {saving ? (
             <>
-              <Loader size={16} className="animate-spin" />
+              <BruLoader size="sm" />
               Saving & Validating...
             </>
           ) : (
@@ -1583,6 +1427,6 @@ export default function SettingsPage() {
           )}
         </Button>
       </Card>
-    </>
+    </Container>
   );
 }

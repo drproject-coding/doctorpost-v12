@@ -1,8 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button } from "@bruddle/react";
+import {
+  Button,
+  Alert,
+  Input,
+  Textarea,
+  Select,
+  Loader,
+} from "@doctorproject/react";
 import { ScheduledPost, PostStatus, DropdownOption } from "@/lib/types";
-import { X, Save, Loader, Calendar } from "lucide-react";
 
 interface PostEditorModalProps {
   isOpen: boolean;
@@ -165,24 +171,29 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
   };
 
   return (
-    <div className="bru-overlay">
-      <div className="bru-modal w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="bru-modal__header">
-          <h2 className="bru-modal__title">Edit Post: {post.title}</h2>
-          <button onClick={onClose} className="bru-modal__close">
-            <X size={20} />
-          </button>
+    <div className="drp-overlay">
+      <div className="drp-modal w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="drp-modal__header">
+          <h2 className="drp-modal__title">Edit Post: {post.title}</h2>
+          <Button
+            onClick={onClose}
+            variant="ghost"
+            size="sm"
+            aria-label="Close"
+          >
+            ✕
+          </Button>
         </div>
 
-        <div className="bru-modal__body">
+        <div className="drp-modal__body">
           {saveError && (
-            <div className="bg-red-100 text-red-800 border-2 border-red-300 rounded-bru-md p-3 mb-4 text-sm font-medium">
-              {saveError}
+            <div style={{ marginBottom: "var(--drp-space-4)" }}>
+              <Alert variant="error">{saveError}</Alert>
             </div>
           )}
           {saveSuccess && (
-            <div className="bg-green-100 text-green-800 border-2 border-green-300 rounded-bru-md p-3 mb-4 text-sm font-medium">
-              {saveSuccess}
+            <div style={{ marginBottom: "var(--drp-space-4)" }}>
+              <Alert variant="success">{saveSuccess}</Alert>
             </div>
           )}
 
@@ -191,13 +202,13 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
             <div
               style={{
                 display: "flex",
-                gap: 16,
-                fontSize: 11,
-                color: "#888",
-                marginBottom: 16,
-                padding: "6px 10px",
-                background: "#f8f8f8",
-                border: "1px solid #e0e0e0",
+                gap: "var(--drp-space-4)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-text-muted)",
+                marginBottom: "var(--drp-space-4)",
+                padding: "var(--drp-space-1) var(--drp-space-2)",
+                background: "var(--drp-cream)",
+                border: "1px solid rgba(0,0,0,0.1)",
               }}
             >
               {post.createdAt && (
@@ -209,66 +220,49 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
             </div>
           )}
 
-          <div className="mb-4 flex flex-col gap-2">
-            <label htmlFor="edit-title" className="bru-field__label block">
-              Title
-            </label>
-            <input
-              type="text"
+          <div className="mb-4">
+            <Input
+              label="Title"
               id="edit-title"
-              className="bru-input w-full"
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
               disabled={isSaving}
             />
           </div>
 
-          <div className="mb-4 flex flex-col gap-2">
-            <label htmlFor="edit-content" className="bru-field__label block">
-              Content
-            </label>
-            <textarea
+          <div className="mb-4">
+            <Textarea
+              label="Content"
               id="edit-content"
-              className="bru-input w-full h-48 resize-y"
+              className="h-48 resize-y"
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
               disabled={isSaving}
-            ></textarea>
+            />
           </div>
 
-          <div className="mb-4 flex flex-col gap-2">
-            <label htmlFor="edit-status" className="bru-field__label block">
-              Status
-            </label>
-            <select
+          <div className="mb-4">
+            <Select
+              label="Status"
               id="edit-status"
-              className="bru-input w-full"
               value={editedStatus}
               onChange={(e) => setEditedStatus(e.target.value as PostStatus)}
               disabled={isSaving}
             >
-              {statusOptions.map((option) => (
-                <option key={option.id} value={option.value}>
-                  {option.label}
+              {statusOptions.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           {showDatePicker && (
-            <div className="mb-4 flex flex-col gap-2">
-              <label
-                htmlFor="edit-date"
-                className="bru-field__label block"
-                style={{ display: "flex", alignItems: "center", gap: 6 }}
-              >
-                <Calendar size={14} />
-                {dateLabel}
-              </label>
-              <input
+            <div className="mb-4">
+              <Input
+                label={dateLabel}
                 type="date"
                 id="edit-date"
-                className="bru-input w-full"
                 value={editedDate}
                 onChange={(e) => setEditedDate(e.target.value)}
                 disabled={isSaving}
@@ -277,7 +271,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
           )}
         </div>
 
-        <div className="bru-modal__footer">
+        <div className="drp-modal__footer">
           <Button onClick={onClose} variant="secondary" disabled={isSaving}>
             Cancel
           </Button>
@@ -288,12 +282,10 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
           >
             {isSaving ? (
               <span className="flex items-center">
-                <Loader size={16} className="animate-spin mr-2" /> Saving...
+                <Loader size="sm" /> Saving...
               </span>
             ) : (
-              <span className="flex items-center">
-                <Save size={16} className="mr-2" /> Save Changes
-              </span>
+              "Save Changes"
             )}
           </Button>
         </div>

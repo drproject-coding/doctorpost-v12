@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Card } from "@bruddle/react";
-import { Clock, Trash2, Play, RotateCcw } from "lucide-react";
+import { Button, Card } from "@doctorproject/react";
 import {
   listSessions as listLocalSessions,
   deleteSession as deleteLocalSession,
@@ -108,26 +107,26 @@ export function SessionHistory({
   const displayed = expanded ? sessions : sessions.slice(0, 3);
 
   return (
-    <Card variant="raised" style={{ marginBottom: "var(--bru-space-4)" }}>
+    <Card variant="raised" style={{ marginBottom: "var(--drp-space-4)" }}>
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "var(--bru-space-3)",
+          marginBottom: "var(--drp-space-3)",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
-          <Clock size={16} style={{ color: "var(--bru-grey)" }} />
+          <span style={{ color: "var(--drp-grey)", fontSize: 16 }}>⏱</span>
           <h4
             style={{
-              fontSize: "var(--bru-text-md)",
+              fontSize: "var(--drp-text-md)",
               fontWeight: 700,
               margin: 0,
             }}
@@ -136,8 +135,8 @@ export function SessionHistory({
           </h4>
           <span
             style={{
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-grey)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-grey)",
             }}
           >
             ({sessions.length})
@@ -145,17 +144,17 @@ export function SessionHistory({
         </div>
       </div>
 
-      <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
+      <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
         {displayed.map((session) => (
           <div
             key={session.id}
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--bru-space-3)",
-              padding: "var(--bru-space-2) var(--bru-space-3)",
-              border: "var(--bru-border)",
-              fontSize: "var(--bru-text-sm)",
+              gap: "var(--drp-space-3)",
+              padding: "var(--drp-space-2) var(--drp-space-3)",
+              border: "var(--drp-border)",
+              fontSize: "var(--drp-text-sm)",
             }}
           >
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -171,10 +170,10 @@ export function SessionHistory({
               </div>
               <div
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-grey)",
+                  fontSize: "var(--drp-text-xs)",
+                  color: "var(--drp-grey)",
                   display: "flex",
-                  gap: "var(--bru-space-2)",
+                  gap: "var(--drp-space-2)",
                 }}
               >
                 <span>{formatDate(session.updatedAt)}</span>
@@ -212,8 +211,8 @@ export function SessionHistory({
                       onRetryFromPhase(session.stateJson, errorAtPhase!)
                     }
                     style={{ flexShrink: 0 }}
+                    iconLeft="↻"
                   >
-                    <RotateCcw size={12} />
                     Retry {PHASE_LABELS[errorAtPhase] || errorAtPhase}
                   </Button>
                 ) : (
@@ -222,8 +221,8 @@ export function SessionHistory({
                     variant="primary"
                     onClick={() => onResume(session.stateJson)}
                     style={{ flexShrink: 0 }}
+                    iconLeft="▶"
                   >
-                    <Play size={12} />
                     Resume
                   </Button>
                 );
@@ -242,44 +241,37 @@ export function SessionHistory({
                 variant="primary"
                 onClick={() => onResume(session.stateJson)}
                 style={{ flexShrink: 0 }}
+                iconLeft="▶"
               >
-                <Play size={12} />
                 Resume
               </Button>
             )}
-            <button
+            <Button
+              size="sm"
+              variant="ghost"
               onClick={() => handleDelete(session.id)}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: "var(--bru-grey)",
-                flexShrink: 0,
-                padding: 4,
-              }}
+              style={{ flexShrink: 0, color: "var(--drp-grey)" }}
               title="Delete session"
             >
-              <Trash2 size={14} />
-            </button>
+              ×
+            </Button>
           </div>
         ))}
       </div>
 
       {sessions.length > 3 && (
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => setExpanded(!expanded)}
           style={{
-            marginTop: "var(--bru-space-2)",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "var(--bru-text-xs)",
-            color: "var(--bru-purple)",
+            marginTop: "var(--drp-space-2)",
+            color: "var(--drp-purple)",
             textDecoration: "underline",
           }}
         >
           {expanded ? "Show less" : `Show all ${sessions.length} sessions`}
-        </button>
+        </Button>
       )}
     </Card>
   );

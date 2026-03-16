@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button } from "@bruddle/react";
-import { Edit3, Wand2, RotateCcw } from "lucide-react";
+import { Button, Textarea } from "@doctorproject/react";
 import type { GuardrailResult } from "@/lib/knowledge/types";
 
 interface GuardrailRecoveryProps {
@@ -32,13 +31,13 @@ export function GuardrailRecovery({
     return (
       <div
         style={{
-          padding: "var(--bru-space-3)",
+          padding: "var(--drp-space-3)",
           background: "rgba(0, 170, 0, 0.08)",
           border: "2px solid rgba(0, 170, 0, 0.3)",
-          fontSize: "var(--bru-text-sm)",
+          fontSize: "var(--drp-text-sm)",
         }}
       >
-        <strong style={{ color: "var(--bru-success-dark, #2d7a3a)" }}>
+        <strong style={{ color: "var(--drp-success-dark, #2d7a3a)" }}>
           All guardrails passed!
         </strong>{" "}
         Proceeding to scoring.
@@ -47,28 +46,28 @@ export function GuardrailRecovery({
   }
 
   return (
-    <div style={{ marginTop: "var(--bru-space-3)" }}>
+    <div style={{ marginTop: "var(--drp-space-3)" }}>
       <h4
         style={{
-          fontSize: "var(--bru-text-md)",
+          fontSize: "var(--drp-text-md)",
           fontWeight: 700,
-          marginBottom: "var(--bru-space-2)",
+          marginBottom: "var(--drp-space-2)",
         }}
       >
         Guardrail Checks
       </h4>
 
       {/* Results list */}
-      <div style={{ display: "grid", gap: "var(--bru-space-1)" }}>
+      <div style={{ display: "grid", gap: "var(--drp-space-1)" }}>
         {guardrailResults.map((r) => (
           <div
             key={r.rule}
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--bru-space-2)",
-              fontSize: "var(--bru-text-sm)",
-              padding: "var(--bru-space-1) var(--bru-space-2)",
+              gap: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+              padding: "var(--drp-space-1) var(--drp-space-2)",
               background: r.passed
                 ? "rgba(0, 170, 0, 0.08)"
                 : "rgba(255, 68, 68, 0.08)",
@@ -78,8 +77,8 @@ export function GuardrailRecovery({
             <span style={{ fontWeight: 500 }}>{r.rule}</span>
             <span
               style={{
-                fontSize: "var(--bru-text-xs)",
-                color: "var(--bru-grey)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-grey)",
               }}
             >
               {r.source}
@@ -87,8 +86,8 @@ export function GuardrailRecovery({
             {r.detail && (
               <span
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-grey)",
+                  fontSize: "var(--drp-text-xs)",
+                  color: "var(--drp-grey)",
                   marginLeft: "auto",
                 }}
               >
@@ -102,8 +101,8 @@ export function GuardrailRecovery({
       {/* Failure summary + actions */}
       <div
         style={{
-          marginTop: "var(--bru-space-3)",
-          padding: "var(--bru-space-3)",
+          marginTop: "var(--drp-space-3)",
+          padding: "var(--drp-space-3)",
           background: "rgba(255, 68, 68, 0.08)",
           border: "2px solid rgba(255, 68, 68, 0.2)",
         }}
@@ -111,9 +110,9 @@ export function GuardrailRecovery({
         <div
           style={{
             fontWeight: 700,
-            fontSize: "var(--bru-text-sm)",
-            color: "var(--bru-error-dark, #c0392b)",
-            marginBottom: "var(--bru-space-2)",
+            fontSize: "var(--drp-text-sm)",
+            color: "var(--drp-error-dark, #c0392b)",
+            marginBottom: "var(--drp-space-2)",
           }}
         >
           {failedRules.length} rule{failedRules.length !== 1 ? "s" : ""} failed
@@ -121,9 +120,9 @@ export function GuardrailRecovery({
             <span
               style={{
                 fontWeight: 400,
-                marginLeft: "var(--bru-space-2)",
-                fontSize: "var(--bru-text-xs)",
-                color: "var(--bru-grey)",
+                marginLeft: "var(--drp-space-2)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-grey)",
               }}
             >
               (Attempt {retryCount}/{maxRetries})
@@ -134,9 +133,9 @@ export function GuardrailRecovery({
         {/* Failed rules detail */}
         <ul
           style={{
-            margin: "0 0 var(--bru-space-3) 0",
-            paddingLeft: "var(--bru-space-4)",
-            fontSize: "var(--bru-text-sm)",
+            margin: "0 0 var(--drp-space-3) 0",
+            paddingLeft: "var(--drp-space-4)",
+            fontSize: "var(--drp-text-sm)",
           }}
         >
           {failedRules.map((r) => (
@@ -151,18 +150,17 @@ export function GuardrailRecovery({
         <div
           style={{
             display: "flex",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
             flexWrap: "wrap",
           }}
         >
           <Button
             onClick={() => setIsEditing(!isEditing)}
             style={{
-              border: isEditing ? "2px solid var(--bru-purple)" : undefined,
+              border: isEditing ? "2px solid var(--drp-purple)" : undefined,
             }}
           >
-            <Edit3 size={14} />
-            Manual Edit
+            ✎ Manual Edit
           </Button>
 
           {retryCount < maxRetries && (
@@ -171,20 +169,15 @@ export function GuardrailRecovery({
               onClick={() => onAiFix(failedRules)}
               disabled={isFixing}
             >
-              {isFixing ? (
-                <RotateCcw size={14} className="animate-spin" />
-              ) : (
-                <Wand2 size={14} />
-              )}
-              {isFixing ? "Fixing..." : "Fix with AI"}
+              {isFixing ? "↻ Fixing..." : "✦ Fix with AI"}
             </Button>
           )}
 
           {retryCount >= maxRetries && (
             <span
               style={{
-                fontSize: "var(--bru-text-xs)",
-                color: "var(--bru-grey)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-grey)",
                 alignSelf: "center",
               }}
             >
@@ -196,16 +189,15 @@ export function GuardrailRecovery({
 
       {/* Manual edit area */}
       {isEditing && (
-        <div style={{ marginTop: "var(--bru-space-3)" }}>
-          <textarea
-            className="bru-input"
+        <div style={{ marginTop: "var(--drp-space-3)" }}>
+          <Textarea
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
             style={{
               width: "100%",
               minHeight: 300,
               fontFamily: "monospace",
-              fontSize: "var(--bru-text-sm)",
+              fontSize: "var(--drp-text-sm)",
               lineHeight: 1.6,
             }}
           />
@@ -213,13 +205,13 @@ export function GuardrailRecovery({
             style={{
               display: "flex",
               justifyContent: "space-between",
-              marginTop: "var(--bru-space-2)",
+              marginTop: "var(--drp-space-2)",
             }}
           >
             <span
               style={{
-                fontSize: "var(--bru-text-xs)",
-                color: "var(--bru-grey)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-grey)",
               }}
             >
               {editedContent.split(/\s+/).length} words | {editedContent.length}{" "}

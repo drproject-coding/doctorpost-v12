@@ -2,15 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card } from "@bruddle/react";
-import {
-  Upload,
-  FileText,
-  X,
-  CheckCircle,
-  AlertCircle,
-  Loader,
-} from "lucide-react";
+import { Button, Card, Loader } from "@doctorproject/react";
 
 type FileStatus = "pending" | "uploading" | "ready" | "error";
 
@@ -59,7 +51,7 @@ function StatusBadge({ status }: StatusBadgeProps) {
     { background: string; color: string; label: string }
   > = {
     pending: {
-      background: "var(--bru-purple)",
+      background: "var(--drp-purple)",
       color: "white",
       label: "Pending",
     },
@@ -77,7 +69,7 @@ function StatusBadge({ status }: StatusBadgeProps) {
         alignItems: "center",
         gap: 4,
         padding: "2px 8px",
-        fontSize: "var(--bru-text-xs, 11px)",
+        fontSize: "var(--drp-text-xs, 11px)",
         fontWeight: 700,
         textTransform: "uppercase",
         letterSpacing: "0.04em",
@@ -87,16 +79,9 @@ function StatusBadge({ status }: StatusBadgeProps) {
         flexShrink: 0,
       }}
     >
-      {status === "uploading" && (
-        <Loader
-          size={10}
-          style={{
-            animation: "spin 1s linear infinite",
-          }}
-        />
-      )}
-      {status === "ready" && <CheckCircle size={10} />}
-      {status === "error" && <AlertCircle size={10} />}
+      {status === "uploading" && <span>⟳</span>}
+      {status === "ready" && <span>✓</span>}
+      {status === "error" && <span>⚠</span>}
       {s.label}
     </span>
   );
@@ -223,40 +208,40 @@ export default function OnboardingUploadPage() {
       <div
         style={{
           minHeight: "100vh",
-          background: "var(--bru-cream)",
+          background: "var(--drp-cream)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          padding: "var(--bru-space-8, 32px) var(--bru-space-4, 16px)",
+          padding: "var(--drp-space-8, 32px) var(--drp-space-4, 16px)",
         }}
       >
         <div style={{ width: "100%", maxWidth: 600 }}>
           {/* Header */}
           <div
             style={{
-              marginBottom: "var(--bru-space-8, 32px)",
+              marginBottom: "var(--drp-space-8, 32px)",
               textAlign: "center",
             }}
           >
             <p
               style={{
-                fontSize: "var(--bru-text-xs, 11px)",
+                fontSize: "var(--drp-text-xs, 11px)",
                 fontWeight: 700,
                 textTransform: "uppercase",
                 letterSpacing: "0.1em",
-                color: "var(--bru-purple)",
-                marginBottom: "var(--bru-space-2, 8px)",
+                color: "var(--drp-purple)",
+                marginBottom: "var(--drp-space-2, 8px)",
               }}
             >
               Step 1 of 3 — Brand Setup
             </p>
             <h1
               style={{
-                fontSize: "var(--bru-text-h2, 28px)",
+                fontSize: "var(--drp-text-h2, 28px)",
                 fontWeight: 800,
-                color: "var(--bru-black)",
-                margin: "0 0 var(--bru-space-3, 12px)",
+                color: "var(--drp-black)",
+                margin: "0 0 var(--drp-space-3, 12px)",
                 lineHeight: 1.15,
               }}
             >
@@ -264,8 +249,8 @@ export default function OnboardingUploadPage() {
             </h1>
             <p
               style={{
-                fontSize: "var(--bru-text-base, 15px)",
-                color: "var(--bru-grey)",
+                fontSize: "var(--drp-text-base, 15px)",
+                color: "var(--drp-grey)",
                 margin: 0,
                 lineHeight: 1.55,
               }}
@@ -291,42 +276,45 @@ export default function OnboardingUploadPage() {
               }
             }}
             style={{
-              border: `2px dashed ${isDragging ? "var(--bru-purple)" : "var(--bru-grey, #999)"}`,
+              border: `2px dashed ${isDragging ? "var(--drp-purple)" : "var(--drp-grey, #999)"}`,
               background: isDragging
-                ? "rgba(var(--bru-purple-rgb, 100, 50, 200), 0.04)"
+                ? "rgba(var(--drp-purple-rgb, 100, 50, 200), 0.04)"
                 : "white",
-              padding: "var(--bru-space-10, 40px) var(--bru-space-6, 24px)",
+              padding: "var(--drp-space-10, 40px) var(--drp-space-6, 24px)",
               textAlign: "center",
               cursor: "pointer",
               transition: "border-color 0.15s ease, background 0.15s ease",
-              marginBottom: "var(--bru-space-4, 16px)",
+              marginBottom: "var(--drp-space-4, 16px)",
               userSelect: "none",
             }}
           >
-            <Upload
-              size={32}
+            <span
               style={{
+                fontSize: 32,
                 color: isDragging
-                  ? "var(--bru-purple)"
-                  : "var(--bru-grey, #999)",
-                marginBottom: "var(--bru-space-3, 12px)",
+                  ? "var(--drp-purple)"
+                  : "var(--drp-grey, #999)",
+                marginBottom: "var(--drp-space-3, 12px)",
                 transition: "color 0.15s ease",
+                display: "block",
               }}
-            />
+            >
+              ⬆
+            </span>
             <p
               style={{
-                fontSize: "var(--bru-text-base, 15px)",
+                fontSize: "var(--drp-text-base, 15px)",
                 fontWeight: 700,
-                color: "var(--bru-black)",
-                margin: "0 0 var(--bru-space-1, 4px)",
+                color: "var(--drp-black)",
+                margin: "0 0 var(--drp-space-1, 4px)",
               }}
             >
               Drop files here or click to browse
             </p>
             <p
               style={{
-                fontSize: "var(--bru-text-sm, 13px)",
-                color: "var(--bru-grey)",
+                fontSize: "var(--drp-text-sm, 13px)",
+                color: "var(--drp-grey)",
                 margin: 0,
               }}
             >
@@ -349,7 +337,7 @@ export default function OnboardingUploadPage() {
             <Card
               variant="flat"
               style={{
-                marginBottom: "var(--bru-space-6, 24px)",
+                marginBottom: "var(--drp-space-6, 24px)",
                 overflow: "hidden",
               }}
             >
@@ -360,25 +348,30 @@ export default function OnboardingUploadPage() {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "var(--bru-space-3, 12px)",
+                      gap: "var(--drp-space-3, 12px)",
                       padding:
-                        "var(--bru-space-3, 12px) var(--bru-space-4, 16px)",
+                        "var(--drp-space-3, 12px) var(--drp-space-4, 16px)",
                       borderTop:
                         idx === 0
                           ? "none"
-                          : "1px solid var(--bru-border-color, #e5e5e5)",
+                          : "1px solid var(--drp-border-color, #e5e5e5)",
                     }}
                   >
-                    <FileText
-                      size={16}
-                      style={{ color: "var(--bru-grey)", flexShrink: 0 }}
-                    />
+                    <span
+                      style={{
+                        color: "var(--drp-grey)",
+                        flexShrink: 0,
+                        fontSize: 16,
+                      }}
+                    >
+                      ▣
+                    </span>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p
                         style={{
-                          fontSize: "var(--bru-text-sm, 13px)",
+                          fontSize: "var(--drp-text-sm, 13px)",
                           fontWeight: 600,
-                          color: "var(--bru-black)",
+                          color: "var(--drp-black)",
                           margin: 0,
                           overflow: "hidden",
                           textOverflow: "ellipsis",
@@ -389,8 +382,8 @@ export default function OnboardingUploadPage() {
                       </p>
                       <p
                         style={{
-                          fontSize: "var(--bru-text-xs, 11px)",
-                          color: "var(--bru-grey)",
+                          fontSize: "var(--drp-text-xs, 11px)",
+                          color: "var(--drp-grey)",
                           margin: 0,
                         }}
                       >
@@ -399,26 +392,22 @@ export default function OnboardingUploadPage() {
                     </div>
                     <StatusBadge status={uf.status} />
                     {uf.status !== "uploading" && (
-                      <button
-                        onClick={(e) => {
+                      <Button
+                        variant="ghost"
+                        icon
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           removeFile(uf.id);
                         }}
                         aria-label={`Remove ${uf.file.name}`}
                         style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          padding: 4,
-                          color: "var(--bru-grey)",
-                          display: "flex",
-                          alignItems: "center",
+                          color: "var(--drp-grey)",
                           flexShrink: 0,
-                          lineHeight: 1,
+                          padding: 4,
                         }}
                       >
-                        <X size={14} />
-                      </button>
+                        ✕
+                      </Button>
                     )}
                   </div>
                 ))}
@@ -432,7 +421,7 @@ export default function OnboardingUploadPage() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "var(--bru-space-4, 16px)",
+              gap: "var(--drp-space-4, 16px)",
             }}
           >
             <Button
@@ -449,10 +438,7 @@ export default function OnboardingUploadPage() {
                     gap: 8,
                   }}
                 >
-                  <Loader
-                    size={14}
-                    style={{ animation: "spin 1s linear infinite" }}
-                  />
+                  <Loader size="sm" />
                   Processing…
                 </span>
               ) : allReady ? (
@@ -462,30 +448,27 @@ export default function OnboardingUploadPage() {
               )}
             </Button>
 
-            <button
+            <Button
+              variant="ghost"
               onClick={() => router.push("/onboarding/wizard/1")}
               style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "var(--bru-text-sm, 13px)",
-                color: "var(--bru-grey)",
+                fontSize: "var(--drp-text-sm, 13px)",
+                color: "var(--drp-grey)",
                 textDecoration: "underline",
                 textUnderlineOffset: 3,
-                padding: 0,
               }}
             >
               Build with wizard instead →
-            </button>
+            </Button>
           </div>
 
           {/* File count warning */}
           {files.length >= MAX_FILES && (
             <p
               style={{
-                marginTop: "var(--bru-space-3, 12px)",
-                fontSize: "var(--bru-text-xs, 11px)",
-                color: "var(--bru-grey)",
+                marginTop: "var(--drp-space-3, 12px)",
+                fontSize: "var(--drp-text-xs, 11px)",
+                color: "var(--drp-grey)",
                 textAlign: "center",
               }}
             >

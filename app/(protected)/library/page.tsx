@@ -1,10 +1,22 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { Card } from "@bruddle/react";
+import Link from "next/link";
+import {
+  Card,
+  Container,
+  Heading,
+  Tabs,
+  Tag,
+  Text,
+  EmptyState,
+  Pagination,
+  Button,
+  Input,
+  Loader,
+} from "@doctorproject/react";
 import { getScheduledPosts, updatePost, deletePost } from "@/lib/api";
 import { useToast } from "@/components/Toast";
 import { ScheduledPost } from "@/lib/types";
-import { Calendar } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import PostEditorModal from "@/components/PostEditorModal";
 
@@ -14,16 +26,16 @@ function getSource(post: ScheduledPost): "Studio" | "Factory" | "Create" {
   return "Create";
 }
 
-const SOURCE_STYLE: Record<string, { bg: string; color: string }> = {
-  Studio: { bg: "#631DED1A", color: "#631DED" },
-  Factory: { bg: "#00A8961A", color: "#00A896" },
-  Create: { bg: "#FF6C011A", color: "#FF6C01" },
+const SOURCE_TAG_COLOR: Record<string, "purple" | "mint" | "yellow"> = {
+  Studio: "purple",
+  Factory: "mint",
+  Create: "yellow",
 };
 
-const FORMAT_STYLE: Record<string, { bg: string; color: string }> = {
-  carousel: { bg: "#631DED1A", color: "#631DED" },
-  visual: { bg: "#D4A8001A", color: "#D4A800" },
-  simple: { bg: "#1212120D", color: "#666" },
+const FORMAT_TAG_COLOR: Record<string, "purple" | "yellow" | "grey"> = {
+  carousel: "purple",
+  visual: "yellow",
+  simple: "grey",
 };
 
 const STATUS_FILTERS = [
@@ -152,288 +164,220 @@ export default function LibraryPage() {
     }
   };
 
+  const tabItems = STATUS_FILTERS.map((f) => ({
+    key: f.id,
+    label: f.label,
+    count: statusCounts[f.id] ?? 0,
+  }));
+
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Content Library</h1>
-          <Card
-            variant="raised"
-            className="flex items-center justify-center p-12"
-          >
-            <p>Loading content library...</p>
-          </Card>
+      <Container>
+        <div style={{ marginBottom: "var(--drp-space-6)" }}>
+          <Heading level={1}>Content Library</Heading>
         </div>
-      </div>
+        <Card
+          variant="raised"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "var(--drp-space-12)",
+          }}
+        >
+          <Loader label="Loading content library..." />
+        </Card>
+      </Container>
     );
   }
 
   return (
-    <div className="p-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Content Library</h1>
+    <Container>
+      <div style={{ marginBottom: "var(--drp-space-6)" }}>
+        <Heading level={1}>Content Library</Heading>
+      </div>
 
-        {/* Status filter chips */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 6,
-            marginBottom: 12,
-          }}
-        >
-          {STATUS_FILTERS.map((f) => {
-            const count = statusCounts[f.id] ?? 0;
-            const active = filter === f.id;
-            return (
-              <button
-                key={f.id}
-                onClick={() => setFilter(f.id)}
-                style={{
-                  padding: "4px 12px",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  border: "2px solid #000",
-                  cursor: "pointer",
-                  background: active ? "#000" : "#f5f5f5",
-                  color: active ? "#fff" : "#333",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 5,
-                }}
-              >
-                {f.label}
-                {count > 0 && (
-                  <span
-                    style={{
-                      background: active ? "rgba(255,255,255,0.25)" : "#ddd",
-                      color: active ? "#fff" : "#555",
-                      borderRadius: 8,
-                      padding: "0 5px",
-                      fontSize: 10,
-                      fontWeight: 800,
-                    }}
-                  >
-                    {count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+      {/* Status filter tabs */}
+      <div style={{ marginBottom: "var(--drp-space-4)" }}>
+        <Tabs
+          items={tabItems}
+          activeKey={filter}
+          onChange={(id) => setFilter(id as FilterId)}
+        />
+      </div>
 
-        {/* Search */}
-        <div style={{ marginBottom: 16 }}>
-          <input
-            type="text"
-            placeholder="Search by title, content or pillar…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "8px 12px",
-              fontSize: 14,
-              border: "2px solid #000",
-              outline: "none",
-              fontFamily: "inherit",
-            }}
-          />
-        </div>
+      {/* Search */}
+      <div style={{ marginBottom: "var(--drp-space-4)" }}>
+        <Input
+          label=""
+          type="text"
+          placeholder="Search by title, content or pillar…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: "100%" }}
+        />
+      </div>
 
-        <Card variant="raised">
-          {pagedPosts.length === 0 ? (
-            <p className="text-center py-12 text-gray-600 font-medium">
-              No posts found.
-            </p>
-          ) : (
-            <div className="space-y-4">
-              {pagedPosts.map((post) => {
-                const src = getSource(post);
-                const srcStyle = SOURCE_STYLE[src];
-                const showDate = DATED_STATUSES.has(post.status);
-                const dateLabel =
-                  post.status === "published" ? "Published" : "Planned";
-                const scheduledFmt = fmtDate(post.scheduledAt);
-                const createdFmt = fmtDate(post.createdAt);
-                const updatedFmt = fmtDate(post.updatedAt);
-                const showUpdated = updatedFmt && updatedFmt !== createdFmt;
+      <Card variant="raised">
+        {pagedPosts.length === 0 ? (
+          <div style={{ padding: "var(--drp-space-12) 0" }}>
+            <EmptyState
+              icon="📚"
+              title="No posts found"
+              description="Try a different filter or create your first post."
+              action={
+                <Link href="/create">
+                  <Button variant="primary" size="sm">
+                    Create Post
+                  </Button>
+                </Link>
+              }
+            />
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {pagedPosts.map((post) => {
+              const src = getSource(post);
+              const showDate = DATED_STATUSES.has(post.status);
+              const dateLabel =
+                post.status === "published" ? "Published" : "Planned";
+              const scheduledFmt = fmtDate(post.scheduledAt);
+              const createdFmt = fmtDate(post.createdAt);
+              const updatedFmt = fmtDate(post.updatedAt);
+              const showUpdated = updatedFmt && updatedFmt !== createdFmt;
 
-                return (
-                  <div
-                    key={post.id}
-                    className="flex items-start justify-between p-4 border-b border-gray-200 last:border-b-0"
-                    style={{ gap: 12 }}
-                  >
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p className="font-bold" style={{ marginBottom: 4 }}>
+              return (
+                <div
+                  key={post.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                    padding: "var(--drp-space-4)",
+                    borderBottom: "1px solid var(--drp-border-color)",
+                    gap: 12,
+                  }}
+                >
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <Text weight="bold">
+                      <span style={{ marginBottom: 4, display: "block" }}>
                         {post.title}
-                      </p>
-                      {/* Badge row */}
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: 6,
-                          flexWrap: "wrap",
-                          alignItems: "center",
-                          marginBottom: 4,
-                        }}
-                      >
-                        <span
-                          style={{
-                            background: srcStyle.bg,
-                            color: srcStyle.color,
-                            padding: "1px 7px",
-                            fontSize: 10,
-                            fontWeight: 800,
-                            textTransform: "uppercase",
-                            letterSpacing: 0.8,
-                          }}
-                        >
-                          {src}
-                        </span>
-                        {post.format &&
-                          (() => {
-                            const s =
-                              FORMAT_STYLE[post.format] ?? FORMAT_STYLE.simple;
-                            return (
-                              <span
-                                style={{
-                                  background: s.bg,
-                                  color: s.color,
-                                  padding: "1px 7px",
-                                  fontSize: 10,
-                                  fontWeight: 800,
-                                  textTransform: "uppercase",
-                                  letterSpacing: 0.8,
-                                }}
-                              >
-                                {post.format}
-                              </span>
-                            );
-                          })()}
-                        {post.pillar && (
-                          <span style={{ fontSize: 11, color: "#666" }}>
-                            {post.pillar}
-                          </span>
-                        )}
-                      </div>
-                      {/* Date metadata row */}
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: 12,
-                          flexWrap: "wrap",
-                          fontSize: 11,
-                          color: "#888",
-                        }}
-                      >
-                        {createdFmt && <span>Created {createdFmt}</span>}
-                        {showUpdated && <span>Updated {updatedFmt}</span>}
-                        {showDate && scheduledFmt && (
-                          <span
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 3,
-                              color:
-                                post.status === "published"
-                                  ? "#00A896"
-                                  : "#631DED",
-                              fontWeight: 700,
-                            }}
-                          >
-                            <Calendar size={11} />
-                            {dateLabel} {scheduledFmt}
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                      </span>
+                    </Text>
+                    {/* Badge row */}
                     <div
                       style={{
                         display: "flex",
+                        gap: 6,
+                        flexWrap: "wrap",
                         alignItems: "center",
-                        gap: 8,
-                        flexShrink: 0,
+                        marginBottom: 4,
                       }}
                     >
-                      <span
-                        className={`bru-tag bru-tag--filled ${post.status}`}
-                      >
-                        {post.status.charAt(0).toUpperCase() +
-                          post.status.slice(1)}
-                      </span>
-                      <a
-                        href={`/library/${post.uuid ?? post.id}`}
-                        className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
-                        style={{ textDecoration: "none" }}
-                      >
-                        View
-                      </a>
-                      <button
-                        onClick={() => handleEditPost(post)}
-                        className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeletePost(post.id)}
-                        className="text-sm bg-red-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-red-200 text-red-700"
-                      >
-                        Delete
-                      </button>
+                      <Tag color={SOURCE_TAG_COLOR[src] ?? "grey"} filled>
+                        {src}
+                      </Tag>
+                      {post.format && (
+                        <Tag
+                          color={FORMAT_TAG_COLOR[post.format] ?? "grey"}
+                          filled
+                        >
+                          {post.format}
+                        </Tag>
+                      )}
+                      {post.pillar && (
+                        <span
+                          style={{
+                            fontSize: 11,
+                            color: "var(--drp-text-muted)",
+                          }}
+                        >
+                          {post.pillar}
+                        </span>
+                      )}
+                    </div>
+                    {/* Date metadata row */}
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 12,
+                        flexWrap: "wrap",
+                        fontSize: 11,
+                        color: "var(--drp-text-muted)",
+                      }}
+                    >
+                      {createdFmt && <span>Created {createdFmt}</span>}
+                      {showUpdated && <span>Updated {updatedFmt}</span>}
+                      {showDate && scheduledFmt && (
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 3,
+                            color:
+                              post.status === "published"
+                                ? "var(--drp-mint)"
+                                : "var(--drp-purple)",
+                            fontWeight: 700,
+                          }}
+                        >
+                          📅 {dateLabel} {scheduledFmt}
+                        </span>
+                      )}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </Card>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 12,
-              marginTop: 16,
-            }}
-          >
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((p) => p - 1)}
-              style={{
-                padding: "6px 16px",
-                fontWeight: 700,
-                border: "2px solid #000",
-                cursor: page === 1 ? "not-allowed" : "pointer",
-                background: page === 1 ? "#f5f5f5" : "#fff",
-                opacity: page === 1 ? 0.5 : 1,
-              }}
-            >
-              ← Prev
-            </button>
-            <span style={{ fontSize: 13, fontWeight: 600 }}>
-              {page} / {totalPages} &nbsp;({filteredPosts.length} posts)
-            </span>
-            <button
-              disabled={page === totalPages}
-              onClick={() => setPage((p) => p + 1)}
-              style={{
-                padding: "6px 16px",
-                fontWeight: 700,
-                border: "2px solid #000",
-                cursor: page === totalPages ? "not-allowed" : "pointer",
-                background: page === totalPages ? "#f5f5f5" : "#fff",
-                opacity: page === totalPages ? 0.5 : 1,
-              }}
-            >
-              Next →
-            </button>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <span className={`drp-tag drp-tag--filled ${post.status}`}>
+                      {post.status.charAt(0).toUpperCase() +
+                        post.status.slice(1)}
+                    </span>
+                    <Link
+                      href={`/library/${post.uuid ?? post.id}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Button variant="outline" size="sm">
+                        View
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="ghost-bordered"
+                      size="sm"
+                      onClick={() => handleEditPost(post)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleDeletePost(post.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
-      </div>
+      </Card>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div style={{ marginTop: "var(--drp-space-6)" }}>
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        </div>
+      )}
 
       <PostEditorModal
         isOpen={isModalOpen}
@@ -441,6 +385,6 @@ export default function LibraryPage() {
         post={editingPost}
         onSave={handleSavePost}
       />
-    </div>
+    </Container>
   );
 }

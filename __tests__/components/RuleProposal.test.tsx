@@ -3,12 +3,15 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { RuleProposalCard } from "@/components/learning/RuleProposal";
 import type { RuleProposal, ProposalStatus } from "@/lib/knowledge/types";
 
-// Mock @bruddle/react components
-jest.mock("@bruddle/react", () => ({
+// Mock @doctorproject/react components
+jest.mock("@doctorproject/react", () => ({
   Alert: ({ variant, children }: any) => (
     <div data-testid="alert" data-variant={variant}>
       {children}
     </div>
+  ),
+  Badge: ({ variant, children }: any) => (
+    <span data-variant={variant}>{children}</span>
   ),
   Button: ({ children, onClick, disabled, ...props }: any) => (
     <button onClick={onClick} disabled={disabled} {...props}>

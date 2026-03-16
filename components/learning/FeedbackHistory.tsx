@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Card } from "@bruddle/react";
+import { Badge, Card, Select } from "@doctorproject/react";
 import type { Signal } from "@/lib/knowledge/types";
 
 interface FeedbackHistoryProps {
@@ -21,6 +21,11 @@ export function FeedbackHistory({ signals }: FeedbackHistoryProps) {
       ? sorted
       : sorted.filter((s) => s.signalType === filterType);
 
+  const filterOptions = [
+    { value: "all", label: "All types" },
+    ...signalTypes.map((t) => ({ value: t, label: t })),
+  ];
+
   return (
     <Card variant="raised">
       <div
@@ -28,12 +33,12 @@ export function FeedbackHistory({ signals }: FeedbackHistoryProps) {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         <h3
           style={{
-            fontSize: "var(--bru-text-h5)",
+            fontSize: "var(--drp-text-h5)",
             fontWeight: 700,
             margin: 0,
           }}
@@ -43,50 +48,48 @@ export function FeedbackHistory({ signals }: FeedbackHistoryProps) {
 
         {/* Filter */}
         {signalTypes.length > 1 && (
-          <select
-            className="bru-input"
+          <Select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            style={{ width: "auto", fontSize: "var(--bru-text-sm)" }}
+            style={{ width: "auto", fontSize: "var(--drp-text-sm)" }}
           >
-            <option value="all">All types</option>
-            {signalTypes.map((t) => (
-              <option key={t} value={t}>
-                {t}
+            {filterOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
               </option>
             ))}
-          </select>
+          </Select>
         )}
       </div>
 
       {filtered.length === 0 ? (
         <p
           style={{
-            fontSize: "var(--bru-text-sm)",
-            color: "var(--bru-grey)",
+            fontSize: "var(--drp-text-sm)",
+            color: "var(--drp-grey)",
           }}
         >
           No feedback entries yet.
         </p>
       ) : (
-        <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
-          {filtered.map((signal, idx) => (
+        <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
+          {filtered.map((signal) => (
             <div
               key={signal.id}
               style={{
                 display: "grid",
                 gridTemplateColumns: "100px 80px 1fr",
-                gap: "var(--bru-space-2)",
-                padding: "var(--bru-space-2)",
-                borderBottom: "1px solid var(--bru-border-color, #e0e0e0)",
+                gap: "var(--drp-space-2)",
+                padding: "var(--drp-space-2)",
+                borderBottom: "1px solid var(--drp-border-color, #e0e0e0)",
                 alignItems: "start",
               }}
             >
               {/* Date */}
               <span
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-grey)",
+                  fontSize: "var(--drp-text-xs)",
+                  color: "var(--drp-grey)",
                 }}
               >
                 {new Date(signal.createdAt).toLocaleDateString(undefined, {
@@ -96,32 +99,17 @@ export function FeedbackHistory({ signals }: FeedbackHistoryProps) {
               </span>
 
               {/* Type badge */}
-              <span
-                style={{
-                  fontSize: "var(--bru-text-xs)",
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  padding: "0 4px",
-                  background: "var(--bru-purple)",
-                  color: "white",
-                  textAlign: "center",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {signal.signalType}
-              </span>
+              <Badge variant="primary">{signal.signalType}</Badge>
 
               {/* Observation */}
               <div>
-                <div style={{ fontSize: "var(--bru-text-sm)" }}>
+                <div style={{ fontSize: "var(--drp-text-sm)" }}>
                   {signal.observation}
                 </div>
                 <div
                   style={{
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                     marginTop: 2,
                   }}
                 >

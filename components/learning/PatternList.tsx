@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Card } from "@bruddle/react";
+import { Badge, Card, ProgressBar } from "@doctorproject/react";
 import type { Signal } from "@/lib/knowledge/types";
 
 interface PatternListProps {
@@ -53,9 +53,9 @@ export function PatternList({ signals }: PatternListProps) {
     <Card variant="raised">
       <h3
         style={{
-          fontSize: "var(--bru-text-h5)",
+          fontSize: "var(--drp-text-h5)",
           fontWeight: 700,
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         Detected Patterns
@@ -64,52 +64,41 @@ export function PatternList({ signals }: PatternListProps) {
       {patterns.length === 0 ? (
         <p
           style={{
-            fontSize: "var(--bru-text-sm)",
-            color: "var(--bru-grey)",
+            fontSize: "var(--drp-text-sm)",
+            color: "var(--drp-grey)",
           }}
         >
           No patterns detected yet. Patterns emerge as you use the Content
           Factory and the learning agent records recurring signals.
         </p>
       ) : (
-        <div style={{ display: "grid", gap: "var(--bru-space-3)" }}>
-          {patterns.map((p, idx) => (
+        <div style={{ display: "grid", gap: "var(--drp-space-3)" }}>
+          {patterns.map((p) => (
             <Card
               key={`${p.category}::${p.signalType}`}
               variant="flat"
-              style={{ padding: "var(--bru-space-3)" }}
+              style={{ padding: "var(--drp-space-3)" }}
             >
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "var(--bru-space-2)",
-                  marginBottom: "var(--bru-space-2)",
+                  gap: "var(--drp-space-2)",
+                  marginBottom: "var(--drp-space-2)",
                 }}
               >
-                <span
-                  style={{
-                    fontSize: "var(--bru-text-xs)",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    padding: "0 4px",
-                    background: p.promotionReady
-                      ? "var(--bru-success, #00AA00)"
-                      : "var(--bru-purple)",
-                    color: "white",
-                  }}
-                >
+                <Badge variant={p.promotionReady ? "mint" : "primary"}>
                   {p.promotionReady ? "Promotion Ready" : `${p.count} signals`}
-                </span>
+                </Badge>
                 <span
-                  style={{ fontSize: "var(--bru-text-sm)", fontWeight: 700 }}
+                  style={{ fontSize: "var(--drp-text-sm)", fontWeight: 700 }}
                 >
                   {p.category}
                 </span>
                 <span
                   style={{
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   {p.signalType}
@@ -117,15 +106,15 @@ export function PatternList({ signals }: PatternListProps) {
               </div>
 
               {/* Recent observations */}
-              <div style={{ display: "grid", gap: "var(--bru-space-1)" }}>
+              <div style={{ display: "grid", gap: "var(--drp-space-1)" }}>
                 {p.recentObservations.map((obs, oi) => (
                   <div
-                    key={`obs-${idx}-${oi}`}
+                    key={`obs-${p.category}-${p.signalType}-${oi}`}
                     style={{
-                      fontSize: "var(--bru-text-xs)",
-                      color: "var(--bru-grey)",
-                      paddingLeft: "var(--bru-space-2)",
-                      borderLeft: "2px solid var(--bru-border-color, #e0e0e0)",
+                      fontSize: "var(--drp-text-xs)",
+                      color: "var(--drp-grey)",
+                      paddingLeft: "var(--drp-space-2)",
+                      borderLeft: "2px solid var(--drp-border-color, #e0e0e0)",
                     }}
                   >
                     {obs}
@@ -137,27 +126,14 @@ export function PatternList({ signals }: PatternListProps) {
               {!p.promotionReady && (
                 <div
                   style={{
-                    marginTop: "var(--bru-space-2)",
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    marginTop: "var(--drp-space-2)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   {p.count}/10 signals toward rule promotion
-                  <div
-                    style={{
-                      width: "100%",
-                      height: 4,
-                      background: "var(--bru-border-color, #e0e0e0)",
-                      marginTop: 4,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: `${Math.min(100, (p.count / 10) * 100)}%`,
-                        height: "100%",
-                        background: "var(--bru-purple)",
-                      }}
-                    />
+                  <div style={{ marginTop: "var(--drp-space-1)" }}>
+                    <ProgressBar value={Math.min(100, (p.count / 10) * 100)} />
                   </div>
                 </div>
               )}

@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Input } from "@doctorproject/react";
 import { BrandProfile } from "@/lib/types";
 
 interface ProfileSectionProps {
@@ -11,9 +12,9 @@ interface ProfileSectionProps {
 const NOT_SET = (
   <span
     style={{
-      color: "var(--bru-grey-85)",
+      color: "var(--drp-grey-85)",
       fontStyle: "italic",
-      fontSize: "var(--bru-text-sm)",
+      fontSize: "var(--drp-text-sm)",
     }}
   >
     Not set
@@ -38,22 +39,22 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
       [profile.firstName, profile.lastName].filter(Boolean).join(" ") || null;
 
     return (
-      <div className="bru-form-stack">
+      <div className="drp-form-stack">
         {/* Name */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "140px 1fr",
-            gap: "8px",
+            gap: "var(--drp-space-2)",
             alignItems: "baseline",
           }}
         >
-          <span className="bru-field__label">Name</span>
+          <span className="drp-field__label">Name</span>
           <span
             style={{
-              fontFamily: "var(--bru-font-primary)",
-              fontSize: "var(--bru-text-md)",
-              color: "var(--bru-black)",
+              fontFamily: "var(--drp-font-primary)",
+              fontSize: "var(--drp-text-md)",
+              color: "var(--drp-black)",
             }}
           >
             {fullName ?? NOT_SET}
@@ -65,16 +66,16 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           style={{
             display: "grid",
             gridTemplateColumns: "140px 1fr",
-            gap: "8px",
+            gap: "var(--drp-space-2)",
             alignItems: "baseline",
           }}
         >
-          <span className="bru-field__label">Company</span>
+          <span className="drp-field__label">Company</span>
           <span
             style={{
-              fontFamily: "var(--bru-font-primary)",
-              fontSize: "var(--bru-text-md)",
-              color: "var(--bru-black)",
+              fontFamily: "var(--drp-font-primary)",
+              fontSize: "var(--drp-text-md)",
+              color: "var(--drp-black)",
             }}
           >
             {profile.companyName || NOT_SET}
@@ -86,16 +87,16 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           style={{
             display: "grid",
             gridTemplateColumns: "140px 1fr",
-            gap: "8px",
+            gap: "var(--drp-space-2)",
             alignItems: "baseline",
           }}
         >
-          <span className="bru-field__label">Role</span>
+          <span className="drp-field__label">Role</span>
           <span
             style={{
-              fontFamily: "var(--bru-font-primary)",
-              fontSize: "var(--bru-text-md)",
-              color: "var(--bru-black)",
+              fontFamily: "var(--drp-font-primary)",
+              fontSize: "var(--drp-text-md)",
+              color: "var(--drp-black)",
             }}
           >
             {profile.role || NOT_SET}
@@ -107,16 +108,16 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           style={{
             display: "grid",
             gridTemplateColumns: "140px 1fr",
-            gap: "8px",
+            gap: "var(--drp-space-2)",
             alignItems: "baseline",
           }}
         >
-          <span className="bru-field__label">Industry</span>
+          <span className="drp-field__label">Industry</span>
           <span
             style={{
-              fontFamily: "var(--bru-font-primary)",
-              fontSize: "var(--bru-text-md)",
-              color: "var(--bru-black)",
+              fontFamily: "var(--drp-font-primary)",
+              fontSize: "var(--drp-text-md)",
+              color: "var(--drp-black)",
             }}
           >
             {profile.industry || NOT_SET}
@@ -128,17 +129,17 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           style={{
             display: "grid",
             gridTemplateColumns: "140px 1fr",
-            gap: "8px",
+            gap: "var(--drp-space-2)",
             alignItems: "flex-start",
           }}
         >
-          <span className="bru-field__label" style={{ paddingTop: "2px" }}>
+          <span className="drp-field__label" style={{ paddingTop: "2px" }}>
             Audience
           </span>
           {profile.audience.length > 0 ? (
             <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
               {profile.audience.map((tag) => (
-                <span key={tag} className="bru-tag bru-tag--purple">
+                <span key={tag} className="drp-tag drp-tag--purple">
                   {tag}
                 </span>
               ))}
@@ -153,30 +154,22 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
 
   // Edit mode
   return (
-    <div className="bru-form-stack">
+    <div className="drp-form-stack">
       {/* First + Last name row */}
-      <div className="bru-form-row">
-        <div className="bru-field">
-          <label className="bru-field__label" htmlFor="profile-first-name">
-            First Name
-          </label>
-          <input
+      <div className="drp-form-row">
+        <div className="drp-field">
+          <Input
+            label="First Name"
             id="profile-first-name"
-            type="text"
-            className="bru-input"
             value={profile.firstName}
             onChange={(e) => onChange({ firstName: e.target.value })}
             placeholder="First name"
           />
         </div>
-        <div className="bru-field">
-          <label className="bru-field__label" htmlFor="profile-last-name">
-            Last Name
-          </label>
-          <input
+        <div className="drp-field">
+          <Input
+            label="Last Name"
             id="profile-last-name"
-            type="text"
-            className="bru-input"
             value={profile.lastName}
             onChange={(e) => onChange({ lastName: e.target.value })}
             placeholder="Last name"
@@ -185,72 +178,46 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
       </div>
 
       {/* Company */}
-      <div className="bru-field">
-        <label className="bru-field__label" htmlFor="profile-company">
-          Company
-        </label>
-        <input
-          id="profile-company"
-          type="text"
-          className="bru-input"
-          style={{ width: "100%" }}
-          value={profile.companyName}
-          onChange={(e) => onChange({ companyName: e.target.value })}
-          placeholder="Company name"
-        />
-      </div>
+      <Input
+        label="Company"
+        id="profile-company"
+        value={profile.companyName}
+        onChange={(e) => onChange({ companyName: e.target.value })}
+        placeholder="Company name"
+      />
 
       {/* Role */}
-      <div className="bru-field">
-        <label className="bru-field__label" htmlFor="profile-role">
-          Role
-        </label>
-        <input
-          id="profile-role"
-          type="text"
-          className="bru-input"
-          style={{ width: "100%" }}
-          value={profile.role}
-          onChange={(e) => onChange({ role: e.target.value })}
-          placeholder="Your role or job title"
-        />
-      </div>
+      <Input
+        label="Role"
+        id="profile-role"
+        value={profile.role}
+        onChange={(e) => onChange({ role: e.target.value })}
+        placeholder="Your role or job title"
+      />
 
       {/* Industry */}
-      <div className="bru-field">
-        <label className="bru-field__label" htmlFor="profile-industry">
-          Industry
-        </label>
-        <input
-          id="profile-industry"
-          type="text"
-          className="bru-input"
-          style={{ width: "100%" }}
-          value={profile.industry}
-          onChange={(e) => onChange({ industry: e.target.value })}
-          placeholder="e.g. Technology, Healthcare, Finance"
-        />
-      </div>
+      <Input
+        label="Industry"
+        id="profile-industry"
+        value={profile.industry}
+        onChange={(e) => onChange({ industry: e.target.value })}
+        placeholder="e.g. Technology, Healthcare, Finance"
+      />
 
       {/* Audience */}
-      <div className="bru-field">
-        <label className="bru-field__label" htmlFor="profile-audience">
-          Audience
-        </label>
-        <input
+      <div className="drp-field">
+        <Input
+          label="Audience"
           id="profile-audience"
-          type="text"
-          className="bru-input"
-          style={{ width: "100%" }}
           value={profile.audience.join(", ")}
           onChange={(e) => handleAudienceChange(e.target.value)}
           placeholder="Comma-separated, e.g. Founders, Marketers, CTOs"
         />
         <span
           style={{
-            fontSize: "var(--bru-text-xs)",
-            color: "var(--bru-grey)",
-            fontFamily: "var(--bru-font-primary)",
+            fontSize: "var(--drp-text-xs)",
+            color: "var(--drp-grey)",
+            fontFamily: "var(--drp-font-primary)",
           }}
         >
           Separate multiple audiences with commas

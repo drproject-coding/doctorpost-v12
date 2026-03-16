@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Textarea, Button } from "@doctorproject/react";
 import { BrandProfile } from "@/lib/types";
 
 const TRUNCATE_AT = 200;
@@ -18,10 +19,12 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
   editing,
   onChange,
 }) => {
+  const [expanded, setExpanded] = useState(false);
+
   if (editing) {
     return (
       <div>
-        <textarea
+        <Textarea
           value={profile.positioning ?? ""}
           onChange={(e) => onChange({ positioning: e.target.value })}
           placeholder="e.g. The only LinkedIn coach who teaches engineers to write without sounding like a LinkedIn post."
@@ -29,11 +32,11 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
           style={{
             width: "100%",
             resize: "vertical",
-            padding: "10px 12px",
-            fontFamily: "var(--bru-font-primary)",
-            fontSize: "var(--bru-text-sm)",
-            color: "var(--bru-black)",
-            background: "var(--bru-white)",
+            padding: "var(--drp-space-2) var(--drp-space-3)",
+            fontFamily: "var(--drp-font-primary)",
+            fontSize: "var(--drp-text-sm)",
+            color: "var(--drp-black)",
+            background: "var(--drp-white)",
             border: "1px solid rgba(0,0,0,0.18)",
             borderRadius: 0,
             outline: "none",
@@ -43,10 +46,10 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
         />
         <p
           style={{
-            marginTop: "6px",
-            fontFamily: "var(--bru-font-primary)",
-            fontSize: "var(--bru-text-xs)",
-            color: "rgba(18,18,18,0.5)",
+            marginTop: "var(--drp-space-1)",
+            fontFamily: "var(--drp-font-primary)",
+            fontSize: "var(--drp-text-xs)",
+            color: "var(--drp-text-muted)",
           }}
         >
           Describe how you&apos;re different from others in your space.
@@ -55,8 +58,6 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
       </div>
     );
   }
-
-  const [expanded, setExpanded] = useState(false);
 
   const text = profile.positioning ?? "";
   const hasContent = text.trim().length > 0;
@@ -69,7 +70,7 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
       style={{
         background: ACCENT_BG,
         borderLeft: `3px solid ${ACCENT}`,
-        padding: "12px 16px",
+        padding: "var(--drp-space-3) var(--drp-space-4)",
       }}
     >
       {hasContent ? (
@@ -77,9 +78,9 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
           <p
             style={{
               margin: 0,
-              fontFamily: "var(--bru-font-primary)",
-              fontSize: "var(--bru-text-sm)",
-              color: "var(--bru-black)",
+              fontFamily: "var(--drp-font-primary)",
+              fontSize: "var(--drp-text-sm)",
+              color: "var(--drp-black)",
               lineHeight: 1.7,
               whiteSpace: "pre-wrap",
             }}
@@ -87,33 +88,31 @@ const PositioningSection: React.FC<PositioningSectionProps> = ({
             {displayed}
           </p>
           {isLong && (
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setExpanded((v) => !v)}
               style={{
-                marginTop: 8,
-                background: "none",
-                border: "none",
+                marginTop: "var(--drp-space-2)",
                 padding: 0,
-                cursor: "pointer",
-                fontFamily: "var(--bru-font-primary)",
-                fontSize: "var(--bru-text-xs)",
-                fontWeight: 700,
                 color: ACCENT,
                 textDecoration: "underline",
+                fontWeight: 700,
+                fontSize: "var(--drp-text-xs)",
                 letterSpacing: "0.03em",
               }}
             >
               {expanded ? "Show less" : "Read more"}
-            </button>
+            </Button>
           )}
         </>
       ) : (
         <p
           style={{
             margin: 0,
-            fontFamily: "var(--bru-font-primary)",
-            fontSize: "var(--bru-text-sm)",
-            color: "rgba(18,18,18,0.45)",
+            fontFamily: "var(--drp-font-primary)",
+            fontSize: "var(--drp-text-sm)",
+            color: "var(--drp-text-muted)",
             lineHeight: 1.7,
             fontStyle: "italic",
           }}

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button, EmptyState, Loader } from "@doctorproject/react";
 import {
   CampaignCalendar,
   type CalendarSlot,
@@ -84,26 +85,23 @@ export default function CampaignDetailPage({ params }: Props) {
     return (
       <div
         style={{
-          textAlign: "center",
-          padding: "var(--bru-space-8)",
-          color: "var(--bru-grey)",
+          display: "flex",
+          justifyContent: "center",
+          padding: "var(--drp-space-8)",
         }}
       >
-        Loading campaign...
+        <Loader label="Loading campaign..." />
       </div>
     );
   }
 
   if (!campaign) {
     return (
-      <div
-        style={{
-          textAlign: "center",
-          padding: "var(--bru-space-8)",
-          color: "var(--bru-grey)",
-        }}
-      >
-        Campaign not found.
+      <div style={{ padding: "var(--drp-space-8)" }}>
+        <EmptyState
+          title="Campaign not found"
+          description="This campaign could not be found."
+        />
       </div>
     );
   }
@@ -114,25 +112,15 @@ export default function CampaignDetailPage({ params }: Props) {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "var(--bru-space-3)",
-          marginBottom: "var(--bru-space-6)",
+          gap: "var(--drp-space-3)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
-        <button
-          onClick={() => router.push("/campaigns")}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "var(--bru-text-md)",
-            color: "var(--bru-grey)",
-            padding: 0,
-          }}
-        >
+        <Button variant="ghost" onClick={() => router.push("/campaigns")}>
           &larr;
-        </button>
+        </Button>
         <h1
-          style={{ fontSize: "var(--bru-text-h3)", fontWeight: 700, margin: 0 }}
+          style={{ fontSize: "var(--drp-text-h3)", fontWeight: 700, margin: 0 }}
         >
           {campaign.name}
         </h1>
@@ -146,15 +134,10 @@ export default function CampaignDetailPage({ params }: Props) {
           campaignId={campaignId}
         />
       ) : (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "var(--bru-space-8)",
-            color: "var(--bru-grey)",
-          }}
-        >
-          No ideas found for this campaign.
-        </div>
+        <EmptyState
+          title="No ideas found"
+          description="No content ideas were found for this campaign."
+        />
       )}
     </div>
   );

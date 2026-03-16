@@ -1,171 +1,172 @@
 /* ============================================================
-   BRUDDLE DESIGN SYSTEM — MODALS & OVERLAYS
+   DOCTORPROJECT DESIGN SYSTEM — MODALS & OVERLAYS
    ============================================================ */
-
 
 /* ──────────────────────────────────────────────
    MODAL / OVERLAY
    ────────────────────────────────────────────── */
 
-.bru-overlay {
+.drp-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: var(--bru-z-overlay);
+  z-index: var(--drp-z-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--bru-space-4);
+  padding: var(--drp-space-4);
 }
 
-.bru-overlay[hidden] {
+.drp-overlay[hidden] {
   display: none;
 }
 
-.bru-modal {
-  background: var(--bru-surface);
-  border: var(--bru-border);
-  box-shadow: var(--bru-shadow-xl);
+.drp-modal {
+  background: var(--drp-surface);
+  border: var(--drp-border);
+  box-shadow: var(--drp-shadow-xl);
   width: 100%;
   max-width: 520px;
   max-height: 90vh;
   overflow-y: auto;
-  z-index: var(--bru-z-modal);
+  z-index: var(--drp-z-modal);
 }
 
-.bru-modal__header {
+.drp-modal__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--bru-space-4) var(--bru-space-6);
-  background: var(--bru-purple);
-  color: #FFFFFF;
+  padding: var(--drp-space-4) var(--drp-space-6);
+  background: var(--drp-purple);
+  color: #ffffff;
 }
 
-.bru-modal__title {
-  font-family: var(--bru-font-primary);
-  font-size: var(--bru-text-lg);
-  font-weight: var(--bru-weight-bold);
+.drp-modal__title {
+  font-family: var(--drp-font-primary);
+  font-size: var(--drp-text-lg);
+  font-weight: var(--drp-weight-bold);
   margin: 0;
 }
 
-.bru-modal__close {
+.drp-modal__close {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  /* Visual size 28px, touch target expanded to 44px via negative margin + padding */
+  width: 44px;
+  height: 44px;
+  margin: -8px -8px -8px 0;
   background: transparent;
   border: none;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 20px;
   cursor: pointer;
   opacity: 0.8;
-  transition: opacity var(--bru-duration-fast) var(--bru-ease);
+  transition: opacity var(--drp-duration-fast) var(--drp-ease);
 }
 
-.bru-modal__close:hover { opacity: 1; }
-
-.bru-modal__body {
-  padding: var(--bru-space-6);
+.drp-modal__close:hover {
+  opacity: 1;
 }
 
-.bru-modal__footer {
+.drp-modal__body {
+  padding: var(--drp-space-6);
+}
+
+.drp-modal__footer {
   display: flex;
   justify-content: flex-end;
-  gap: var(--bru-space-3);
-  padding: var(--bru-space-4) var(--bru-space-6);
-  border-top: var(--bru-border-dotted);
+  gap: var(--drp-space-3);
+  padding: var(--drp-space-4) var(--drp-space-6);
+  border-top: var(--drp-border-dotted);
 }
-
 
 /* ──────────────────────────────────────────────
    TOOLTIP
    Hover-reveal text popup.
    ────────────────────────────────────────────── */
 
-.bru-tooltip {
+.drp-tooltip {
   position: relative;
   display: inline-block;
 }
 
-.bru-tooltip-text {
+.drp-tooltip-text {
   position: absolute;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  padding: var(--bru-space-2) var(--bru-space-3);
-  background: var(--bru-black);
-  color: var(--bru-white);
-  font-family: var(--bru-font-mono);
-  font-size: var(--bru-text-xs);
+  padding: var(--drp-space-2) var(--drp-space-3);
+  background: var(--drp-black);
+  color: var(--drp-white);
+  font-family: var(--drp-font-mono);
+  font-size: var(--drp-text-xs);
   white-space: nowrap;
-  border: var(--bru-border);
-  margin-bottom: var(--bru-space-2);
+  border: var(--drp-border);
+  margin-bottom: var(--drp-space-2);
   opacity: 0;
   visibility: hidden;
-  transition: all var(--bru-duration-fast) var(--bru-ease);
-  z-index: var(--bru-z-tooltip);
+  transition: all var(--drp-duration-fast) var(--drp-ease);
+  z-index: var(--drp-z-tooltip);
 }
 
-.bru-tooltip-text::after {
-  content: '';
+.drp-tooltip-text::after {
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
   border: 6px solid transparent;
-  border-top-color: var(--bru-black);
+  border-top-color: var(--drp-black);
 }
 
-.bru-tooltip:hover .bru-tooltip-text {
+.drp-tooltip:hover .drp-tooltip-text {
   opacity: 1;
   visibility: visible;
 }
-
 
 /* ──────────────────────────────────────────────
    RESPONSIVE — MODALS
    ────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
-  .bru-modal {
+  .drp-modal {
     max-width: calc(100vw - 32px);
     max-height: 85vh;
   }
 
-  .bru-modal__header {
-    padding: var(--bru-space-3) var(--bru-space-4);
+  .drp-modal__header {
+    padding: var(--drp-space-3) var(--drp-space-4);
   }
 
-  .bru-modal__body {
-    padding: var(--bru-space-4);
+  .drp-modal__body {
+    padding: var(--drp-space-4);
   }
 
-  .bru-modal__footer {
-    padding: var(--bru-space-3) var(--bru-space-4);
+  .drp-modal__footer {
+    padding: var(--drp-space-3) var(--drp-space-4);
   }
 }
 
 @media (max-width: 390px) {
-  .bru-overlay {
-    padding: var(--bru-space-2);
+  .drp-overlay {
+    padding: var(--drp-space-2);
   }
 
-  .bru-modal {
+  .drp-modal {
     max-width: 100%;
     max-height: 90vh;
   }
 
-  .bru-modal__title {
-    font-size: var(--bru-text-md);
+  .drp-modal__title {
+    font-size: var(--drp-text-md);
   }
 
-  .bru-modal__footer {
+  .drp-modal__footer {
     flex-direction: column;
   }
 
-  .bru-modal__footer .bru-btn {
+  .drp-modal__footer .drp-btn {
     width: 100%;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { Button } from "@bruddle/react";
+import { Button, EmptyState, Heading } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import {
@@ -239,20 +239,13 @@ export default function CampaignsPage() {
         <div
           style={{
             display: "flex",
+            flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: "var(--bru-space-6)",
+            marginBottom: "var(--drp-space-6)",
           }}
         >
-          <h1
-            style={{
-              fontSize: "var(--bru-text-h3)",
-              fontWeight: 700,
-              margin: 0,
-            }}
-          >
-            Campaigns
-          </h1>
+          <Heading level={1}>Campaigns</Heading>
           <Button onClick={handleNewCampaign}>New Campaign</Button>
         </div>
         <CampaignList
@@ -270,40 +263,24 @@ export default function CampaignsPage() {
         <div
           style={{
             display: "flex",
+            flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: "var(--bru-space-6)",
+            marginBottom: "var(--drp-space-6)",
           }}
         >
           <div
             style={{
               display: "flex",
+              flexDirection: "row",
               alignItems: "center",
-              gap: "var(--bru-space-3)",
+              gap: "var(--drp-space-3)",
             }}
           >
-            <button
-              onClick={handleBackToList}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "var(--bru-text-md)",
-                color: "var(--bru-grey)",
-                padding: 0,
-              }}
-            >
+            <Button variant="ghost" onClick={handleBackToList}>
               &larr;
-            </button>
-            <h1
-              style={{
-                fontSize: "var(--bru-text-h3)",
-                fontWeight: 700,
-                margin: 0,
-              }}
-            >
-              {selectedCampaign.name}
-            </h1>
+            </Button>
+            <Heading level={1}>{selectedCampaign.name}</Heading>
           </div>
         </div>
         {slots.length > 0 && config && (
@@ -315,15 +292,10 @@ export default function CampaignsPage() {
           />
         )}
         {slots.length === 0 && phase === "complete" && (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "var(--bru-space-8)",
-              color: "var(--bru-grey)",
-            }}
-          >
-            No ideas found for this campaign.
-          </div>
+          <EmptyState
+            title="No ideas found"
+            description="No content ideas were found for this campaign."
+          />
         )}
       </div>
     );
@@ -335,47 +307,31 @@ export default function CampaignsPage() {
       <div
         style={{
           display: "flex",
+          flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-6)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <div
           style={{
             display: "flex",
+            flexDirection: "row",
             alignItems: "center",
-            gap: "var(--bru-space-3)",
+            gap: "var(--drp-space-3)",
           }}
         >
-          <button
-            onClick={handleBackToList}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "var(--bru-text-md)",
-              color: "var(--bru-grey)",
-              padding: 0,
-            }}
-          >
+          <Button variant="ghost" onClick={handleBackToList}>
             &larr;
-          </button>
-          <h1
-            style={{
-              fontSize: "var(--bru-text-h3)",
-              fontWeight: 700,
-              margin: 0,
-            }}
-          >
-            New Campaign
-          </h1>
+          </Button>
+          <Heading level={1}>New Campaign</Heading>
         </div>
       </div>
 
       {phase === "idle" && <CampaignSetup onSubmit={handleSubmit} />}
 
       {phase !== "idle" && (
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <BatchProgress
             phase={phase}
             slotsPlanned={slots.length}

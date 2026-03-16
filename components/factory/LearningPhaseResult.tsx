@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Card } from "@bruddle/react";
-import { ChevronDown, ChevronUp, Brain, TrendingUp, Zap } from "lucide-react";
+import { Card, Button } from "@doctorproject/react";
 import type { LearnerOutput, LearnerSignal } from "@/lib/agents/learner";
 
 interface LearningPhaseResultProps {
@@ -30,14 +29,14 @@ function signalIcon(type: LearnerSignal["signalType"]) {
 function signalColor(type: LearnerSignal["signalType"]): string {
   switch (type) {
     case "approval":
-      return "var(--bru-success-dark, #2d7a3a)";
+      return "var(--drp-success-dark, #2d7a3a)";
     case "rejection":
-      return "var(--bru-error-dark, #c0392b)";
+      return "var(--drp-error-dark, #c0392b)";
     case "edit":
     case "hook-rewrite":
-      return "var(--bru-warning-dark, #b8860b)";
+      return "var(--drp-warning-dark, #b8860b)";
     default:
-      return "var(--bru-grey)";
+      return "var(--drp-grey)";
   }
 }
 
@@ -47,34 +46,35 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
   return (
     <Card variant="raised">
       {/* Header */}
-      <button
+      <Button
+        variant="ghost"
         onClick={() => setExpanded(!expanded)}
         style={{
           width: "100%",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
           padding: 0,
-          marginBottom: expanded ? "var(--bru-space-4)" : 0,
+          marginBottom: expanded ? "var(--drp-space-4)" : 0,
+          height: "auto",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
-          <Brain size={18} style={{ color: "var(--bru-purple)" }} />
+          <span style={{ color: "var(--drp-purple)", fontSize: "18px" }}>
+            ◎
+          </span>
           <h3
             style={{
-              fontSize: "var(--bru-text-h5)",
+              fontSize: "var(--drp-text-h5)",
               fontWeight: 700,
               margin: 0,
-              color: "var(--bru-success-dark, #2d7a3a)",
+              color: "var(--drp-success-dark, #2d7a3a)",
             }}
           >
             Learning Phase Complete
@@ -84,21 +84,21 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
           <span
             style={{
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-grey)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-grey)",
             }}
           >
             {output.signals.length} signal
             {output.signals.length !== 1 ? "s" : ""} captured
           </span>
-          {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          {expanded ? "▲" : "▼"}
         </div>
-      </button>
+      </Button>
 
       {expanded && (
         <div>
@@ -108,20 +108,19 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "var(--bru-space-2)",
-                padding: "var(--bru-space-2) var(--bru-space-3)",
+                gap: "var(--drp-space-2)",
+                padding: "var(--drp-space-2) var(--drp-space-3)",
                 background: "rgba(124, 58, 237, 0.08)",
                 border: "1px solid rgba(124, 58, 237, 0.2)",
-                marginBottom: "var(--bru-space-3)",
-                fontSize: "var(--bru-text-sm)",
+                marginBottom: "var(--drp-space-3)",
+                fontSize: "var(--drp-text-sm)",
               }}
             >
-              <TrendingUp
-                size={14}
-                style={{ color: "var(--bru-purple)", flexShrink: 0 }}
-              />
+              <span style={{ color: "var(--drp-purple)", flexShrink: 0 }}>
+                ↗
+              </span>
               <div>
-                <strong style={{ color: "var(--bru-purple)" }}>
+                <strong style={{ color: "var(--drp-purple)" }}>
                   Pattern Detected:
                 </strong>{" "}
                 {output.patternDetected}
@@ -135,24 +134,25 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "var(--bru-space-2)",
-                padding: "var(--bru-space-2) var(--bru-space-3)",
+                gap: "var(--drp-space-2)",
+                padding: "var(--drp-space-2) var(--drp-space-3)",
                 background: "rgba(0, 170, 0, 0.08)",
                 border: "1px solid rgba(0, 170, 0, 0.2)",
-                marginBottom: "var(--bru-space-3)",
-                fontSize: "var(--bru-text-sm)",
+                marginBottom: "var(--drp-space-3)",
+                fontSize: "var(--drp-text-sm)",
               }}
             >
-              <Zap
-                size={14}
-                style={{
-                  color: "var(--bru-success-dark, #2d7a3a)",
-                  flexShrink: 0,
-                }}
-              />
               <span
                 style={{
-                  color: "var(--bru-success-dark, #2d7a3a)",
+                  color: "var(--drp-success-dark, #2d7a3a)",
+                  flexShrink: 0,
+                }}
+              >
+                ⚡
+              </span>
+              <span
+                style={{
+                  color: "var(--drp-success-dark, #2d7a3a)",
                   fontWeight: 600,
                 }}
               >
@@ -163,10 +163,10 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
           )}
 
           {/* Captured Signals */}
-          <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
+          <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
             <h4
               style={{
-                fontSize: "var(--bru-text-sm)",
+                fontSize: "var(--drp-text-sm)",
                 fontWeight: 700,
                 margin: 0,
               }}
@@ -177,17 +177,17 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
               <div
                 key={i}
                 style={{
-                  padding: "var(--bru-space-2) var(--bru-space-3)",
-                  border: "var(--bru-border)",
-                  fontSize: "var(--bru-text-sm)",
+                  padding: "var(--drp-space-2) var(--drp-space-3)",
+                  border: "var(--drp-border)",
+                  fontSize: "var(--drp-text-sm)",
                 }}
               >
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "var(--bru-space-2)",
-                    marginBottom: "var(--bru-space-1)",
+                    gap: "var(--drp-space-2)",
+                    marginBottom: "var(--drp-space-1)",
                   }}
                 >
                   <span>{signalIcon(signal.signalType)}</span>
@@ -202,10 +202,10 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
                   </span>
                   <span
                     style={{
-                      fontSize: "var(--bru-text-xs)",
-                      color: "var(--bru-grey)",
+                      fontSize: "var(--drp-text-xs)",
+                      color: "var(--drp-grey)",
                       padding: "0 4px",
-                      background: "var(--bru-cream, #faf8f5)",
+                      background: "var(--drp-cream, #faf8f5)",
                     }}
                   >
                     {signal.category}
@@ -214,8 +214,8 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
                 <p
                   style={{
                     margin: 0,
-                    fontSize: "var(--bru-text-sm)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-sm)",
+                    color: "var(--drp-grey)",
                     lineHeight: 1.5,
                   }}
                 >
@@ -228,12 +228,12 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
           {output.signals.length === 0 && (
             <div
               style={{
-                padding: "var(--bru-space-3)",
-                fontSize: "var(--bru-text-sm)",
-                color: "var(--bru-grey)",
+                padding: "var(--drp-space-3)",
+                fontSize: "var(--drp-text-sm)",
+                color: "var(--drp-grey)",
               }}
             >
-              <p style={{ margin: 0, marginBottom: "var(--bru-space-2)" }}>
+              <p style={{ margin: 0, marginBottom: "var(--drp-space-2)" }}>
                 <strong>No signals captured</strong>
               </p>
               <p style={{ margin: 0, lineHeight: 1.5 }}>
@@ -241,16 +241,16 @@ export function LearningPhaseResult({ output }: LearningPhaseResultProps) {
                 during the pipeline, such as approvals, rejections, edits, or
                 feedback you provide.
               </p>
-              <p style={{ margin: "var(--bru-space-2) 0 0", lineHeight: 1.5 }}>
+              <p style={{ margin: "var(--drp-space-2) 0 0", lineHeight: 1.5 }}>
                 This session had no interactive feedback signals, which is
                 normal for auto-completed sessions. Signals are captured when
                 you manually:
               </p>
               <ul
                 style={{
-                  margin: "var(--bru-space-1) 0 0",
-                  paddingLeft: "var(--bru-space-4)",
-                  fontSize: "var(--bru-text-xs)",
+                  margin: "var(--drp-space-1) 0 0",
+                  paddingLeft: "var(--drp-space-4)",
+                  fontSize: "var(--drp-text-xs)",
                 }}
               >
                 <li>Approve or reject content</li>

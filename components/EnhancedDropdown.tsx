@@ -171,6 +171,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
       <label htmlFor={`dropdown-${label}`} className="drp-field__label">
         {label}
       </label>
+      {/* Keep raw button — DS Button would override the drp-input dropdown trigger styling */}
       <button
         id={`dropdown-${label}`}
         type="button"
@@ -228,6 +229,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             />
           </div>
           <div className="enhanced-dropdown-filters">
+            {/* Keep raw button — DS Button would override filter tag chip styling */}
             {filterTags.map((tag) => (
               <button
                 key={tag.id}

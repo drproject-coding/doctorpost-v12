@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@doctorproject/react";
 
 export default function DebugPage() {
   const [loading, setLoading] = useState(false);
@@ -31,17 +32,9 @@ export default function DebugPage() {
     <div style={{ padding: "20px", fontFamily: "monospace" }}>
       <h1>Debug: Post Creation</h1>
 
-      <button
-        onClick={testPostCreation}
-        disabled={loading}
-        style={{
-          padding: "10px 20px",
-          fontSize: "16px",
-          cursor: loading ? "not-allowed" : "pointer",
-        }}
-      >
+      <Button variant="primary" onClick={testPostCreation} disabled={loading}>
         {loading ? "Testing..." : "Test Post Creation"}
-      </button>
+      </Button>
 
       {error && (
         <div

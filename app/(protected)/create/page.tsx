@@ -8,7 +8,6 @@ import {
   Heading,
   Icon,
   Input,
-  Stack,
   Tabs,
   Textarea,
   Loader as BruLoader,
@@ -728,7 +727,13 @@ export default function CreatePage() {
           </Card>
 
           {/* Right Column: Generated Post */}
-          <Stack gap="var(--drp-space-4)">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--drp-space-4)",
+            }}
+          >
             <PostGenerator
               ref={postGeneratorRef}
               parameters={postGenerationParams}
@@ -757,7 +762,7 @@ export default function CreatePage() {
                 </Button>
               </div>
             )}
-          </Stack>
+          </div>
         </div>
       )}
 
@@ -816,11 +821,17 @@ export default function CreatePage() {
                   "No taboo topics defined. Go to Settings to add them."}
               </p>
             </div>
-            <Stack direction="row" justify="flex-end">
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
               <Link href="/settings" className="drp-btn">
                 Edit Strategy in Settings
               </Link>
-            </Stack>
+            </div>
           </div>
         </Card>
       )}

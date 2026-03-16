@@ -8,7 +8,6 @@ import {
   Icon,
   Input,
   Loader,
-  Stack,
 } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
@@ -958,7 +957,14 @@ export default function FactoryPage() {
                   ? ` — "${incompleteSession.title}"`
                   : ""}
               </div>
-              <Stack direction="row" gap="var(--drp-space-2)" wrap>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: "var(--drp-space-2)",
+                  flexWrap: "wrap",
+                }}
+              >
                 <Button
                   variant="primary"
                   onClick={() =>
@@ -970,7 +976,7 @@ export default function FactoryPage() {
                     incompleteSession.phase}
                 </Button>
                 <Button onClick={handleNewPost}>Start Fresh</Button>
-              </Stack>
+              </div>
             </div>
           </div>
         </Card>
@@ -1007,12 +1013,15 @@ export default function FactoryPage() {
             topic proposals, research, evidence, writing, scoring, formatting,
             review, and learning.
           </p>
-          <Stack
-            direction="row"
-            gap="var(--drp-space-2)"
-            justify="center"
-            align="center"
-            wrap
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "var(--drp-space-2)",
+              justifyContent: "center",
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
           >
             <div title="Override your brand tones for this session only. E.g., 'casual', 'humorous', 'celebratory'. Your brand profile remains unchanged.">
               <Input
@@ -1031,7 +1040,7 @@ export default function FactoryPage() {
             <Button variant="primary" onClick={handleStart} disabled={running}>
               ▶ Start Pipeline
             </Button>
-          </Stack>
+          </div>
         </Card>
       )}
 

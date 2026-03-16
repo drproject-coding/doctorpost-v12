@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { Button, EmptyState, Heading, Stack } from "@doctorproject/react";
+import { Button, EmptyState, Heading } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import {
@@ -236,15 +236,18 @@ export default function CampaignsPage() {
   if (view === "list") {
     return (
       <div>
-        <Stack
-          direction="row"
-          align="center"
-          justify="space-between"
-          style={{ marginBottom: "var(--drp-space-6)" }}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "var(--drp-space-6)",
+          }}
         >
           <Heading level={1}>Campaigns</Heading>
           <Button onClick={handleNewCampaign}>New Campaign</Button>
-        </Stack>
+        </div>
         <CampaignList
           onSelect={handleSelectCampaign}
           onNewCampaign={handleNewCampaign}
@@ -257,19 +260,29 @@ export default function CampaignsPage() {
   if (view === "detail" && selectedCampaign) {
     return (
       <div>
-        <Stack
-          direction="row"
-          align="center"
-          justify="space-between"
-          style={{ marginBottom: "var(--drp-space-6)" }}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "var(--drp-space-6)",
+          }}
         >
-          <Stack direction="row" align="center" gap="var(--drp-space-3)">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "var(--drp-space-3)",
+            }}
+          >
             <Button variant="ghost" onClick={handleBackToList}>
               &larr;
             </Button>
             <Heading level={1}>{selectedCampaign.name}</Heading>
-          </Stack>
-        </Stack>
+          </div>
+        </div>
         {slots.length > 0 && config && (
           <CampaignCalendar
             slots={slots}
@@ -291,19 +304,29 @@ export default function CampaignsPage() {
   // New campaign view — setup + progress + calendar
   return (
     <div>
-      <Stack
-        direction="row"
-        align="center"
-        justify="space-between"
-        style={{ marginBottom: "var(--drp-space-6)" }}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "var(--drp-space-6)",
+        }}
       >
-        <Stack direction="row" align="center" gap="var(--drp-space-3)">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: "var(--drp-space-3)",
+          }}
+        >
           <Button variant="ghost" onClick={handleBackToList}>
             &larr;
           </Button>
           <Heading level={1}>New Campaign</Heading>
-        </Stack>
-      </Stack>
+        </div>
+      </div>
 
       {phase === "idle" && <CampaignSetup onSubmit={handleSubmit} />}
 

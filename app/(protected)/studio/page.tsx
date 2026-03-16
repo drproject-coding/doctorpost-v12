@@ -8,7 +8,6 @@ import {
   Loader,
   Alert,
   Radio,
-  Stack,
 } from "@doctorproject/react";
 import Link from "next/link";
 import { parseSSEStream } from "@/lib/sse";
@@ -320,7 +319,7 @@ function renderStageContent(
         icp_label?: string;
       };
       return (
-        <Stack gap="8px">
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           {d.angle && (
             <p
               style={{
@@ -374,7 +373,14 @@ function renderStageContent(
             </ul>
           )}
           {(d.pillar_name ?? d.icp_label) && (
-            <Stack direction="row" gap="8px" wrap>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "8px",
+                flexWrap: "wrap",
+              }}
+            >
               {d.pillar_name && (
                 <span
                   style={{
@@ -401,9 +407,9 @@ function renderStageContent(
                   {d.icp_label}
                 </span>
               )}
-            </Stack>
+            </div>
           )}
-        </Stack>
+        </div>
       );
     } catch {
       return isActive ? null : <pre style={preStyle}>{raw}</pre>;
@@ -431,7 +437,7 @@ function renderStageContent(
             ? "var(--drp-orange)"
             : "var(--drp-error-dark)";
       return (
-        <Stack gap="10px">
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div
               style={{
@@ -485,7 +491,9 @@ function renderStageContent(
             </div>
           </div>
           {d.breakdown && (
-            <Stack gap="4px">
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "4px" }}
+            >
               {d.breakdown.map((b) => {
                 const pct = Math.round((b.score / b.max) * 100);
                 const bc =
@@ -541,9 +549,9 @@ function renderStageContent(
                   </div>
                 );
               })}
-            </Stack>
+            </div>
           )}
-        </Stack>
+        </div>
       );
     } catch {
       return isActive ? null : <pre style={preStyle}>{raw}</pre>;
@@ -561,7 +569,7 @@ function renderStageContent(
       const text = d.post_text ?? d.post ?? "";
       if (d.slides && d.slides.length > 0) {
         return (
-          <Stack gap="8px">
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {text && (
               <p
                 style={{
@@ -578,7 +586,9 @@ function renderStageContent(
                 {text.length > 120 ? "..." : ""}
               </p>
             )}
-            <Stack gap="6px">
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "6px" }}
+            >
               {d.slides.slice(0, 6).map((s, i) => (
                 <div
                   key={i}
@@ -625,8 +635,8 @@ function renderStageContent(
                   +{d.slides.length - 6} more slides
                 </span>
               )}
-            </Stack>
-          </Stack>
+            </div>
+          </div>
         );
       }
       return <pre style={{ ...preStyle, maxHeight: 200 }}>{text}</pre>;
@@ -1559,7 +1569,13 @@ export default function StudioPage() {
                   >
                     Format
                   </label>
-                  <Stack gap="6px">
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "6px",
+                    }}
+                  >
                     {(["simple", "visual", "carousel"] as PostFormat[]).map(
                       (f) => (
                         <div
@@ -1609,7 +1625,7 @@ export default function StudioPage() {
                         </div>
                       ),
                     )}
-                  </Stack>
+                  </div>
                 </div>
 
                 {/* Generate button */}

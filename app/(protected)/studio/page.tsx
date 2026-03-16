@@ -8,6 +8,7 @@ import {
   Loader,
   Alert,
   Radio,
+  Stack,
 } from "@doctorproject/react";
 import Link from "next/link";
 import { parseSSEStream } from "@/lib/sse";
@@ -319,7 +320,7 @@ function renderStageContent(
         icp_label?: string;
       };
       return (
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <Stack gap="8px">
           {d.angle && (
             <p
               style={{
@@ -373,7 +374,7 @@ function renderStageContent(
             </ul>
           )}
           {(d.pillar_name ?? d.icp_label) && (
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Stack direction="row" gap="8px" wrap>
               {d.pillar_name && (
                 <span
                   style={{
@@ -400,9 +401,9 @@ function renderStageContent(
                   {d.icp_label}
                 </span>
               )}
-            </div>
+            </Stack>
           )}
-        </div>
+        </Stack>
       );
     } catch {
       return isActive ? null : <pre style={preStyle}>{raw}</pre>;
@@ -430,7 +431,7 @@ function renderStageContent(
             ? "var(--drp-orange)"
             : "var(--drp-error-dark)";
       return (
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <Stack gap="10px">
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div
               style={{
@@ -484,7 +485,7 @@ function renderStageContent(
             </div>
           </div>
           {d.breakdown && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <Stack gap="4px">
               {d.breakdown.map((b) => {
                 const pct = Math.round((b.score / b.max) * 100);
                 const bc =
@@ -540,9 +541,9 @@ function renderStageContent(
                   </div>
                 );
               })}
-            </div>
+            </Stack>
           )}
-        </div>
+        </Stack>
       );
     } catch {
       return isActive ? null : <pre style={preStyle}>{raw}</pre>;
@@ -560,7 +561,7 @@ function renderStageContent(
       const text = d.post_text ?? d.post ?? "";
       if (d.slides && d.slides.length > 0) {
         return (
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <Stack gap="8px">
             {text && (
               <p
                 style={{
@@ -577,7 +578,7 @@ function renderStageContent(
                 {text.length > 120 ? "..." : ""}
               </p>
             )}
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <Stack gap="6px">
               {d.slides.slice(0, 6).map((s, i) => (
                 <div
                   key={i}
@@ -624,8 +625,8 @@ function renderStageContent(
                   +{d.slides.length - 6} more slides
                 </span>
               )}
-            </div>
-          </div>
+            </Stack>
+          </Stack>
         );
       }
       return <pre style={{ ...preStyle, maxHeight: 200 }}>{text}</pre>;
@@ -1558,9 +1559,7 @@ export default function StudioPage() {
                   >
                     Format
                   </label>
-                  <div
-                    style={{ display: "flex", flexDirection: "column", gap: 6 }}
-                  >
+                  <Stack gap="6px">
                     {(["simple", "visual", "carousel"] as PostFormat[]).map(
                       (f) => (
                         <div
@@ -1610,7 +1609,7 @@ export default function StudioPage() {
                         </div>
                       ),
                     )}
-                  </div>
+                  </Stack>
                 </div>
 
                 {/* Generate button */}

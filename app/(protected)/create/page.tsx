@@ -5,8 +5,11 @@ import {
   Alert,
   Button,
   Card,
+  Heading,
   Icon,
   Input,
+  Stack,
+  Tabs,
   Textarea,
   Loader as BruLoader,
 } from "@doctorproject/react";
@@ -379,36 +382,20 @@ export default function CreatePage() {
 
   return (
     <>
-      <h1
-        style={{
-          fontSize: "var(--drp-text-h3)",
-          fontWeight: 700,
-          marginBottom: "var(--drp-space-6)",
-        }}
-      >
-        Create New Post
-      </h1>
+      <div style={{ marginBottom: "var(--drp-space-6)" }}>
+        <Heading level={1}>Create New Post</Heading>
+      </div>
 
       {/* Sub-navigation tabs */}
-      <div
-        style={{
-          display: "flex",
-          gap: "var(--drp-space-2)",
-          marginBottom: "var(--drp-space-6)",
-        }}
-      >
-        <Button
-          onClick={() => setActiveSubNav("generate-post")}
-          variant={activeSubNav === "generate-post" ? "primary" : "outline"}
-        >
-          Generate Post
-        </Button>
-        <Button
-          onClick={() => setActiveSubNav("content-strategy")}
-          variant={activeSubNav === "content-strategy" ? "primary" : "outline"}
-        >
-          Content Strategy
-        </Button>
+      <div style={{ marginBottom: "var(--drp-space-6)" }}>
+        <Tabs
+          items={[
+            { label: "Generate Post", key: "generate-post" },
+            { label: "Content Strategy", key: "content-strategy" },
+          ]}
+          activeKey={activeSubNav}
+          onChange={setActiveSubNav}
+        />
       </div>
 
       {activeSubNav === "generate-post" && (
@@ -422,15 +409,9 @@ export default function CreatePage() {
         >
           {/* Left Column: Input Form */}
           <Card variant="raised">
-            <h2
-              style={{
-                fontSize: "var(--drp-text-h5)",
-                fontWeight: 700,
-                marginBottom: "var(--drp-space-4)",
-              }}
-            >
-              Post Details
-            </h2>
+            <div style={{ marginBottom: "var(--drp-space-4)" }}>
+              <Heading level={2}>Post Details</Heading>
+            </div>
 
             <div className="drp-form-stack">
               {/* Topic field */}
@@ -747,13 +728,7 @@ export default function CreatePage() {
           </Card>
 
           {/* Right Column: Generated Post */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "var(--drp-space-4)",
-            }}
-          >
+          <Stack gap="var(--drp-space-4)">
             <PostGenerator
               ref={postGeneratorRef}
               parameters={postGenerationParams}
@@ -782,21 +757,15 @@ export default function CreatePage() {
                 </Button>
               </div>
             )}
-          </div>
+          </Stack>
         </div>
       )}
 
       {activeSubNav === "content-strategy" && (
         <Card variant="raised">
-          <h2
-            style={{
-              fontSize: "var(--drp-text-h5)",
-              fontWeight: 700,
-              marginBottom: "var(--drp-space-4)",
-            }}
-          >
-            Your Content Strategy
-          </h2>
+          <div style={{ marginBottom: "var(--drp-space-4)" }}>
+            <Heading level={2}>Your Content Strategy</Heading>
+          </div>
           <div className="drp-form-stack">
             <div className="drp-field">
               <h3 className="drp-field__label">Content Strategy Overview</h3>
@@ -847,11 +816,11 @@ export default function CreatePage() {
                   "No taboo topics defined. Go to Settings to add them."}
               </p>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Stack direction="row" justify="flex-end">
               <Link href="/settings" className="drp-btn">
                 Edit Strategy in Settings
               </Link>
-            </div>
+            </Stack>
           </div>
         </Card>
       )}

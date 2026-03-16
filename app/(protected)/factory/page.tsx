@@ -1,6 +1,15 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { Alert, Button, Card, Icon, Input, Loader } from "@doctorproject/react";
+import {
+  Alert,
+  Button,
+  Card,
+  Heading,
+  Icon,
+  Input,
+  Loader,
+  Stack,
+} from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
 import type {
@@ -725,15 +734,7 @@ export default function FactoryPage() {
           marginBottom: "var(--drp-space-6)",
         }}
       >
-        <h1
-          style={{
-            fontSize: "var(--drp-text-h3)",
-            fontWeight: 700,
-            margin: 0,
-          }}
-        >
-          Content Factory
-        </h1>
+        <Heading level={1}>Content Factory</Heading>
         {state.phase !== "idle" && (
           <Button onClick={handleNewPost}>New Post</Button>
         )}
@@ -957,13 +958,7 @@ export default function FactoryPage() {
                   ? ` — "${incompleteSession.title}"`
                   : ""}
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  gap: "var(--drp-space-2)",
-                  flexWrap: "wrap",
-                }}
-              >
+              <Stack direction="row" gap="var(--drp-space-2)" wrap>
                 <Button
                   variant="primary"
                   onClick={() =>
@@ -975,7 +970,7 @@ export default function FactoryPage() {
                     incompleteSession.phase}
                 </Button>
                 <Button onClick={handleNewPost}>Start Fresh</Button>
-              </div>
+              </Stack>
             </div>
           </div>
         </Card>
@@ -996,15 +991,9 @@ export default function FactoryPage() {
           variant="raised"
           style={{ textAlign: "center", padding: "var(--drp-space-8)" }}
         >
-          <h2
-            style={{
-              fontSize: "var(--drp-text-h4)",
-              fontWeight: 700,
-              marginBottom: "var(--drp-space-3)",
-            }}
-          >
-            Create a New Post
-          </h2>
+          <div style={{ marginBottom: "var(--drp-space-3)" }}>
+            <Heading level={2}>Create a New Post</Heading>
+          </div>
           <p
             style={{
               fontSize: "var(--drp-text-md)",
@@ -1018,14 +1007,12 @@ export default function FactoryPage() {
             topic proposals, research, evidence, writing, scoring, formatting,
             review, and learning.
           </p>
-          <div
-            style={{
-              display: "flex",
-              gap: "var(--drp-space-2)",
-              justifyContent: "center",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
+          <Stack
+            direction="row"
+            gap="var(--drp-space-2)"
+            justify="center"
+            align="center"
+            wrap
           >
             <div title="Override your brand tones for this session only. E.g., 'casual', 'humorous', 'celebratory'. Your brand profile remains unchanged.">
               <Input
@@ -1044,7 +1031,7 @@ export default function FactoryPage() {
             <Button variant="primary" onClick={handleStart} disabled={running}>
               ▶ Start Pipeline
             </Button>
-          </div>
+          </Stack>
         </Card>
       )}
 

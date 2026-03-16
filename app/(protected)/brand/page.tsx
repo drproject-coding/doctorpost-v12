@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Loader, Alert, Button } from "@doctorproject/react";
+import { Loader, Alert, Button, Heading, Stack } from "@doctorproject/react";
 import {
   getBrandProfile,
   updateBrandProfile,
@@ -137,16 +137,9 @@ export default function BrandPage() {
 
   if (loading) {
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: 300,
-        }}
-      >
+      <Stack align="center" justify="center" style={{ minHeight: 300 }}>
         <Loader label="Loading brand profile..." />
-      </div>
+      </Stack>
     );
   }
 
@@ -166,12 +159,12 @@ export default function BrandPage() {
         {/* Page header */}
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-1">Brand</h1>
+            <Heading level={1}>Brand</Heading>
             <p style={{ color: "var(--drp-grey)", fontWeight: 500 }}>
               Your brand identity, voice, and strategy in one place.
             </p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Stack direction="row" align="center" gap="var(--drp-space-2)">
             <Button
               variant="primary"
               size="sm"
@@ -236,7 +229,7 @@ export default function BrandPage() {
                 </div>
               )}
             </div>
-          </div>
+          </Stack>
         </div>
 
         {/* Audit panel */}
@@ -249,13 +242,11 @@ export default function BrandPage() {
               background: "var(--drp-cream)",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "var(--drp-space-3)",
-              }}
+            <Stack
+              direction="row"
+              justify="space-between"
+              align="center"
+              style={{ marginBottom: "var(--drp-space-3)" }}
             >
               <strong>Brand Audit</strong>
               <Button
@@ -265,7 +256,7 @@ export default function BrandPage() {
               >
                 ✕
               </Button>
-            </div>
+            </Stack>
             {auditing ? (
               <div>Analyzing your brand...</div>
             ) : auditResult ? (

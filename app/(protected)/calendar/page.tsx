@@ -75,7 +75,7 @@ const ListView = ({
                     )}
                     {post.title}
                   </Text>
-                  <Text size="sm" color="secondary">
+                  <Text size="sm">
                     Pillar: {post.pillar} | Scheduled:{" "}
                     {new Date(post.scheduledAt).toLocaleString()}
                   </Text>
@@ -172,9 +172,9 @@ export default function CalendarPage() {
     return (
       <div style={{ padding: "var(--drp-space-6)" }}>
         <div style={{ maxWidth: 1152, margin: "0 auto" }}>
-          <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
-            Content Calendar
-          </Heading>
+          <div style={{ marginBottom: "var(--drp-space-6)" }}>
+            <Heading level={1}>Content Calendar</Heading>
+          </div>
           <Card
             variant="raised"
             style={{
@@ -262,9 +262,9 @@ export default function CalendarPage() {
             marginBottom: "var(--drp-space-6)",
           }}
         >
-          <Heading level="h3" style={{ marginBottom: "var(--drp-space-2)" }}>
-            Status Color Guide:
-          </Heading>
+          <div style={{ marginBottom: "var(--drp-space-2)" }}>
+            <Heading level={3}>Status Color Guide:</Heading>
+          </div>
           <div
             style={{
               display: "flex",

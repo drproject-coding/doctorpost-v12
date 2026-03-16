@@ -148,11 +148,13 @@ export default function SettingsSubscriptionPage() {
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
-          <Heading level="h1" style={{ marginBottom: "var(--drp-space-1)" }}>
-            Subscription
-          </Heading>
-          <Text size="sm" style={{ color: "var(--drp-grey)" }}>
-            Your current plan and usage
+          <div style={{ marginBottom: "var(--drp-space-1)" }}>
+            <Heading level={1}>Subscription</Heading>
+          </div>
+          <Text size="sm">
+            <span style={{ color: "var(--drp-grey)" }}>
+              Your current plan and usage
+            </span>
           </Text>
         </div>
 
@@ -282,9 +284,9 @@ export default function SettingsSubscriptionPage() {
         {/* Plan comparison */}
         <Card variant="raised" style={{ marginBottom: 16 }}>
           <div style={{ padding: 24 }}>
-            <Heading level="h2" style={{ marginBottom: "var(--drp-space-5)" }}>
-              Plan Comparison
-            </Heading>
+            <div style={{ marginBottom: "var(--drp-space-5)" }}>
+              <Heading level={2}>Plan Comparison</Heading>
+            </div>
 
             <div
               style={{

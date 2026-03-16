@@ -173,14 +173,18 @@ export default function CalendarView({
             className="p-2 flex items-center justify-center"
             aria-label="Previous month"
             iconLeft="‹"
-          />
+          >
+            ‹
+          </Button>
           <Button
             onClick={nextMonth}
             variant="primary"
             className="p-2 flex items-center justify-center"
             aria-label="Next month"
             iconLeft="›"
-          />
+          >
+            ›
+          </Button>
         </div>
       </div>
 

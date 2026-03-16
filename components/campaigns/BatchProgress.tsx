@@ -33,9 +33,9 @@ export function BatchProgress({
 
   return (
     <Card variant="raised">
-      <Heading level="h3" style={{ marginBottom: "var(--drp-space-4)" }}>
-        Campaign Progress
-      </Heading>
+      <div style={{ marginBottom: "var(--drp-space-4)" }}>
+        <Heading level={3}>Campaign Progress</Heading>
+      </div>
 
       {/* Progress bar */}
       <div
@@ -103,9 +103,9 @@ export function BatchProgress({
       {/* Pillar distribution on complete */}
       {phase === "complete" && pillarDistribution && (
         <div>
-          <Heading level="h4" style={{ marginBottom: "var(--drp-space-2)" }}>
-            Pillar Distribution
-          </Heading>
+          <div style={{ marginBottom: "var(--drp-space-2)" }}>
+            <Heading level={4}>Pillar Distribution</Heading>
+          </div>
           <div
             style={{
               display: "flex",

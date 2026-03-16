@@ -244,7 +244,7 @@ export default function CampaignsPage() {
             marginBottom: "var(--drp-space-6)",
           }}
         >
-          <Heading level="h1">Campaigns</Heading>
+          <Heading level={1}>Campaigns</Heading>
           <Button onClick={handleNewCampaign}>New Campaign</Button>
         </div>
         <CampaignList
@@ -277,7 +277,7 @@ export default function CampaignsPage() {
             <Button variant="ghost" onClick={handleBackToList}>
               &larr;
             </Button>
-            <Heading level="h1">{selectedCampaign.name}</Heading>
+            <Heading level={1}>{selectedCampaign.name}</Heading>
           </div>
         </div>
         {slots.length > 0 && config && (
@@ -319,7 +319,7 @@ export default function CampaignsPage() {
           <Button variant="ghost" onClick={handleBackToList}>
             &larr;
           </Button>
-          <Heading level="h1">New Campaign</Heading>
+          <Heading level={1}>New Campaign</Heading>
         </div>
       </div>
 

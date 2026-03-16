@@ -246,7 +246,7 @@ export default function KnowledgePage() {
           marginBottom: "var(--drp-space-6)",
         }}
       >
-        <Heading level="h1">Knowledge Base</Heading>
+        <Heading level={1}>Knowledge Base</Heading>
         <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
           <Button onClick={() => setView("import")}>Import</Button>
           <Button onClick={() => setView("extract")}>Extract Template</Button>

@@ -565,9 +565,9 @@ export default function SettingsPage() {
 
   return (
     <>
-      <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
-        AI & Integrations
-      </Heading>
+      <div style={{ marginBottom: "var(--drp-space-6)" }}>
+        <Heading level={1}>AI & Integrations</Heading>
+      </div>
 
       {/* Integration Status Overview Bar */}
       <div
@@ -636,17 +636,17 @@ export default function SettingsPage() {
 
       {/* ── Research APIs Card (Perplexity + Reddit) ── */}
       <Card variant="raised" style={{ marginBottom: "var(--drp-space-6)" }}>
-        <Heading level="h5" style={{ marginBottom: "var(--drp-space-2)" }}>
-          Research APIs
-        </Heading>
-        <Text
-          size="xs"
-          color="secondary"
-          style={{ marginBottom: "var(--drp-space-4)", display: "block" }}
-        >
-          Optional keys for the Content Factory research pipeline. When
-          configured, the researcher agent can pull real-time data from
-          Perplexity and Reddit.
+        <div style={{ marginBottom: "var(--drp-space-2)" }}>
+          <Heading level={5}>Research APIs</Heading>
+        </div>
+        <Text size="xs">
+          <span
+            style={{ marginBottom: "var(--drp-space-4)", display: "block" }}
+          >
+            Optional keys for the Content Factory research pipeline. When
+            configured, the researcher agent can pull real-time data from
+            Perplexity and Reddit.
+          </span>
         </Text>
 
         <div className="drp-form-stack">

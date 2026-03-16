@@ -11,7 +11,6 @@ import {
   Loader,
   EmptyState,
   Button,
-  ResponsiveGrid,
   Heading,
   Text,
   Tag,
@@ -103,15 +102,17 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
-        Dashboard
-      </Heading>
+      <div style={{ marginBottom: "var(--drp-space-6)" }}>
+        <Heading level={1}>Dashboard</Heading>
+      </div>
 
-      <ResponsiveGrid
-        cols={4}
-        colsSm={1}
-        gap="var(--drp-space-6)"
-        style={{ marginBottom: "var(--drp-space-6)" }}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "var(--drp-space-6)",
+          marginBottom: "var(--drp-space-6)",
+        }}
       >
         {/* Performance Summary Card */}
         <Card variant="raised">
@@ -126,15 +127,13 @@ export default function DashboardPage() {
                   marginBottom: "var(--drp-space-2)",
                 }}
               >
-                <Text size="sm" weight="bold" color="secondary">
+                <Text size="sm" weight="bold">
                   Impressions
                 </Text>
-                <Text
-                  size="sm"
-                  weight="bold"
-                  style={{ color: "var(--drp-success)" }}
-                >
-                  {analyticsData?.totalImpressions.toLocaleString() ?? "N/A"}
+                <Text size="sm" weight="bold">
+                  <span style={{ color: "var(--drp-success)" }}>
+                    {analyticsData?.totalImpressions.toLocaleString() ?? "N/A"}
+                  </span>
                 </Text>
               </div>
               <ProgressBar
@@ -150,15 +149,13 @@ export default function DashboardPage() {
                   marginBottom: "var(--drp-space-2)",
                 }}
               >
-                <Text size="sm" weight="bold" color="secondary">
+                <Text size="sm" weight="bold">
                   Engagement
                 </Text>
-                <Text
-                  size="sm"
-                  weight="bold"
-                  style={{ color: "var(--drp-success)" }}
-                >
-                  {analyticsData?.ctr ? `${analyticsData.ctr}%` : "N/A"}
+                <Text size="sm" weight="bold">
+                  <span style={{ color: "var(--drp-success)" }}>
+                    {analyticsData?.ctr ? `${analyticsData.ctr}%` : "N/A"}
+                  </span>
                 </Text>
               </div>
               <ProgressBar value={(analyticsData?.ctr ?? 0) * 10} />
@@ -172,15 +169,13 @@ export default function DashboardPage() {
                   marginBottom: "var(--drp-space-2)",
                 }}
               >
-                <Text size="sm" weight="bold" color="secondary">
+                <Text size="sm" weight="bold">
                   Top Pillar
                 </Text>
-                <Text
-                  size="sm"
-                  weight="bold"
-                  style={{ color: "var(--drp-success)" }}
-                >
-                  {analyticsData?.topPerformingPillar.name ?? "N/A"}
+                <Text size="sm" weight="bold">
+                  <span style={{ color: "var(--drp-success)" }}>
+                    {analyticsData?.topPerformingPillar.name ?? "N/A"}
+                  </span>
                 </Text>
               </div>
               <ProgressBar
@@ -253,7 +248,7 @@ export default function DashboardPage() {
                   >
                     <div>
                       <Text weight="semibold">{post.title}</Text>
-                      <Text size="sm" color="secondary">
+                      <Text size="sm">
                         {formatDate(post.scheduledAt)} at{" "}
                         {formatTime(post.scheduledAt)}
                       </Text>
@@ -277,9 +272,15 @@ export default function DashboardPage() {
             </div>
           </Card>
         </div>
-      </ResponsiveGrid>
+      </div>
 
-      <ResponsiveGrid cols={2} colsSm={1} gap="var(--drp-space-6)">
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "var(--drp-space-6)",
+        }}
+      >
         {/* Recent Posts Card */}
         <Card variant="raised">
           <CardHeader
@@ -304,7 +305,7 @@ export default function DashboardPage() {
                   }}
                 >
                   <Text weight="semibold">{post.title}</Text>
-                  <Text size="sm" color="secondary">
+                  <Text size="sm">
                     Published: {formatDate(post.scheduledAt)}
                   </Text>
                 </div>
@@ -323,11 +324,7 @@ export default function DashboardPage() {
         <Card variant="raised">
           <CardHeader
             title="Trending Topics"
-            action={
-              <Text size="sm" color="secondary">
-                Last 7 Days
-              </Text>
-            }
+            action={<Text size="sm">Last 7 Days</Text>}
           />
           <div style={{ display: "grid", gap: "var(--drp-space-3)" }}>
             {analyticsData?.trendingTopics.length ? (
@@ -357,7 +354,7 @@ export default function DashboardPage() {
             )}
           </div>
         </Card>
-      </ResponsiveGrid>
+      </div>
     </div>
   );
 }

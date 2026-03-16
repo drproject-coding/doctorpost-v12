@@ -27,18 +27,18 @@ const StatCard = ({
       alignItems: "flex-start",
     }}
   >
-    <Text
-      size="sm"
-      weight="bold"
-      style={{
-        textTransform: "uppercase",
-        letterSpacing: "0.05em",
-        marginBottom: "var(--drp-space-1)",
-      }}
-    >
-      {title}
+    <Text size="sm" weight="bold">
+      <span
+        style={{
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
+          marginBottom: "var(--drp-space-1)",
+        }}
+      >
+        {title}
+      </span>
     </Text>
-    <Heading level="h2">{value}</Heading>
+    <Heading level={2}>{value}</Heading>
   </Card>
 );
 
@@ -65,9 +65,9 @@ export default function AnalyticsPage() {
     return (
       <div style={{ padding: "var(--drp-space-6)" }}>
         <div style={{ maxWidth: 1152, margin: "0 auto" }}>
-          <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
-            Analytics
-          </Heading>
+          <div style={{ marginBottom: "var(--drp-space-6)" }}>
+            <Heading level={1}>Analytics</Heading>
+          </div>
           <Card
             variant="raised"
             style={{
@@ -88,9 +88,9 @@ export default function AnalyticsPage() {
     return (
       <div style={{ padding: "var(--drp-space-6)" }}>
         <div style={{ maxWidth: 1152, margin: "0 auto" }}>
-          <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
-            Analytics
-          </Heading>
+          <div style={{ marginBottom: "var(--drp-space-6)" }}>
+            <Heading level={1}>Analytics</Heading>
+          </div>
           <Alert variant="error" title="Failed to load analytics data">
             Please refresh the page to try again.
           </Alert>
@@ -107,9 +107,9 @@ export default function AnalyticsPage() {
   return (
     <div className="p-6">
       <div className="max-w-6xl mx-auto">
-        <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
-          Performance Analytics
-        </Heading>
+        <div style={{ marginBottom: "var(--drp-space-6)" }}>
+          <Heading level={1}>Performance Analytics</Heading>
+        </div>
 
         <div
           style={{
@@ -142,9 +142,9 @@ export default function AnalyticsPage() {
           }}
         >
           <Card variant="raised">
-            <Heading level="h2" style={{ marginBottom: "var(--drp-space-4)" }}>
-              Top Performers &amp; Insights
-            </Heading>
+            <div style={{ marginBottom: "var(--drp-space-4)" }}>
+              <Heading level={2}>Top Performers &amp; Insights</Heading>
+            </div>
             <div
               style={{
                 display: "flex",
@@ -182,9 +182,9 @@ export default function AnalyticsPage() {
           </Card>
 
           <Card variant="raised">
-            <Heading level="h2" style={{ marginBottom: "var(--drp-space-4)" }}>
-              Impressions by Pillar
-            </Heading>
+            <div style={{ marginBottom: "var(--drp-space-4)" }}>
+              <Heading level={2}>Impressions by Pillar</Heading>
+            </div>
             <div
               style={{
                 display: "flex",

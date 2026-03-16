@@ -124,7 +124,9 @@ export default function ProtectedLayout({
         aria-label="Sign out"
         iconLeft="↩"
         onClick={() => void logout()}
-      />
+      >
+        ↩
+      </Button>
     </div>
   );
 

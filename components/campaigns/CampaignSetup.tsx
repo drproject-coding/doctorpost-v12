@@ -77,9 +77,9 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
   return (
     <form onSubmit={handleSubmit}>
       <Card variant="raised">
-        <Heading level="h3" style={{ marginBottom: "var(--drp-space-4)" }}>
-          New Campaign
-        </Heading>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
+          <Heading level={3}>New Campaign</Heading>
+        </div>
 
         <div className="drp-form-stack">
           <Input

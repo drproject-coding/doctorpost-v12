@@ -121,9 +121,9 @@ export function CampaignCalendar({
 
   return (
     <Card variant="raised">
-      <Heading level="h3" style={{ marginBottom: "var(--drp-space-3)" }}>
-        Campaign Calendar
-      </Heading>
+      <div style={{ marginBottom: "var(--drp-space-3)" }}>
+        <Heading level={3}>Campaign Calendar</Heading>
+      </div>
 
       <CampaignSummaryRow
         counts={statusCounts}
@@ -154,12 +154,9 @@ export function CampaignCalendar({
 
           return (
             <div key={`week-${wi}`}>
-              <Heading
-                level="h4"
-                style={{ marginBottom: "var(--drp-space-2)" }}
-              >
-                Week {wi + 1}
-              </Heading>
+              <div style={{ marginBottom: "var(--drp-space-2)" }}>
+                <Heading level={4}>Week {wi + 1}</Heading>
+              </div>
               <div
                 style={{
                   display: "grid",

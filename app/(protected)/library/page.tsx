@@ -173,9 +173,9 @@ export default function LibraryPage() {
     return (
       <div style={{ padding: "var(--drp-space-6)" }}>
         <div style={{ maxWidth: 1152, margin: "0 auto" }}>
-          <Heading level="h1" style={{ marginBottom: "var(--drp-space-6)" }}>
-            Content Library
-          </Heading>
+          <div style={{ marginBottom: "var(--drp-space-6)" }}>
+            <Heading level={1}>Content Library</Heading>
+          </div>
           <Card
             variant="raised"
             style={{
@@ -267,8 +267,10 @@ export default function LibraryPage() {
                     }}
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <Text weight="bold" style={{ marginBottom: 4 }}>
-                        {post.title}
+                      <Text weight="bold">
+                        <span style={{ marginBottom: 4, display: "block" }}>
+                          {post.title}
+                        </span>
                       </Text>
                       {/* Badge row */}
                       <div

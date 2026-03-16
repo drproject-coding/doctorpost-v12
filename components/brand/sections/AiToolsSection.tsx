@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Input } from "@doctorproject/react";
+import { Button, Input, Radio } from "@doctorproject/react";
 import { BrandProfile, AiProviderType } from "@/lib/types";
 
 interface AiToolsSectionProps {
@@ -205,28 +205,15 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
           }}
         >
           {PROVIDERS.map((p) => (
-            <label
+            <Radio
               key={p}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                cursor: "pointer",
-                fontFamily: "var(--drp-font-primary)",
-                fontSize: "var(--drp-text-md)",
-                fontWeight: profile.aiProvider === p ? 700 : 400,
-              }}
-            >
-              <input
-                type="radio"
-                name="aiProvider"
-                value={p}
-                checked={profile.aiProvider === p}
-                onChange={() => onChange({ aiProvider: p })}
-                style={{ accentColor: "var(--drp-purple)", cursor: "pointer" }}
-              />
-              {PROVIDER_LABELS[p]}
-            </label>
+              name="aiProvider"
+              value={p}
+              checked={profile.aiProvider === p}
+              onChange={() => onChange({ aiProvider: p })}
+              label={PROVIDER_LABELS[p]}
+              color="purple"
+            />
           ))}
         </div>
       </div>

@@ -434,36 +434,30 @@ export default function CreatePage() {
 
             <div className="drp-form-stack">
               {/* Topic field */}
-              <div className="drp-field drp-field--has-icon">
-                <label htmlFor="topic-input" className="drp-field__label">
-                  Topic
-                </label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type="text"
-                    id="topic-input"
-                    className="drp-input"
-                    style={{ width: "100%", paddingRight: 40 }}
-                    value={topic}
-                    onChange={handleTopicChange}
-                    placeholder="e.g., 'AI in healthcare'"
-                  />
-                  <Button
-                    onClick={() => void handleFindSubtopics()}
-                    disabled={loadingSubtopics || !topic.trim()}
-                    aria-label="Find Subtopics"
-                    variant="ghost"
-                    style={{
-                      position: "absolute",
-                      right: 8,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      padding: 4,
-                    }}
-                  >
-                    {loadingSubtopics ? "…" : "⌕"}
-                  </Button>
-                </div>
+              <div style={{ position: "relative" }}>
+                <Input
+                  label="Topic"
+                  id="topic-input"
+                  type="text"
+                  style={{ width: "100%", paddingRight: 40 }}
+                  value={topic}
+                  onChange={handleTopicChange}
+                  placeholder="e.g., 'AI in healthcare'"
+                />
+                <Button
+                  onClick={() => void handleFindSubtopics()}
+                  disabled={loadingSubtopics || !topic.trim()}
+                  aria-label="Find Subtopics"
+                  variant="ghost"
+                  style={{
+                    position: "absolute",
+                    right: 8,
+                    bottom: 8,
+                    padding: 4,
+                  }}
+                >
+                  {loadingSubtopics ? "…" : "⌕"}
+                </Button>
 
                 {subtopics.length > 0 && (
                   <div

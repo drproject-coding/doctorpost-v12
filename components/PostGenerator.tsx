@@ -7,7 +7,14 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import { Alert, Button, Card, Loader, ProgressBar } from "@doctorproject/react";
+import {
+  Alert,
+  Button,
+  Card,
+  Loader,
+  ProgressBar,
+  Textarea,
+} from "@doctorproject/react";
 import {
   PostGenerationParameters,
   BrandProfile,
@@ -40,7 +47,11 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
     const [isContentSelected, setIsContentSelected] = useState<boolean>(false);
     const [aiProgress, setAiProgress] = useState<AiProgress | null>(null);
 
-    const contentRef = useRef<HTMLTextAreaElement>(null);
+    const contentContainerRef = useRef<HTMLDivElement>(null);
+    const getContentTextarea = () =>
+      contentContainerRef.current?.querySelector(
+        "textarea",
+      ) as HTMLTextAreaElement | null;
     const abortRef = useRef<AbortController | null>(null);
     const isGeneratingRef = useRef(false);
     const onContentGeneratedRef = useRef(onContentGenerated);
@@ -158,11 +169,12 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
     }, [triggerGeneration, generateContentEffect, parameters]);
 
     const copyToClipboard = async () => {
-      if (contentRef.current) {
+      const textarea = getContentTextarea();
+      if (textarea) {
         try {
-          contentRef.current.select();
-          contentRef.current.setSelectionRange(0, generatedContent.length);
-          contentRef.current.focus();
+          textarea.select();
+          textarea.setSelectionRange(0, generatedContent.length);
+          textarea.focus();
           setIsContentSelected(true);
           await navigator.clipboard.writeText(generatedContent);
           setCopied(true);
@@ -236,33 +248,30 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
             >
               ⏱ {estimatedReadTime} min read
             </div>
-            <textarea
-              ref={contentRef}
-              className="drp-input"
-              style={{
-                width: "100%",
-                minHeight: 256,
-                resize: "vertical",
-                padding: "var(--drp-space-4)",
-                border: isContentSelected
-                  ? "2px solid var(--drp-purple)"
-                  : "var(--drp-border)",
-                boxShadow: isContentSelected
-                  ? "3px 3px 0 0 var(--drp-purple)"
-                  : "var(--drp-shadow-sm)",
-                background: "var(--drp-white)",
-                fontFamily: "var(--drp-font-mono)",
-                fontSize: "var(--drp-text-md)",
-                lineHeight: "var(--drp-leading-loose)",
-                color: "var(--drp-black)",
-                outline: "none",
-              }}
-              value={generatedContent}
-              onChange={(e) => {
-                setGeneratedContent(e.target.value);
-                onContentGenerated(e.target.value);
-              }}
-            />
+            <div ref={contentContainerRef}>
+              <Textarea
+                style={{
+                  width: "100%",
+                  minHeight: 256,
+                  resize: "vertical",
+                  border: isContentSelected
+                    ? "2px solid var(--drp-purple)"
+                    : "var(--drp-border)",
+                  boxShadow: isContentSelected
+                    ? "3px 3px 0 0 var(--drp-purple)"
+                    : "var(--drp-shadow-sm)",
+                  fontFamily: "var(--drp-font-mono)",
+                  fontSize: "var(--drp-text-md)",
+                  lineHeight: "var(--drp-leading-loose)",
+                  outline: "none",
+                }}
+                value={generatedContent}
+                onChange={(e) => {
+                  setGeneratedContent(e.target.value);
+                  onContentGenerated(e.target.value);
+                }}
+              />
+            </div>
             <div
               className="drp-form-actions"
               style={{ marginTop: "var(--drp-space-3)" }}

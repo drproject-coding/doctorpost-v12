@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
+import { Button, Card, Checkbox } from "@doctorproject/react";
 import type { EvidencePack as EvidencePackType } from "@/lib/knowledge/types";
 
 type VerificationFilter = "all" | "verified" | "estimate" | "anecdotal";
@@ -160,8 +160,8 @@ export function EvidencePack({
                 gap: "var(--drp-space-2)",
               }}
             >
-              <input
-                type="checkbox"
+              <Checkbox
+                label=""
                 checked={selectedClaims.has(i)}
                 onChange={() => toggleClaim(i)}
                 onClick={(e) => e.stopPropagation()}

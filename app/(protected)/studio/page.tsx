@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from "react";
-import { Card, Button, Textarea, Loader, Alert } from "@doctorproject/react";
+import {
+  Card,
+  Button,
+  Textarea,
+  Loader,
+  Alert,
+  Radio,
+} from "@doctorproject/react";
 import Link from "next/link";
 import { parseSSEStream } from "@/lib/sse";
 
@@ -1556,8 +1563,9 @@ export default function StudioPage() {
                   >
                     {(["simple", "visual", "carousel"] as PostFormat[]).map(
                       (f) => (
-                        <label
+                        <div
                           key={f}
+                          onClick={() => !isRunning && setFormat(f)}
                           style={{
                             display: "flex",
                             alignItems: "flex-start",
@@ -1572,16 +1580,14 @@ export default function StudioPage() {
                             transition: "border-color 0.15s",
                           }}
                         >
-                          <input
-                            type="radio"
+                          <Radio
                             name="format"
                             value={f}
                             checked={format === f}
                             onChange={() => !isRunning && setFormat(f)}
-                            style={{
-                              accentColor: "var(--drp-purple)",
-                              marginTop: 2,
-                            }}
+                            label=""
+                            color="purple"
+                            style={{ marginTop: 2 }}
                           />
                           <div>
                             <div
@@ -1601,7 +1607,7 @@ export default function StudioPage() {
                               {f === "carousel" && "Multi-slide carousel"}
                             </div>
                           </div>
-                        </label>
+                        </div>
                       ),
                     )}
                   </div>

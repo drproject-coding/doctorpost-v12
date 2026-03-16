@@ -28,26 +28,37 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   return (
     <header className="topbar">
       <div className="topbar-left">
-        <button
-          className="topbar-menu-btn drp-btn drp-btn--ghost drp-btn--icon"
+        <Button
+          variant="ghost"
+          icon
+          aria-label="Toggle menu"
           onClick={onToggleSidebar}
+          className="topbar-menu-btn"
         >
           ☰
-        </button>
+        </Button>
         <h1 className="topbar-title">{title}</h1>
       </div>
       <div className="topbar-right">
-        <button className="topbar-icon-btn drp-btn drp-btn--ghost drp-btn--icon">
+        <Button
+          variant="ghost"
+          icon
+          aria-label="Notifications"
+          className="topbar-icon-btn"
+        >
           ◉
           <span className="notification-dot" />
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost"
+          icon
+          aria-label="Sign out"
           onClick={() => void logout()}
-          className="topbar-icon-btn drp-btn drp-btn--ghost drp-btn--icon"
+          className="topbar-icon-btn"
           title="Sign out"
         >
           ⎋
-        </button>
+        </Button>
         <Link href="/create">
           <Button variant="primary" size="sm">
             + Create Post

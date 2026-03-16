@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Icon } from "@doctorproject/react";
+import { Button, Icon } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 
 interface SidebarProps {
@@ -83,13 +83,15 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       </nav>
 
       {/* Toggle */}
-      <button
-        className="sidebar-toggle"
-        onClick={onToggle}
+      <Button
+        variant="ghost"
+        icon
         aria-label="Toggle sidebar"
+        onClick={onToggle}
+        className="sidebar-toggle"
       >
         ‹
-      </button>
+      </Button>
 
       {/* User Profile */}
       <div className="sidebar-user">

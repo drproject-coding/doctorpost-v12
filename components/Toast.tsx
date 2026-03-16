@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { Button } from "@doctorproject/react";
+import { Toast, Button } from "@doctorproject/react";
 
 type ToastType = "success" | "error" | "info";
 
-interface Toast {
+interface ToastItem {
   id: number;
   message: string;
   type: ToastType;
@@ -23,7 +23,7 @@ export function useToast() {
 }
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
   const counterRef = useRef(0);
 
   const showToast = useCallback((message: string, type: ToastType = "info") => {
@@ -51,41 +51,28 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         }}
       >
         {toasts.map((toast) => (
-          <ToastItem key={toast.id} toast={toast} onDismiss={dismiss} />
+          <ToastItemComponent
+            key={toast.id}
+            toast={toast}
+            onDismiss={dismiss}
+          />
         ))}
       </div>
     </ToastContext.Provider>
   );
 }
 
-function ToastItem({
+function ToastItemComponent({
   toast,
   onDismiss,
 }: {
-  toast: Toast;
+  toast: ToastItem;
   onDismiss: (id: number) => void;
 }) {
   useEffect(() => {
     const t = setTimeout(() => onDismiss(toast.id), 4000);
     return () => clearTimeout(t);
   }, [toast.id, onDismiss]);
-
-  const colors: Record<ToastType, { bg: string; icon: React.ReactNode }> = {
-    success: {
-      bg: "#e6f9ec",
-      icon: <span style={{ color: "var(--drp-success)" }}>✓</span>,
-    },
-    error: {
-      bg: "#fde8e8",
-      icon: <span style={{ color: "var(--drp-error)" }}>✕</span>,
-    },
-    info: {
-      bg: "var(--drp-cream, #fffdf4)",
-      icon: null,
-    },
-  };
-
-  const { bg, icon } = colors[toast.type];
 
   return (
     <div
@@ -94,25 +81,16 @@ function ToastItem({
         display: "flex",
         alignItems: "center",
         gap: "var(--drp-space-2)",
-        padding: "var(--drp-space-3) var(--drp-space-4)",
-        background: bg,
-        border: "2px solid black",
-        boxShadow: "3px 3px 0 black",
-        minWidth: 260,
-        maxWidth: 380,
-        fontSize: "var(--drp-text-sm)",
-        fontWeight: 600,
         animation: "drp-toast-in 0.15s ease-out",
       }}
     >
-      {icon}
-      <span style={{ flex: 1 }}>{toast.message}</span>
+      <Toast variant={toast.type} message={toast.message} />
       <Button
         variant="ghost"
         icon
         onClick={() => onDismiss(toast.id)}
         aria-label="Dismiss"
-        style={{ flexShrink: 0, color: "var(--drp-grey)" }}
+        style={{ flexShrink: 0 }}
       >
         ✕
       </Button>

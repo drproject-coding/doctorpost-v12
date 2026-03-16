@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback, useRef } from "react";
-import { Button } from "@doctorproject/react";
+import { Button, Modal } from "@doctorproject/react";
 
 interface ConfirmOptions {
   title?: string;
@@ -46,59 +46,15 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
     <ConfirmContext.Provider value={{ confirm }}>
       {children}
       {state && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "rgba(0,0,0,0.35)",
-          }}
-          onClick={() => handleClose(false)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "white",
-              border: "1px solid #121212",
-              padding: "24px",
-              minWidth: 320,
-              maxWidth: 480,
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-            }}
-          >
-            {state.title && (
-              <p
-                style={{
-                  margin: 0,
-                  fontFamily: "var(--drp-font-primary)",
-                  fontWeight: "var(--drp-weight-heavy)",
-                  fontSize: "var(--drp-text-base)",
-                  color: "var(--drp-black)",
-                }}
-              >
-                {state.title}
-              </p>
-            )}
-            <p
-              style={{
-                margin: 0,
-                fontFamily: "var(--drp-font-primary)",
-                fontSize: "var(--drp-text-sm)",
-                color: "var(--drp-muted, #555)",
-                lineHeight: 1.5,
-              }}
-            >
-              {state.message}
-            </p>
+        <Modal
+          open={true}
+          onClose={() => handleClose(false)}
+          title={state.title ?? "Confirm"}
+          footer={
             <div
               style={{
                 display: "flex",
-                gap: "8px",
+                gap: "var(--drp-space-2)",
                 justifyContent: "flex-end",
               }}
             >
@@ -117,8 +73,20 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
                 {state.confirmLabel ?? "Confirm"}
               </Button>
             </div>
-          </div>
-        </div>
+          }
+        >
+          <p
+            style={{
+              margin: 0,
+              fontFamily: "var(--drp-font-primary)",
+              fontSize: "var(--drp-text-sm)",
+              color: "var(--drp-muted, #555)",
+              lineHeight: 1.5,
+            }}
+          >
+            {state.message}
+          </p>
+        </Modal>
       )}
     </ConfirmContext.Provider>
   );

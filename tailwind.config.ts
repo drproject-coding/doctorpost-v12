@@ -7,10 +7,13 @@ const config: Config = {
     "./lib/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: ["class"],
+  corePlugins: {
+    preflight: false, // CRITICAL: Tailwind Preflight destroys DS base styles
+  },
   theme: {
     extend: {
       colors: {
-        // DoctorProject Design System
+        // Doctor Project Design System
         "drp-purple": "#631DED",
         "drp-purple-hover": "#4A14B8",
         "drp-purple-active": "#8B4FF5",
@@ -33,7 +36,7 @@ const config: Config = {
         visby: ["Visby", "Roboto Flex", "sans-serif"],
       },
       borderWidth: {
-        bru: "2px",
+        drp: "2px",
       },
       boxShadow: {
         "drp-xs": "2px 2px 0 0 rgba(0,0,0,1)",

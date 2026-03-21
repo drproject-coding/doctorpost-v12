@@ -4,8 +4,8 @@ import { jest } from "@jest/globals";
 import { FeedbackHistory } from "@/components/learning/FeedbackHistory";
 import type { Signal } from "@/lib/knowledge/types";
 
-// Mock @bruddle/react components
-jest.mock("@bruddle/react", () => ({
+// Mock @doctorproject/react components
+jest.mock("@doctorproject/react", () => ({
   Card: ({ children, ...props }: any) => (
     <div data-testid="card" {...props}>
       {children}

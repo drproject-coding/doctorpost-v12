@@ -26,15 +26,15 @@ export default function PostGoalSelector({
               fontSize: 13,
               fontWeight: isSelected ? 700 : 500,
               border: isSelected
-                ? "2px solid var(--bru-purple, #631DED)"
+                ? "2px solid var(--drp-purple, #631DED)"
                 : "2px solid rgba(0,0,0,0.12)",
               background: isSelected
-                ? "var(--bru-purple, #631DED)"
+                ? "var(--drp-purple, #631DED)"
                 : "transparent",
               color: isSelected ? "#fff" : "inherit",
               cursor: "pointer",
               transition: "all 0.15s ease",
-              fontFamily: "var(--bru-font-primary)",
+              fontFamily: "var(--drp-font-primary)",
             }}
           >
             {goal.label}

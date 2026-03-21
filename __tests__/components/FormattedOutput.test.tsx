@@ -117,7 +117,7 @@ describe("FormattedOutput", () => {
     render(<FormattedOutput post={mockPost} />);
 
     const characterStat = screen.getByText("245").closest("div");
-    expect(characterStat).toHaveStyle({ fontSize: "var(--bru-text-xs)" });
+    expect(characterStat).toHaveStyle({ fontSize: "var(--drp-text-xs)" });
   });
 
   it("displays hook fold information correctly", () => {

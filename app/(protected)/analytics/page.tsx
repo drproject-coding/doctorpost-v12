@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Alert, Card } from "@bruddle/react";
+import { Alert, Card } from "@doctorproject/react";
 import { getAnalytics } from "@/lib/api";
 import { AnalyticsData } from "@/lib/types";
 import { BarChart2, MessageSquare, ThumbsUp, TrendingUp } from "lucide-react";
@@ -17,7 +17,7 @@ const StatCard = ({
 }) => (
   <Card variant="raised" className="flex flex-col items-start">
     <div className="flex items-center mb-2">
-      <div className="p-2 bg-bru-purple rounded-bru-md border-2 border-black mr-2">
+      <div className="p-2 bg-drp-purple rounded-drp-md border-2 border-black mr-2">
         {React.cloneElement(icon as React.ReactElement, {
           size: 20,
           className: "text-white",
@@ -126,7 +126,7 @@ export default function AnalyticsPage() {
                 {data.topPerformingHook.name} (
                 {data.topPerformingHook.value.toLocaleString()} reactions)
               </p>
-              <div className="mt-4 p-3 bg-blue-50 border-2 border-black rounded-bru-md text-blue-800 font-medium">
+              <div className="mt-4 p-3 bg-blue-50 border-2 border-black rounded-drp-md text-blue-800 font-medium">
                 <p className="font-bold">Creator Engagement Insight:</p>
                 <p>
                   Posts with &quot;Educational/Framework&quot; hooks
@@ -150,9 +150,9 @@ export default function AnalyticsPage() {
                       {pillar.impressions.toLocaleString()}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-bru-md border border-black h-3">
+                  <div className="w-full bg-gray-200 rounded-drp-md border border-black h-3">
                     <div
-                      className="bg-bru-purple h-3 rounded-bru-md"
+                      className="bg-drp-purple h-3 rounded-drp-md"
                       style={{
                         width: `${(pillar.impressions / maxImpressions) * 100}%`,
                       }}

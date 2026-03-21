@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import type { BrandProfile } from "@/lib/types";
 
@@ -79,7 +79,7 @@ function TagInput({ value, onChange, placeholder }: TagInputProps) {
         flexWrap: "wrap",
         gap: "6px",
         padding: "8px 10px",
-        border: "1.5px solid var(--bru-grey)",
+        border: "1.5px solid var(--drp-grey)",
         background: "#fff",
         minHeight: "44px",
         alignItems: "center",
@@ -93,7 +93,7 @@ function TagInput({ value, onChange, placeholder }: TagInputProps) {
             alignItems: "center",
             gap: "4px",
             padding: "2px 10px 2px 10px",
-            background: "var(--bru-purple)",
+            background: "var(--drp-purple)",
             color: "#fff",
             fontSize: "13px",
             fontWeight: 500,
@@ -131,7 +131,7 @@ function TagInput({ value, onChange, placeholder }: TagInputProps) {
           minWidth: "120px",
           fontSize: "14px",
           background: "transparent",
-          color: "var(--bru-black)",
+          color: "var(--drp-black)",
         }}
       />
     </div>
@@ -171,9 +171,9 @@ function ChipSelector({ options, selected, onChange, max }: ChipSelectorProps) {
             onClick={() => toggle(option)}
             style={{
               padding: "6px 14px",
-              border: `1.5px solid ${active ? "var(--bru-purple)" : "var(--bru-grey)"}`,
-              background: active ? "var(--bru-purple)" : "#fff",
-              color: active ? "#fff" : "var(--bru-black)",
+              border: `1.5px solid ${active ? "var(--drp-purple)" : "var(--drp-grey)"}`,
+              background: active ? "var(--drp-purple)" : "#fff",
+              color: active ? "#fff" : "var(--drp-black)",
               cursor:
                 max !== undefined && selected.length >= max && !active
                   ? "not-allowed"
@@ -213,7 +213,7 @@ function LabeledField({ label, error, children, hint }: LabeledFieldProps) {
         style={{
           fontWeight: 600,
           fontSize: "13px",
-          color: "var(--bru-black)",
+          color: "var(--drp-black)",
           letterSpacing: "0.03em",
           textTransform: "uppercase",
         }}
@@ -225,7 +225,7 @@ function LabeledField({ label, error, children, hint }: LabeledFieldProps) {
           style={{
             margin: 0,
             fontSize: "12px",
-            color: "var(--bru-grey)",
+            color: "var(--drp-grey)",
             lineHeight: 1.4,
           }}
         >
@@ -243,11 +243,11 @@ function LabeledField({ label, error, children, hint }: LabeledFieldProps) {
 const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: "10px 12px",
-  border: "1.5px solid var(--bru-grey)",
+  border: "1.5px solid var(--drp-grey)",
   outline: "none",
   fontSize: "14px",
   background: "#fff",
-  color: "var(--bru-black)",
+  color: "var(--drp-black)",
   boxSizing: "border-box",
 };
 
@@ -317,7 +317,7 @@ function Step1({
           <input
             style={{
               ...inputStyle,
-              borderColor: errors.firstName ? "#e53e3e" : "var(--bru-grey)",
+              borderColor: errors.firstName ? "#e53e3e" : "var(--drp-grey)",
             }}
             value={state.firstName}
             onChange={set("firstName")}
@@ -461,7 +461,7 @@ function Step3({
         <textarea
           style={{
             ...textareaStyle,
-            borderColor: errors.contentStrategy ? "#e53e3e" : "var(--bru-grey)",
+            borderColor: errors.contentStrategy ? "#e53e3e" : "var(--drp-grey)",
           }}
           value={state.contentStrategy}
           onChange={(e) =>
@@ -568,7 +568,7 @@ function Step5({
           style={{
             ...textareaStyle,
             minHeight: "128px",
-            borderColor: errors.positioning ? "#e53e3e" : "var(--bru-grey)",
+            borderColor: errors.positioning ? "#e53e3e" : "var(--drp-grey)",
           }}
           value={state.positioning}
           onChange={(e) => onChange({ ...state, positioning: e.target.value })}
@@ -599,7 +599,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
           display: "flex",
           justifyContent: "space-between",
           fontSize: "11px",
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           letterSpacing: "0.06em",
           textTransform: "uppercase",
           fontWeight: 600,
@@ -614,7 +614,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
         style={{
           width: "100%",
           height: "3px",
-          background: "var(--bru-grey)",
+          background: "var(--drp-grey)",
           position: "relative",
         }}
       >
@@ -625,7 +625,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
             top: 0,
             height: "100%",
             width: `${pct}%`,
-            background: "var(--bru-purple)",
+            background: "var(--drp-purple)",
             transition: "width 0.3s ease",
           }}
         />
@@ -841,10 +841,10 @@ export default function WizardStepPage({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "var(--bru-cream)",
+          background: "var(--drp-cream)",
         }}
       >
-        <p style={{ color: "var(--bru-grey)", fontSize: "14px" }}>Loading…</p>
+        <p style={{ color: "var(--drp-grey)", fontSize: "14px" }}>Loading…</p>
       </div>
     );
   }
@@ -858,7 +858,7 @@ export default function WizardStepPage({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "var(--bru-cream)",
+          background: "var(--drp-cream)",
           padding: "24px",
         }}
       >
@@ -874,7 +874,7 @@ export default function WizardStepPage({
     <div
       style={{
         minHeight: "100vh",
-        background: "var(--bru-cream)",
+        background: "var(--drp-cream)",
         display: "flex",
         alignItems: "flex-start",
         justifyContent: "center",
@@ -889,7 +889,7 @@ export default function WizardStepPage({
           style={{
             padding: "36px 40px",
             marginTop: "16px",
-            border: "1.5px solid var(--bru-black)",
+            border: "1.5px solid var(--drp-black)",
             background: "#fff",
           }}
         >
@@ -900,7 +900,7 @@ export default function WizardStepPage({
                 margin: "0 0 8px",
                 fontSize: "22px",
                 fontWeight: 700,
-                color: "var(--bru-black)",
+                color: "var(--drp-black)",
                 letterSpacing: "-0.02em",
               }}
             >
@@ -910,7 +910,7 @@ export default function WizardStepPage({
               style={{
                 margin: 0,
                 fontSize: "14px",
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
                 lineHeight: 1.5,
               }}
             >

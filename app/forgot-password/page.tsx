@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 
@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
     <div
       style={{
         minHeight: "100vh",
-        backgroundColor: "var(--bru-cream)",
+        backgroundColor: "var(--drp-cream)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
                 fontSize: "1.5rem",
                 fontWeight: 700,
                 marginBottom: "1rem",
-                color: "var(--bru-purple)",
+                color: "var(--drp-purple)",
               }}
             >
               Check your inbox
@@ -80,7 +80,7 @@ export default function ForgotPasswordPage() {
                 fontSize: "1.5rem",
                 fontWeight: 700,
                 marginBottom: "0.5rem",
-                color: "var(--bru-purple)",
+                color: "var(--drp-purple)",
               }}
             >
               Reset your password
@@ -105,7 +105,7 @@ export default function ForgotPasswordPage() {
                 <input
                   id="email"
                   type="email"
-                  className="bru-input"
+                  className="drp-input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
@@ -150,7 +150,7 @@ export default function ForgotPasswordPage() {
                 style={{
                   background: "none",
                   border: "none",
-                  color: "var(--bru-purple)",
+                  color: "var(--drp-purple)",
                   cursor: "pointer",
                   fontSize: "0.875rem",
                   textDecoration: "underline",

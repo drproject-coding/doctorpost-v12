@@ -116,12 +116,12 @@ export function PipelineStepper({
   };
 
   return (
-    <div style={{ marginBottom: "var(--bru-space-6)" }}>
+    <div style={{ marginBottom: "var(--drp-space-6)" }}>
       {/* Phase bar */}
       <div
         style={{
           display: "flex",
-          gap: "var(--bru-space-1)",
+          gap: "var(--drp-space-1)",
           alignItems: "center",
         }}
       >
@@ -142,7 +142,7 @@ export function PipelineStepper({
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: "var(--bru-space-1)",
+                gap: "var(--drp-space-1)",
                 cursor: canClick ? "pointer" : "default",
                 position: "relative",
               }}
@@ -151,10 +151,10 @@ export function PipelineStepper({
               <div
                 style={{
                   color: isViewing
-                    ? "var(--bru-purple)"
+                    ? "var(--drp-purple)"
                     : isComplete || isCurrent
-                      ? "var(--bru-black)"
-                      : "var(--bru-grey)",
+                      ? "var(--drp-black)"
+                      : "var(--drp-grey)",
                   opacity: isComplete || isCurrent || isViewing ? 1 : 0.5,
                   transition: "all 0.2s ease",
                   display: "flex",
@@ -171,7 +171,7 @@ export function PipelineStepper({
                   height: isViewing ? 6 : 4,
                   background: isViewing
                     ? "rgba(124, 58, 237, 0.2)"
-                    : "var(--bru-border-color, #e0e0e0)",
+                    : "var(--drp-border-color, #e0e0e0)",
                   position: "relative",
                   overflow: "hidden",
                   transition: "height 0.2s ease",
@@ -186,8 +186,8 @@ export function PipelineStepper({
                         : "0%",
                     height: "100%",
                     background: isError
-                      ? "var(--bru-error, #FF4444)"
-                      : "var(--bru-purple)",
+                      ? "var(--drp-error, #FF4444)"
+                      : "var(--drp-purple)",
                     transition: "width 0.3s ease",
                   }}
                 />
@@ -197,18 +197,18 @@ export function PipelineStepper({
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "var(--bru-space-1)",
+                  gap: "var(--drp-space-1)",
                 }}
               >
                 <span
                   style={{
-                    fontSize: "var(--bru-text-xs)",
+                    fontSize: "var(--drp-text-xs)",
                     fontWeight: isCurrent || isViewing ? 700 : 400,
                     color: isViewing
-                      ? "var(--bru-purple)"
+                      ? "var(--drp-purple)"
                       : isComplete || isCurrent
-                        ? "var(--bru-black)"
-                        : "var(--bru-grey)",
+                        ? "var(--drp-black)"
+                        : "var(--drp-grey)",
                     whiteSpace: "nowrap",
                     textDecoration: canClick ? "underline" : "none",
                   }}
@@ -219,13 +219,13 @@ export function PipelineStepper({
                 {metadata?.phaseStatus?.[step.phase] === "success" && (
                   <CheckCircle
                     size={14}
-                    style={{ color: "var(--bru-success-dark, #2d7a3a)" }}
+                    style={{ color: "var(--drp-success-dark, #2d7a3a)" }}
                   />
                 )}
                 {metadata?.phaseStatus?.[step.phase] === "failed" && (
                   <XCircle
                     size={14}
-                    style={{ color: "var(--bru-error-dark, #c0392b)" }}
+                    style={{ color: "var(--drp-error-dark, #c0392b)" }}
                   />
                 )}
                 {canRetry && (
@@ -239,7 +239,7 @@ export function PipelineStepper({
                       background: "none",
                       border: "none",
                       cursor: "pointer",
-                      color: "var(--bru-purple)",
+                      color: "var(--drp-purple)",
                       padding: "2px 4px",
                       display: "flex",
                       alignItems: "center",
@@ -271,7 +271,7 @@ export function PipelineStepper({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: "var(--bru-space-2)",
+            marginTop: "var(--drp-space-2)",
           }}
         >
           <button
@@ -284,10 +284,10 @@ export function PipelineStepper({
               background: "none",
               border: "none",
               cursor: canGoPrev ? "pointer" : "default",
-              fontSize: "var(--bru-text-xs)",
+              fontSize: "var(--drp-text-xs)",
               color: canGoPrev
-                ? "var(--bru-purple)"
-                : "var(--bru-border-color, #e0e0e0)",
+                ? "var(--drp-purple)"
+                : "var(--drp-border-color, #e0e0e0)",
               padding: "2px 0",
             }}
           >
@@ -298,8 +298,8 @@ export function PipelineStepper({
           {isViewingPast && (
             <span
               style={{
-                fontSize: "var(--bru-text-xs)",
-                color: "var(--bru-purple)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-purple)",
                 fontWeight: 600,
               }}
             >
@@ -310,8 +310,8 @@ export function PipelineStepper({
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "var(--bru-grey)",
-                  fontSize: "var(--bru-text-xs)",
+                  color: "var(--drp-grey)",
+                  fontSize: "var(--drp-text-xs)",
                   textDecoration: "underline",
                 }}
               >
@@ -330,10 +330,10 @@ export function PipelineStepper({
               background: "none",
               border: "none",
               cursor: canGoNext ? "pointer" : "default",
-              fontSize: "var(--bru-text-xs)",
+              fontSize: "var(--drp-text-xs)",
               color: canGoNext
-                ? "var(--bru-purple)"
-                : "var(--bru-border-color, #e0e0e0)",
+                ? "var(--drp-purple)"
+                : "var(--drp-border-color, #e0e0e0)",
               padding: "2px 0",
             }}
           >
@@ -348,13 +348,13 @@ export function PipelineStepper({
         <div
           style={{
             display: "flex",
-            gap: "var(--bru-space-3)",
+            gap: "var(--drp-space-3)",
             flexWrap: "wrap",
-            marginTop: "var(--bru-space-3)",
-            padding: "var(--bru-space-2) var(--bru-space-3)",
-            background: "var(--bru-cream, #faf8f5)",
-            border: "var(--bru-border)",
-            fontSize: "var(--bru-text-xs)",
+            marginTop: "var(--drp-space-3)",
+            padding: "var(--drp-space-2) var(--drp-space-3)",
+            background: "var(--drp-cream, #faf8f5)",
+            border: "var(--drp-border)",
+            fontSize: "var(--drp-text-xs)",
           }}
         >
           {metadata.postType && (
@@ -407,8 +407,8 @@ export function PipelineStepper({
 
 function MetadataTag({ label, value }: { label: string; value: string }) {
   return (
-    <span style={{ color: "var(--bru-grey)" }}>
-      <strong style={{ color: "var(--bru-black)" }}>{label}:</strong> {value}
+    <span style={{ color: "var(--drp-grey)" }}>
+      <strong style={{ color: "var(--drp-black)" }}>{label}:</strong> {value}
     </span>
   );
 }

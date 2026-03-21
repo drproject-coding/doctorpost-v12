@@ -42,9 +42,9 @@ const OffersSection: React.FC<OffersSectionProps> = ({
         {offers.length === 0 ? (
           <span
             style={{
-              color: "var(--bru-muted, #888)",
-              fontSize: "var(--bru-text-sm)",
-              fontFamily: "var(--bru-font-primary)",
+              color: "var(--drp-muted, #888)",
+              fontSize: "var(--drp-text-sm)",
+              fontFamily: "var(--drp-font-primary)",
             }}
           >
             No offers added yet
@@ -57,8 +57,8 @@ const OffersSection: React.FC<OffersSectionProps> = ({
                 backgroundColor: "#FAE8A4",
                 color: "#121212",
                 padding: "4px 12px",
-                fontSize: "var(--bru-text-sm)",
-                fontFamily: "var(--bru-font-primary)",
+                fontSize: "var(--drp-text-sm)",
+                fontFamily: "var(--drp-font-primary)",
                 fontWeight: "500",
                 borderRadius: 0,
               }}
@@ -85,8 +85,8 @@ const OffersSection: React.FC<OffersSectionProps> = ({
                 backgroundColor: "#FAE8A4",
                 color: "#121212",
                 padding: "4px 10px",
-                fontSize: "var(--bru-text-sm)",
-                fontFamily: "var(--bru-font-primary)",
+                fontSize: "var(--drp-text-sm)",
+                fontFamily: "var(--drp-font-primary)",
                 fontWeight: "500",
                 borderRadius: 0,
               }}
@@ -117,7 +117,7 @@ const OffersSection: React.FC<OffersSectionProps> = ({
       <div style={{ display: "flex", gap: "8px" }}>
         <input
           type="text"
-          className="bru-input"
+          className="drp-input"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -126,7 +126,7 @@ const OffersSection: React.FC<OffersSectionProps> = ({
         />
         <button
           type="button"
-          className="bru-btn bru-btn--primary bru-btn--sm"
+          className="drp-btn drp-btn--primary drp-btn--sm"
           onClick={handleAdd}
           disabled={!inputValue.trim()}
         >

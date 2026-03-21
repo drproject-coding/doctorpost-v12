@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { Plus, Minus } from "lucide-react";
 
 interface CampaignSetupProps {
@@ -80,19 +80,19 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
       <Card variant="raised">
         <h3
           style={{
-            fontSize: "var(--bru-text-h5)",
+            fontSize: "var(--drp-text-h5)",
             fontWeight: 700,
-            marginBottom: "var(--bru-space-4)",
+            marginBottom: "var(--drp-space-4)",
           }}
         >
           New Campaign
         </h3>
 
-        <div className="bru-form-stack">
-          <div className="bru-field">
-            <label className="bru-field__label">Campaign Name</label>
+        <div className="drp-form-stack">
+          <div className="drp-field">
+            <label className="drp-field__label">Campaign Name</label>
             <input
-              className="bru-input"
+              className="drp-input"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Q2 2026 Authority Building"
@@ -100,11 +100,11 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
             />
           </div>
 
-          <div className="bru-form-row">
-            <div className="bru-field">
-              <label className="bru-field__label">Duration (weeks)</label>
+          <div className="drp-form-row">
+            <div className="drp-field">
+              <label className="drp-field__label">Duration (weeks)</label>
               <input
-                className="bru-input"
+                className="drp-input"
                 type="number"
                 min={1}
                 max={52}
@@ -113,10 +113,10 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                 onChange={(e) => setDurationWeeks(Number(e.target.value))}
               />
             </div>
-            <div className="bru-field">
-              <label className="bru-field__label">Posts per week</label>
+            <div className="drp-field">
+              <label className="drp-field__label">Posts per week</label>
               <input
-                className="bru-input"
+                className="drp-input"
                 type="number"
                 min={1}
                 max={7}
@@ -125,10 +125,10 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                 onChange={(e) => setPostsPerWeek(Number(e.target.value))}
               />
             </div>
-            <div className="bru-field">
-              <label className="bru-field__label">Start Date</label>
+            <div className="drp-field">
+              <label className="drp-field__label">Start Date</label>
               <input
-                className="bru-input"
+                className="drp-input"
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
@@ -136,10 +136,10 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
             </div>
           </div>
 
-          <div className="bru-field">
-            <label className="bru-field__label">Goals</label>
+          <div className="drp-field">
+            <label className="drp-field__label">Goals</label>
             <textarea
-              className="bru-input"
+              className="drp-input"
               value={goals}
               onChange={(e) => setGoals(e.target.value)}
               placeholder="What do you want to achieve with this campaign?"
@@ -148,42 +148,42 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
           </div>
 
           {/* Pillar Weights */}
-          <div className="bru-field">
-            <label className="bru-field__label">
+          <div className="drp-field">
+            <label className="drp-field__label">
               Pillar Weights (total: {totalWeight}%)
             </label>
             {totalWeight !== 100 && (
               <div
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-error-dark)",
-                  marginBottom: "var(--bru-space-2)",
+                  fontSize: "var(--drp-text-xs)",
+                  color: "var(--drp-error-dark)",
+                  marginBottom: "var(--drp-space-2)",
                 }}
               >
                 Weights should sum to 100%
               </div>
             )}
-            <div style={{ display: "grid", gap: "var(--bru-space-2)" }}>
+            <div style={{ display: "grid", gap: "var(--drp-space-2)" }}>
               {Object.entries(pillars).map(([pillar, weight]) => (
                 <div
                   key={pillar}
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "var(--bru-space-2)",
+                    gap: "var(--drp-space-2)",
                   }}
                 >
                   <span
                     style={{
                       width: 120,
-                      fontSize: "var(--bru-text-sm)",
+                      fontSize: "var(--drp-text-sm)",
                       fontWeight: 500,
                     }}
                   >
                     {pillar}
                   </span>
                   <input
-                    className="bru-input"
+                    className="drp-input"
                     type="number"
                     min={0}
                     max={100}
@@ -195,8 +195,8 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                   />
                   <span
                     style={{
-                      fontSize: "var(--bru-text-xs)",
-                      color: "var(--bru-grey)",
+                      fontSize: "var(--drp-text-xs)",
+                      color: "var(--drp-grey)",
                     }}
                   >
                     %
@@ -216,11 +216,11 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "var(--bru-space-2)",
+                  gap: "var(--drp-space-2)",
                 }}
               >
                 <input
-                  className="bru-input"
+                  className="drp-input"
                   value={newPillar}
                   onChange={(e) => setNewPillar(e.target.value)}
                   placeholder="New pillar..."
@@ -246,11 +246,11 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
 
           <div
             style={{
-              fontSize: "var(--bru-text-sm)",
-              color: "var(--bru-grey)",
-              padding: "var(--bru-space-2)",
-              background: "var(--bru-cream)",
-              border: "var(--bru-border)",
+              fontSize: "var(--drp-text-sm)",
+              color: "var(--drp-grey)",
+              padding: "var(--drp-space-2)",
+              background: "var(--drp-cream)",
+              border: "var(--drp-border)",
             }}
           >
             Total posts: {durationWeeks * postsPerWeek}
@@ -258,8 +258,8 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
         </div>
 
         <div
-          className="bru-form-actions"
-          style={{ marginTop: "var(--bru-space-4)" }}
+          className="drp-form-actions"
+          style={{ marginTop: "var(--drp-space-4)" }}
         >
           <Button
             type="submit"

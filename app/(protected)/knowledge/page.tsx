@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Alert, Button, Card } from "@bruddle/react";
+import { Alert, Button, Card } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import {
   FileText,
@@ -201,7 +201,7 @@ export default function KnowledgePage() {
         style={{
           display: "grid",
           gridTemplateColumns: "1fr",
-          gap: "var(--bru-space-6)",
+          gap: "var(--drp-space-6)",
         }}
       >
         <DocumentEditor
@@ -243,15 +243,15 @@ export default function KnowledgePage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-6)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <h1
-          style={{ fontSize: "var(--bru-text-h3)", fontWeight: 700, margin: 0 }}
+          style={{ fontSize: "var(--drp-text-h3)", fontWeight: 700, margin: 0 }}
         >
           Knowledge Base
         </h1>
-        <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
+        <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
           <Button onClick={() => setView("import")}>
             <Upload size={14} />
             Import
@@ -268,9 +268,9 @@ export default function KnowledgePage() {
         variant="flat"
         style={{
           display: "flex",
-          gap: "var(--bru-space-3)",
+          gap: "var(--drp-space-3)",
           alignItems: "center",
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
           flexWrap: "wrap",
         }}
       >
@@ -278,7 +278,7 @@ export default function KnowledgePage() {
           <Button
             key={cat.value}
             variant={filterCategory === cat.value ? "primary" : undefined}
-            style={{ padding: "4px 12px", fontSize: "var(--bru-text-sm)" }}
+            style={{ padding: "4px 12px", fontSize: "var(--drp-text-sm)" }}
             onClick={() => setFilterCategory(cat.value)}
           >
             {cat.label}
@@ -293,11 +293,11 @@ export default function KnowledgePage() {
                 left: 10,
                 top: "50%",
                 transform: "translateY(-50%)",
-                color: "var(--bru-grey)",
+                color: "var(--drp-grey)",
               }}
             />
             <input
-              className="bru-input"
+              className="drp-input"
               placeholder="Search documents..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -309,7 +309,7 @@ export default function KnowledgePage() {
 
       {/* Error */}
       {error && (
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <Alert variant="error">{error}</Alert>
         </div>
       )}
@@ -319,8 +319,8 @@ export default function KnowledgePage() {
         <div
           style={{
             textAlign: "center",
-            padding: "var(--bru-space-8)",
-            color: "var(--bru-grey)",
+            padding: "var(--drp-space-8)",
+            color: "var(--drp-grey)",
           }}
         >
           <Loader size={24} className="animate-spin" />
@@ -330,8 +330,8 @@ export default function KnowledgePage() {
           variant="raised"
           style={{
             textAlign: "center",
-            padding: "var(--bru-space-8)",
-            color: "var(--bru-grey)",
+            padding: "var(--drp-space-8)",
+            color: "var(--drp-grey)",
           }}
         >
           No documents found. Import brand files to get started.
@@ -341,7 +341,7 @@ export default function KnowledgePage() {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-            gap: "var(--bru-space-4)",
+            gap: "var(--drp-space-4)",
           }}
         >
           {filtered.map((doc) => (
@@ -355,14 +355,14 @@ export default function KnowledgePage() {
                 style={{
                   display: "flex",
                   alignItems: "flex-start",
-                  gap: "var(--bru-space-3)",
+                  gap: "var(--drp-space-3)",
                 }}
               >
                 <FileText size={20} style={{ flexShrink: 0, marginTop: 2 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <h4
                     style={{
-                      fontSize: "var(--bru-text-md)",
+                      fontSize: "var(--drp-text-md)",
                       fontWeight: 700,
                       margin: 0,
                       overflow: "hidden",
@@ -375,19 +375,19 @@ export default function KnowledgePage() {
                   <div
                     style={{
                       display: "flex",
-                      gap: "var(--bru-space-2)",
-                      marginTop: "var(--bru-space-1)",
+                      gap: "var(--drp-space-2)",
+                      marginTop: "var(--drp-space-1)",
                       flexWrap: "wrap",
                     }}
                   >
                     <span
                       style={{
-                        fontSize: "var(--bru-text-xs)",
+                        fontSize: "var(--drp-text-xs)",
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
                         padding: "1px 6px",
-                        background: "var(--bru-purple)",
+                        background: "var(--drp-purple)",
                         color: "white",
                       }}
                     >
@@ -396,7 +396,7 @@ export default function KnowledgePage() {
                     {doc.source === "seed" && (
                       <span
                         style={{
-                          fontSize: "var(--bru-text-xs)",
+                          fontSize: "var(--drp-text-xs)",
                           fontWeight: 700,
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
@@ -414,8 +414,8 @@ export default function KnowledgePage() {
                     {doc.subcategory && (
                       <span
                         style={{
-                          fontSize: "var(--bru-text-xs)",
-                          color: "var(--bru-grey)",
+                          fontSize: "var(--drp-text-xs)",
+                          color: "var(--drp-grey)",
                         }}
                       >
                         {doc.subcategory}
@@ -424,9 +424,9 @@ export default function KnowledgePage() {
                   </div>
                   <p
                     style={{
-                      fontSize: "var(--bru-text-xs)",
-                      color: "var(--bru-grey)",
-                      margin: "var(--bru-space-2) 0 0",
+                      fontSize: "var(--drp-text-xs)",
+                      color: "var(--drp-grey)",
+                      margin: "var(--drp-space-2) 0 0",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       display: "-webkit-box",
@@ -442,9 +442,9 @@ export default function KnowledgePage() {
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
-                  marginTop: "var(--bru-space-3)",
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-grey)",
+                  marginTop: "var(--drp-space-3)",
+                  fontSize: "var(--drp-text-xs)",
+                  color: "var(--drp-grey)",
                 }}
               >
                 <span>v{doc.version}</span>

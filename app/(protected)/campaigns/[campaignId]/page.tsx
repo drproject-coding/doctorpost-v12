@@ -85,8 +85,8 @@ export default function CampaignDetailPage({ params }: Props) {
       <div
         style={{
           textAlign: "center",
-          padding: "var(--bru-space-8)",
-          color: "var(--bru-grey)",
+          padding: "var(--drp-space-8)",
+          color: "var(--drp-grey)",
         }}
       >
         Loading campaign...
@@ -99,8 +99,8 @@ export default function CampaignDetailPage({ params }: Props) {
       <div
         style={{
           textAlign: "center",
-          padding: "var(--bru-space-8)",
-          color: "var(--bru-grey)",
+          padding: "var(--drp-space-8)",
+          color: "var(--drp-grey)",
         }}
       >
         Campaign not found.
@@ -114,8 +114,8 @@ export default function CampaignDetailPage({ params }: Props) {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "var(--bru-space-3)",
-          marginBottom: "var(--bru-space-6)",
+          gap: "var(--drp-space-3)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <button
@@ -124,15 +124,15 @@ export default function CampaignDetailPage({ params }: Props) {
             background: "none",
             border: "none",
             cursor: "pointer",
-            fontSize: "var(--bru-text-md)",
-            color: "var(--bru-grey)",
+            fontSize: "var(--drp-text-md)",
+            color: "var(--drp-grey)",
             padding: 0,
           }}
         >
           &larr;
         </button>
         <h1
-          style={{ fontSize: "var(--bru-text-h3)", fontWeight: 700, margin: 0 }}
+          style={{ fontSize: "var(--drp-text-h3)", fontWeight: 700, margin: 0 }}
         >
           {campaign.name}
         </h1>
@@ -149,8 +149,8 @@ export default function CampaignDetailPage({ params }: Props) {
         <div
           style={{
             textAlign: "center",
-            padding: "var(--bru-space-8)",
-            color: "var(--bru-grey)",
+            padding: "var(--drp-space-8)",
+            color: "var(--drp-grey)",
           }}
         >
           No ideas found for this campaign.

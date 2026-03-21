@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { ScheduledPost } from "@/lib/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getStatusColorClasses } from "@/lib/calendarUtils"; // Import from new utility file
@@ -93,15 +93,15 @@ export default function CalendarView({
       let cellClasses = "bg-white";
       let cellStyle: React.CSSProperties = {};
       if (isToday) {
-        cellClasses = "bg-bru-purple/10"; // Highlight for today
+        cellClasses = "bg-drp-purple/10"; // Highlight for today
       }
       if (isSelected) {
-        cellClasses = "bg-bru-yellow/20 border-bru-yellow"; // Highlight for selected date
+        cellClasses = "bg-drp-yellow/20 border-drp-yellow"; // Highlight for selected date
       }
       if (isToday && isSelected) {
-        cellClasses = "bg-bru-yellow/20 border-bru-yellow ring-2"; // Both today and selected
+        cellClasses = "bg-drp-yellow/20 border-drp-yellow ring-2"; // Both today and selected
         cellStyle = {
-          "--tw-ring-color": "var(--bru-purple)",
+          "--tw-ring-color": "var(--drp-purple)",
         } as React.CSSProperties;
       }
 
@@ -112,7 +112,7 @@ export default function CalendarView({
           style={cellStyle}
         >
           <div
-            className={`font-bold text-sm mb-1 ${isToday ? "text-bru-purple" : isSelected ? "text-bru-yellow" : ""}`}
+            className={`font-bold text-sm mb-1 ${isToday ? "text-drp-purple" : isSelected ? "text-drp-yellow" : ""}`}
           >
             {day}
           </div>
@@ -121,7 +121,7 @@ export default function CalendarView({
               {dayPosts.map((post) => (
                 <button
                   key={post.id}
-                  className={`block w-full text-left px-2 py-1 text-xs rounded-bru-md border-2 truncate ${getStatusColorClasses(post.status)} hover:opacity-80 transition-opacity`}
+                  className={`block w-full text-left px-2 py-1 text-xs rounded-drp-md border-2 truncate ${getStatusColorClasses(post.status)} hover:opacity-80 transition-opacity`}
                   title={post.title}
                   onClick={() => onPostClick(post)}
                 >

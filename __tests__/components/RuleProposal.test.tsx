@@ -3,8 +3,8 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { RuleProposalCard } from "@/components/learning/RuleProposal";
 import type { RuleProposal, ProposalStatus } from "@/lib/knowledge/types";
 
-// Mock @bruddle/react components
-jest.mock("@bruddle/react", () => ({
+// Mock @doctorproject/react components
+jest.mock("@doctorproject/react", () => ({
   Alert: ({ variant, children }: any) => (
     <div data-testid="alert" data-variant={variant}>
       {children}

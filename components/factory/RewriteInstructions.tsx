@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button } from "@bruddle/react";
+import { Button } from "@doctorproject/react";
 import { Wand2, RotateCcw, ChevronDown, ChevronUp } from "lucide-react";
 
 interface ParsedInstruction {
@@ -96,8 +96,8 @@ export function RewriteInstructions({
   return (
     <div
       style={{
-        marginTop: "var(--bru-space-3)",
-        border: "var(--bru-border)",
+        marginTop: "var(--drp-space-3)",
+        border: "var(--drp-border)",
         overflow: "hidden",
       }}
     >
@@ -109,24 +109,24 @@ export function RewriteInstructions({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "var(--bru-space-2) var(--bru-space-3)",
+          padding: "var(--drp-space-2) var(--drp-space-3)",
           background: passes
             ? "rgba(0, 170, 0, 0.08)"
             : "rgba(233, 215, 152, 0.3)",
           border: "none",
           cursor: "pointer",
-          fontSize: "var(--bru-text-sm)",
+          fontSize: "var(--drp-text-sm)",
           fontWeight: 700,
         }}
       >
         <span>
           SCORE: {totalScore}/100{" "}
           {passes ? (
-            <span style={{ color: "var(--bru-success-dark, #2d7a3a)" }}>
+            <span style={{ color: "var(--drp-success-dark, #2d7a3a)" }}>
               PASSES (&gt;{threshold})
             </span>
           ) : (
-            <span style={{ color: "var(--bru-warning-dark, #b8860b)" }}>
+            <span style={{ color: "var(--drp-warning-dark, #b8860b)" }}>
               NEEDS WORK (&lt;{threshold})
             </span>
           )}
@@ -135,16 +135,16 @@ export function RewriteInstructions({
       </button>
 
       {expanded && (
-        <div style={{ padding: "var(--bru-space-3)" }}>
+        <div style={{ padding: "var(--drp-space-3)" }}>
           {/* Required changes */}
           {parsed.required.length > 0 && (
-            <div style={{ marginBottom: "var(--bru-space-3)" }}>
+            <div style={{ marginBottom: "var(--drp-space-3)" }}>
               <h5
                 style={{
-                  fontSize: "var(--bru-text-sm)",
+                  fontSize: "var(--drp-text-sm)",
                   fontWeight: 700,
-                  marginBottom: "var(--bru-space-1)",
-                  color: "var(--bru-error-dark, #c0392b)",
+                  marginBottom: "var(--drp-space-1)",
+                  color: "var(--drp-error-dark, #c0392b)",
                 }}
               >
                 REQUIRED CHANGES:
@@ -152,13 +152,13 @@ export function RewriteInstructions({
               <ol
                 style={{
                   margin: 0,
-                  paddingLeft: "var(--bru-space-4)",
-                  fontSize: "var(--bru-text-sm)",
+                  paddingLeft: "var(--drp-space-4)",
+                  fontSize: "var(--drp-text-sm)",
                   lineHeight: 1.6,
                 }}
               >
                 {parsed.required.map((item, i) => (
-                  <li key={i} style={{ marginBottom: "var(--bru-space-1)" }}>
+                  <li key={i} style={{ marginBottom: "var(--drp-space-1)" }}>
                     {item}
                   </li>
                 ))}
@@ -168,13 +168,13 @@ export function RewriteInstructions({
 
           {/* Optional improvements */}
           {parsed.optional.length > 0 && (
-            <div style={{ marginBottom: "var(--bru-space-3)" }}>
+            <div style={{ marginBottom: "var(--drp-space-3)" }}>
               <h5
                 style={{
-                  fontSize: "var(--bru-text-sm)",
+                  fontSize: "var(--drp-text-sm)",
                   fontWeight: 700,
-                  marginBottom: "var(--bru-space-1)",
-                  color: "var(--bru-grey)",
+                  marginBottom: "var(--drp-space-1)",
+                  color: "var(--drp-grey)",
                 }}
               >
                 OPTIONAL IMPROVEMENTS:
@@ -182,14 +182,14 @@ export function RewriteInstructions({
               <ul
                 style={{
                   margin: 0,
-                  paddingLeft: "var(--bru-space-4)",
-                  fontSize: "var(--bru-text-sm)",
+                  paddingLeft: "var(--drp-space-4)",
+                  fontSize: "var(--drp-text-sm)",
                   lineHeight: 1.6,
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                 }}
               >
                 {parsed.optional.map((item, i) => (
-                  <li key={i} style={{ marginBottom: "var(--bru-space-1)" }}>
+                  <li key={i} style={{ marginBottom: "var(--drp-space-1)" }}>
                     {item}
                   </li>
                 ))}
@@ -202,7 +202,7 @@ export function RewriteInstructions({
             <div
               style={{
                 display: "flex",
-                gap: "var(--bru-space-2)",
+                gap: "var(--drp-space-2)",
                 alignItems: "center",
               }}
             >
@@ -222,8 +222,8 @@ export function RewriteInstructions({
               ) : (
                 <span
                   style={{
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   Max rewrites reached ({maxRewrites}). Edit manually in Review
@@ -233,8 +233,8 @@ export function RewriteInstructions({
               {rewriteCount > 0 && rewriteCount < maxRewrites && (
                 <span
                   style={{
-                    fontSize: "var(--bru-text-xs)",
-                    color: "var(--bru-grey)",
+                    fontSize: "var(--drp-text-xs)",
+                    color: "var(--drp-grey)",
                   }}
                 >
                   Attempt {rewriteCount}/{maxRewrites}
@@ -246,11 +246,11 @@ export function RewriteInstructions({
           {passes && (
             <div
               style={{
-                padding: "var(--bru-space-2)",
+                padding: "var(--drp-space-2)",
                 background: "rgba(0, 170, 0, 0.08)",
-                fontSize: "var(--bru-text-sm)",
+                fontSize: "var(--drp-text-sm)",
                 fontWeight: 500,
-                color: "var(--bru-success-dark, #2d7a3a)",
+                color: "var(--drp-success-dark, #2d7a3a)",
               }}
             >
               Score passes threshold. Ready to format!

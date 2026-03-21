@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type React from "react";
 import { AuthProvider } from "@/lib/auth-context";
+import "@doctorproject/react/styles";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,9 +18,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         style={{
-          fontFamily: "var(--bru-font-primary)",
-          background: "var(--bru-cream)",
-          color: "var(--bru-black)",
+          fontFamily: "var(--drp-font-primary)",
+          background: "var(--drp-cream)",
+          color: "var(--drp-black)",
         }}
       >
         <AuthProvider>{children}</AuthProvider>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { Button } from "@bruddle/react";
+import { Button } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import {
@@ -241,12 +241,12 @@ export default function CampaignsPage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: "var(--bru-space-6)",
+            marginBottom: "var(--drp-space-6)",
           }}
         >
           <h1
             style={{
-              fontSize: "var(--bru-text-h3)",
+              fontSize: "var(--drp-text-h3)",
               fontWeight: 700,
               margin: 0,
             }}
@@ -272,14 +272,14 @@ export default function CampaignsPage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: "var(--bru-space-6)",
+            marginBottom: "var(--drp-space-6)",
           }}
         >
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--bru-space-3)",
+              gap: "var(--drp-space-3)",
             }}
           >
             <button
@@ -288,8 +288,8 @@ export default function CampaignsPage() {
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                fontSize: "var(--bru-text-md)",
-                color: "var(--bru-grey)",
+                fontSize: "var(--drp-text-md)",
+                color: "var(--drp-grey)",
                 padding: 0,
               }}
             >
@@ -297,7 +297,7 @@ export default function CampaignsPage() {
             </button>
             <h1
               style={{
-                fontSize: "var(--bru-text-h3)",
+                fontSize: "var(--drp-text-h3)",
                 fontWeight: 700,
                 margin: 0,
               }}
@@ -318,8 +318,8 @@ export default function CampaignsPage() {
           <div
             style={{
               textAlign: "center",
-              padding: "var(--bru-space-8)",
-              color: "var(--bru-grey)",
+              padding: "var(--drp-space-8)",
+              color: "var(--drp-grey)",
             }}
           >
             No ideas found for this campaign.
@@ -337,14 +337,14 @@ export default function CampaignsPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-6)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-3)",
+            gap: "var(--drp-space-3)",
           }}
         >
           <button
@@ -353,8 +353,8 @@ export default function CampaignsPage() {
               background: "none",
               border: "none",
               cursor: "pointer",
-              fontSize: "var(--bru-text-md)",
-              color: "var(--bru-grey)",
+              fontSize: "var(--drp-text-md)",
+              color: "var(--drp-grey)",
               padding: 0,
             }}
           >
@@ -362,7 +362,7 @@ export default function CampaignsPage() {
           </button>
           <h1
             style={{
-              fontSize: "var(--bru-text-h3)",
+              fontSize: "var(--drp-text-h3)",
               fontWeight: 700,
               margin: 0,
             }}
@@ -375,7 +375,7 @@ export default function CampaignsPage() {
       {phase === "idle" && <CampaignSetup onSubmit={handleSubmit} />}
 
       {phase !== "idle" && (
-        <div style={{ marginBottom: "var(--bru-space-4)" }}>
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <BatchProgress
             phase={phase}
             slotsPlanned={slots.length}

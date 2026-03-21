@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Alert, Button, Card } from "@bruddle/react";
+import { Alert, Button, Card } from "@doctorproject/react";
 import { ArrowRight, Loader, TrendingUp } from "lucide-react";
 import PostTypeSelector from "@/components/factory/PostTypeSelector";
 import HookPatternSelector from "@/components/factory/HookPatternSelector";
@@ -135,7 +135,7 @@ export default function CreatePostDialog({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "var(--bru-space-3)",
+            gap: "var(--drp-space-3)",
             minHeight: 120,
           }}
         >
@@ -147,20 +147,20 @@ export default function CreatePostDialog({
   }
 
   return (
-    <div className="bru-form-stack">
+    <div className="drp-form-stack">
       {/* Error banner */}
       {hasError && (
         <Alert variant="error" title="Configuration Error">
           {profileError && <p>Profile: {profileError}</p>}
           {presetsError && <p>Presets: {presetsError}</p>}
-          <p style={{ marginTop: "var(--bru-space-2)", fontSize: "0.875rem" }}>
+          <p style={{ marginTop: "var(--drp-space-2)", fontSize: "0.875rem" }}>
             Using default options. You can still create a post.
           </p>
         </Alert>
       )}
 
       {/* Selector grid: 2 columns */}
-      <div className="bru-form-row">
+      <div className="drp-form-row">
         <div style={{ position: "relative" }}>
           <PostTypeSelector
             value={postType}
@@ -170,7 +170,7 @@ export default function CreatePostDialog({
           {recommendation && postType === recommendation.postStructure && (
             <span
               className="smart-choice-badge"
-              style={{ marginTop: "var(--bru-space-1)" }}
+              style={{ marginTop: "var(--drp-space-1)" }}
             >
               <TrendingUp size={12} /> Smart Choice
             </span>
@@ -186,7 +186,7 @@ export default function CreatePostDialog({
           {recommendation && hookPattern === recommendation.contentAngle && (
             <span
               className="smart-choice-badge"
-              style={{ marginTop: "var(--bru-space-1)" }}
+              style={{ marginTop: "var(--drp-space-1)" }}
             >
               <TrendingUp size={12} /> Smart Choice
             </span>
@@ -202,7 +202,7 @@ export default function CreatePostDialog({
           {recommendation && contentPillar === recommendation.contentPillar && (
             <span
               className="smart-choice-badge"
-              style={{ marginTop: "var(--bru-space-1)" }}
+              style={{ marginTop: "var(--drp-space-1)" }}
             >
               <TrendingUp size={12} /> Smart Choice
             </span>

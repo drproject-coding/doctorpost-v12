@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Preserve @ alias for src/ during migration, then update to root-relative
+  transpilePackages: ["@doctorproject/react"],
 };
 
 export default nextConfig;

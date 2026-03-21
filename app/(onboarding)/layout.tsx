@@ -37,7 +37,7 @@ export default function OnboardingLayout({
       <div
         style={{
           minHeight: "100vh",
-          background: "var(--bru-cream)",
+          background: "var(--drp-cream)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -53,11 +53,11 @@ export default function OnboardingLayout({
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bru-cream)" }}>
+    <div style={{ minHeight: "100vh", background: "var(--drp-cream)" }}>
       {/* Top bar */}
       <div
         style={{
-          background: "var(--bru-black)",
+          background: "var(--drp-black)",
           color: "white",
           padding: "12px 24px",
           display: "flex",
@@ -69,7 +69,7 @@ export default function OnboardingLayout({
         <button
           onClick={() => router.push("/dashboard")}
           style={{
-            color: "var(--bru-grey)",
+            color: "var(--drp-grey)",
             fontSize: 14,
             background: "none",
             border: "none",
@@ -86,7 +86,7 @@ export default function OnboardingLayout({
           style={{
             padding: "16px 24px",
             background: "white",
-            borderBottom: "2px solid var(--bru-black)",
+            borderBottom: "2px solid var(--drp-black)",
           }}
         >
           <div style={{ maxWidth: 640, margin: "0 auto" }}>
@@ -100,21 +100,21 @@ export default function OnboardingLayout({
               <span style={{ fontSize: 13, fontWeight: 600 }}>
                 Step {step} of 5
               </span>
-              <span style={{ fontSize: 13, color: "var(--bru-grey)" }}>
+              <span style={{ fontSize: 13, color: "var(--drp-grey)" }}>
                 {stepLabels[step!]}
               </span>
             </div>
             <div
               style={{
                 height: 6,
-                background: "var(--bru-cream)",
-                border: "2px solid var(--bru-black)",
+                background: "var(--drp-cream)",
+                border: "2px solid var(--drp-black)",
               }}
             >
               <div
                 style={{
                   height: "100%",
-                  background: "var(--bru-purple)",
+                  background: "var(--drp-purple)",
                   width: `${(step! / 5) * 100}%`,
                   transition: "width 0.3s",
                 }}
@@ -129,7 +129,7 @@ export default function OnboardingLayout({
         style={{
           padding: "40px 24px",
           minHeight: "calc(100vh - 120px)",
-          background: "var(--bru-cream)",
+          background: "var(--drp-cream)",
         }}
       >
         <div style={{ maxWidth: 640, margin: "0 auto" }}>{children}</div>

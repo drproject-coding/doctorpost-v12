@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Card } from "@bruddle/react";
+import { Card } from "@doctorproject/react";
 import { getScheduledPosts, updatePost } from "@/lib/api";
 import { ScheduledPost, PostStatus } from "@/lib/types";
 import CalendarView from "@/components/calendar/CalendarView";
@@ -47,12 +47,12 @@ const ListView = ({
                 </div>
                 <div className="flex items-center space-x-4">
                   <span
-                    className={`bru-tag bru-tag--filled ${getStatusColorClasses(post.status)}`}
+                    className={`drp-tag drp-tag--filled ${getStatusColorClasses(post.status)}`}
                   >
                     {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
                   </span>
                   <button
-                    className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
+                    className="text-sm bg-gray-100 py-1 px-3 rounded-drp-md border-2 border-black font-bold hover:bg-gray-200"
                     onClick={() => onPostClick(post)}
                   >
                     View/Edit
@@ -145,17 +145,17 @@ export default function CalendarPage() {
 
         {/* View Toggle, Date Picker and Filter */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-          <div className="flex items-center space-x-2 p-1 bg-gray-200 rounded-bru-md border-2 border-black">
+          <div className="flex items-center space-x-2 p-1 bg-gray-200 rounded-drp-md border-2 border-black">
             <button
               onClick={() => setView("calendar")}
-              className={`flex items-center px-3 py-1 rounded-bru-md text-sm font-bold transition-colors ${view === "calendar" ? "bg-white text-bru-purple shadow" : "text-gray-600 hover:bg-gray-100"}`}
+              className={`flex items-center px-3 py-1 rounded-drp-md text-sm font-bold transition-colors ${view === "calendar" ? "bg-white text-drp-purple shadow" : "text-gray-600 hover:bg-gray-100"}`}
             >
               <Calendar className="w-4 h-4 mr-2" />
               Calendar
             </button>
             <button
               onClick={() => setView("list")}
-              className={`flex items-center px-3 py-1 rounded-bru-md text-sm font-bold transition-colors ${view === "list" ? "bg-white text-bru-purple shadow" : "text-gray-600 hover:bg-gray-100"}`}
+              className={`flex items-center px-3 py-1 rounded-drp-md text-sm font-bold transition-colors ${view === "list" ? "bg-white text-drp-purple shadow" : "text-gray-600 hover:bg-gray-100"}`}
             >
               <List className="w-4 h-4 mr-2" />
               List
@@ -170,7 +170,7 @@ export default function CalendarPage() {
             <input
               type="date"
               id="date-picker"
-              className="bru-input !py-2 !pl-3 !pr-8 text-sm font-bold appearance-none bg-white"
+              className="drp-input !py-2 !pl-3 !pr-8 text-sm font-bold appearance-none bg-white"
               value={selectedDateFromPicker ?? ""}
               onChange={(e) => setSelectedDateFromPicker(e.target.value)}
             />
@@ -180,7 +180,7 @@ export default function CalendarPage() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as FilterStatus)}
-              className="bru-input !py-2 !pl-3 !pr-8 text-sm font-bold appearance-none bg-white"
+              className="drp-input !py-2 !pl-3 !pr-8 text-sm font-bold appearance-none bg-white"
             >
               <option value="all">All Statuses</option>
               <option value="past">Past Posts</option>
@@ -223,7 +223,7 @@ export default function CalendarPage() {
               Today&apos;s Date
             </div>
             <div className="flex items-center text-sm text-gray-700">
-              <span className="w-3 h-3 rounded-full border-2 border-bru-yellow bg-yellow-100 mr-2"></span>
+              <span className="w-3 h-3 rounded-full border-2 border-drp-yellow bg-yellow-100 mr-2"></span>
               Selected Date
             </div>
           </div>

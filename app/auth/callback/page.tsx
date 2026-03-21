@@ -18,10 +18,10 @@ export default function AuthCallback() {
   return (
     <div
       className="flex items-center justify-center min-h-screen"
-      style={{ background: "var(--bru-cream)" }}
+      style={{ background: "var(--drp-cream)" }}
     >
       <div className="flex items-center gap-2">
-        <Loader size={24} className="animate-spin text-bru-purple" />
+        <Loader size={24} className="animate-spin text-drp-purple" />
         <span className="font-medium">Authenticating...</span>
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button } from "@bruddle/react";
+import { Button } from "@doctorproject/react";
 import { PostStatus, DropdownOption } from "@/lib/types";
 import { X } from "lucide-react";
 
@@ -96,36 +96,36 @@ const SchedulePostModal: React.FC<SchedulePostModalProps> = ({
   };
 
   return (
-    <div className="bru-overlay">
-      <div className="bru-modal w-full max-w-md">
-        <div className="bru-modal__header">
-          <h2 className="bru-modal__title">Schedule Post</h2>
-          <button onClick={onClose} className="bru-modal__close">
+    <div className="drp-overlay">
+      <div className="drp-modal w-full max-w-md">
+        <div className="drp-modal__header">
+          <h2 className="drp-modal__title">Schedule Post</h2>
+          <button onClick={onClose} className="drp-modal__close">
             <X size={20} />
           </button>
         </div>
 
-        <div className="bru-modal__body">
+        <div className="drp-modal__body">
           <div className="mb-4">
-            <label htmlFor="schedule-date" className="bru-field__label">
+            <label htmlFor="schedule-date" className="drp-field__label">
               Date
             </label>
             <input
               type="date"
               id="schedule-date"
-              className="bru-input"
+              className="drp-input"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
             />
           </div>
 
           <div className="mb-6">
-            <label htmlFor="schedule-status" className="bru-field__label">
+            <label htmlFor="schedule-status" className="drp-field__label">
               Status
             </label>
             <select
               id="schedule-status"
-              className="bru-input"
+              className="drp-input"
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value as PostStatus)}
             >
@@ -138,7 +138,7 @@ const SchedulePostModal: React.FC<SchedulePostModalProps> = ({
           </div>
         </div>
 
-        <div className="bru-modal__footer">
+        <div className="drp-modal__footer">
           <Button onClick={onClose} variant="secondary">
             Cancel
           </Button>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Loader, Eye, EyeOff } from "lucide-react";
@@ -83,9 +83,9 @@ export default function LoginPage() {
     return (
       <div
         className="flex items-center justify-center"
-        style={{ minHeight: "100vh", background: "var(--bru-cream)" }}
+        style={{ minHeight: "100vh", background: "var(--drp-cream)" }}
       >
-        <Loader size={32} className="animate-spin text-bru-purple" />
+        <Loader size={32} className="animate-spin text-drp-purple" />
       </div>
     );
   }
@@ -93,7 +93,7 @@ export default function LoginPage() {
   return (
     <div
       className="flex items-center justify-center"
-      style={{ minHeight: "100vh", background: "var(--bru-cream)" }}
+      style={{ minHeight: "100vh", background: "var(--drp-cream)" }}
     >
       <Card
         variant="raised"
@@ -104,7 +104,7 @@ export default function LoginPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-4">
-            <Loader size={24} className="animate-spin mr-2 text-bru-purple" />
+            <Loader size={24} className="animate-spin mr-2 text-drp-purple" />
             <span className="font-medium">Signing in...</span>
           </div>
         ) : (
@@ -143,7 +143,7 @@ export default function LoginPage() {
                   <div className="relative flex justify-center text-sm">
                     <span
                       className="px-2 text-gray-500"
-                      style={{ background: "var(--bru-cream)" }}
+                      style={{ background: "var(--drp-cream)" }}
                     >
                       or
                     </span>
@@ -161,7 +161,7 @@ export default function LoginPage() {
                   <div>
                     <input
                       type="email"
-                      className="bru-input"
+                      className="drp-input"
                       style={{ width: "100%" }}
                       placeholder="Email address"
                       value={email}
@@ -171,7 +171,7 @@ export default function LoginPage() {
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
-                      className="bru-input pr-10"
+                      className="drp-input pr-10"
                       style={{ width: "100%" }}
                       placeholder="Password"
                       value={password}
@@ -192,14 +192,14 @@ export default function LoginPage() {
 
                 <button
                   onClick={() => router.push("/signup")}
-                  className="mt-4 text-sm text-bru-purple font-medium hover:underline"
+                  className="mt-4 text-sm text-drp-purple font-medium hover:underline"
                 >
                   Don&apos;t have an account? <strong>Sign up</strong>
                 </button>
 
                 <button
                   onClick={() => router.push("/forgot-password")}
-                  className="block mx-auto mt-2 text-sm text-gray-500 hover:text-bru-purple"
+                  className="block mx-auto mt-2 text-sm text-gray-500 hover:text-drp-purple"
                 >
                   Forgot password?
                 </button>
@@ -214,7 +214,7 @@ export default function LoginPage() {
               marginTop: "24px",
               padding: "12px",
               background: "rgba(233,152,152,0.2)",
-              border: "2px solid var(--bru-pink)",
+              border: "2px solid var(--drp-pink)",
               color: "#991B1B",
               fontSize: "14px",
               fontWeight: 500,

@@ -139,7 +139,7 @@ export default function BrandPage() {
     return (
       <div className="p-6">
         <div className="max-w-6xl mx-auto flex items-center justify-center py-24">
-          <Loader size={32} className="animate-spin text-bru-purple" />
+          <Loader size={32} className="animate-spin text-drp-purple" />
         </div>
       </div>
     );
@@ -168,7 +168,7 @@ export default function BrandPage() {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <button
-              className="bru-btn bru-btn--primary bru-btn--sm"
+              className="drp-btn drp-btn--primary drp-btn--sm"
               onClick={() => void handleAudit()}
               disabled={auditing || !aiSettings}
             >
@@ -176,7 +176,7 @@ export default function BrandPage() {
             </button>
             <div style={{ position: "relative" }} ref={exportRef}>
               <button
-                className="bru-btn bru-btn--secondary bru-btn--sm"
+                className="drp-btn drp-btn--secondary drp-btn--sm"
                 onClick={() => setExportOpen((o) => !o)}
               >
                 Export ↓

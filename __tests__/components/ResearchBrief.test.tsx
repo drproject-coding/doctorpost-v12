@@ -144,8 +144,8 @@ describe("ResearchBrief", () => {
     const refinedTopicSection = screen
       .getByText("Refined Topic")
       .closest("div");
-    expect(refinedTopicSection).toHaveStyle({ background: "var(--bru-cream)" });
-    expect(refinedTopicSection).toHaveStyle({ border: "var(--bru-border)" });
+    expect(refinedTopicSection).toHaveStyle({ background: "var(--drp-cream)" });
+    expect(refinedTopicSection).toHaveStyle({ border: "var(--drp-border)" });
   });
 
   it("handles missing refined topic", () => {

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Card, Alert } from "@bruddle/react";
+import { Card, Alert } from "@doctorproject/react";
 import { IdeaStatusBadge } from "@/components/campaigns/IdeaStatusBadge";
 import type { CampaignPostStatus } from "@/lib/knowledge/types";
 
@@ -145,8 +145,8 @@ export default function IdeaDetailPage({ params }: Props) {
       <div
         style={{
           textAlign: "center",
-          padding: "var(--bru-space-8)",
-          color: "var(--bru-grey)",
+          padding: "var(--drp-space-8)",
+          color: "var(--drp-grey)",
         }}
       >
         Loading idea...
@@ -156,7 +156,7 @@ export default function IdeaDetailPage({ params }: Props) {
 
   if (error && !idea) {
     return (
-      <div style={{ padding: "var(--bru-space-6)" }}>
+      <div style={{ padding: "var(--drp-space-6)" }}>
         <Alert variant="error">{error}</Alert>
       </div>
     );
@@ -173,8 +173,8 @@ export default function IdeaDetailPage({ params }: Props) {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "var(--bru-space-3)",
-          marginBottom: "var(--bru-space-6)",
+          gap: "var(--drp-space-3)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <button
@@ -183,8 +183,8 @@ export default function IdeaDetailPage({ params }: Props) {
             background: "none",
             border: "none",
             cursor: "pointer",
-            fontSize: "var(--bru-text-md)",
-            color: "var(--bru-grey)",
+            fontSize: "var(--drp-text-md)",
+            color: "var(--drp-grey)",
             padding: 0,
           }}
         >
@@ -193,8 +193,8 @@ export default function IdeaDetailPage({ params }: Props) {
         <div style={{ flex: 1 }}>
           <div
             style={{
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-grey)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-grey)",
               marginBottom: 2,
             }}
           >
@@ -202,7 +202,7 @@ export default function IdeaDetailPage({ params }: Props) {
           </div>
           <h1
             style={{
-              fontSize: "var(--bru-text-h3)",
+              fontSize: "var(--drp-text-h3)",
               fontWeight: 700,
               margin: 0,
               lineHeight: 1.2,
@@ -216,14 +216,14 @@ export default function IdeaDetailPage({ params }: Props) {
 
       {/* Error */}
       {error && (
-        <div style={{ marginBottom: "var(--bru-space-3)" }}>
+        <div style={{ marginBottom: "var(--drp-space-3)" }}>
           <Alert variant="error">{error}</Alert>
         </div>
       )}
 
       {/* Topic card details */}
-      <Card variant="raised" style={{ marginBottom: "var(--bru-space-4)" }}>
-        <div style={{ display: "grid", gap: "var(--bru-space-3)" }}>
+      <Card variant="raised" style={{ marginBottom: "var(--drp-space-4)" }}>
+        <div style={{ display: "grid", gap: "var(--drp-space-3)" }}>
           <Field label="Pillar" value={idea.topicCard.pillar} />
           {idea.topicCard.angle && (
             <Field label="Angle" value={String(idea.topicCard.angle)} />
@@ -256,7 +256,7 @@ export default function IdeaDetailPage({ params }: Props) {
       <div
         style={{
           display: "flex",
-          gap: "var(--bru-space-2)",
+          gap: "var(--drp-space-2)",
           flexWrap: "wrap",
           alignItems: "center",
         }}
@@ -267,12 +267,12 @@ export default function IdeaDetailPage({ params }: Props) {
             onClick={handleWritePost}
             disabled={saving}
             style={{
-              padding: "var(--bru-space-2) var(--bru-space-4)",
-              background: "var(--bru-black, #000)",
+              padding: "var(--drp-space-2) var(--drp-space-4)",
+              background: "var(--drp-black, #000)",
               color: "#fff",
               border: "none",
               fontWeight: 700,
-              fontSize: "var(--bru-text-sm)",
+              fontSize: "var(--drp-text-sm)",
               cursor: saving ? "not-allowed" : "pointer",
               opacity: saving ? 0.6 : 1,
             }}
@@ -288,7 +288,7 @@ export default function IdeaDetailPage({ params }: Props) {
             onClick={() => handleStatusChange(action.next)}
             disabled={saving}
             style={{
-              padding: "var(--bru-space-2) var(--bru-space-4)",
+              padding: "var(--drp-space-2) var(--drp-space-4)",
               background:
                 action.variant === "danger"
                   ? "#FFCCCC"
@@ -300,11 +300,11 @@ export default function IdeaDetailPage({ params }: Props) {
                   ? "#990000"
                   : action.variant === "primary"
                     ? "#fff"
-                    : "var(--bru-grey)",
+                    : "var(--drp-grey)",
               border:
-                action.variant === "secondary" ? "var(--bru-border)" : "none",
+                action.variant === "secondary" ? "var(--drp-border)" : "none",
               fontWeight: 600,
-              fontSize: "var(--bru-text-sm)",
+              fontSize: "var(--drp-text-sm)",
               cursor: saving ? "not-allowed" : "pointer",
               opacity: saving ? 0.6 : 1,
             }}
@@ -322,17 +322,17 @@ function Field({ label, value }: { label: string; value: string }) {
     <div>
       <div
         style={{
-          fontSize: "var(--bru-text-xs)",
+          fontSize: "var(--drp-text-xs)",
           fontWeight: 700,
           textTransform: "uppercase",
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           letterSpacing: "0.05em",
           marginBottom: 2,
         }}
       >
         {label}
       </div>
-      <div style={{ fontSize: "var(--bru-text-sm)" }}>{value}</div>
+      <div style={{ fontSize: "var(--drp-text-sm)" }}>{value}</div>
     </div>
   );
 }

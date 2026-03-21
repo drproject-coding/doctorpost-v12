@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card, Select } from "@bruddle/react";
+import { Button, Card, Select } from "@doctorproject/react";
 import { Upload, FileText, Check, ArrowLeft, Loader } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import type { DocumentCategory } from "@/lib/knowledge/types";
@@ -103,8 +103,8 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "var(--bru-space-3)",
-          marginBottom: "var(--bru-space-6)",
+          gap: "var(--drp-space-3)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <Button variant="ghost" onClick={onCancel}>
@@ -112,7 +112,7 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
         </Button>
         <h2
           style={{
-            fontSize: "var(--bru-text-h4)",
+            fontSize: "var(--drp-text-h4)",
             fontWeight: 700,
             margin: 0,
           }}
@@ -125,9 +125,9 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
         <Card variant="raised">
           <h3
             style={{
-              fontSize: "var(--bru-text-h5)",
+              fontSize: "var(--drp-text-h5)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-4)",
+              marginBottom: "var(--drp-space-4)",
             }}
           >
             Paste text or upload a file
@@ -135,23 +135,23 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
 
           {/* File upload */}
           <div
-            className="bru-field"
-            style={{ marginBottom: "var(--bru-space-4)" }}
+            className="drp-field"
+            style={{ marginBottom: "var(--drp-space-4)" }}
           >
-            <label className="bru-field__label">Upload .md file</label>
+            <label className="drp-field__label">Upload .md file</label>
             <input
               type="file"
               accept=".md,.txt"
               onChange={handleFileUpload}
-              className="bru-input"
-              style={{ padding: "var(--bru-space-2)" }}
+              className="drp-input"
+              style={{ padding: "var(--drp-space-2)" }}
             />
             {fileName && (
               <span
                 style={{
-                  fontSize: "var(--bru-text-sm)",
-                  color: "var(--bru-grey)",
-                  marginTop: "var(--bru-space-1)",
+                  fontSize: "var(--drp-text-sm)",
+                  color: "var(--drp-grey)",
+                  marginTop: "var(--drp-space-1)",
                 }}
               >
                 Selected: {fileName}
@@ -160,10 +160,10 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
           </div>
 
           {/* Text paste */}
-          <div className="bru-field">
-            <label className="bru-field__label">Or paste content</label>
+          <div className="drp-field">
+            <label className="drp-field__label">Or paste content</label>
             <textarea
-              className="bru-input"
+              className="drp-input"
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Paste markdown content here..."
@@ -172,8 +172,8 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
           </div>
 
           <div
-            className="bru-form-actions"
-            style={{ marginTop: "var(--bru-space-4)" }}
+            className="drp-form-actions"
+            style={{ marginTop: "var(--drp-space-4)" }}
           >
             <Button onClick={onCancel}>Cancel</Button>
             <Button
@@ -191,26 +191,26 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
         <Card variant="raised">
           <h3
             style={{
-              fontSize: "var(--bru-text-h5)",
+              fontSize: "var(--drp-text-h5)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-4)",
+              marginBottom: "var(--drp-space-4)",
             }}
           >
             Classify & Name
           </h3>
 
-          <div className="bru-form-stack">
-            <div className="bru-field">
-              <label className="bru-field__label">Document Name</label>
+          <div className="drp-form-stack">
+            <div className="drp-field">
+              <label className="drp-field__label">Document Name</label>
               <input
-                className="bru-input"
+                className="drp-input"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. brand-voice"
               />
             </div>
 
-            <div className="bru-form-row">
+            <div className="drp-form-row">
               <Select
                 label="Category"
                 value={category}
@@ -224,10 +224,10 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
                   </option>
                 ))}
               </Select>
-              <div className="bru-field">
-                <label className="bru-field__label">Subcategory</label>
+              <div className="drp-field">
+                <label className="drp-field__label">Subcategory</label>
                 <input
-                  className="bru-input"
+                  className="drp-input"
                   value={subcategory}
                   onChange={(e) => setSubcategory(e.target.value)}
                   placeholder="e.g. hooks, closers"
@@ -236,14 +236,14 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
             </div>
 
             {/* Preview */}
-            <div className="bru-field">
-              <label className="bru-field__label">Content Preview</label>
+            <div className="drp-field">
+              <label className="drp-field__label">Content Preview</label>
               <pre
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  background: "var(--bru-cream)",
-                  padding: "var(--bru-space-3)",
-                  border: "var(--bru-border)",
+                  fontSize: "var(--drp-text-xs)",
+                  background: "var(--drp-cream)",
+                  padding: "var(--drp-space-3)",
+                  border: "var(--drp-border)",
                   maxHeight: 200,
                   overflow: "auto",
                   whiteSpace: "pre-wrap",
@@ -256,8 +256,8 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
           </div>
 
           <div
-            className="bru-form-actions"
-            style={{ marginTop: "var(--bru-space-4)" }}
+            className="drp-form-actions"
+            style={{ marginTop: "var(--drp-space-4)" }}
           >
             <Button onClick={() => setStep("input")}>Back</Button>
             <Button
@@ -280,17 +280,17 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
           {feedback && (
             <div
               style={{
-                marginTop: "var(--bru-space-3)",
-                padding: "var(--bru-space-3)",
-                border: "var(--bru-border)",
-                fontSize: "var(--bru-text-md)",
+                marginTop: "var(--drp-space-3)",
+                padding: "var(--drp-space-3)",
+                border: "var(--drp-border)",
+                fontSize: "var(--drp-text-md)",
                 fontWeight: 500,
                 background: feedback.startsWith("Error")
                   ? "rgba(255, 68, 68, 0.12)"
                   : "rgba(0, 170, 0, 0.12)",
                 color: feedback.startsWith("Error")
-                  ? "var(--bru-error-dark)"
-                  : "var(--bru-success-dark)",
+                  ? "var(--drp-error-dark)"
+                  : "var(--drp-success-dark)",
               }}
             >
               {feedback}

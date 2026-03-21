@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import { Loader, Play, ArrowRight, RotateCcw } from "lucide-react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
@@ -714,7 +714,7 @@ export default function FactoryPage() {
       style={{
         maxWidth: "1400px",
         margin: "0 auto",
-        padding: "var(--bru-space-6)",
+        padding: "var(--drp-space-6)",
       }}
     >
       {/* Header */}
@@ -723,12 +723,12 @@ export default function FactoryPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-6)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <h1
           style={{
-            fontSize: "var(--bru-text-h3)",
+            fontSize: "var(--drp-text-h3)",
             fontWeight: 700,
             margin: 0,
           }}
@@ -788,14 +788,14 @@ export default function FactoryPage() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-3)",
-            padding: "var(--bru-space-2) var(--bru-space-3)",
-            marginBottom: "var(--bru-space-4)",
+            gap: "var(--drp-space-3)",
+            padding: "var(--drp-space-2) var(--drp-space-3)",
+            marginBottom: "var(--drp-space-4)",
             background: "rgba(0,0,0,0.04)",
             border: "1px solid rgba(0,0,0,0.08)",
             borderRadius: "4px",
-            fontSize: "var(--bru-text-xs)",
-            color: "var(--bru-grey)",
+            fontSize: "var(--drp-text-xs)",
+            color: "var(--drp-grey)",
           }}
         >
           <span>
@@ -807,7 +807,7 @@ export default function FactoryPage() {
           <span style={{ opacity: 0.4 }}>|</span>
           <span>
             Phase:{" "}
-            <strong style={{ color: "var(--bru-black)" }}>
+            <strong style={{ color: "var(--drp-black)" }}>
               {PHASE_LABELS[state.phase] || state.phase}
             </strong>
           </span>
@@ -823,19 +823,19 @@ export default function FactoryPage() {
       {/* Error */}
       {state.phase === "error" && (
         <div
-          className="bru-alert bru-alert--error"
-          style={{ marginBottom: "var(--bru-space-4)" }}
+          className="drp-alert drp-alert--error"
+          style={{ marginBottom: "var(--drp-space-4)" }}
         >
-          <span className="bru-alert__icon">!</span>
-          <div className="bru-alert__content">
-            <div className="bru-alert__text">
+          <span className="drp-alert__icon">!</span>
+          <div className="drp-alert__content">
+            <div className="drp-alert__text">
               {state.error || "An error occurred"}
             </div>
             {state.errorAtPhase && (
               <div
                 style={{
-                  fontSize: "var(--bru-text-xs)",
-                  color: "var(--bru-grey)",
+                  fontSize: "var(--drp-text-xs)",
+                  color: "var(--drp-grey)",
                   marginTop: 2,
                 }}
               >
@@ -847,8 +847,8 @@ export default function FactoryPage() {
           <div
             style={{
               display: "flex",
-              gap: "var(--bru-space-2)",
-              marginLeft: "var(--bru-space-3)",
+              gap: "var(--drp-space-2)",
+              marginLeft: "var(--drp-space-3)",
               flexShrink: 0,
             }}
           >
@@ -876,9 +876,9 @@ export default function FactoryPage() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--bru-space-3)",
-              marginBottom: "var(--bru-space-4)",
-              padding: "var(--bru-space-3)",
+              gap: "var(--drp-space-3)",
+              marginBottom: "var(--drp-space-4)",
+              padding: "var(--drp-space-3)",
               background: "rgba(124, 58, 237, 0.08)",
               borderRadius: "4px",
               border: "1px solid rgba(124, 58, 237, 0.2)",
@@ -887,8 +887,8 @@ export default function FactoryPage() {
             <div
               style={{
                 flex: 1,
-                fontSize: "var(--bru-text-sm)",
-                color: "var(--bru-black)",
+                fontSize: "var(--drp-text-sm)",
+                color: "var(--drp-black)",
               }}
             >
               Paused at{" "}
@@ -912,10 +912,10 @@ export default function FactoryPage() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
-            marginBottom: "var(--bru-space-4)",
-            color: "var(--bru-grey)",
-            fontSize: "var(--bru-text-sm)",
+            gap: "var(--drp-space-2)",
+            marginBottom: "var(--drp-space-4)",
+            color: "var(--drp-grey)",
+            fontSize: "var(--drp-text-sm)",
           }}
         >
           <Loader size={16} className="animate-spin" />
@@ -935,32 +935,32 @@ export default function FactoryPage() {
         <Card
           variant="raised"
           style={{
-            marginBottom: "var(--bru-space-4)",
-            borderLeft: "4px solid var(--bru-purple)",
+            marginBottom: "var(--drp-space-4)",
+            borderLeft: "4px solid var(--drp-purple)",
           }}
         >
           <div
             style={{
               display: "flex",
               alignItems: "flex-start",
-              gap: "var(--bru-space-3)",
+              gap: "var(--drp-space-3)",
             }}
           >
             <div style={{ flex: 1 }}>
               <div
                 style={{
                   fontWeight: 700,
-                  fontSize: "var(--bru-text-md)",
-                  marginBottom: "var(--bru-space-1)",
+                  fontSize: "var(--drp-text-md)",
+                  marginBottom: "var(--drp-space-1)",
                 }}
               >
                 You have an incomplete session
               </div>
               <div
                 style={{
-                  fontSize: "var(--bru-text-sm)",
-                  color: "var(--bru-grey)",
-                  marginBottom: "var(--bru-space-3)",
+                  fontSize: "var(--drp-text-sm)",
+                  color: "var(--drp-grey)",
+                  marginBottom: "var(--drp-space-3)",
                 }}
               >
                 Last phase:{" "}
@@ -976,7 +976,7 @@ export default function FactoryPage() {
               <div
                 style={{
                   display: "flex",
-                  gap: "var(--bru-space-2)",
+                  gap: "var(--drp-space-2)",
                   flexWrap: "wrap",
                 }}
               >
@@ -1011,24 +1011,24 @@ export default function FactoryPage() {
       {state.phase === "idle" && !running && (
         <Card
           variant="raised"
-          style={{ textAlign: "center", padding: "var(--bru-space-8)" }}
+          style={{ textAlign: "center", padding: "var(--drp-space-8)" }}
         >
           <h2
             style={{
-              fontSize: "var(--bru-text-h4)",
+              fontSize: "var(--drp-text-h4)",
               fontWeight: 700,
-              marginBottom: "var(--bru-space-3)",
+              marginBottom: "var(--drp-space-3)",
             }}
           >
             Create a New Post
           </h2>
           <p
             style={{
-              fontSize: "var(--bru-text-md)",
-              color: "var(--bru-grey)",
-              marginBottom: "var(--bru-space-6)",
+              fontSize: "var(--drp-text-md)",
+              color: "var(--drp-grey)",
+              marginBottom: "var(--drp-space-6)",
               maxWidth: 500,
-              margin: "0 auto var(--bru-space-6)",
+              margin: "0 auto var(--drp-space-6)",
             }}
           >
             The Content Factory will guide you through an 8-phase AI pipeline:
@@ -1038,7 +1038,7 @@ export default function FactoryPage() {
           <div
             style={{
               display: "flex",
-              gap: "var(--bru-space-2)",
+              gap: "var(--drp-space-2)",
               justifyContent: "center",
               alignItems: "center",
               flexWrap: "wrap",
@@ -1049,7 +1049,7 @@ export default function FactoryPage() {
               title="Override your brand tones for this session only. E.g., 'casual', 'humorous', 'celebratory'. Your brand profile remains unchanged."
             >
               <input
-                className="bru-input"
+                className="drp-input"
                 placeholder="Tone override (optional)"
                 value={toneInput}
                 onChange={(e) => {
@@ -1084,7 +1084,7 @@ export default function FactoryPage() {
             {state.selectedTopic && !running && (
               <div
                 style={{
-                  marginTop: "var(--bru-space-4)",
+                  marginTop: "var(--drp-space-4)",
                   display: "flex",
                   justifyContent: "flex-end",
                 }}
@@ -1110,7 +1110,7 @@ export default function FactoryPage() {
             {!running && state.phase === "discovery" && (
               <div
                 style={{
-                  marginTop: "var(--bru-space-4)",
+                  marginTop: "var(--drp-space-4)",
                   display: "flex",
                   justifyContent: "flex-end",
                 }}
@@ -1138,15 +1138,15 @@ export default function FactoryPage() {
             {!running && state.phase === "evidence" && (
               <div
                 style={{
-                  marginTop: "var(--bru-space-4)",
+                  marginTop: "var(--drp-space-4)",
                   display: "flex",
-                  gap: "var(--bru-space-2)",
+                  gap: "var(--drp-space-2)",
                   justifyContent: "flex-end",
                   alignItems: "center",
                 }}
               >
                 <input
-                  className="bru-input"
+                  className="drp-input"
                   placeholder="Template name (optional)"
                   value={templateInput}
                   onChange={(e) => {
@@ -1178,7 +1178,7 @@ export default function FactoryPage() {
               gridTemplateColumns: state.scoreResult
                 ? "minmax(0, 1fr) minmax(0, 1fr)"
                 : "1fr",
-              gap: "var(--bru-space-4)",
+              gap: "var(--drp-space-4)",
               overflowX: "hidden",
             }}
           >
@@ -1213,17 +1213,17 @@ export default function FactoryPage() {
         !state.formattedPost &&
         !running &&
         (state.phase === "scoring" || state.phase === "writing") && (
-          <div style={{ marginTop: "var(--bru-space-4)" }}>
+          <div style={{ marginTop: "var(--drp-space-4)" }}>
             {!allGuardrailsPassing() && (
               <div
                 style={{
-                  padding: "var(--bru-space-3)",
+                  padding: "var(--drp-space-3)",
                   backgroundColor: "rgba(255, 193, 7, 0.1)",
                   border: "1px solid rgba(255, 193, 7, 0.3)",
                   borderRadius: "4px",
-                  fontSize: "var(--bru-text-sm)",
-                  color: "var(--bru-grey)",
-                  marginBottom: "var(--bru-space-2)",
+                  fontSize: "var(--drp-text-sm)",
+                  color: "var(--drp-grey)",
+                  marginBottom: "var(--drp-space-2)",
                 }}
               >
                 ⚠️ Fix failing guardrails before formatting
@@ -1245,7 +1245,7 @@ export default function FactoryPage() {
       {/* FORMATTING — Formatted Output */}
       {state.formattedPost &&
         (!isViewingPast || viewPhase === "formatting") && (
-          <div style={{ marginTop: "var(--bru-space-4)" }}>
+          <div style={{ marginTop: "var(--drp-space-4)" }}>
             <FormattedOutput
               post={state.formattedPost}
               onSave={handleManualSave}
@@ -1260,7 +1260,7 @@ export default function FactoryPage() {
         !isViewingPast &&
         state.phase !== "learning" &&
         state.phase !== "complete" && (
-          <div style={{ marginTop: "var(--bru-space-4)" }}>
+          <div style={{ marginTop: "var(--drp-space-4)" }}>
             <PostReview
               content={state.formattedPost.content}
               onApprove={handleApprove}
@@ -1271,7 +1271,7 @@ export default function FactoryPage() {
 
       {/* LEARNING RESULTS + COMPLETE */}
       {state.phase === "complete" && (
-        <div style={{ marginTop: "var(--bru-space-4)" }}>
+        <div style={{ marginTop: "var(--drp-space-4)" }}>
           {state.learnerOutput && (
             <LearningPhaseResult output={state.learnerOutput} />
           )}
@@ -1279,24 +1279,24 @@ export default function FactoryPage() {
             variant="raised"
             style={{
               textAlign: "center",
-              padding: "var(--bru-space-8)",
-              marginTop: "var(--bru-space-4)",
+              padding: "var(--drp-space-8)",
+              marginTop: "var(--drp-space-4)",
             }}
           >
             <h2
               style={{
-                fontSize: "var(--bru-text-h4)",
+                fontSize: "var(--drp-text-h4)",
                 fontWeight: 700,
-                marginBottom: "var(--bru-space-3)",
+                marginBottom: "var(--drp-space-3)",
               }}
             >
               Post Complete
             </h2>
             <p
               style={{
-                fontSize: "var(--bru-text-md)",
-                color: "var(--bru-grey)",
-                marginBottom: "var(--bru-space-4)",
+                fontSize: "var(--drp-text-md)",
+                color: "var(--drp-grey)",
+                marginBottom: "var(--drp-space-4)",
               }}
             >
               Your post has been approved and learning signals captured.

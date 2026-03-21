@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { Card } from "@bruddle/react";
+import { Card } from "@doctorproject/react";
 import { getScheduledPosts, updatePost, deletePost } from "@/lib/api";
 import { useToast } from "@/components/Toast";
 import { ScheduledPost } from "@/lib/types";
@@ -357,27 +357,27 @@ export default function LibraryPage() {
                       }}
                     >
                       <span
-                        className={`bru-tag bru-tag--filled ${post.status}`}
+                        className={`drp-tag drp-tag--filled ${post.status}`}
                       >
                         {post.status.charAt(0).toUpperCase() +
                           post.status.slice(1)}
                       </span>
                       <a
                         href={`/library/${post.uuid ?? post.id}`}
-                        className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
+                        className="text-sm bg-gray-100 py-1 px-3 rounded-drp-md border-2 border-black font-bold hover:bg-gray-200"
                         style={{ textDecoration: "none" }}
                       >
                         View
                       </a>
                       <button
                         onClick={() => handleEditPost(post)}
-                        className="text-sm bg-gray-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-gray-200"
+                        className="text-sm bg-gray-100 py-1 px-3 rounded-drp-md border-2 border-black font-bold hover:bg-gray-200"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDeletePost(post.id)}
-                        className="text-sm bg-red-100 py-1 px-3 rounded-bru-md border-2 border-black font-bold hover:bg-red-200 text-red-700"
+                        className="text-sm bg-red-100 py-1 px-3 rounded-drp-md border-2 border-black font-bold hover:bg-red-200 text-red-700"
                       >
                         Delete
                       </button>

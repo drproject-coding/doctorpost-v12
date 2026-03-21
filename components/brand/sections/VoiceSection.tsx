@@ -56,13 +56,13 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
         {/* Tones */}
         <div>
           <label
-            className="bru-field__label"
+            className="drp-field__label"
             style={{ display: "block", marginBottom: "6px" }}
           >
             Voice Tones
           </label>
           <input
-            className="bru-input"
+            className="drp-input"
             type="text"
             defaultValue={profile.tones.join(", ")}
             onChange={handleTonesChange}
@@ -70,8 +70,8 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
           />
           <p
             style={{
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-text-muted, #888)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-text-muted, #888)",
               marginTop: "4px",
             }}
           >
@@ -82,13 +82,13 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
         {/* Copy Guideline */}
         <div>
           <label
-            className="bru-field__label"
+            className="drp-field__label"
             style={{ display: "block", marginBottom: "6px" }}
           >
             Copy Guideline
           </label>
           <textarea
-            className="bru-input"
+            className="drp-input"
             rows={4}
             defaultValue={profile.copyGuideline}
             onChange={handleCopyGuidelineChange}
@@ -100,7 +100,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
         {/* Style Guide */}
         <div>
           <label
-            className="bru-field__label"
+            className="drp-field__label"
             style={{ display: "block", marginBottom: "10px" }}
           >
             Style Guide
@@ -127,19 +127,19 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
                   height: "16px",
                 }}
               />
-              <span style={{ fontSize: "var(--bru-text-sm)" }}>Use Emoji</span>
+              <span style={{ fontSize: "var(--drp-text-sm)" }}>Use Emoji</span>
             </label>
 
             {/* Hashtags */}
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <label
-                className="bru-field__label"
+                className="drp-field__label"
                 style={{ minWidth: "80px", margin: 0 }}
               >
                 Hashtags
               </label>
               <input
-                className="bru-input"
+                className="drp-input"
                 type="number"
                 min={0}
                 max={10}
@@ -152,13 +152,13 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
             {/* Links */}
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <label
-                className="bru-field__label"
+                className="drp-field__label"
                 style={{ minWidth: "80px", margin: 0 }}
               >
                 Links
               </label>
               <select
-                className="bru-input"
+                className="drp-input"
                 defaultValue={profile.styleGuide.links}
                 onChange={handleLinksChange}
                 style={{ width: "160px" }}
@@ -174,13 +174,13 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
         {/* Taboos */}
         <div>
           <label
-            className="bru-field__label"
+            className="drp-field__label"
             style={{ display: "block", marginBottom: "6px" }}
           >
             Taboos
           </label>
           <input
-            className="bru-input"
+            className="drp-input"
             type="text"
             defaultValue={profile.taboos.join(", ")}
             onChange={handleTaboosChange}
@@ -188,8 +188,8 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
           />
           <p
             style={{
-              fontSize: "var(--bru-text-xs)",
-              color: "var(--bru-text-muted, #888)",
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-text-muted, #888)",
               marginTop: "4px",
             }}
           >
@@ -204,7 +204,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       {/* Tones */}
       <div>
-        <p className="bru-field__label" style={{ marginBottom: "8px" }}>
+        <p className="drp-field__label" style={{ marginBottom: "8px" }}>
           Voice Tones
         </p>
         {profile.tones.length > 0 ? (
@@ -216,7 +216,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
                   backgroundColor: "rgba(255, 108, 1, 0.15)",
                   color: "#FF6C01",
                   padding: "3px 10px",
-                  fontSize: "var(--bru-text-sm)",
+                  fontSize: "var(--drp-text-sm)",
                   fontWeight: 500,
                   borderRadius: 0,
                 }}
@@ -228,8 +228,8 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
         ) : (
           <span
             style={{
-              color: "var(--bru-text-muted, #888)",
-              fontSize: "var(--bru-text-sm)",
+              color: "var(--drp-text-muted, #888)",
+              fontSize: "var(--drp-text-sm)",
             }}
           >
             Not set
@@ -239,13 +239,13 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
 
       {/* Copy Guideline */}
       <div>
-        <p className="bru-field__label" style={{ marginBottom: "6px" }}>
+        <p className="drp-field__label" style={{ marginBottom: "6px" }}>
           Copy Guideline
         </p>
         {profile.copyGuideline ? (
           <p
             style={{
-              fontSize: "var(--bru-text-sm)",
+              fontSize: "var(--drp-text-sm)",
               lineHeight: 1.6,
               margin: 0,
             }}
@@ -255,8 +255,8 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
         ) : (
           <span
             style={{
-              color: "var(--bru-text-muted, #888)",
-              fontSize: "var(--bru-text-sm)",
+              color: "var(--drp-text-muted, #888)",
+              fontSize: "var(--drp-text-sm)",
             }}
           >
             Not set
@@ -266,52 +266,52 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
 
       {/* Style Guide */}
       <div>
-        <p className="bru-field__label" style={{ marginBottom: "8px" }}>
+        <p className="drp-field__label" style={{ marginBottom: "8px" }}>
           Style Guide
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span
               style={{
-                fontSize: "var(--bru-text-xs)",
-                color: "var(--bru-text-muted, #888)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-text-muted, #888)",
                 textTransform: "uppercase",
                 letterSpacing: "0.05em",
               }}
             >
               Emoji:
             </span>
-            <span style={{ fontSize: "var(--bru-text-sm)", fontWeight: 500 }}>
+            <span style={{ fontSize: "var(--drp-text-sm)", fontWeight: 500 }}>
               {profile.styleGuide.emoji ? "Yes" : "No"}
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span
               style={{
-                fontSize: "var(--bru-text-xs)",
-                color: "var(--bru-text-muted, #888)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-text-muted, #888)",
                 textTransform: "uppercase",
                 letterSpacing: "0.05em",
               }}
             >
               Hashtags:
             </span>
-            <span style={{ fontSize: "var(--bru-text-sm)", fontWeight: 500 }}>
+            <span style={{ fontSize: "var(--drp-text-sm)", fontWeight: 500 }}>
               {profile.styleGuide.hashtags}
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span
               style={{
-                fontSize: "var(--bru-text-xs)",
-                color: "var(--bru-text-muted, #888)",
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-text-muted, #888)",
                 textTransform: "uppercase",
                 letterSpacing: "0.05em",
               }}
             >
               Links:
             </span>
-            <span style={{ fontSize: "var(--bru-text-sm)", fontWeight: 500 }}>
+            <span style={{ fontSize: "var(--drp-text-sm)", fontWeight: 500 }}>
               {profile.styleGuide.links === "end"
                 ? "End of post"
                 : profile.styleGuide.links === "inline"
@@ -324,7 +324,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
 
       {/* Taboos */}
       <div>
-        <p className="bru-field__label" style={{ marginBottom: "8px" }}>
+        <p className="drp-field__label" style={{ marginBottom: "8px" }}>
           Taboos
         </p>
         {profile.taboos.length > 0 ? (
@@ -336,7 +336,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
                   backgroundColor: "rgba(220, 38, 38, 0.12)",
                   color: "#dc2626",
                   padding: "3px 10px",
-                  fontSize: "var(--bru-text-sm)",
+                  fontSize: "var(--drp-text-sm)",
                   fontWeight: 500,
                   borderRadius: 0,
                 }}
@@ -348,8 +348,8 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
         ) : (
           <span
             style={{
-              color: "var(--bru-text-muted, #888)",
-              fontSize: "var(--bru-text-sm)",
+              color: "var(--drp-text-muted, #888)",
+              fontSize: "var(--drp-text-sm)",
             }}
           >
             Not set

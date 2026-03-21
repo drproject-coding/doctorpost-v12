@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { RotateCcw, X, ChevronDown, ChevronRight } from "lucide-react";
 import type {
   DocumentVersion,
@@ -61,12 +61,12 @@ export function VersionHistory({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         <h3
           style={{
-            fontSize: "var(--bru-text-h5)",
+            fontSize: "var(--drp-text-h5)",
             fontWeight: 700,
             margin: 0,
           }}
@@ -82,8 +82,8 @@ export function VersionHistory({
         <div
           style={{
             textAlign: "center",
-            padding: "var(--bru-space-8)",
-            color: "var(--bru-grey)",
+            padding: "var(--drp-space-8)",
+            color: "var(--drp-grey)",
           }}
         >
           Loading versions...
@@ -92,9 +92,9 @@ export function VersionHistory({
         <div
           style={{
             textAlign: "center",
-            padding: "var(--bru-space-8)",
-            color: "var(--bru-grey)",
-            fontSize: "var(--bru-text-md)",
+            padding: "var(--drp-space-8)",
+            color: "var(--drp-grey)",
+            fontSize: "var(--drp-text-md)",
           }}
         >
           No version history yet. Edits will create version snapshots.
@@ -104,15 +104,15 @@ export function VersionHistory({
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
           {versions.map((v) => (
             <div
               key={v.id}
               style={{
-                border: "var(--bru-border)",
-                padding: "var(--bru-space-3)",
+                border: "var(--drp-border)",
+                padding: "var(--drp-space-3)",
               }}
             >
               <div
@@ -128,16 +128,16 @@ export function VersionHistory({
                   <span
                     style={{
                       fontWeight: 700,
-                      fontSize: "var(--bru-text-md)",
+                      fontSize: "var(--drp-text-md)",
                     }}
                   >
                     v{v.version}
                   </span>
                   <span
                     style={{
-                      marginLeft: "var(--bru-space-2)",
-                      color: "var(--bru-grey)",
-                      fontSize: "var(--bru-text-sm)",
+                      marginLeft: "var(--drp-space-2)",
+                      color: "var(--drp-grey)",
+                      fontSize: "var(--drp-text-sm)",
                     }}
                   >
                     {v.changeReason}
@@ -147,13 +147,13 @@ export function VersionHistory({
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "var(--bru-space-2)",
+                    gap: "var(--drp-space-2)",
                   }}
                 >
                   <span
                     style={{
-                      fontSize: "var(--bru-text-xs)",
-                      color: "var(--bru-grey)",
+                      fontSize: "var(--drp-text-xs)",
+                      color: "var(--drp-grey)",
                     }}
                   >
                     {new Date(v.createdAt).toLocaleDateString()}
@@ -167,13 +167,13 @@ export function VersionHistory({
               </div>
 
               {expanded === v.id && (
-                <div style={{ marginTop: "var(--bru-space-3)" }}>
+                <div style={{ marginTop: "var(--drp-space-3)" }}>
                   <pre
                     style={{
-                      fontSize: "var(--bru-text-xs)",
-                      background: "var(--bru-cream)",
-                      padding: "var(--bru-space-3)",
-                      border: "var(--bru-border)",
+                      fontSize: "var(--drp-text-xs)",
+                      background: "var(--drp-cream)",
+                      padding: "var(--drp-space-3)",
+                      border: "var(--drp-border)",
                       maxHeight: 300,
                       overflow: "auto",
                       whiteSpace: "pre-wrap",
@@ -183,7 +183,7 @@ export function VersionHistory({
                   </pre>
                   {v.version < currentVersion && (
                     <Button
-                      style={{ marginTop: "var(--bru-space-2)" }}
+                      style={{ marginTop: "var(--drp-space-2)" }}
                       onClick={() => onRestore(v)}
                     >
                       <RotateCcw size={14} />

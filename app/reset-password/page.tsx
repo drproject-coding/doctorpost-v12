@@ -2,7 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Alert, Button, Card } from "@bruddle/react";
+import { Alert, Button, Card } from "@doctorproject/react";
 import { Loader } from "lucide-react";
 
 function ResetPasswordContent() {
@@ -74,7 +74,7 @@ function ResetPasswordContent() {
   return (
     <div
       className="flex items-center justify-center min-h-screen"
-      style={{ background: "var(--bru-cream)" }}
+      style={{ background: "var(--drp-cream)" }}
     >
       <Card
         variant="raised"
@@ -87,7 +87,7 @@ function ResetPasswordContent() {
 
         {loading ? (
           <div className="flex items-center justify-center py-4">
-            <Loader size={24} className="animate-spin text-bru-purple" />
+            <Loader size={24} className="animate-spin text-drp-purple" />
           </div>
         ) : token ? (
           <form
@@ -96,7 +96,7 @@ function ResetPasswordContent() {
           >
             <input
               type="password"
-              className="bru-input"
+              className="drp-input"
               style={{ width: "100%" }}
               placeholder="New password"
               value={newPassword}
@@ -114,7 +114,7 @@ function ResetPasswordContent() {
           >
             <input
               type="email"
-              className="bru-input"
+              className="drp-input"
               style={{ width: "100%" }}
               placeholder="Email address"
               value={email}
@@ -128,19 +128,19 @@ function ResetPasswordContent() {
         )}
 
         {message && (
-          <div style={{ marginTop: "var(--bru-space-4)" }}>
+          <div style={{ marginTop: "var(--drp-space-4)" }}>
             <Alert variant="success">{message}</Alert>
           </div>
         )}
         {error && (
-          <div style={{ marginTop: "var(--bru-space-4)" }}>
+          <div style={{ marginTop: "var(--drp-space-4)" }}>
             <Alert variant="error">{error}</Alert>
           </div>
         )}
 
         <button
           onClick={() => router.push("/login")}
-          className="mt-4 text-sm text-bru-purple font-medium hover:underline"
+          className="mt-4 text-sm text-drp-purple font-medium hover:underline"
         >
           Back to login
         </button>
@@ -155,9 +155,9 @@ export default function ResetPasswordPage() {
       fallback={
         <div
           className="flex items-center justify-center min-h-screen"
-          style={{ background: "var(--bru-cream)" }}
+          style={{ background: "var(--drp-cream)" }}
         >
-          <Loader size={24} className="animate-spin text-bru-purple" />
+          <Loader size={24} className="animate-spin text-drp-purple" />
         </div>
       }
     >

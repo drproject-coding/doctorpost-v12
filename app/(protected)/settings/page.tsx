@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import {
   BrandProfile,
@@ -125,7 +125,7 @@ function StatusBadge({
         textTransform: "uppercase",
         letterSpacing: "0.05em",
         background: connected ? "rgba(22, 163, 74, 0.1)" : "rgba(0,0,0,0.05)",
-        color: connected ? "#16a34a" : "var(--bru-grey)",
+        color: connected ? "#16a34a" : "var(--drp-grey)",
       }}
     >
       {connected ? <CheckCircle size={10} /> : <XCircle size={10} />}
@@ -151,7 +151,7 @@ function TestResultBlock({ test }: { test: TestState }) {
           alignItems: "center",
           gap: 6,
           fontSize: 12,
-          color: "var(--bru-grey)",
+          color: "var(--drp-grey)",
           padding: "8px 0",
         }}
       >
@@ -197,11 +197,11 @@ function TestResultBlock({ test }: { test: TestState }) {
         </div>
         <div
           style={{
-            background: "var(--bru-bg-2, #f5f5f5)",
+            background: "var(--drp-bg-2, #f5f5f5)",
             border: "1px solid rgba(0,0,0,0.1)",
             padding: "10px 14px",
             fontSize: 13,
-            color: "var(--bru-text, #111)",
+            color: "var(--drp-text, #111)",
             fontStyle: "italic",
           }}
         >
@@ -628,9 +628,9 @@ export default function SettingsPage() {
     <>
       <h1
         style={{
-          fontSize: "var(--bru-text-h3)",
+          fontSize: "var(--drp-text-h3)",
           fontWeight: 700,
-          marginBottom: "var(--bru-space-6)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         AI & Integrations
@@ -641,22 +641,22 @@ export default function SettingsPage() {
         style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: "var(--bru-space-4)",
-          padding: "var(--bru-space-3)",
-          border: "var(--bru-border)",
-          background: "var(--bru-white)",
-          marginBottom: "var(--bru-space-6)",
+          gap: "var(--drp-space-4)",
+          padding: "var(--drp-space-3)",
+          border: "var(--drp-border)",
+          background: "var(--drp-white)",
+          marginBottom: "var(--drp-space-6)",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
           <span
-            style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}
+            style={{ fontSize: 12, fontWeight: 700, color: "var(--drp-grey)" }}
           >
             Claude:
           </span>
@@ -669,11 +669,11 @@ export default function SettingsPage() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
           <span
-            style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}
+            style={{ fontSize: 12, fontWeight: 700, color: "var(--drp-grey)" }}
           >
             Straico:
           </span>
@@ -686,11 +686,11 @@ export default function SettingsPage() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-2)",
+            gap: "var(--drp-space-2)",
           }}
         >
           <span
-            style={{ fontSize: 12, fontWeight: 700, color: "var(--bru-grey)" }}
+            style={{ fontSize: 12, fontWeight: 700, color: "var(--drp-grey)" }}
           >
             1ForAll:
           </span>
@@ -702,21 +702,21 @@ export default function SettingsPage() {
       </div>
 
       {/* ── Research APIs Card (Perplexity + Reddit) ── */}
-      <Card variant="raised" style={{ marginBottom: "var(--bru-space-6)" }}>
+      <Card variant="raised" style={{ marginBottom: "var(--drp-space-6)" }}>
         <h2
           style={{
-            fontSize: "var(--bru-text-h5)",
+            fontSize: "var(--drp-text-h5)",
             fontWeight: 700,
-            marginBottom: "var(--bru-space-2)",
+            marginBottom: "var(--drp-space-2)",
           }}
         >
           Research APIs
         </h2>
         <p
           style={{
-            fontSize: "var(--bru-text-xs)",
-            color: "var(--bru-grey)",
-            marginBottom: "var(--bru-space-4)",
+            fontSize: "var(--drp-text-xs)",
+            color: "var(--drp-grey)",
+            marginBottom: "var(--drp-space-4)",
           }}
         >
           Optional keys for the Content Factory research pipeline. When
@@ -724,13 +724,13 @@ export default function SettingsPage() {
           Perplexity and Reddit.
         </p>
 
-        <div className="bru-form-stack">
+        <div className="drp-form-stack">
           {/* Perplexity */}
-          <div className="bru-field">
-            <label className="bru-field__label">Perplexity API Key</label>
-            <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
+          <div className="drp-field">
+            <label className="drp-field__label">Perplexity API Key</label>
+            <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
               <input
-                className="bru-input"
+                className="drp-input"
                 type={showPerplexityKey ? "text" : "password"}
                 value={perplexityApiKey}
                 onChange={(e) => setPerplexityApiKey(e.target.value)}
@@ -750,21 +750,21 @@ export default function SettingsPage() {
           </div>
 
           {/* Reddit */}
-          <div className="bru-field">
-            <label className="bru-field__label">Reddit Client ID</label>
+          <div className="drp-field">
+            <label className="drp-field__label">Reddit Client ID</label>
             <input
-              className="bru-input"
+              className="drp-input"
               value={redditClientId}
               onChange={(e) => setRedditClientId(e.target.value)}
               onBlur={() => void saveProfileSilent()}
               placeholder="Reddit app client ID"
             />
           </div>
-          <div className="bru-field">
-            <label className="bru-field__label">Reddit Client Secret</label>
-            <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
+          <div className="drp-field">
+            <label className="drp-field__label">Reddit Client Secret</label>
+            <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
               <input
-                className="bru-input"
+                className="drp-input"
                 type={showRedditSecret ? "text" : "password"}
                 value={redditClientSecret}
                 onChange={(e) => setRedditClientSecret(e.target.value)}
@@ -786,13 +786,13 @@ export default function SettingsPage() {
       </Card>
 
       {/* ── AI Providers Section (full width) ── */}
-      <Card variant="raised" style={{ marginBottom: "var(--bru-space-6)" }}>
+      <Card variant="raised" style={{ marginBottom: "var(--drp-space-6)" }}>
         {/* Tab Navigation */}
         <div
           style={{
             display: "flex",
             borderBottom: "2px solid rgba(0,0,0,0.08)",
-            marginBottom: "var(--bru-space-5)",
+            marginBottom: "var(--drp-space-5)",
           }}
         >
           {[
@@ -826,10 +826,10 @@ export default function SettingsPage() {
                     ? `3px solid ${color}`
                     : "3px solid transparent",
                   cursor: "pointer",
-                  fontFamily: "var(--bru-font-primary)",
-                  fontSize: "var(--bru-text-md)",
+                  fontFamily: "var(--drp-font-primary)",
+                  fontSize: "var(--drp-text-md)",
                   fontWeight: isActive ? 700 : 400,
-                  color: isActive ? color : "var(--bru-grey)",
+                  color: isActive ? color : "var(--drp-grey)",
                   marginBottom: -2,
                   transition: "color 0.15s, border-color 0.15s",
                 }}
@@ -846,14 +846,14 @@ export default function SettingsPage() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "var(--bru-space-3)",
+              gap: "var(--drp-space-3)",
             }}
           >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "var(--bru-space-3)",
+                gap: "var(--drp-space-3)",
               }}
             >
               <ValidationBadge status={claudeValidation} />
@@ -866,7 +866,7 @@ export default function SettingsPage() {
                     letterSpacing: "0.05em",
                     color: claudeReady
                       ? "#7C3AED"
-                      : "var(--bru-error, #FF4444)",
+                      : "var(--drp-error, #FF4444)",
                     background: claudeReady
                       ? "rgba(124, 58, 237, 0.1)"
                       : "rgba(231, 76, 60, 0.1)",
@@ -894,11 +894,11 @@ export default function SettingsPage() {
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
-                  marginBottom: "var(--bru-space-2)",
+                  marginBottom: "var(--drp-space-2)",
                 }}
               >
                 <Key size={12} /> API Key
@@ -912,7 +912,7 @@ export default function SettingsPage() {
                     setClaudeValidation({ state: "idle" });
                   }}
                   placeholder="sk-ant-..."
-                  className="bru-input"
+                  className="drp-input"
                   style={{ width: "100%", paddingRight: 40 }}
                 />
                 <button
@@ -926,7 +926,7 @@ export default function SettingsPage() {
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                     padding: 0,
                   }}
                 >
@@ -955,7 +955,7 @@ export default function SettingsPage() {
                 "Validate Key"
               )}
             </Button>
-            <p style={{ fontSize: 10, color: "var(--bru-grey)" }}>
+            <p style={{ fontSize: 10, color: "var(--drp-grey)" }}>
               Claude uses direct browser API — model selection is automatic
               (Claude Sonnet 4.5).
             </p>
@@ -998,14 +998,14 @@ export default function SettingsPage() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "var(--bru-space-3)",
+              gap: "var(--drp-space-3)",
             }}
           >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "var(--bru-space-3)",
+                gap: "var(--drp-space-3)",
               }}
             >
               <ValidationBadge status={straicoValidation} />
@@ -1018,7 +1018,7 @@ export default function SettingsPage() {
                     letterSpacing: "0.05em",
                     color: straicoReady
                       ? "#F59E0B"
-                      : "var(--bru-error, #FF4444)",
+                      : "var(--drp-error, #FF4444)",
                     background: straicoReady
                       ? "rgba(245, 158, 11, 0.1)"
                       : "rgba(231, 76, 60, 0.1)",
@@ -1046,11 +1046,11 @@ export default function SettingsPage() {
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
-                  marginBottom: "var(--bru-space-2)",
+                  marginBottom: "var(--drp-space-2)",
                 }}
               >
                 <Key size={12} /> API Key
@@ -1064,7 +1064,7 @@ export default function SettingsPage() {
                     setStraicoValidation({ state: "idle" });
                   }}
                   placeholder="Your Straico API key"
-                  className="bru-input"
+                  className="drp-input"
                   style={{ width: "100%", paddingRight: 40 }}
                 />
                 <button
@@ -1078,7 +1078,7 @@ export default function SettingsPage() {
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                     padding: 0,
                   }}
                 >
@@ -1110,7 +1110,7 @@ export default function SettingsPage() {
             {straicoApiKey.trim() && (
               <>
                 {/* Model for Copy dropdown */}
-                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
+                <div style={{ border: "var(--drp-border)", borderRadius: 0 }}>
                   <button
                     type="button"
                     onClick={() => setStraicoModelOpen((v) => !v)}
@@ -1125,7 +1125,7 @@ export default function SettingsPage() {
                         : "none",
                       border: "none",
                       cursor: "pointer",
-                      fontFamily: "var(--bru-font-primary)",
+                      fontFamily: "var(--drp-font-primary)",
                     }}
                   >
                     <span
@@ -1134,15 +1134,15 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       Model for Copy
                     </span>
                     {straicoModelOpen ? (
-                      <ChevronDown size={14} color="var(--bru-grey)" />
+                      <ChevronDown size={14} color="var(--drp-grey)" />
                     ) : (
-                      <ChevronRight size={14} color="var(--bru-grey)" />
+                      <ChevronRight size={14} color="var(--drp-grey)" />
                     )}
                   </button>
                   {straicoModelOpen && (
@@ -1164,7 +1164,7 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Model for Image dropdown */}
-                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
+                <div style={{ border: "var(--drp-border)", borderRadius: 0 }}>
                   <button
                     type="button"
                     onClick={() => setStraicoImageOpen((v) => !v)}
@@ -1179,7 +1179,7 @@ export default function SettingsPage() {
                         : "none",
                       border: "none",
                       cursor: "pointer",
-                      fontFamily: "var(--bru-font-primary)",
+                      fontFamily: "var(--drp-font-primary)",
                     }}
                   >
                     <span
@@ -1188,15 +1188,15 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       Model for Image
                     </span>
                     {straicoImageOpen ? (
-                      <ChevronDown size={14} color="var(--bru-grey)" />
+                      <ChevronDown size={14} color="var(--drp-grey)" />
                     ) : (
-                      <ChevronRight size={14} color="var(--bru-grey)" />
+                      <ChevronRight size={14} color="var(--drp-grey)" />
                     )}
                   </button>
                   {straicoImageOpen && (
@@ -1285,14 +1285,14 @@ export default function SettingsPage() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "var(--bru-space-3)",
+              gap: "var(--drp-space-3)",
             }}
           >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "var(--bru-space-3)",
+                gap: "var(--drp-space-3)",
               }}
             >
               <ValidationBadge status={oneforallValidation} />
@@ -1305,7 +1305,7 @@ export default function SettingsPage() {
                     letterSpacing: "0.05em",
                     color: oneforallReady
                       ? "#0EA5E9"
-                      : "var(--bru-error, #FF4444)",
+                      : "var(--drp-error, #FF4444)",
                     background: oneforallReady
                       ? "rgba(14, 165, 233, 0.1)"
                       : "rgba(231, 76, 60, 0.1)",
@@ -1333,11 +1333,11 @@ export default function SettingsPage() {
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  color: "var(--bru-grey)",
+                  color: "var(--drp-grey)",
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
-                  marginBottom: "var(--bru-space-2)",
+                  marginBottom: "var(--drp-space-2)",
                 }}
               >
                 <Key size={12} /> API Key
@@ -1351,7 +1351,7 @@ export default function SettingsPage() {
                     setOneforallValidation({ state: "idle" });
                   }}
                   placeholder="Your 1ForAll API key"
-                  className="bru-input"
+                  className="drp-input"
                   style={{ width: "100%", paddingRight: 40 }}
                 />
                 <button
@@ -1365,7 +1365,7 @@ export default function SettingsPage() {
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    color: "var(--bru-grey)",
+                    color: "var(--drp-grey)",
                     padding: 0,
                   }}
                 >
@@ -1397,7 +1397,7 @@ export default function SettingsPage() {
             {oneforallApiKey.trim() && (
               <>
                 {/* Model for Copy dropdown */}
-                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
+                <div style={{ border: "var(--drp-border)", borderRadius: 0 }}>
                   <button
                     type="button"
                     onClick={() => setOneforallModelOpen((v) => !v)}
@@ -1412,7 +1412,7 @@ export default function SettingsPage() {
                         : "none",
                       border: "none",
                       cursor: "pointer",
-                      fontFamily: "var(--bru-font-primary)",
+                      fontFamily: "var(--drp-font-primary)",
                     }}
                   >
                     <span
@@ -1421,15 +1421,15 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       Model for Copy
                     </span>
                     {oneforallModelOpen ? (
-                      <ChevronDown size={14} color="var(--bru-grey)" />
+                      <ChevronDown size={14} color="var(--drp-grey)" />
                     ) : (
-                      <ChevronRight size={14} color="var(--bru-grey)" />
+                      <ChevronRight size={14} color="var(--drp-grey)" />
                     )}
                   </button>
                   {oneforallModelOpen && (
@@ -1450,7 +1450,7 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Model for Image dropdown */}
-                <div style={{ border: "var(--bru-border)", borderRadius: 0 }}>
+                <div style={{ border: "var(--drp-border)", borderRadius: 0 }}>
                   <button
                     type="button"
                     onClick={() => setOneforallImageOpen((v) => !v)}
@@ -1465,7 +1465,7 @@ export default function SettingsPage() {
                         : "none",
                       border: "none",
                       cursor: "pointer",
-                      fontFamily: "var(--bru-font-primary)",
+                      fontFamily: "var(--drp-font-primary)",
                     }}
                   >
                     <span
@@ -1474,15 +1474,15 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--bru-grey)",
+                        color: "var(--drp-grey)",
                       }}
                     >
                       Model for Image
                     </span>
                     {oneforallImageOpen ? (
-                      <ChevronDown size={14} color="var(--bru-grey)" />
+                      <ChevronDown size={14} color="var(--drp-grey)" />
                     ) : (
-                      <ChevronRight size={14} color="var(--bru-grey)" />
+                      <ChevronRight size={14} color="var(--drp-grey)" />
                     )}
                   </button>
                   {oneforallImageOpen && (
@@ -1569,7 +1569,7 @@ export default function SettingsPage() {
         <Button
           variant="primary"
           block
-          style={{ marginTop: "var(--bru-space-6)" }}
+          style={{ marginTop: "var(--drp-space-6)" }}
           onClick={() => void handleSaveAll()}
           disabled={saving}
         >

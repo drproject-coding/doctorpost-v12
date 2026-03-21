@@ -49,7 +49,7 @@ describe("PipelineStepper", () => {
 
     const discoveryLabel = screen.getByText("Discovery");
     expect(discoveryLabel).toHaveStyle({ fontWeight: "700" });
-    expect(discoveryLabel).toHaveStyle({ color: "var(--bru-black)" });
+    expect(discoveryLabel).toHaveStyle({ color: "var(--drp-black)" });
   });
 
   it("shows progress bar for current phase", () => {
@@ -63,10 +63,10 @@ describe("PipelineStepper", () => {
     render(<PipelineStepper currentPhase="evidence" percent={100} />);
 
     // Direction is a completed phase (before evidence), so fontWeight is 400
-    // and color is var(--bru-black) because isComplete is true
+    // and color is var(--drp-black) because isComplete is true
     const directionLabel = screen.getByText("Direction");
     expect(directionLabel).toHaveStyle({ fontWeight: "400" });
-    expect(directionLabel).toHaveStyle({ color: "var(--bru-black)" });
+    expect(directionLabel).toHaveStyle({ color: "var(--drp-black)" });
   });
 
   it("shows incomplete phases with default styling", () => {
@@ -74,7 +74,7 @@ describe("PipelineStepper", () => {
 
     const discoveryLabel = screen.getByText("Discovery");
     expect(discoveryLabel).toHaveStyle({ fontWeight: "400" });
-    expect(discoveryLabel).toHaveStyle({ color: "var(--bru-grey)" });
+    expect(discoveryLabel).toHaveStyle({ color: "var(--drp-grey)" });
   });
 
   it("handles error state", () => {
@@ -88,7 +88,7 @@ describe("PipelineStepper", () => {
 
     const writingLabel = screen.getByText("Writing");
     expect(writingLabel).toHaveStyle({ fontWeight: "700" });
-    expect(writingLabel).toHaveStyle({ color: "var(--bru-black)" });
+    expect(writingLabel).toHaveStyle({ color: "var(--drp-black)" });
   });
 
   it("shows error styling for failed phase", () => {
@@ -101,7 +101,7 @@ describe("PipelineStepper", () => {
     );
 
     const fillBar = getFillBar("Scoring");
-    expect(fillBar).toHaveStyle({ background: "var(--bru-error, #FF4444)" });
+    expect(fillBar).toHaveStyle({ background: "var(--drp-error, #FF4444)" });
   });
 
   it("handles invalid phase gracefully", () => {
@@ -137,6 +137,6 @@ describe("PipelineStepper", () => {
     const stepWrapper = directionSpan.parentElement;
     const stepperContainer = stepWrapper?.parentElement;
     expect(stepperContainer).toHaveStyle({ display: "flex" });
-    expect(stepperContainer).toHaveStyle({ gap: "var(--bru-space-1)" });
+    expect(stepperContainer).toHaveStyle({ gap: "var(--drp-space-1)" });
   });
 });

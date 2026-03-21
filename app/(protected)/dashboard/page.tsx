@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
-import { ProgressBar, Card } from "@bruddle/react";
+import { ProgressBar, Card } from "@doctorproject/react";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -112,9 +112,9 @@ export default function DashboardPage() {
             <div className="flex items-center mb-4">
               <div
                 style={{
-                  background: "var(--bru-purple)",
+                  background: "var(--drp-purple)",
                   padding: "8px",
-                  borderRadius: "var(--bru-radius-md)",
+                  borderRadius: "var(--drp-radius-md)",
                 }}
                 className="mr-3"
               >
@@ -173,9 +173,9 @@ export default function DashboardPage() {
             <div className="flex items-center mb-4">
               <div
                 style={{
-                  background: "var(--bru-yellow)",
+                  background: "var(--drp-yellow)",
                   padding: "8px",
-                  borderRadius: "var(--bru-radius-md)",
+                  borderRadius: "var(--drp-radius-md)",
                 }}
                 className="mr-3"
               >
@@ -187,21 +187,21 @@ export default function DashboardPage() {
               <Link
                 href="/create"
                 className="flex items-center font-bold hover:underline"
-                style={{ color: "var(--bru-purple)" }}
+                style={{ color: "var(--drp-purple)" }}
               >
                 <ArrowUpRight size={16} className="mr-2" /> Generate New Post
               </Link>
               <Link
                 href="/calendar"
                 className="flex items-center font-bold hover:underline"
-                style={{ color: "var(--bru-purple)" }}
+                style={{ color: "var(--drp-purple)" }}
               >
                 <Calendar size={16} className="mr-2" /> View Calendar
               </Link>
               <Link
                 href="/settings"
                 className="flex items-center font-bold hover:underline"
-                style={{ color: "var(--bru-purple)" }}
+                style={{ color: "var(--drp-purple)" }}
               >
                 <Settings size={16} className="mr-2" /> Update Brand Profile
               </Link>
@@ -215,7 +215,7 @@ export default function DashboardPage() {
               <Link
                 href="/calendar"
                 className="text-sm font-bold hover:underline"
-                style={{ color: "var(--bru-purple)" }}
+                style={{ color: "var(--drp-purple)" }}
               >
                 View All
               </Link>
@@ -257,7 +257,7 @@ export default function DashboardPage() {
               <Link
                 href="/library"
                 className="text-sm font-bold hover:underline"
-                style={{ color: "var(--bru-purple)" }}
+                style={{ color: "var(--drp-purple)" }}
               >
                 View Library
               </Link>

@@ -186,13 +186,13 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
 
   return (
     <div className="enhanced-dropdown-container" ref={dropdownRef}>
-      <label htmlFor={`dropdown-${label}`} className="bru-field__label">
+      <label htmlFor={`dropdown-${label}`} className="drp-field__label">
         {label}
       </label>
       <button
         id={`dropdown-${label}`}
         type="button"
-        className="enhanced-dropdown-trigger bru-input"
+        className="enhanced-dropdown-trigger drp-input"
         onClick={toggleDropdown}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -229,7 +229,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             <input
               type="text"
               placeholder="Search options..."
-              className="bru-input"
+              className="drp-input"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-label={`Search ${label} options`}
@@ -276,7 +276,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                     <div className="enhanced-dropdown-option-content">
                       <span className="shrink-0 w-4">
                         {option.value === value && (
-                          <Check size={14} className="text-bru-purple" />
+                          <Check size={14} className="text-drp-purple" />
                         )}
                       </span>
                       <span className="flex-1 text-sm leading-tight">
@@ -302,7 +302,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
 
       {loading && (
         <div className="recommendation-loading">
-          <Loader size={24} className="animate-spin text-bru-purple" />
+          <Loader size={24} className="animate-spin text-drp-purple" />
         </div>
       )}
     </div>

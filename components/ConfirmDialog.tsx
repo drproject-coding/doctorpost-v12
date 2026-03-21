@@ -74,10 +74,10 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
               <p
                 style={{
                   margin: 0,
-                  fontFamily: "var(--bru-font-primary)",
-                  fontWeight: "var(--bru-weight-heavy)",
-                  fontSize: "var(--bru-text-base)",
-                  color: "var(--bru-black)",
+                  fontFamily: "var(--drp-font-primary)",
+                  fontWeight: "var(--drp-weight-heavy)",
+                  fontSize: "var(--drp-text-base)",
+                  color: "var(--drp-black)",
                 }}
               >
                 {state.title}
@@ -86,9 +86,9 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
             <p
               style={{
                 margin: 0,
-                fontFamily: "var(--bru-font-primary)",
-                fontSize: "var(--bru-text-sm)",
-                color: "var(--bru-muted, #555)",
+                fontFamily: "var(--drp-font-primary)",
+                fontSize: "var(--drp-text-sm)",
+                color: "var(--drp-muted, #555)",
                 lineHeight: 1.5,
               }}
             >
@@ -102,13 +102,13 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
               }}
             >
               <button
-                className="bru-btn bru-btn--secondary bru-btn--sm"
+                className="drp-btn drp-btn--secondary drp-btn--sm"
                 onClick={() => handleClose(false)}
               >
                 {state.cancelLabel ?? "Cancel"}
               </button>
               <button
-                className="bru-btn bru-btn--sm"
+                className="drp-btn drp-btn--sm"
                 style={
                   state.danger
                     ? {

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button } from "@bruddle/react";
+import { Button } from "@doctorproject/react";
 import { ScheduledPost, PostStatus, DropdownOption } from "@/lib/types";
 import { X, Save, Loader, Calendar } from "lucide-react";
 
@@ -165,23 +165,23 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
   };
 
   return (
-    <div className="bru-overlay">
-      <div className="bru-modal w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="bru-modal__header">
-          <h2 className="bru-modal__title">Edit Post: {post.title}</h2>
-          <button onClick={onClose} className="bru-modal__close">
+    <div className="drp-overlay">
+      <div className="drp-modal w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="drp-modal__header">
+          <h2 className="drp-modal__title">Edit Post: {post.title}</h2>
+          <button onClick={onClose} className="drp-modal__close">
             <X size={20} />
           </button>
         </div>
 
-        <div className="bru-modal__body">
+        <div className="drp-modal__body">
           {saveError && (
-            <div className="bg-red-100 text-red-800 border-2 border-red-300 rounded-bru-md p-3 mb-4 text-sm font-medium">
+            <div className="bg-red-100 text-red-800 border-2 border-red-300 rounded-drp-md p-3 mb-4 text-sm font-medium">
               {saveError}
             </div>
           )}
           {saveSuccess && (
-            <div className="bg-green-100 text-green-800 border-2 border-green-300 rounded-bru-md p-3 mb-4 text-sm font-medium">
+            <div className="bg-green-100 text-green-800 border-2 border-green-300 rounded-drp-md p-3 mb-4 text-sm font-medium">
               {saveSuccess}
             </div>
           )}
@@ -210,13 +210,13 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
           )}
 
           <div className="mb-4 flex flex-col gap-2">
-            <label htmlFor="edit-title" className="bru-field__label block">
+            <label htmlFor="edit-title" className="drp-field__label block">
               Title
             </label>
             <input
               type="text"
               id="edit-title"
-              className="bru-input w-full"
+              className="drp-input w-full"
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
               disabled={isSaving}
@@ -224,12 +224,12 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
           </div>
 
           <div className="mb-4 flex flex-col gap-2">
-            <label htmlFor="edit-content" className="bru-field__label block">
+            <label htmlFor="edit-content" className="drp-field__label block">
               Content
             </label>
             <textarea
               id="edit-content"
-              className="bru-input w-full h-48 resize-y"
+              className="drp-input w-full h-48 resize-y"
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
               disabled={isSaving}
@@ -237,12 +237,12 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
           </div>
 
           <div className="mb-4 flex flex-col gap-2">
-            <label htmlFor="edit-status" className="bru-field__label block">
+            <label htmlFor="edit-status" className="drp-field__label block">
               Status
             </label>
             <select
               id="edit-status"
-              className="bru-input w-full"
+              className="drp-input w-full"
               value={editedStatus}
               onChange={(e) => setEditedStatus(e.target.value as PostStatus)}
               disabled={isSaving}
@@ -259,7 +259,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
             <div className="mb-4 flex flex-col gap-2">
               <label
                 htmlFor="edit-date"
-                className="bru-field__label block"
+                className="drp-field__label block"
                 style={{ display: "flex", alignItems: "center", gap: 6 }}
               >
                 <Calendar size={14} />
@@ -268,7 +268,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
               <input
                 type="date"
                 id="edit-date"
-                className="bru-input w-full"
+                className="drp-input w-full"
                 value={editedDate}
                 onChange={(e) => setEditedDate(e.target.value)}
                 disabled={isSaving}
@@ -277,7 +277,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
           )}
         </div>
 
-        <div className="bru-modal__footer">
+        <div className="drp-modal__footer">
           <Button onClick={onClose} variant="secondary" disabled={isSaving}>
             Cancel
           </Button>

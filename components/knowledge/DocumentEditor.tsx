@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { Button, Card } from "@bruddle/react";
+import { Button, Card } from "@doctorproject/react";
 import { Save, X, History, Lock, GitFork } from "lucide-react";
 
 interface DocumentEditorProps {
@@ -58,13 +58,13 @@ export function DocumentEditor({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "var(--bru-space-4)",
+          marginBottom: "var(--drp-space-4)",
         }}
       >
         <div>
           <h3
             style={{
-              fontSize: "var(--bru-text-h5)",
+              fontSize: "var(--drp-text-h5)",
               fontWeight: 700,
               margin: 0,
             }}
@@ -75,9 +75,9 @@ export function DocumentEditor({
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--bru-space-2)",
-              fontSize: "var(--bru-text-sm)",
-              color: "var(--bru-grey)",
+              gap: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+              color: "var(--drp-grey)",
             }}
           >
             <span>
@@ -93,7 +93,7 @@ export function DocumentEditor({
                   background: "#0066FF15",
                   color: "#0066FF",
                   fontWeight: 700,
-                  fontSize: "var(--bru-text-xs)",
+                  fontSize: "var(--drp-text-xs)",
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
                 }}
@@ -103,7 +103,7 @@ export function DocumentEditor({
             )}
           </div>
         </div>
-        <div style={{ display: "flex", gap: "var(--bru-space-2)" }}>
+        <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
           {readOnly && onFork && (
             <Button variant="primary" onClick={onFork}>
               <GitFork size={14} />
@@ -127,7 +127,7 @@ export function DocumentEditor({
 
       {/* Editor */}
       <textarea
-        className="bru-input"
+        className="drp-input"
         value={content}
         onChange={(e) => setContent(e.target.value)}
         readOnly={readOnly}
@@ -135,7 +135,7 @@ export function DocumentEditor({
           width: "100%",
           minHeight: 400,
           fontFamily: "monospace",
-          fontSize: "var(--bru-text-sm)",
+          fontSize: "var(--drp-text-sm)",
           resize: "vertical",
           ...(readOnly
             ? { background: "#f5f5f5", cursor: "default", opacity: 0.85 }
@@ -149,12 +149,12 @@ export function DocumentEditor({
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--bru-space-3)",
-            marginTop: "var(--bru-space-4)",
+            gap: "var(--drp-space-3)",
+            marginTop: "var(--drp-space-4)",
           }}
         >
           <input
-            className="bru-input"
+            className="drp-input"
             placeholder="Change reason (optional)"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
@@ -175,17 +175,17 @@ export function DocumentEditor({
       {feedback && (
         <div
           style={{
-            marginTop: "var(--bru-space-3)",
-            padding: "var(--bru-space-3)",
-            border: "var(--bru-border)",
-            fontSize: "var(--bru-text-md)",
+            marginTop: "var(--drp-space-3)",
+            padding: "var(--drp-space-3)",
+            border: "var(--drp-border)",
+            fontSize: "var(--drp-text-md)",
             fontWeight: 500,
             background: feedback.startsWith("Error")
               ? "rgba(255, 68, 68, 0.12)"
               : "rgba(0, 170, 0, 0.12)",
             color: feedback.startsWith("Error")
-              ? "var(--bru-error-dark)"
-              : "var(--bru-success-dark)",
+              ? "var(--drp-error-dark)"
+              : "var(--drp-success-dark)",
           }}
         >
           {feedback}

@@ -29,27 +29,27 @@ export function CampaignSummaryRow({
       style={{
         display: "flex",
         alignItems: "center",
-        gap: "var(--bru-space-3)",
+        gap: "var(--drp-space-3)",
         flexWrap: "wrap",
-        marginBottom: "var(--bru-space-4)",
+        marginBottom: "var(--drp-space-4)",
       }}
     >
       <button
         onClick={() => onFilterClick(null)}
         style={{
           padding: "4px 12px",
-          fontSize: "var(--bru-text-sm)",
+          fontSize: "var(--drp-text-sm)",
           fontWeight:
             activeFilter === null || activeFilter === undefined ? 700 : 500,
           background:
             activeFilter === null || activeFilter === undefined
-              ? "var(--bru-black, #000)"
+              ? "var(--drp-black, #000)"
               : "transparent",
           color:
             activeFilter === null || activeFilter === undefined
               ? "#fff"
-              : "var(--bru-grey)",
-          border: "var(--bru-border)",
+              : "var(--drp-grey)",
+          border: "var(--drp-border)",
           cursor: "pointer",
         }}
       >
@@ -66,7 +66,7 @@ export function CampaignSummaryRow({
             onClick={() => onFilterClick(isActive ? null : s)}
             style={{
               padding: "4px 12px",
-              fontSize: "var(--bru-text-sm)",
+              fontSize: "var(--drp-text-sm)",
               fontWeight: isActive ? 700 : 500,
               background: isActive ? cfg.bg : "transparent",
               color: isActive

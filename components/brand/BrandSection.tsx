@@ -1,166 +1,145 @@
 "use client";
 import React, { useState } from "react";
-import { Loader, Sparkles, Pencil, X, Check } from "lucide-react";
+import { Button, Card, Icon, Loader } from "@doctorproject/react";
 
 interface BrandSectionProps {
   title: string;
   tag: string;
   color: string;
-  children: (editing: boolean) => React.ReactNode;
-  onSave: (data: unknown) => Promise<void>;
+  onSave: () => Promise<void>;
+  saving: boolean;
   onAiGenerate?: () => Promise<void>;
-  saving?: boolean;
+  children: (editing: boolean) => React.ReactNode;
 }
 
-const BrandSection: React.FC<BrandSectionProps> = ({
+export function BrandSection({
   title,
   tag,
   color,
-  children,
   onSave,
+  saving,
   onAiGenerate,
-  saving = false,
-}) => {
+  children,
+}: BrandSectionProps) {
   const [editing, setEditing] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
-
-  const handleEdit = () => setEditing(true);
-
-  const handleCancel = () => setEditing(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
 
   const handleSave = async () => {
-    await onSave({});
+    await onSave();
     setEditing(false);
   };
 
   const handleAiGenerate = async () => {
     if (!onAiGenerate) return;
-    setAiLoading(true);
+    setAiGenerating(true);
     try {
       await onAiGenerate();
-      setEditing(true);
     } finally {
-      setAiLoading(false);
+      setAiGenerating(false);
     }
   };
 
   return (
-    <div
-      style={{
-        borderLeft: `3px solid ${color}`,
-        background: "var(--drp-white)",
-        border: "var(--drp-border-thin)",
-        borderLeftColor: color,
-        borderLeftWidth: "3px",
-        borderLeftStyle: "solid",
-      }}
-    >
-      {/* Header row */}
+    <Card variant="raised">
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "12px",
-          padding: "12px 16px",
-          borderBottom: "1px solid rgba(0,0,0,0.08)",
+          justifyContent: "space-between",
+          padding: "var(--drp-space-4)",
+          borderBottom: editing ? "2px solid var(--drp-border)" : "none",
         }}
       >
-        {/* Tag */}
-        <span
+        <div
           style={{
-            backgroundColor: `${color}1A`,
-            color: color,
-            padding: "2px 8px",
-            fontSize: "var(--drp-text-xs)",
-            fontWeight: "var(--drp-weight-heavy)",
-            letterSpacing: "var(--drp-tracking-caps)",
-            textTransform: "uppercase" as const,
-            fontFamily: "var(--drp-font-primary)",
-            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--drp-space-3)",
           }}
         >
-          {tag}
-        </span>
+          <span
+            style={{
+              fontSize: 10,
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              padding: "2px 8px",
+              background: color,
+              color: "#fff",
+            }}
+          >
+            {tag}
+          </span>
+          <h3
+            style={{
+              fontSize: "var(--drp-text-md)",
+              fontWeight: 700,
+              margin: 0,
+            }}
+          >
+            {title}
+          </h3>
+        </div>
 
-        {/* Title */}
-        <span
+        <div
           style={{
-            fontFamily: "var(--drp-font-primary)",
-            fontWeight: "var(--drp-weight-bold)",
-            fontSize: "var(--drp-text-lg)",
-            color: "var(--drp-black)",
-            flex: 1,
+            display: "flex",
+            gap: "var(--drp-space-2)",
+            alignItems: "center",
           }}
         >
-          {title}
-        </span>
-
-        {/* Action buttons */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          {!editing && onAiGenerate && (
-            <button
-              type="button"
-              className="drp-btn drp-btn--sm drp-btn--ghost drp-btn--purple"
-              onClick={handleAiGenerate}
-              disabled={aiLoading}
-              aria-label="AI Generate"
+          {onAiGenerate && !editing && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => void handleAiGenerate()}
+              disabled={aiGenerating}
             >
-              {aiLoading ? (
-                <Loader size={13} className="animate-spin" />
+              {aiGenerating ? (
+                <>
+                  <Loader size="sm" /> Generating…
+                </>
               ) : (
-                <Sparkles size={13} />
+                "AI Generate"
               )}
-              {aiLoading ? "Generating..." : "Generate"}
-            </button>
+            </Button>
           )}
-
-          {!editing && (
-            <button
-              type="button"
-              className="drp-btn drp-btn--sm drp-btn--outline"
-              onClick={handleEdit}
-              aria-label="Edit section"
-            >
-              <Pencil size={13} />
-              Edit
-            </button>
-          )}
-
-          {editing && (
+          {editing ? (
             <>
-              <button
-                type="button"
-                className="drp-btn drp-btn--sm drp-btn--ghost"
-                onClick={handleCancel}
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setEditing(false)}
                 disabled={saving}
-                aria-label="Cancel editing"
               >
-                <X size={13} />
+                <Icon name="close" size="sm" />
                 Cancel
-              </button>
-              <button
-                type="button"
-                className="drp-btn drp-btn--sm drp-btn--primary"
-                onClick={handleSave}
+              </Button>
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={() => void handleSave()}
                 disabled={saving}
-                aria-label="Save section"
               >
                 {saving ? (
-                  <Loader size={13} className="animate-spin" />
+                  <>
+                    <Loader size="sm" /> Saving…
+                  </>
                 ) : (
-                  <Check size={13} />
+                  "Save"
                 )}
-                {saving ? "Saving..." : "Save"}
-              </button>
+              </Button>
             </>
+          ) : (
+            <Button size="sm" variant="ghost" onClick={() => setEditing(true)}>
+              <Icon name="edit" size="sm" />
+              Edit
+            </Button>
           )}
         </div>
       </div>
 
-      {/* Content area */}
-      <div style={{ padding: "16px" }}>{children(editing)}</div>
-    </div>
+      <div style={{ padding: "var(--drp-space-4)" }}>{children(editing)}</div>
+    </Card>
   );
-};
-
-export default BrandSection;
+}

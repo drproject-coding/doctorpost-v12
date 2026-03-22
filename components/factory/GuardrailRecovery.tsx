@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@doctorproject/react";
-import { Edit3, Wand2, RotateCcw } from "lucide-react";
+import { Icon, Loader } from "@doctorproject/react";
 import type { GuardrailResult } from "@/lib/knowledge/types";
 
 interface GuardrailRecoveryProps {
@@ -161,7 +161,7 @@ export function GuardrailRecovery({
               border: isEditing ? "2px solid var(--drp-purple)" : undefined,
             }}
           >
-            <Edit3 size={14} />
+            <Icon name="edit" size="sm" />
             Manual Edit
           </Button>
 
@@ -172,9 +172,9 @@ export function GuardrailRecovery({
               disabled={isFixing}
             >
               {isFixing ? (
-                <RotateCcw size={14} className="animate-spin" />
+                <Loader size="sm" />
               ) : (
-                <Wand2 size={14} />
+                <Icon name="arrow-left" size="sm" />
               )}
               {isFixing ? "Fixing..." : "Fix with AI"}
             </Button>

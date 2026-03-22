@@ -22,12 +22,6 @@ jest.mock("@doctorproject/react", () => ({
   ),
 }));
 
-// Mock lucide-react icons
-jest.mock("lucide-react", () => ({
-  Check: () => <span data-testid="icon-check">✓</span>,
-  X: () => <span data-testid="icon-x">✗</span>,
-}));
-
 describe("RuleProposalCard", () => {
   const mockProposal: RuleProposal = {
     id: "prop-1",

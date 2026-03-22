@@ -1,11 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Card } from "@doctorproject/react";
+import { Card, Icon } from "@doctorproject/react";
 import { getScheduledPosts, updatePost } from "@/lib/api";
 import { ScheduledPost, PostStatus } from "@/lib/types";
 import CalendarView from "@/components/calendar/CalendarView";
 import PostEditorModal from "@/components/PostEditorModal";
-import { List, Calendar, Filter } from "lucide-react";
 import { getStatusColorClasses, statusOptions } from "@/lib/calendarUtils";
 import ScoreBadge from "@/components/calendar/ScoreBadge";
 
@@ -150,14 +149,13 @@ export default function CalendarPage() {
               onClick={() => setView("calendar")}
               className={`flex items-center px-3 py-1 rounded-drp-md text-sm font-bold transition-colors ${view === "calendar" ? "bg-white text-drp-purple shadow" : "text-gray-600 hover:bg-gray-100"}`}
             >
-              <Calendar className="w-4 h-4 mr-2" />
+              <Icon name="calendar" size="sm" className="mr-2" />
               Calendar
             </button>
             <button
               onClick={() => setView("list")}
               className={`flex items-center px-3 py-1 rounded-drp-md text-sm font-bold transition-colors ${view === "list" ? "bg-white text-drp-purple shadow" : "text-gray-600 hover:bg-gray-100"}`}
             >
-              <List className="w-4 h-4 mr-2" />
               List
             </button>
           </div>
@@ -191,7 +189,7 @@ export default function CalendarPage() {
               ))}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <Filter size={16} />
+              <Icon name="filter" size="sm" />
             </div>
           </div>
         </div>

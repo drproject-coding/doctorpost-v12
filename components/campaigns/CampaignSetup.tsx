@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Card } from "@doctorproject/react";
-import { Plus, Minus } from "lucide-react";
+import { Icon } from "@doctorproject/react";
 
 interface CampaignSetupProps {
   onSubmit: (config: CampaignConfig) => void;
@@ -207,7 +207,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                     onClick={() => removePillar(pillar)}
                     style={{ padding: 2 }}
                   >
-                    <Minus size={12} />
+                    <Icon name="minus" size="sm" />
                   </Button>
                 </div>
               ))}
@@ -238,7 +238,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                   onClick={addPillar}
                   style={{ padding: 2 }}
                 >
-                  <Plus size={12} />
+                  <Icon name="plus" size="sm" />
                 </Button>
               </div>
             </div>

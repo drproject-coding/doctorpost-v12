@@ -1,24 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import {
-  ChevronDown,
-  Check,
-  Info,
-  XCircle,
-  AlertTriangle,
-  Book,
-  BarChart,
-  MessageSquare,
-  Target,
-  Sparkles,
-  TrendingUp,
-  Heart,
-  UserCheck,
-  Smile,
-  BookOpen,
-  Zap,
-  Loader,
-} from "lucide-react";
+import { Icon, Loader } from "@doctorproject/react";
 import {
   DropdownOption,
   CompatibilityMap,
@@ -35,30 +17,6 @@ interface EnhancedDropdownProps {
   loading?: boolean;
 }
 
-const categoryIcons: Record<string, React.ReactNode> = {
-  "Educational Content": <Book size={16} />,
-  "Data-Driven Content": <BarChart size={16} />,
-  "Engagement Content": <MessageSquare size={16} />,
-  "Authority Content": <Target size={16} />,
-  "Intrigue & Discovery": <Sparkles size={16} />,
-  "Pain & Solution": <AlertTriangle size={16} />,
-  "Credibility & Trust": <Check size={16} />,
-  "Challenge & Debate": <XCircle size={16} />,
-  "Expertise & Value": <Info size={16} />,
-  "Learning & Guidance": <Book size={16} />,
-  "Market & Future": <TrendingUp size={16} />,
-  "Personal Wellbeing": <Heart size={16} />,
-  "Proof & Results": <BarChart size={16} />,
-  "Formal & Expert": <UserCheck size={16} />,
-  "Informal & Engaging": <Smile size={16} />,
-  Storytelling: <BookOpen size={16} />,
-  "Emotional & Relatable": <Heart size={16} />,
-  Visionary: <Zap size={16} />,
-  "Niche & Specific": <Target size={16} />,
-};
-
-// PerformanceBadge removed — performance claims were inaccurate
-
 // Helper for compatibility badges
 const CompatibilityBadge: React.FC<{
   status?: CompatibilityStatus;
@@ -74,17 +32,17 @@ const CompatibilityBadge: React.FC<{
   switch (status) {
     case "recommended":
       statusClasses = "badge-compatibility-recommended";
-      statusIcon = <Check size={12} />;
+      statusIcon = <Icon name="check" size="sm" />;
       statusLabel = "Recommended";
       break;
     case "caution":
       statusClasses = "badge-compatibility-caution";
-      statusIcon = <AlertTriangle size={12} />;
+      statusIcon = null;
       statusLabel = "Caution";
       break;
     case "not-recommended":
       statusClasses = "badge-compatibility-not-recommended";
-      statusIcon = <XCircle size={12} />;
+      statusIcon = <Icon name="close" size="sm" />;
       statusLabel = "Not Recommended";
       break;
   }
@@ -201,12 +159,6 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
         <span className="flex items-center gap-2 min-w-0">
           {selectedOption ? (
             <>
-              {selectedOption.category &&
-                categoryIcons[selectedOption.category] && (
-                  <span className="shrink-0 text-gray-500">
-                    {categoryIcons[selectedOption.category]}
-                  </span>
-                )}
               <span className="truncate">{selectedOption.label}</span>
               <CompatibilityBadge
                 status={compatibilityMap[selectedOption.id]?.status}
@@ -217,8 +169,9 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             <span className="text-gray-500">{placeholder}</span>
           )}
         </span>
-        <ChevronDown
-          size={16}
+        <Icon
+          name="arrow-down"
+          size="sm"
           className={`shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
@@ -258,11 +211,6 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             Object.entries(filteredOptions).map(([category, optionsInCat]) => (
               <div key={category}>
                 <div className="enhanced-dropdown-category-header flex items-center gap-1.5">
-                  {categoryIcons[category] && (
-                    <span className="text-gray-400">
-                      {categoryIcons[category]}
-                    </span>
-                  )}
                   <span>{category}</span>
                 </div>
                 {optionsInCat.map((option) => (
@@ -276,7 +224,11 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                     <div className="enhanced-dropdown-option-content">
                       <span className="shrink-0 w-4">
                         {option.value === value && (
-                          <Check size={14} className="text-drp-purple" />
+                          <Icon
+                            name="check"
+                            size="sm"
+                            className="text-drp-purple"
+                          />
                         )}
                       </span>
                       <span className="flex-1 text-sm leading-tight">
@@ -302,7 +254,7 @@ const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
 
       {loading && (
         <div className="recommendation-loading">
-          <Loader size={24} className="animate-spin text-drp-purple" />
+          <Loader size="sm" />
         </div>
       )}
     </div>

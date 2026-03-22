@@ -30,14 +30,8 @@ jest.mock("@doctorproject/react", () => ({
       {children}
     </div>
   ),
-}));
-
-// Mock lucide-react icons
-jest.mock("lucide-react", () => ({
-  Loader: () => <span data-testid="icon-loader">L</span>,
-  Clock: () => <span data-testid="icon-clock">C</span>,
-  Copy: () => <span data-testid="icon-copy">CP</span>,
-  Download: () => <span data-testid="icon-download">D</span>,
+  Icon: ({ name }: any) => <span data-testid={`icon-${name}`}>{name}</span>,
+  Loader: () => <span data-testid="ds-loader">Loading</span>,
 }));
 
 // --- Helpers for mocking fetch with SSE ---
@@ -253,7 +247,7 @@ describe("PostGenerator", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("icon-loader")).toBeInTheDocument();
+      expect(screen.getByTestId("ds-loader")).toBeInTheDocument();
       expect(screen.getByText(/Generating your post/i)).toBeInTheDocument();
     });
   });
@@ -362,7 +356,6 @@ describe("PostGenerator", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("icon-clock")).toBeInTheDocument();
       expect(screen.getByText(/min read/)).toBeInTheDocument();
     });
   });

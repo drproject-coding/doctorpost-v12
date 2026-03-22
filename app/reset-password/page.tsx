@@ -2,8 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Alert, Button, Card } from "@doctorproject/react";
-import { Loader } from "lucide-react";
+import { Alert, Button, Card, Loader } from "@doctorproject/react";
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams();
@@ -87,7 +86,7 @@ function ResetPasswordContent() {
 
         {loading ? (
           <div className="flex items-center justify-center py-4">
-            <Loader size={24} className="animate-spin text-drp-purple" />
+            <Loader size="sm" />
           </div>
         ) : token ? (
           <form
@@ -157,7 +156,7 @@ export default function ResetPasswordPage() {
           className="flex items-center justify-center min-h-screen"
           style={{ background: "var(--drp-cream)" }}
         >
-          <Loader size={24} className="animate-spin text-drp-purple" />
+          <Loader size="sm" />
         </div>
       }
     >

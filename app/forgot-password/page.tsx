@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
+import { Button, Card, Loader } from "@doctorproject/react";
 import { useRouter } from "next/navigation";
-import { Loader } from "lucide-react";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -132,14 +131,7 @@ export default function ForgotPasswordPage() {
                 disabled={loading}
                 style={{ borderRadius: 0, width: "100%", marginBottom: "1rem" }}
               >
-                {loading ? (
-                  <Loader
-                    size={16}
-                    style={{ animation: "spin 1s linear infinite" }}
-                  />
-                ) : (
-                  "Send Reset Link"
-                )}
+                {loading ? <Loader size="sm" /> : "Send Reset Link"}
               </Button>
             </form>
 

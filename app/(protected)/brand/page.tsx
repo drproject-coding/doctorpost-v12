@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Loader } from "lucide-react";
+import { Loader } from "@doctorproject/react";
 import {
   getBrandProfile,
   updateBrandProfile,
@@ -15,7 +15,7 @@ import {
   copyToClipboard,
   triggerPrint,
 } from "@/lib/brand-export";
-import BrandSection from "@/components/brand/BrandSection";
+import { BrandSection } from "@/components/brand/BrandSection";
 import ProfileSection from "@/components/brand/sections/ProfileSection";
 import VoiceSection from "@/components/brand/sections/VoiceSection";
 import StrategySection from "@/components/brand/sections/StrategySection";
@@ -139,7 +139,7 @@ export default function BrandPage() {
     return (
       <div className="p-6">
         <div className="max-w-6xl mx-auto flex items-center justify-center py-24">
-          <Loader size={32} className="animate-spin text-drp-purple" />
+          <Loader size="sm" />
         </div>
       </div>
     );
@@ -315,7 +315,7 @@ export default function BrandPage() {
               saving={savingSection === "profile"}
               onAiGenerate={() => handleAiGenerate("Profile")}
             >
-              {(editing) => (
+              {(editing: boolean) => (
                 <ProfileSection
                   profile={draft ?? profile}
                   editing={editing}
@@ -335,7 +335,7 @@ export default function BrandPage() {
               saving={savingSection === "voice"}
               onAiGenerate={() => handleAiGenerate("Voice & Guidelines")}
             >
-              {(editing) => (
+              {(editing: boolean) => (
                 <VoiceSection
                   profile={draft ?? profile}
                   editing={editing}
@@ -355,7 +355,7 @@ export default function BrandPage() {
               saving={savingSection === "strategy"}
               onAiGenerate={() => handleAiGenerate("Content Strategy")}
             >
-              {(editing) => (
+              {(editing: boolean) => (
                 <StrategySection
                   profile={draft ?? profile}
                   editing={editing}
@@ -375,7 +375,7 @@ export default function BrandPage() {
               saving={savingSection === "offers"}
               onAiGenerate={() => handleAiGenerate("Offers & Value Prop")}
             >
-              {(editing) => (
+              {(editing: boolean) => (
                 <OffersSection
                   profile={draft ?? profile}
                   editing={editing}
@@ -404,7 +404,7 @@ export default function BrandPage() {
               }
               saving={savingSection === "pillars"}
             >
-              {(editing) => (
+              {(editing: boolean) => (
                 <PillarsSection
                   profile={draft ?? profile}
                   editing={editing}
@@ -427,7 +427,7 @@ export default function BrandPage() {
               saving={savingSection === "positioning"}
               onAiGenerate={() => handleAiGenerate("Brand Positioning")}
             >
-              {(editing) => (
+              {(editing: boolean) => (
                 <PositioningSection
                   profile={draft ?? profile}
                   editing={editing}
@@ -446,7 +446,7 @@ export default function BrandPage() {
               onSave={() => handleSave("aitools", draft ? { ...draft } : {})}
               saving={savingSection === "aitools"}
             >
-              {(editing) => (
+              {(editing: boolean) => (
                 <AiToolsSection
                   profile={draft ?? profile}
                   editing={editing}

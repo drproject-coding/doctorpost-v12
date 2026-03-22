@@ -28,14 +28,6 @@ jest.mock("next/link", () => {
   return ({ children, href }: any) => <a href={href}>{children}</a>;
 });
 
-// Mock lucide-react icons
-jest.mock("lucide-react", () => ({
-  Menu: () => <span data-testid="icon-menu">M</span>,
-  Bell: () => <span data-testid="icon-bell">B</span>,
-  Plus: () => <span data-testid="icon-plus">+</span>,
-  LogOut: () => <span data-testid="icon-logout">L</span>,
-}));
-
 describe("Header", () => {
   const mockOnToggleSidebar = jest.fn();
 

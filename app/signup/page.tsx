@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
+import { Button, Card, Loader, Icon } from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { Loader, Eye, EyeOff } from "lucide-react";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -160,7 +159,11 @@ export default function SignupPage() {
                 }}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showPassword ? (
+                  <Icon name="eye-off" size="sm" />
+                ) : (
+                  <Icon name="eye" size="sm" />
+                )}
               </button>
             </div>
           </div>
@@ -196,7 +199,7 @@ export default function SignupPage() {
                   gap: "8px",
                 }}
               >
-                <Loader size={16} className="animate-spin" />
+                <Loader size="sm" />
                 Creating account...
               </span>
             ) : (

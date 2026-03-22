@@ -73,11 +73,19 @@ function ToastItem({
   const colors: Record<ToastType, { bg: string; icon: React.ReactNode }> = {
     success: {
       bg: "#e6f9ec",
-      icon: <Icon name="check-circle" size="sm" style={{ color: "#00aa00" }} />,
+      icon: (
+        <span style={{ color: "#00aa00" }}>
+          <Icon name="check" size="sm" />
+        </span>
+      ),
     },
     error: {
       bg: "#fde8e8",
-      icon: <Icon name="x-circle" size="sm" style={{ color: "#cc0000" }} />,
+      icon: (
+        <span style={{ color: "#cc0000" }}>
+          <Icon name="close" size="sm" />
+        </span>
+      ),
     },
     info: {
       bg: "var(--drp-cream, #fffdf4)",
@@ -120,7 +128,7 @@ function ToastItem({
         }}
         aria-label="Dismiss"
       >
-        <Icon name="x" size="sm" />
+        <Icon name="close" size="sm" />
       </button>
       <style>{`
         @keyframes drp-toast-in {

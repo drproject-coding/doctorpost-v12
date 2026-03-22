@@ -2,10 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { Button, Card } from "@doctorproject/react";
-import { Upload, Wand2 } from "lucide-react";
 
 interface OptionCardProps {
-  icon: React.ReactNode;
   title: string;
   description: string;
   buttonLabel: string;
@@ -13,7 +11,6 @@ interface OptionCardProps {
 }
 
 function OptionCard({
-  icon,
   title,
   description,
   buttonLabel,
@@ -43,7 +40,6 @@ function OptionCard({
       }}
       onClick={onClick}
     >
-      <div style={{ color: "var(--drp-purple)" }}>{icon}</div>
       <div
         style={{
           display: "flex",
@@ -67,7 +63,7 @@ function OptionCard({
           style={{
             margin: 0,
             fontSize: "15px",
-            color: "var(--drp-grey)",
+            color: "var(--drp-text-muted)",
             lineHeight: 1.55,
           }}
         >
@@ -128,7 +124,7 @@ export default function OnboardingStartPage() {
             style={{
               margin: 0,
               fontSize: "16px",
-              color: "var(--drp-grey)",
+              color: "var(--drp-text-muted)",
               lineHeight: 1.5,
             }}
           >
@@ -145,14 +141,12 @@ export default function OnboardingStartPage() {
           }}
         >
           <OptionCard
-            icon={<Upload size={32} />}
             title="Upload brand files"
             description="Have existing brand docs? Upload PDFs, DOCX or text files and we'll extract your brand profile automatically."
             buttonLabel="Upload files"
             onClick={() => router.push("/onboarding/upload")}
           />
           <OptionCard
-            icon={<Wand2 size={32} />}
             title="Build with the wizard"
             description="Answer a few questions to set up your brand profile step by step. Takes about 5 minutes."
             buttonLabel="Start wizard"
@@ -168,7 +162,7 @@ export default function OnboardingStartPage() {
               border: "none",
               cursor: "pointer",
               fontSize: "14px",
-              color: "var(--drp-grey)",
+              color: "var(--drp-text-muted)",
               padding: "4px 0",
               textDecoration: "none",
               transition: "color 0.15s ease",
@@ -179,7 +173,7 @@ export default function OnboardingStartPage() {
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLButtonElement).style.color =
-                "var(--drp-grey)";
+                "var(--drp-text-muted)";
             }}
           >
             Skip for now &rarr;

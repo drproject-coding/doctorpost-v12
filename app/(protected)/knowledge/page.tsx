@@ -1,17 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Alert, Button, Card } from "@doctorproject/react";
+import { Alert, Button, Card, Icon, Loader } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
-import {
-  FileText,
-  Plus,
-  Upload,
-  Scissors,
-  Search,
-  Loader,
-  Lock,
-  GitFork,
-} from "lucide-react";
 import type {
   KnowledgeDocument,
   DocumentCategory,
@@ -252,14 +242,8 @@ export default function KnowledgePage() {
           Knowledge Base
         </h1>
         <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
-          <Button onClick={() => setView("import")}>
-            <Upload size={14} />
-            Import
-          </Button>
-          <Button onClick={() => setView("extract")}>
-            <Scissors size={14} />
-            Extract Template
-          </Button>
+          <Button onClick={() => setView("import")}>Import</Button>
+          <Button onClick={() => setView("extract")}>Extract Template</Button>
         </div>
       </div>
 
@@ -286,16 +270,18 @@ export default function KnowledgePage() {
         ))}
         <div style={{ flex: 1, minWidth: 200 }}>
           <div style={{ position: "relative" }}>
-            <Search
-              size={14}
+            <span
               style={{
                 position: "absolute",
                 left: 10,
                 top: "50%",
                 transform: "translateY(-50%)",
                 color: "var(--drp-grey)",
+                display: "flex",
               }}
-            />
+            >
+              <Icon name="search" size="sm" />
+            </span>
             <input
               className="drp-input"
               placeholder="Search documents..."
@@ -323,7 +309,7 @@ export default function KnowledgePage() {
             color: "var(--drp-grey)",
           }}
         >
-          <Loader size={24} className="animate-spin" />
+          <Loader size="sm" />
         </div>
       ) : filtered.length === 0 ? (
         <Card
@@ -358,7 +344,6 @@ export default function KnowledgePage() {
                   gap: "var(--drp-space-3)",
                 }}
               >
-                <FileText size={20} style={{ flexShrink: 0, marginTop: 2 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <h4
                     style={{
@@ -408,7 +393,7 @@ export default function KnowledgePage() {
                           gap: 3,
                         }}
                       >
-                        <Lock size={9} /> System
+                        System
                       </span>
                     )}
                     {doc.subcategory && (

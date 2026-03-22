@@ -32,23 +32,6 @@ jest.mock("next/link", () => {
   );
 });
 
-// Mock lucide-react icons
-jest.mock("lucide-react", () => ({
-  LayoutDashboard: () => <span data-testid="icon-dashboard">D</span>,
-  PenSquare: () => <span data-testid="icon-create">P</span>,
-  Calendar: () => <span data-testid="icon-calendar">C</span>,
-  Book: () => <span data-testid="icon-library">B</span>,
-  BarChart2: () => <span data-testid="icon-analytics">A</span>,
-  Settings: () => <span data-testid="icon-settings">S</span>,
-  ChevronLeft: () => <span data-testid="icon-chevron">»</span>,
-  Factory: () => <span data-testid="icon-factory">F</span>,
-  Megaphone: () => <span data-testid="icon-campaigns">M</span>,
-  BookOpen: () => <span data-testid="icon-knowledge">K</span>,
-  Brain: () => <span data-testid="icon-learning">Br</span>,
-  Palette: () => <span data-testid="icon-brand">Pa</span>,
-  Clapperboard: () => <span data-testid="icon-studio">Cl</span>,
-}));
-
 describe("Sidebar", () => {
   const mockOnToggle = jest.fn();
 

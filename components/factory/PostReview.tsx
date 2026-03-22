@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Card } from "@doctorproject/react";
-import { ThumbsUp, ThumbsDown, Edit3, MessageSquare } from "lucide-react";
+import { Icon } from "@doctorproject/react";
 
 interface PostReviewProps {
   content: string;
@@ -53,7 +53,6 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
         }}
       >
         <Button variant="primary" onClick={handleApprove}>
-          <ThumbsUp size={14} />
           Approve
         </Button>
         <Button
@@ -63,7 +62,7 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
               action === "editing" ? "2px solid var(--drp-purple)" : undefined,
           }}
         >
-          <Edit3 size={14} />
+          <Icon name="edit" size="sm" />
           Edit Before Approve
         </Button>
         <Button
@@ -73,11 +72,10 @@ export function PostReview({ content, onApprove, onReject }: PostReviewProps) {
               action === "feedback" ? "2px solid var(--drp-purple)" : undefined,
           }}
         >
-          <MessageSquare size={14} />
+          <Icon name="mail" size="sm" />
           Add Feedback
         </Button>
         <Button onClick={handleReject} style={{ marginLeft: "auto" }}>
-          <ThumbsDown size={14} />
           Reject
         </Button>
       </div>

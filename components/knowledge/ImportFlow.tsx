@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card, Select } from "@doctorproject/react";
-import { Upload, FileText, Check, ArrowLeft, Loader } from "lucide-react";
+import { Button, Card, Icon, Loader, Select } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import type { DocumentCategory } from "@/lib/knowledge/types";
 
@@ -108,7 +107,7 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
         }}
       >
         <Button variant="ghost" onClick={onCancel}>
-          <ArrowLeft size={16} />
+          <Icon name="arrow-left" size="sm" />
         </Button>
         <h2
           style={{
@@ -267,11 +266,11 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
             >
               {saving ? (
                 <>
-                  <Loader size={14} className="animate-spin" /> Saving...
+                  <Loader size="sm" /> Saving...
                 </>
               ) : (
                 <>
-                  <Check size={14} /> Import Document
+                  <Icon name="check" size="sm" /> Import Document
                 </>
               )}
             </Button>

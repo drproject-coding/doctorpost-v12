@@ -7,14 +7,13 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import { Alert, Button, Card } from "@doctorproject/react";
+import { Alert, Button, Card, Icon, Loader } from "@doctorproject/react";
 import {
   PostGenerationParameters,
   BrandProfile,
   AiSettings,
   AiProgress,
 } from "@/lib/types";
-import { Loader, Clock, Copy, Download } from "lucide-react";
 
 interface PostGeneratorProps {
   parameters: PostGenerationParameters;
@@ -203,20 +202,16 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
           <div
             style={{
               minHeight: 256,
-              border: "2px dashed var(--drp-grey-85)",
+              border: "2px dashed var(--drp-text-muted)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              color: "var(--drp-grey)",
+              color: "var(--drp-text-muted)",
               gap: "var(--drp-space-3)",
             }}
           >
-            <Loader
-              size={32}
-              className="animate-spin"
-              style={{ color: "var(--drp-purple)" }}
-            />
+            <Loader size="sm" />
             <p>{aiProgress?.step ?? "Generating your post..."}</p>
             {aiProgress && (
               <div
@@ -248,12 +243,12 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
                 display: "flex",
                 alignItems: "center",
                 fontSize: "var(--drp-text-sm)",
-                color: "var(--drp-grey)",
+                color: "var(--drp-text-muted)",
                 marginBottom: "var(--drp-space-2)",
                 gap: "var(--drp-space-1)",
               }}
             >
-              <Clock size={14} /> {estimatedReadTime} min read
+              {estimatedReadTime} min read
             </div>
             <textarea
               ref={contentRef}
@@ -286,11 +281,10 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
               style={{ marginTop: "var(--drp-space-3)" }}
             >
               <Button size="sm" onClick={() => copyToClipboard()}>
-                <Copy size={14} />
                 {copied ? "Copied!" : "Copy"}
               </Button>
               <Button size="sm" onClick={downloadAsText}>
-                <Download size={14} />
+                <Icon name="download" size="sm" />
                 Download
               </Button>
             </div>
@@ -299,11 +293,11 @@ const PostGenerator = forwardRef<PostGeneratorRef, PostGeneratorProps>(
           <div
             style={{
               minHeight: 256,
-              border: "2px dashed var(--drp-grey-85)",
+              border: "2px dashed var(--drp-text-muted)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "var(--drp-grey)",
+              color: "var(--drp-text-muted)",
               padding: "var(--drp-space-6)",
               textAlign: "center",
             }}

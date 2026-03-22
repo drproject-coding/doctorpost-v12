@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import { Alert, Card } from "@doctorproject/react";
-import { Loader, Check, AlertCircle } from "lucide-react";
+import { Alert, Card, Icon, Loader } from "@doctorproject/react";
 
 const PILLAR_COLORS = [
   { bg: "#6B4FFF", text: "#fff" },
@@ -78,14 +77,9 @@ export function BatchProgress({
         }}
       >
         {phase === "complete" ? (
-          <Check size={16} style={{ color: "var(--drp-success, #00AA00)" }} />
-        ) : phase === "error" ? (
-          <AlertCircle
-            size={16}
-            style={{ color: "var(--drp-error, #FF4444)" }}
-          />
-        ) : phase !== "idle" ? (
-          <Loader size={16} className="animate-spin" />
+          <Icon name="check" size="sm" />
+        ) : phase !== "idle" && phase !== "error" ? (
+          <Loader size="sm" />
         ) : null}
         <span
           style={{

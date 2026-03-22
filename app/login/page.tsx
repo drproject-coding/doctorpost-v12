@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Card } from "@doctorproject/react";
+import { Button, Card, Loader, Icon } from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { Loader, Eye, EyeOff } from "lucide-react";
 
 interface Providers {
   email?: boolean;
@@ -85,7 +84,7 @@ export default function LoginPage() {
         className="flex items-center justify-center"
         style={{ minHeight: "100vh", background: "var(--drp-cream)" }}
       >
-        <Loader size={32} className="animate-spin text-drp-purple" />
+        <Loader size="sm" />
       </div>
     );
   }
@@ -104,8 +103,10 @@ export default function LoginPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-4">
-            <Loader size={24} className="animate-spin mr-2 text-drp-purple" />
-            <span className="font-medium">Signing in...</span>
+            <Loader size="sm" />
+            <span className="font-medium" style={{ marginLeft: "8px" }}>
+              Signing in...
+            </span>
           </div>
         ) : (
           <>
@@ -182,7 +183,11 @@ export default function LoginPage() {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                     >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showPassword ? (
+                        <Icon name="eye-off" size="sm" />
+                      ) : (
+                        <Icon name="eye" size="sm" />
+                      )}
                     </button>
                   </div>
                   <Button type="submit" variant="primary" block>

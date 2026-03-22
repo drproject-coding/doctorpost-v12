@@ -2,19 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { getScheduledPosts, getAnalytics } from "@/lib/api";
 import { ScheduledPost, AnalyticsData } from "@/lib/types";
-import {
-  BarChart2,
-  ArrowUpRight,
-  Calendar,
-  Clock,
-  PlusSquare,
-  TrendingUp,
-  Book,
-  Settings,
-} from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
-import { ProgressBar, Card } from "@doctorproject/react";
+import { ProgressBar, Card, Icon, Loader } from "@doctorproject/react";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -118,7 +108,7 @@ export default function DashboardPage() {
                 }}
                 className="mr-3"
               >
-                <BarChart2 className="text-white" size={24} />
+                <Icon name="analytics" size="lg" className="text-white" />
               </div>
               <h2 className="text-lg font-bold">Performance Overview</h2>
             </div>
@@ -171,16 +161,6 @@ export default function DashboardPage() {
           {/* Quick Actions Card */}
           <Card variant="raised">
             <div className="flex items-center mb-4">
-              <div
-                style={{
-                  background: "var(--drp-yellow)",
-                  padding: "8px",
-                  borderRadius: "var(--drp-radius-md)",
-                }}
-                className="mr-3"
-              >
-                <PlusSquare className="text-white" size={24} />
-              </div>
               <h2 className="text-lg font-bold">Quick Actions</h2>
             </div>
             <div className="space-y-3">
@@ -189,21 +169,23 @@ export default function DashboardPage() {
                 className="flex items-center font-bold hover:underline"
                 style={{ color: "var(--drp-purple)" }}
               >
-                <ArrowUpRight size={16} className="mr-2" /> Generate New Post
+                Generate New Post
               </Link>
               <Link
                 href="/calendar"
                 className="flex items-center font-bold hover:underline"
                 style={{ color: "var(--drp-purple)" }}
               >
-                <Calendar size={16} className="mr-2" /> View Calendar
+                <Icon name="calendar" size="sm" className="mr-2" /> View
+                Calendar
               </Link>
               <Link
                 href="/settings"
                 className="flex items-center font-bold hover:underline"
                 style={{ color: "var(--drp-purple)" }}
               >
-                <Settings size={16} className="mr-2" /> Update Brand Profile
+                <Icon name="settings" size="sm" className="mr-2" /> Update Brand
+                Profile
               </Link>
             </div>
           </Card>
@@ -228,9 +210,6 @@ export default function DashboardPage() {
                     className="flex items-start space-x-3 pb-4 last:pb-0"
                     style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}
                   >
-                    <div className="pt-1">
-                      <Clock className="w-4 h-4 text-gray-600" />
-                    </div>
                     <div>
                       <p className="font-semibold">{post.title}</p>
                       <p className="text-sm text-gray-600">
@@ -270,9 +249,6 @@ export default function DashboardPage() {
                     className="flex items-start space-x-3 pb-4 last:pb-0"
                     style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}
                   >
-                    <div className="pt-1">
-                      <Book className="w-4 h-4 text-gray-600" />
-                    </div>
                     <div>
                       <p className="font-semibold">{post.title}</p>
                       <p className="text-sm text-gray-600">
@@ -307,7 +283,6 @@ export default function DashboardPage() {
                     style={{ padding: "8px" }}
                   >
                     <span className="font-medium">{topic}</span>
-                    <TrendingUp size={16} className="text-green-500" />
                   </Card>
                 ))
               ) : (

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useMemo } from "react";
 import { Card } from "@doctorproject/react";
-import { Layers, FileText } from "lucide-react";
+import { Icon } from "@doctorproject/react";
 import type { GuardrailResult } from "@/lib/knowledge/types";
 import type { WriterOutput } from "@/lib/agents/writer";
 import { GuardrailRecovery } from "./GuardrailRecovery";
@@ -202,7 +202,11 @@ export function DraftEditor({
               cursor: "pointer",
             }}
           >
-            {showStructure ? <Layers size={12} /> : <FileText size={12} />}
+            {showStructure ? (
+              <Icon name="download" size="sm" />
+            ) : (
+              <Icon name="download" size="sm" />
+            )}
             {showStructure ? "Structure" : "Plain"}
           </button>
           {rewriteCount > 0 && (

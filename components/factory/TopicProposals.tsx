@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Card } from "@doctorproject/react";
-import { Check } from "lucide-react";
+import { Icon } from "@doctorproject/react";
 import type { TopicProposal } from "@/lib/knowledge/types";
 import type { StrategistOutput } from "@/lib/agents/strategist";
 
@@ -132,10 +132,9 @@ export function TopicProposals({
                   )}
                 </div>
                 {isSelected && (
-                  <Check
-                    size={20}
-                    style={{ color: "var(--drp-purple)", flexShrink: 0 }}
-                  />
+                  <span style={{ color: "var(--drp-purple)", flexShrink: 0 }}>
+                    <Icon name="check" size="md" />
+                  </span>
                 )}
               </div>
             </Card>

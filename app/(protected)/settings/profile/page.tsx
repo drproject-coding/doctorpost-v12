@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, Button, Icon } from "@doctorproject/react";
+import { Card, Button, Icon, Loader } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import "@doctorproject/react/styles";
 
@@ -165,7 +165,6 @@ export default function SettingsProfilePage() {
                     cursor: "not-allowed",
                   }}
                 >
-                  <Icon name="camera" size="sm" />
                   Change Photo (coming soon)
                 </div>
               </div>
@@ -202,7 +201,7 @@ export default function SettingsProfilePage() {
                   color: "var(--drp-black)",
                 }}
               >
-                <Icon name="user" size="sm" />
+                <Icon name="users" size="sm" />
                 Display Name
               </label>
               <input
@@ -284,11 +283,9 @@ export default function SettingsProfilePage() {
                   marginBottom: 16,
                 }}
               >
-                <Icon
-                  name="close"
-                  size="sm"
-                  style={{ color: "var(--drp-pink)" }}
-                />
+                <span style={{ color: "var(--drp-pink)" }}>
+                  <Icon name="close" size="sm" />
+                </span>
                 <span style={{ fontSize: 13, color: "var(--drp-black)" }}>
                   {error}
                 </span>
@@ -324,11 +321,7 @@ export default function SettingsProfilePage() {
             >
               {saving ? (
                 <>
-                  <Icon
-                    name="loader"
-                    size="sm"
-                    style={{ animation: "spin 1s linear infinite" }}
-                  />
+                  <Loader size="sm" />
                   Saving…
                 </>
               ) : saved ? (

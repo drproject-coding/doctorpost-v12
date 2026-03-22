@@ -1,32 +1,46 @@
 "use client";
 import React from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  RotateCcw,
-  CheckCircle,
-  XCircle,
-  Compass,
-  Search,
-  BookOpen,
-  PenTool,
-  Target,
-  Wand2,
-  Eye,
-  Lightbulb,
-} from "lucide-react";
+import { Icon } from "@doctorproject/react";
 import type { PipelinePhase } from "@/lib/agents/orchestrator";
 
 const STEPS: { phase: PipelinePhase; label: string; icon: React.ReactNode }[] =
   [
-    { phase: "direction", label: "Direction", icon: <Compass size={20} /> },
-    { phase: "discovery", label: "Discovery", icon: <Search size={20} /> },
-    { phase: "evidence", label: "Evidence", icon: <BookOpen size={20} /> },
-    { phase: "writing", label: "Writing", icon: <PenTool size={20} /> },
-    { phase: "scoring", label: "Scoring", icon: <Target size={20} /> },
-    { phase: "formatting", label: "Formatting", icon: <Wand2 size={20} /> },
-    { phase: "review", label: "Review", icon: <Eye size={20} /> },
-    { phase: "learning", label: "Learning", icon: <Lightbulb size={20} /> },
+    {
+      phase: "direction",
+      label: "Direction",
+      icon: <Icon name="analytics" size="md" />,
+    },
+    {
+      phase: "discovery",
+      label: "Discovery",
+      icon: <Icon name="search" size="md" />,
+    },
+    {
+      phase: "evidence",
+      label: "Evidence",
+      icon: <Icon name="eye" size="md" />,
+    },
+    {
+      phase: "writing",
+      label: "Writing",
+      icon: <Icon name="edit" size="md" />,
+    },
+    {
+      phase: "scoring",
+      label: "Scoring",
+      icon: <Icon name="filter" size="md" />,
+    },
+    {
+      phase: "formatting",
+      label: "Formatting",
+      icon: <Icon name="settings" size="md" />,
+    },
+    { phase: "review", label: "Review", icon: <Icon name="eye" size="md" /> },
+    {
+      phase: "learning",
+      label: "Learning",
+      icon: <Icon name="bell" size="md" />,
+    },
   ];
 
 const PHASE_ORDER: PipelinePhase[] = STEPS.map((s) => s.phase);
@@ -217,16 +231,14 @@ export function PipelineStepper({
                 </span>
                 {/* Phase status indicator */}
                 {metadata?.phaseStatus?.[step.phase] === "success" && (
-                  <CheckCircle
-                    size={14}
-                    style={{ color: "var(--drp-success-dark, #2d7a3a)" }}
-                  />
+                  <span style={{ color: "var(--drp-success-dark, #2d7a3a)" }}>
+                    <Icon name="check" size="sm" />
+                  </span>
                 )}
                 {metadata?.phaseStatus?.[step.phase] === "failed" && (
-                  <XCircle
-                    size={14}
-                    style={{ color: "var(--drp-error-dark, #c0392b)" }}
-                  />
+                  <span style={{ color: "var(--drp-error-dark, #c0392b)" }}>
+                    <Icon name="close" size="sm" />
+                  </span>
                 )}
                 {canRetry && (
                   <button
@@ -255,7 +267,7 @@ export function PipelineStepper({
                         "0.7";
                     }}
                   >
-                    <RotateCcw size={12} />
+                    <Icon name="arrow-left" size="sm" />
                   </button>
                 )}
               </div>
@@ -291,7 +303,7 @@ export function PipelineStepper({
               padding: "2px 0",
             }}
           >
-            <ChevronLeft size={14} />
+            <Icon name="arrow-left" size="sm" />
             Previous
           </button>
 
@@ -338,7 +350,7 @@ export function PipelineStepper({
             }}
           >
             Next
-            <ChevronRight size={14} />
+            <Icon name="arrow-right" size="sm" />
           </button>
         </div>
       )}

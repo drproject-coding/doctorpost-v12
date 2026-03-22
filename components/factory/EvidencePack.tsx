@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
-import { ChevronDown, ChevronRight, ExternalLink, Filter } from "lucide-react";
+import { Button, Card, Icon } from "@doctorproject/react";
 import type { EvidencePack as EvidencePackType } from "@/lib/knowledge/types";
 
 type VerificationFilter = "all" | "verified" | "estimate" | "anecdotal";
@@ -115,7 +114,9 @@ export function EvidencePack({
             alignItems: "center",
           }}
         >
-          <Filter size={12} style={{ color: "var(--drp-grey)" }} />
+          <span style={{ color: "var(--drp-grey)" }}>
+            <Icon name="filter" size="sm" />
+          </span>
           {(["all", "verified", "estimate", "anecdotal"] as const).map((f) => (
             <button
               key={f}
@@ -243,14 +244,10 @@ export function EvidencePack({
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 2,
                         color: "var(--drp-purple)",
                       }}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <ExternalLink size={10} />
                       Link
                     </a>
                   )}
@@ -378,7 +375,11 @@ function Section({
           color: "inherit",
         }}
       >
-        {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+        {isOpen ? (
+          <Icon name="arrow-down" size="sm" />
+        ) : (
+          <Icon name="arrow-right" size="sm" />
+        )}
         {title}
       </button>
       {isOpen && (

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { Button, Card } from "@doctorproject/react";
-import { Save, X, History, Lock, GitFork } from "lucide-react";
+import { Button, Card, Icon } from "@doctorproject/react";
 
 interface DocumentEditorProps {
   documentId: string;
@@ -98,7 +97,7 @@ export function DocumentEditor({
                   letterSpacing: "0.05em",
                 }}
               >
-                <Lock size={9} /> System
+                System
               </span>
             )}
           </div>
@@ -106,7 +105,6 @@ export function DocumentEditor({
         <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
           {readOnly && onFork && (
             <Button variant="primary" onClick={onFork}>
-              <GitFork size={14} />
               Fork & Customise
             </Button>
           )}
@@ -116,11 +114,11 @@ export function DocumentEditor({
               onClick={onShowHistory}
               title="Version history"
             >
-              <History size={16} />
+              <Icon name="filter" size="sm" />
             </Button>
           )}
           <Button variant="ghost" onClick={onClose}>
-            <X size={16} />
+            <Icon name="close" size="sm" />
           </Button>
         </div>
       </div>
@@ -165,7 +163,7 @@ export function DocumentEditor({
             onClick={handleSave}
             disabled={!hasChanges || saving}
           >
-            <Save size={14} />
+            <Icon name="download" size="sm" />
             {saving ? "Saving..." : "Save"}
           </Button>
         </div>

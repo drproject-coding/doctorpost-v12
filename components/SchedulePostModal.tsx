@@ -101,7 +101,7 @@ const SchedulePostModal: React.FC<SchedulePostModalProps> = ({
         <div className="drp-modal__header">
           <h2 className="drp-modal__title">Schedule Post</h2>
           <button onClick={onClose} className="drp-modal__close">
-            <Icon name="x" size="md" />
+            <Icon name="close" size="md" />
           </button>
         </div>
 

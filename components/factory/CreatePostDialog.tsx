@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Alert, Button, Card } from "@doctorproject/react";
-import { ArrowRight, Loader, TrendingUp } from "lucide-react";
+import { Alert, Button, Card, Icon, Loader } from "@doctorproject/react";
 import PostTypeSelector from "@/components/factory/PostTypeSelector";
 import HookPatternSelector from "@/components/factory/HookPatternSelector";
 import ContentPillarSelector from "@/components/factory/ContentPillarSelector";
@@ -139,7 +138,7 @@ export default function CreatePostDialog({
             minHeight: 120,
           }}
         >
-          <Loader size={20} className="animate-spin" />
+          <Loader size="sm" />
           <span>Loading post configuration...</span>
         </div>
       </Card>
@@ -172,7 +171,7 @@ export default function CreatePostDialog({
               className="smart-choice-badge"
               style={{ marginTop: "var(--drp-space-1)" }}
             >
-              <TrendingUp size={12} /> Smart Choice
+              Smart Choice
             </span>
           )}
         </div>
@@ -188,7 +187,7 @@ export default function CreatePostDialog({
               className="smart-choice-badge"
               style={{ marginTop: "var(--drp-space-1)" }}
             >
-              <TrendingUp size={12} /> Smart Choice
+              Smart Choice
             </span>
           )}
         </div>
@@ -204,7 +203,7 @@ export default function CreatePostDialog({
               className="smart-choice-badge"
               style={{ marginTop: "var(--drp-space-1)" }}
             >
-              <TrendingUp size={12} /> Smart Choice
+              Smart Choice
             </span>
           )}
         </div>
@@ -228,12 +227,12 @@ export default function CreatePostDialog({
       >
         {loadingRecommendation ? (
           <>
-            <Loader size={18} className="animate-spin" />
+            <Loader size="sm" />
             Getting Recommendations...
           </>
         ) : (
           <>
-            <ArrowRight size={18} />
+            <Icon name="arrow-right" size="sm" />
             Generate Post
           </>
         )}

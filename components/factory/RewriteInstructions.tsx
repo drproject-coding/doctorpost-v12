@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button } from "@doctorproject/react";
-import { Wand2, RotateCcw, ChevronDown, ChevronUp } from "lucide-react";
+import { Button, Icon } from "@doctorproject/react";
 
 interface ParsedInstruction {
   text: string;
@@ -131,7 +130,11 @@ export function RewriteInstructions({
             </span>
           )}
         </span>
-        {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        {expanded ? (
+          <Icon name="arrow-up" size="sm" />
+        ) : (
+          <Icon name="arrow-down" size="sm" />
+        )}
       </button>
 
       {expanded && (
@@ -212,11 +215,6 @@ export function RewriteInstructions({
                   onClick={() => onApplyFix(instructions)}
                   disabled={isApplying}
                 >
-                  {isApplying ? (
-                    <RotateCcw size={14} className="animate-spin" />
-                  ) : (
-                    <Wand2 size={14} />
-                  )}
                   {isApplying ? "Applying fixes..." : "Apply Fixes with AI"}
                 </Button>
               ) : (

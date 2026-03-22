@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Card } from "@doctorproject/react";
-import { Clock, Trash2, Play, RotateCcw } from "lucide-react";
+import { Button, Card, Icon } from "@doctorproject/react";
 import {
   listSessions as listLocalSessions,
   deleteSession as deleteLocalSession,
@@ -124,7 +123,9 @@ export function SessionHistory({
             gap: "var(--drp-space-2)",
           }}
         >
-          <Clock size={16} style={{ color: "var(--drp-grey)" }} />
+          <span style={{ color: "var(--drp-grey)" }}>
+            <Icon name="calendar" size="sm" />
+          </span>
           <h4
             style={{
               fontSize: "var(--drp-text-md)",
@@ -213,7 +214,6 @@ export function SessionHistory({
                     }
                     style={{ flexShrink: 0 }}
                   >
-                    <RotateCcw size={12} />
                     Retry {PHASE_LABELS[errorAtPhase] || errorAtPhase}
                   </Button>
                 ) : (
@@ -223,7 +223,6 @@ export function SessionHistory({
                     onClick={() => onResume(session.stateJson)}
                     style={{ flexShrink: 0 }}
                   >
-                    <Play size={12} />
                     Resume
                   </Button>
                 );
@@ -243,7 +242,6 @@ export function SessionHistory({
                 onClick={() => onResume(session.stateJson)}
                 style={{ flexShrink: 0 }}
               >
-                <Play size={12} />
                 Resume
               </Button>
             )}
@@ -259,7 +257,7 @@ export function SessionHistory({
               }}
               title="Delete session"
             >
-              <Trash2 size={14} />
+              <Icon name="trash" size="sm" />
             </button>
           </div>
         ))}

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
-import { Copy, Check, Smartphone, Monitor, Save } from "lucide-react";
+import { Button, Card, Icon } from "@doctorproject/react";
 import type { FormattedPost } from "@/lib/knowledge/types";
 
 type PreviewMode = "mobile" | "desktop";
@@ -15,7 +14,11 @@ interface FormattedOutputProps {
   isSaving?: boolean;
 }
 
-export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps) {
+export function FormattedOutput({
+  post,
+  onSave,
+  isSaving,
+}: FormattedOutputProps) {
   const [copied, setCopied] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile");
   const [showMore, setShowMore] = useState(false);
@@ -95,7 +98,6 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
                 cursor: "pointer",
               }}
             >
-              <Smartphone size={12} />
               Mobile
             </button>
             <button
@@ -118,7 +120,6 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
                 cursor: "pointer",
               }}
             >
-              <Monitor size={12} />
               Desktop
             </button>
           </div>
@@ -126,7 +127,11 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
             onClick={handleCopy}
             style={{ fontSize: "var(--drp-text-sm)" }}
           >
-            {copied ? <Check size={14} /> : <Copy size={14} />}
+            {copied ? (
+              <Icon name="check" size="sm" />
+            ) : (
+              <Icon name="download" size="sm" />
+            )}
             {copied ? "Copied!" : "Copy"}
           </Button>
           {onSave && (
@@ -135,7 +140,7 @@ export function FormattedOutput({ post, onSave, isSaving }: FormattedOutputProps
               disabled={isSaving}
               style={{ fontSize: "var(--drp-text-sm)" }}
             >
-              <Save size={14} />
+              <Icon name="check" size="sm" />
               {isSaving ? "Saving..." : "Save to Library"}
             </Button>
           )}

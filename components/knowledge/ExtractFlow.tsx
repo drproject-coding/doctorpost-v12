@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
-import { ArrowLeft, Loader, Check, Scissors } from "lucide-react";
+import { Button, Card, Icon, Loader } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import type { DocumentCategory } from "@/lib/knowledge/types";
 
@@ -123,7 +122,7 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
         }}
       >
         <Button variant="ghost" onClick={onCancel}>
-          <ArrowLeft size={16} />
+          <Icon name="arrow-left" size="sm" />
         </Button>
         <h2
           style={{
@@ -174,7 +173,6 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
               onClick={handleExtract}
               disabled={!postContent.trim()}
             >
-              <Scissors size={14} />
               Extract Template
             </Button>
           </div>
@@ -204,11 +202,15 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
             padding: "var(--drp-space-8)",
           }}
         >
-          <Loader
-            size={32}
-            className="animate-spin"
-            style={{ margin: "0 auto var(--drp-space-4)" }}
-          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "var(--drp-space-4)",
+            }}
+          >
+            <Loader size="sm" />
+          </div>
           <h3 style={{ fontSize: "var(--drp-text-h5)", fontWeight: 700 }}>
             Analyzing post structure...
           </h3>
@@ -354,7 +356,7 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
               onClick={handleSave}
               disabled={!templateName.trim()}
             >
-              <Check size={14} />
+              <Icon name="check" size="sm" />
               Save Template
             </Button>
           </div>
@@ -389,11 +391,15 @@ ${template.exampleHooks.map((h) => `- ${h}`).join("\n")}
             padding: "var(--drp-space-8)",
           }}
         >
-          <Loader
-            size={32}
-            className="animate-spin"
-            style={{ margin: "0 auto var(--drp-space-4)" }}
-          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "var(--drp-space-4)",
+            }}
+          >
+            <Loader size="sm" />
+          </div>
           <h3 style={{ fontSize: "var(--drp-text-h5)", fontWeight: 700 }}>
             Saving template...
           </h3>

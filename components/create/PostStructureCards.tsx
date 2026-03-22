@@ -1,17 +1,18 @@
 "use client";
 
+import React from "react";
 import { useEffect, useState } from "react";
-import { FileText, BookOpen, Eye, MessageSquare, List } from "lucide-react";
+import { Icon } from "@doctorproject/react";
 import { postStructureOptions } from "@/lib/dropdownData";
 
 const STORAGE_KEY = "doctorpost:lastPostStructure";
 
 const ICONS: Record<string, React.ReactNode> = {
-  opinionTake: <MessageSquare size={20} />,
-  howTo: <BookOpen size={20} />,
-  observation: <Eye size={20} />,
-  story: <FileText size={20} />,
-  list: <List size={20} />,
+  opinionTake: <Icon name="edit" size="sm" />,
+  howTo: <Icon name="arrow-right" size="sm" />,
+  observation: <Icon name="eye" size="sm" />,
+  story: <Icon name="edit" size="sm" />,
+  list: <Icon name="more" size="sm" />,
 };
 
 // ─── Section colour palette ──────────────────────────────────────────────────
@@ -399,10 +400,10 @@ export default function PostStructureCards({
                 style={{
                   color: isSelected
                     ? "var(--drp-purple, #631DED)"
-                    : "var(--drp-grey, #888)",
+                    : "var(--drp-text-muted)",
                 }}
               >
-                {ICONS[option.id] ?? <FileText size={20} />}
+                {ICONS[option.id] ?? null}
               </span>
               <span
                 style={{
@@ -416,7 +417,7 @@ export default function PostStructureCards({
               <span
                 style={{
                   fontSize: 11,
-                  color: "var(--drp-grey, #888)",
+                  color: "var(--drp-text-muted)",
                   lineHeight: 1.3,
                 }}
               >

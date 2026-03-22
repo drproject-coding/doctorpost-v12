@@ -715,7 +715,11 @@ function StageCard({
           >
             {isActive ? meta.description : isComplete ? "Done" : "Waiting..."}
           </span>
-          {isActive && <Loader size="sm" style={{ flexShrink: 0 }} />}
+          {isActive && (
+            <span style={{ flexShrink: 0, display: "flex" }}>
+              <Loader size="sm" />
+            </span>
+          )}
           {isComplete && onCopy && (
             <Button
               onClick={onCopy}
@@ -731,11 +735,15 @@ function StageCard({
             </Button>
           )}
           {isComplete && (
-            <Icon
-              name="check"
-              size="sm"
-              style={{ color: "var(--drp-mint)", flexShrink: 0 }}
-            />
+            <span
+              style={{
+                color: "var(--drp-mint)",
+                flexShrink: 0,
+                display: "flex",
+              }}
+            >
+              <Icon name="check" size="sm" />
+            </span>
           )}
         </div>
 
@@ -842,13 +850,21 @@ function VisualStageCard({
                   ? "Done"
                   : "Waiting..."}
           </span>
-          {isActive && <Loader size="sm" style={{ flexShrink: 0 }} />}
+          {isActive && (
+            <span style={{ flexShrink: 0, display: "flex" }}>
+              <Loader size="sm" />
+            </span>
+          )}
           {isComplete && (
-            <Icon
-              name="check"
-              size="sm"
-              style={{ color: "var(--drp-mint)", flexShrink: 0 }}
-            />
+            <span
+              style={{
+                color: "var(--drp-mint)",
+                flexShrink: 0,
+                display: "flex",
+              }}
+            >
+              <Icon name="check" size="sm" />
+            </span>
           )}
         </div>
 
@@ -1714,9 +1730,6 @@ export default function StudioPage() {
                           fontWeight: 800,
                           fontSize: 11,
                           marginBottom: 6,
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 4,
                         }}
                       >
                         {score.pass ? (
@@ -1757,11 +1770,16 @@ export default function StudioPage() {
                     color: "var(--drp-text-muted)",
                   }}
                 >
-                  <Icon
-                    name="plus"
-                    size="sm"
-                    style={{ marginBottom: 16, opacity: 0.25 }}
-                  />
+                  <span
+                    style={{
+                      marginBottom: 16,
+                      opacity: 0.25,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Icon name="plus" size="sm" />
+                  </span>
                   <p
                     style={{
                       fontWeight: 700,
@@ -2882,11 +2900,15 @@ export default function StudioPage() {
                       flexWrap: "wrap",
                     }}
                   >
-                    <Icon
-                      name="check"
-                      size="sm"
-                      style={{ color: "var(--drp-mint)", flexShrink: 0 }}
-                    />
+                    <span
+                      style={{
+                        color: "var(--drp-mint)",
+                        flexShrink: 0,
+                        display: "flex",
+                      }}
+                    >
+                      <Icon name="check" size="sm" />
+                    </span>
                     <span
                       style={{
                         fontSize: 13,
@@ -2932,15 +2954,16 @@ export default function StudioPage() {
                     gap: 10,
                   }}
                 >
-                  <Icon
-                    name="close"
-                    size="sm"
+                  <span
                     style={{
                       marginTop: 2,
                       flexShrink: 0,
                       color: "var(--drp-pink)",
+                      display: "flex",
                     }}
-                  />
+                  >
+                    <Icon name="close" size="sm" />
+                  </span>
                   <div>
                     <p
                       style={{

@@ -2,8 +2,8 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
-import { Menu, Bell, Plus, LogOut } from "lucide-react";
 import Link from "next/link";
+import { Icon } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 
 interface HeaderProps {
@@ -28,13 +28,13 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
     <header className="topbar">
       <div className="topbar-left">
         <button className="topbar-menu-btn" onClick={onToggleSidebar}>
-          <Menu size={20} />
+          <Icon name="more" size="sm" />
         </button>
         <h1 className="topbar-title">{title}</h1>
       </div>
       <div className="topbar-right">
         <button className="topbar-icon-btn">
-          <Bell size={20} />
+          <Icon name="bell" size="sm" />
           <span className="notification-dot" />
         </button>
         <button
@@ -42,11 +42,11 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           className="topbar-icon-btn"
           title="Sign out"
         >
-          <LogOut size={20} />
+          <Icon name="arrow-right" size="sm" />
         </button>
         <Link href="/create">
           <button className="topbar-create-btn">
-            <Plus size={18} />
+            <Icon name="plus" size="sm" />
             <span>Create Post</span>
           </button>
         </Link>

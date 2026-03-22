@@ -2,15 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card } from "@doctorproject/react";
-import {
-  Upload,
-  FileText,
-  X,
-  CheckCircle,
-  AlertCircle,
-  Loader,
-} from "lucide-react";
+import { Button, Card, Icon, Loader } from "@doctorproject/react";
 
 type FileStatus = "pending" | "uploading" | "ready" | "error";
 
@@ -87,16 +79,9 @@ function StatusBadge({ status }: StatusBadgeProps) {
         flexShrink: 0,
       }}
     >
-      {status === "uploading" && (
-        <Loader
-          size={10}
-          style={{
-            animation: "spin 1s linear infinite",
-          }}
-        />
-      )}
-      {status === "ready" && <CheckCircle size={10} />}
-      {status === "error" && <AlertCircle size={10} />}
+      {status === "uploading" && <Loader size="sm" />}
+      {status === "ready" && <Icon name="check" size="sm" />}
+      {status === "error" && <Icon name="close" size="sm" />}
       {s.label}
     </span>
   );
@@ -213,287 +198,262 @@ export default function OnboardingUploadPage() {
   const canContinue = files.length > 0 && !isProcessing;
 
   return (
-    <>
-      <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "var(--drp-cream)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "var(--drp-space-8, 32px) var(--drp-space-4, 16px)",
-        }}
-      >
-        <div style={{ width: "100%", maxWidth: 600 }}>
-          {/* Header */}
-          <div
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--drp-cream)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "var(--drp-space-8, 32px) var(--drp-space-4, 16px)",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: 600 }}>
+        {/* Header */}
+        <div
+          style={{
+            marginBottom: "var(--drp-space-8, 32px)",
+            textAlign: "center",
+          }}
+        >
+          <p
             style={{
-              marginBottom: "var(--drp-space-8, 32px)",
-              textAlign: "center",
+              fontSize: "var(--drp-text-xs, 11px)",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              color: "var(--drp-purple)",
+              marginBottom: "var(--drp-space-2, 8px)",
             }}
           >
-            <p
-              style={{
-                fontSize: "var(--drp-text-xs, 11px)",
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                color: "var(--drp-purple)",
-                marginBottom: "var(--drp-space-2, 8px)",
-              }}
-            >
-              Step 1 of 3 — Brand Setup
-            </p>
-            <h1
-              style={{
-                fontSize: "var(--drp-text-h2, 28px)",
-                fontWeight: 800,
-                color: "var(--drp-black)",
-                margin: "0 0 var(--drp-space-3, 12px)",
-                lineHeight: 1.15,
-              }}
-            >
-              Upload your brand documents
-            </h1>
-            <p
-              style={{
-                fontSize: "var(--drp-text-base, 15px)",
-                color: "var(--drp-grey)",
-                margin: 0,
-                lineHeight: 1.55,
-              }}
-            >
-              Drop in brand guidelines, style guides, or any documents that
-              describe your voice. We'll extract what matters.
-            </p>
-          </div>
-
-          {/* Drop zone */}
-          <div
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={() => inputRef.current?.click()}
-            role="button"
-            tabIndex={0}
-            aria-label="Upload files — click or drag and drop"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                inputRef.current?.click();
-              }
-            }}
+            Step 1 of 3 — Brand Setup
+          </p>
+          <h1
             style={{
-              border: `2px dashed ${isDragging ? "var(--drp-purple)" : "var(--drp-grey, #999)"}`,
-              background: isDragging
-                ? "rgba(var(--drp-purple-rgb, 100, 50, 200), 0.04)"
-                : "white",
-              padding: "var(--drp-space-10, 40px) var(--drp-space-6, 24px)",
-              textAlign: "center",
-              cursor: "pointer",
-              transition: "border-color 0.15s ease, background 0.15s ease",
-              marginBottom: "var(--drp-space-4, 16px)",
-              userSelect: "none",
+              fontSize: "var(--drp-text-h2, 28px)",
+              fontWeight: 800,
+              color: "var(--drp-black)",
+              margin: "0 0 var(--drp-space-3, 12px)",
+              lineHeight: 1.15,
             }}
           >
-            <Upload
-              size={32}
-              style={{
-                color: isDragging
-                  ? "var(--drp-purple)"
-                  : "var(--drp-grey, #999)",
-                marginBottom: "var(--drp-space-3, 12px)",
-                transition: "color 0.15s ease",
-              }}
-            />
-            <p
-              style={{
-                fontSize: "var(--drp-text-base, 15px)",
-                fontWeight: 700,
-                color: "var(--drp-black)",
-                margin: "0 0 var(--drp-space-1, 4px)",
-              }}
-            >
-              Drop files here or click to browse
-            </p>
-            <p
-              style={{
-                fontSize: "var(--drp-text-sm, 13px)",
-                color: "var(--drp-grey)",
-                margin: 0,
-              }}
-            >
-              PDF, DOCX, TXT, MD — max 10 MB each — up to {MAX_FILES} files
-            </p>
-          </div>
-
-          <input
-            ref={inputRef}
-            type="file"
-            multiple
-            accept={ACCEPTED_EXTENSIONS.join(",")}
-            onChange={handleInputChange}
-            style={{ display: "none" }}
-            aria-hidden="true"
-          />
-
-          {/* File list */}
-          {files.length > 0 && (
-            <Card
-              variant="flat"
-              style={{
-                marginBottom: "var(--drp-space-6, 24px)",
-                overflow: "hidden",
-              }}
-            >
-              <div style={{ display: "grid", gap: 0 }}>
-                {files.map((uf, idx) => (
-                  <div
-                    key={uf.id}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "var(--drp-space-3, 12px)",
-                      padding:
-                        "var(--drp-space-3, 12px) var(--drp-space-4, 16px)",
-                      borderTop:
-                        idx === 0
-                          ? "none"
-                          : "1px solid var(--drp-border-color, #e5e5e5)",
-                    }}
-                  >
-                    <FileText
-                      size={16}
-                      style={{ color: "var(--drp-grey)", flexShrink: 0 }}
-                    />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p
-                        style={{
-                          fontSize: "var(--drp-text-sm, 13px)",
-                          fontWeight: 600,
-                          color: "var(--drp-black)",
-                          margin: 0,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {uf.file.name}
-                      </p>
-                      <p
-                        style={{
-                          fontSize: "var(--drp-text-xs, 11px)",
-                          color: "var(--drp-grey)",
-                          margin: 0,
-                        }}
-                      >
-                        {formatBytes(uf.file.size)}
-                      </p>
-                    </div>
-                    <StatusBadge status={uf.status} />
-                    {uf.status !== "uploading" && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeFile(uf.id);
-                        }}
-                        aria-label={`Remove ${uf.file.name}`}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          padding: 4,
-                          color: "var(--drp-grey)",
-                          display: "flex",
-                          alignItems: "center",
-                          flexShrink: 0,
-                          lineHeight: 1,
-                        }}
-                      >
-                        <X size={14} />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
-
-          {/* Actions */}
-          <div
+            Upload your brand documents
+          </h1>
+          <p
             style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "var(--drp-space-4, 16px)",
+              fontSize: "var(--drp-text-base, 15px)",
+              color: "var(--drp-text-muted)",
+              margin: 0,
+              lineHeight: 1.55,
             }}
           >
-            <Button
-              variant="primary"
-              onClick={handleContinue}
-              disabled={!canContinue}
-              style={{ width: "100%" }}
-            >
-              {isProcessing ? (
-                <span
+            Drop in brand guidelines, style guides, or any documents that
+            describe your voice. We'll extract what matters.
+          </p>
+        </div>
+
+        {/* Drop zone */}
+        <div
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onClick={() => inputRef.current?.click()}
+          role="button"
+          tabIndex={0}
+          aria-label="Upload files — click or drag and drop"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              inputRef.current?.click();
+            }
+          }}
+          style={{
+            border: `2px dashed ${isDragging ? "var(--drp-purple)" : "var(--drp-text-muted)"}`,
+            background: isDragging
+              ? "rgba(var(--drp-purple-rgb, 100, 50, 200), 0.04)"
+              : "white",
+            padding: "var(--drp-space-10, 40px) var(--drp-space-6, 24px)",
+            textAlign: "center",
+            cursor: "pointer",
+            transition: "border-color 0.15s ease, background 0.15s ease",
+            marginBottom: "var(--drp-space-4, 16px)",
+            userSelect: "none",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "var(--drp-text-base, 15px)",
+              fontWeight: 700,
+              color: "var(--drp-black)",
+              margin: "0 0 var(--drp-space-1, 4px)",
+            }}
+          >
+            Drop files here or click to browse
+          </p>
+          <p
+            style={{
+              fontSize: "var(--drp-text-sm, 13px)",
+              color: "var(--drp-text-muted)",
+              margin: 0,
+            }}
+          >
+            PDF, DOCX, TXT, MD — max 10 MB each — up to {MAX_FILES} files
+          </p>
+        </div>
+
+        <input
+          ref={inputRef}
+          type="file"
+          multiple
+          accept={ACCEPTED_EXTENSIONS.join(",")}
+          onChange={handleInputChange}
+          style={{ display: "none" }}
+          aria-hidden="true"
+        />
+
+        {/* File list */}
+        {files.length > 0 && (
+          <Card
+            variant="flat"
+            style={{
+              marginBottom: "var(--drp-space-6, 24px)",
+              overflow: "hidden",
+            }}
+          >
+            <div style={{ display: "grid", gap: 0 }}>
+              {files.map((uf, idx) => (
+                <div
+                  key={uf.id}
                   style={{
-                    display: "inline-flex",
+                    display: "flex",
                     alignItems: "center",
-                    gap: 8,
+                    gap: "var(--drp-space-3, 12px)",
+                    padding:
+                      "var(--drp-space-3, 12px) var(--drp-space-4, 16px)",
+                    borderTop:
+                      idx === 0
+                        ? "none"
+                        : "1px solid var(--drp-border-color, #e5e5e5)",
                   }}
                 >
-                  <Loader
-                    size={14}
-                    style={{ animation: "spin 1s linear infinite" }}
-                  />
-                  Processing…
-                </span>
-              ) : allReady ? (
-                "Continue to Review →"
-              ) : (
-                "Continue to Review →"
-              )}
-            </Button>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p
+                      style={{
+                        fontSize: "var(--drp-text-sm, 13px)",
+                        fontWeight: 600,
+                        color: "var(--drp-black)",
+                        margin: 0,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {uf.file.name}
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "var(--drp-text-xs, 11px)",
+                        color: "var(--drp-text-muted)",
+                        margin: 0,
+                      }}
+                    >
+                      {formatBytes(uf.file.size)}
+                    </p>
+                  </div>
+                  <StatusBadge status={uf.status} />
+                  {uf.status !== "uploading" && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeFile(uf.id);
+                      }}
+                      aria-label={`Remove ${uf.file.name}`}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: 4,
+                        color: "var(--drp-text-muted)",
+                        display: "flex",
+                        alignItems: "center",
+                        flexShrink: 0,
+                        lineHeight: 1,
+                      }}
+                    >
+                      <Icon name="close" size="sm" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
 
-            <button
-              onClick={() => router.push("/onboarding/wizard/1")}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "var(--drp-text-sm, 13px)",
-                color: "var(--drp-grey)",
-                textDecoration: "underline",
-                textUnderlineOffset: 3,
-                padding: 0,
-              }}
-            >
-              Build with wizard instead →
-            </button>
-          </div>
+        {/* Actions */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "var(--drp-space-4, 16px)",
+          }}
+        >
+          <Button
+            variant="primary"
+            onClick={handleContinue}
+            disabled={!canContinue}
+            style={{ width: "100%" }}
+          >
+            {isProcessing ? (
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <Loader size="sm" />
+                Processing…
+              </span>
+            ) : allReady ? (
+              "Continue to Review →"
+            ) : (
+              "Continue to Review →"
+            )}
+          </Button>
 
-          {/* File count warning */}
-          {files.length >= MAX_FILES && (
-            <p
-              style={{
-                marginTop: "var(--drp-space-3, 12px)",
-                fontSize: "var(--drp-text-xs, 11px)",
-                color: "var(--drp-grey)",
-                textAlign: "center",
-              }}
-            >
-              Maximum of {MAX_FILES} files reached.
-            </p>
-          )}
+          <button
+            onClick={() => router.push("/onboarding/wizard/1")}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "var(--drp-text-sm, 13px)",
+              color: "var(--drp-text-muted)",
+              textDecoration: "underline",
+              textUnderlineOffset: 3,
+              padding: 0,
+            }}
+          >
+            Build with wizard instead →
+          </button>
         </div>
+
+        {/* File count warning */}
+        {files.length >= MAX_FILES && (
+          <p
+            style={{
+              marginTop: "var(--drp-space-3, 12px)",
+              fontSize: "var(--drp-text-xs, 11px)",
+              color: "var(--drp-text-muted)",
+              textAlign: "center",
+            }}
+          >
+            Maximum of {MAX_FILES} files reached.
+          </p>
+        )}
       </div>
-    </>
+    </div>
   );
 }

@@ -3,21 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  PenSquare,
-  Calendar,
-  Book,
-  BarChart2,
-  Settings,
-  ChevronLeft,
-  Factory,
-  Megaphone,
-  BookOpen,
-  Brain,
-  Palette,
-  Clapperboard,
-} from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { Pictogram } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 
 interface SidebarProps {
@@ -26,18 +13,18 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-  { name: "Studio", path: "/studio", icon: Clapperboard },
-  { name: "Create", path: "/create", icon: PenSquare },
-  { name: "Factory", path: "/factory", icon: Factory },
-  { name: "Campaigns", path: "/campaigns", icon: Megaphone },
-  { name: "Calendar", path: "/calendar", icon: Calendar },
-  { name: "Knowledge", path: "/knowledge", icon: BookOpen },
-  { name: "Learning", path: "/learning", icon: Brain },
-  { name: "Library", path: "/library", icon: Book },
-  { name: "Analytics", path: "/analytics", icon: BarChart2 },
-  { name: "Brand", path: "/brand", icon: Palette },
-  { name: "Settings", path: "/settings", icon: Settings },
+  { name: "Dashboard", path: "/dashboard", pictogram: "Apps" as const },
+  { name: "Studio", path: "/studio", pictogram: "Video" as const },
+  { name: "Create", path: "/create", pictogram: "Add" as const },
+  { name: "Factory", path: "/factory", pictogram: "Layout" as const },
+  { name: "Campaigns", path: "/campaigns", pictogram: "Message" as const },
+  { name: "Calendar", path: "/calendar", pictogram: "Time" as const },
+  { name: "Knowledge", path: "/knowledge", pictogram: "Bookmark" as const },
+  { name: "Learning", path: "/learning", pictogram: "Info" as const },
+  { name: "Library", path: "/library", pictogram: "Folder" as const },
+  { name: "Analytics", path: "/analytics", pictogram: "Analytics" as const },
+  { name: "Brand", path: "/brand", pictogram: "Photo" as const },
+  { name: "Settings", path: "/settings", pictogram: "Filters" as const },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
@@ -59,7 +46,6 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         <div className="sidebar-nav-section">
           <div className="sidebar-nav-label">Main</div>
           {navItems.map((item) => {
-            const Icon = item.icon;
             const isActive = pathname === item.path;
             return (
               <Link
@@ -68,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                 className={`sidebar-nav-item${isActive ? " active" : ""}`}
               >
                 <span className="sidebar-nav-icon">
-                  <Icon size={20} />
+                  <Pictogram name={item.pictogram} size={28} aria-hidden />
                 </span>
                 <span className="sidebar-nav-text">{item.name}</span>
               </Link>

@@ -159,8 +159,10 @@ export default function LearningPage() {
                 style={{
                   marginLeft: 4,
                   padding: "0 6px",
-                  background: tab === t.key ? "white" : "var(--drp-purple)",
-                  color: tab === t.key ? "var(--drp-purple)" : "white",
+                  background:
+                    tab === t.key ? "var(--drp-white)" : "var(--drp-purple)",
+                  color:
+                    tab === t.key ? "var(--drp-purple)" : "var(--drp-white)",
                   fontSize: "var(--drp-text-xs)",
                   fontWeight: 700,
                 }}

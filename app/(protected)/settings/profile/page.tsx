@@ -158,7 +158,7 @@ export default function SettingsProfilePage() {
                     alignItems: "center",
                     gap: 6,
                     padding: "6px 12px",
-                    border: "2px solid #ccc",
+                    border: "2px solid var(--drp-border)",
                     fontSize: 12,
                     fontWeight: 700,
                     color: "var(--drp-text-muted)",
@@ -250,7 +250,7 @@ export default function SettingsProfilePage() {
                 style={{
                   width: "100%",
                   padding: "10px 14px",
-                  border: "2px solid #ccc",
+                  border: "2px solid var(--drp-border)",
                   background: "var(--drp-surface)",
                   fontFamily: "inherit",
                   fontSize: 14,
@@ -306,9 +306,9 @@ export default function SettingsProfilePage() {
                 background: saved
                   ? "var(--drp-mint)"
                   : saving || !displayName.trim() || displayName === user?.name
-                    ? "#aaa"
+                    ? "var(--drp-text-muted)"
                     : "var(--drp-purple)",
-                color: "#fff",
+                color: "var(--drp-white)",
                 border: "none",
                 fontWeight: 800,
                 fontSize: 14,

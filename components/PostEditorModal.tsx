@@ -1,39 +1,44 @@
 "use client";
-import React, { useState } from "react";
-import { Button, Icon } from "@doctorproject/react";
-import type { FormattedPost } from "@/lib/knowledge/types";
+import React, { useState, useEffect } from "react";
+import { Button, Icon, Loader } from "@doctorproject/react";
+import type { ScheduledPost } from "@/lib/types";
 
 interface PostEditorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialPost: FormattedPost;
-  onSave: (post: FormattedPost) => void;
+  post: ScheduledPost | null;
+  onSave: (post: ScheduledPost) => void | Promise<void>;
   isSaving?: boolean;
 }
 
 export function PostEditorModal({
   isOpen,
   onClose,
-  initialPost,
+  post,
   onSave,
   isSaving = false,
 }: PostEditorModalProps) {
-  const [post, setPost] = useState<FormattedPost>(initialPost);
-  const [editingField, setEditingField] = useState<keyof FormattedPost | null>(
-    null,
-  );
+  const [editedPost, setEditedPost] = useState<ScheduledPost | null>(post);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen && post) {
+      setEditedPost(post);
+    }
+  }, [isOpen, post]);
 
-  const handleFieldChange = (field: keyof FormattedPost, value: unknown) => {
-    setPost((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  if (!isOpen || !editedPost) return null;
+
+  const handleFieldChange = <K extends keyof ScheduledPost>(
+    field: K,
+    value: ScheduledPost[K],
+  ) => {
+    setEditedPost((prev) => (prev ? { ...prev, [field]: value } : null));
   };
 
-  const handleSave = () => {
-    onSave(post);
+  const handleSave = async () => {
+    if (editedPost) {
+      await onSave(editedPost);
+    }
   };
 
   return (
@@ -55,12 +60,13 @@ export function PostEditorModal({
       <div
         style={{
           background: "white",
-          borderRadius: 8,
           padding: "var(--drp-space-4)",
           maxWidth: 600,
+          width: "100%",
           maxHeight: "90vh",
           overflowY: "auto",
-          boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
+          boxShadow: "var(--drp-shadow-lg)",
+          border: "var(--drp-border)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -79,9 +85,10 @@ export function PostEditorModal({
               margin: 0,
             }}
           >
-            Edit Post
+            Edit Post: {editedPost.title}
           </h2>
           <button
+            className="bru-modal__close"
             onClick={onClose}
             style={{
               background: "none",
@@ -93,8 +100,35 @@ export function PostEditorModal({
               justifyContent: "center",
             }}
           >
-            <Icon name="x" size={20} />
+            <Icon name="close" size="sm" />
           </button>
+        </div>
+
+        {/* Title Field */}
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
+          <label
+            style={{
+              display: "block",
+              fontWeight: 600,
+              marginBottom: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+            }}
+          >
+            Title
+          </label>
+          <input
+            type="text"
+            value={editedPost.title}
+            onChange={(e) => handleFieldChange("title", e.target.value)}
+            style={{
+              width: "100%",
+              padding: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+              fontFamily: "inherit",
+              border: "var(--drp-border)",
+              boxSizing: "border-box",
+            }}
+          />
         </div>
 
         {/* Content Field */}
@@ -110,7 +144,7 @@ export function PostEditorModal({
             Post Content
           </label>
           <textarea
-            value={post.content}
+            value={editedPost.content}
             onChange={(e) => handleFieldChange("content", e.target.value)}
             style={{
               width: "100%",
@@ -122,12 +156,18 @@ export function PostEditorModal({
               boxSizing: "border-box",
             }}
           />
-          <div style={{ fontSize: "var(--drp-text-xs)", color: "var(--drp-grey)", marginTop: "var(--drp-space-1)" }}>
-            {post.content?.length || 0} characters
+          <div
+            style={{
+              fontSize: "var(--drp-text-xs)",
+              color: "var(--drp-text-muted)",
+              marginTop: "var(--drp-space-1)",
+            }}
+          >
+            {editedPost.content?.length ?? 0} characters
           </div>
         </div>
 
-        {/* Suggested Pinned Comment */}
+        {/* Status Field */}
         <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <label
             style={{
@@ -137,26 +177,36 @@ export function PostEditorModal({
               fontSize: "var(--drp-text-sm)",
             }}
           >
-            Suggested Pinned Comment
+            Status
           </label>
-          <textarea
-            value={post.suggestedPinnedComment || ""}
+          <select
+            value={editedPost.status}
             onChange={(e) =>
-              handleFieldChange("suggestedPinnedComment", e.target.value)
+              handleFieldChange(
+                "status",
+                e.target.value as ScheduledPost["status"],
+              )
             }
             style={{
               width: "100%",
-              minHeight: 80,
               padding: "var(--drp-space-2)",
               fontSize: "var(--drp-text-sm)",
               fontFamily: "inherit",
               border: "var(--drp-border)",
               boxSizing: "border-box",
+              background: "white",
             }}
-          />
+          >
+            <option value="draft">Draft</option>
+            <option value="to-review">To Review</option>
+            <option value="to-plan">To Plan</option>
+            <option value="to-publish">To Publish</option>
+            <option value="scheduled">Scheduled</option>
+            <option value="published">Published</option>
+          </select>
         </div>
 
-        {/* Hook Position Override */}
+        {/* Publish Date */}
         <div style={{ marginBottom: "var(--drp-space-4)" }}>
           <label
             style={{
@@ -166,156 +216,14 @@ export function PostEditorModal({
               fontSize: "var(--drp-text-sm)",
             }}
           >
-            Hook Position
-          </label>
-          <div
-            style={{
-              display: "flex",
-              gap: "var(--drp-space-2)",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <label style={{ marginRight: "var(--drp-space-2)" }}>
-                <input
-                  type="checkbox"
-                  checked={post.hookBeforeFold?.mobile ?? false}
-                  onChange={(e) =>
-                    handleFieldChange("hookBeforeFold", {
-                      ...post.hookBeforeFold,
-                      mobile: e.target.checked,
-                    })
-                  }
-                  style={{ marginRight: 4 }}
-                />
-                Mobile
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={post.hookBeforeFold?.desktop ?? false}
-                  onChange={(e) =>
-                    handleFieldChange("hookBeforeFold", {
-                      ...post.hookBeforeFold,
-                      desktop: e.target.checked,
-                    })
-                  }
-                  style={{ marginRight: 4 }}
-                />
-                Desktop
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* Metadata Fields */}
-        <div style={{ marginBottom: "var(--drp-space-4)" }}>
-          <label
-            style={{
-              display: "block",
-              fontWeight: 600,
-              marginBottom: "var(--drp-space-2)",
-              fontSize: "var(--drp-text-sm)",
-            }}
-          >
-            Template
-          </label>
-          <input
-            type="text"
-            value={post.metadata?.template || ""}
-            onChange={(e) =>
-              handleFieldChange("metadata", {
-                ...post.metadata,
-                template: e.target.value,
-              })
-            }
-            style={{
-              width: "100%",
-              padding: "var(--drp-space-2)",
-              fontSize: "var(--drp-text-sm)",
-              border: "var(--drp-border)",
-              boxSizing: "border-box",
-            }}
-          />
-        </div>
-
-        <div style={{ marginBottom: "var(--drp-space-4)" }}>
-          <label
-            style={{
-              display: "block",
-              fontWeight: 600,
-              marginBottom: "var(--drp-space-2)",
-              fontSize: "var(--drp-text-sm)",
-            }}
-          >
-            Pillar
-          </label>
-          <input
-            type="text"
-            value={post.metadata?.pillar || ""}
-            onChange={(e) =>
-              handleFieldChange("metadata", {
-                ...post.metadata,
-                pillar: e.target.value,
-              })
-            }
-            style={{
-              width: "100%",
-              padding: "var(--drp-space-2)",
-              fontSize: "var(--drp-text-sm)",
-              border: "var(--drp-border)",
-              boxSizing: "border-box",
-            }}
-          />
-        </div>
-
-        <div style={{ marginBottom: "var(--drp-space-4)" }}>
-          <label
-            style={{
-              display: "block",
-              fontWeight: 600,
-              marginBottom: "var(--drp-space-2)",
-              fontSize: "var(--drp-text-sm)",
-            }}
-          >
-            Score
-          </label>
-          <input
-            type="number"
-            value={post.metadata?.score || 0}
-            onChange={(e) =>
-              handleFieldChange("metadata", {
-                ...post.metadata,
-                score: Number(e.target.value),
-              })
-            }
-            style={{
-              width: "100%",
-              padding: "var(--drp-space-2)",
-              fontSize: "var(--drp-text-sm)",
-              border: "var(--drp-border)",
-              boxSizing: "border-box",
-            }}
-          />
-        </div>
-
-        {/* Date Picker */}
-        <div style={{ marginBottom: "var(--drp-space-4)" }}>
-          <label
-            style={{
-              display: "block",
-              fontWeight: 600,
-              marginBottom: "var(--drp-space-2)",
-              fontSize: "var(--drp-text-sm)",
-            }}
-          >
-            <Icon name="calendar" size={14} />
-            {" "}Publish Date
+            <Icon name="calendar" size="sm" /> Publish Date
           </label>
           <input
             type="date"
+            value={
+              editedPost.scheduledAt ? editedPost.scheduledAt.slice(0, 10) : ""
+            }
+            onChange={(e) => handleFieldChange("scheduledAt", e.target.value)}
             style={{
               width: "100%",
               padding: "var(--drp-space-2)",
@@ -339,7 +247,7 @@ export function PostEditorModal({
           </Button>
           <Button
             variant="primary"
-            onClick={handleSave}
+            onClick={() => void handleSave()}
             disabled={isSaving}
             style={{
               display: "flex",
@@ -349,12 +257,12 @@ export function PostEditorModal({
           >
             {isSaving ? (
               <>
-                <Icon name="loader" size={16} className="animate-spin mr-2" />
+                <Loader size="sm" />
                 Saving...
               </>
             ) : (
               <>
-                <Icon name="save" size={16} className="mr-2" />
+                <Icon name="download" size="sm" />
                 Save Changes
               </>
             )}
@@ -364,3 +272,5 @@ export function PostEditorModal({
     </div>
   );
 }
+
+export default PostEditorModal;

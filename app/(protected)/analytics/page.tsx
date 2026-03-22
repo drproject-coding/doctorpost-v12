@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Alert, Card } from "@doctorproject/react";
+import { Alert, Card, Icon } from "@doctorproject/react";
 import { getAnalytics } from "@/lib/api";
 import { AnalyticsData } from "@/lib/types";
-import { BarChart2, MessageSquare, ThumbsUp, TrendingUp } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 const StatCard = ({
@@ -91,22 +90,22 @@ export default function AnalyticsPage() {
           <StatCard
             title="Total Impressions"
             value={data.totalImpressions.toLocaleString()}
-            icon={<BarChart2 />}
+            icon={<Icon name="eye" size="sm" />}
           />
           <StatCard
             title="Total Reactions"
             value={data.totalReactions.toLocaleString()}
-            icon={<ThumbsUp />}
+            icon={<Icon name="arrow-up" size="sm" />}
           />
           <StatCard
             title="Total Comments"
             value={data.totalComments.toLocaleString()}
-            icon={<MessageSquare />}
+            icon={<Icon name="mail" size="sm" />}
           />
           <StatCard
             title="Avg. CTR"
             value={`${data.ctr}%`}
-            icon={<TrendingUp />}
+            icon={<Icon name="analytics" size="sm" />}
           />
         </div>
 

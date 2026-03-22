@@ -1,14 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Camera,
-  Mail,
-  User,
-  AlertCircle,
-  Check,
-  Loader as LucideLoader,
-} from "lucide-react";
 import { Card, Button, Icon } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import "@doctorproject/react/styles";
@@ -85,7 +77,9 @@ export default function SettingsProfilePage() {
           >
             Profile
           </h1>
-          <p style={{ margin: 0, color: "var(--drp-grey)", fontSize: 14 }}>
+          <p
+            style={{ margin: 0, color: "var(--drp-text-muted)", fontSize: 14 }}
+          >
             Manage your personal information
           </p>
         </div>
@@ -153,7 +147,7 @@ export default function SettingsProfilePage() {
                   style={{
                     margin: "0 0 12px",
                     fontSize: 13,
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                   }}
                 >
                   {user?.email ?? ""}
@@ -167,11 +161,11 @@ export default function SettingsProfilePage() {
                     border: "2px solid #ccc",
                     fontSize: 12,
                     fontWeight: 700,
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                     cursor: "not-allowed",
                   }}
                 >
-                  <Camera size={13} />
+                  <Icon name="camera" size="sm" />
                   Change Photo (coming soon)
                 </div>
               </div>
@@ -208,7 +202,7 @@ export default function SettingsProfilePage() {
                   color: "var(--drp-black)",
                 }}
               >
-                <User size={13} />
+                <Icon name="user" size="sm" />
                 Display Name
               </label>
               <input
@@ -246,7 +240,7 @@ export default function SettingsProfilePage() {
                   color: "var(--drp-black)",
                 }}
               >
-                <Mail size={13} />
+                <Icon name="mail" size="sm" />
                 Email Address
               </label>
               <input
@@ -257,12 +251,12 @@ export default function SettingsProfilePage() {
                   width: "100%",
                   padding: "10px 14px",
                   border: "2px solid #ccc",
-                  background: "#f5f5f5",
+                  background: "var(--drp-surface)",
                   fontFamily: "inherit",
                   fontSize: 14,
                   outline: "none",
                   boxSizing: "border-box",
-                  color: "var(--drp-grey)",
+                  color: "var(--drp-text-muted)",
                   cursor: "not-allowed",
                 }}
               />
@@ -270,7 +264,7 @@ export default function SettingsProfilePage() {
                 style={{
                   margin: "6px 0 0",
                   fontSize: 12,
-                  color: "var(--drp-grey)",
+                  color: "var(--drp-text-muted)",
                 }}
               >
                 Email cannot be changed. Contact support if needed.
@@ -286,11 +280,15 @@ export default function SettingsProfilePage() {
                   gap: 8,
                   padding: "10px 14px",
                   background: "rgba(233,152,152,0.1)",
-                  border: "1px solid #E99898",
+                  border: "1px solid var(--drp-pink)",
                   marginBottom: 16,
                 }}
               >
-                <AlertCircle size={14} color="#E99898" />
+                <Icon
+                  name="close"
+                  size="sm"
+                  style={{ color: "var(--drp-pink)" }}
+                />
                 <span style={{ fontSize: 13, color: "var(--drp-black)" }}>
                   {error}
                 </span>
@@ -306,7 +304,7 @@ export default function SettingsProfilePage() {
               style={{
                 padding: "11px 28px",
                 background: saved
-                  ? "#00A896"
+                  ? "var(--drp-mint)"
                   : saving || !displayName.trim() || displayName === user?.name
                     ? "#aaa"
                     : "var(--drp-purple)",
@@ -326,15 +324,16 @@ export default function SettingsProfilePage() {
             >
               {saving ? (
                 <>
-                  <LucideLoader
-                    size={14}
+                  <Icon
+                    name="loader"
+                    size="sm"
                     style={{ animation: "spin 1s linear infinite" }}
                   />
                   Saving…
                 </>
               ) : saved ? (
                 <>
-                  <Check size={14} />
+                  <Icon name="check" size="sm" />
                   Saved
                 </>
               ) : (

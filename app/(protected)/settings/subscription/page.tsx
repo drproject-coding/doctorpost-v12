@@ -102,7 +102,11 @@ export default function SettingsSubscriptionPage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Loader size={20} style={{ animation: "spin 1s linear infinite" }} />
+          <Icon
+            name="loader"
+            size="sm"
+            style={{ animation: "spin 1s linear infinite" }}
+          />
           <span style={{ fontWeight: 600 }}>Loading…</span>
         </div>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
@@ -155,7 +159,9 @@ export default function SettingsSubscriptionPage() {
           >
             Subscription
           </h1>
-          <p style={{ margin: 0, color: "var(--drp-grey)", fontSize: 14 }}>
+          <p
+            style={{ margin: 0, color: "var(--drp-text-muted)", fontSize: 14 }}
+          >
             Your current plan and usage
           </p>
         </div>
@@ -172,7 +178,11 @@ export default function SettingsSubscriptionPage() {
               marginBottom: 16,
             }}
           >
-            <AlertCircle size={15} color="var(--drp-pink)" />
+            <Icon
+              name="close"
+              size="sm"
+              style={{ color: "var(--drp-pink)", flexShrink: 0 }}
+            />
             <span style={{ fontSize: 13 }}>{error}</span>
           </div>
         )}
@@ -198,7 +208,7 @@ export default function SettingsSubscriptionPage() {
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: 0.5,
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                   }}
                 >
                   Current Plan
@@ -214,14 +224,18 @@ export default function SettingsSubscriptionPage() {
                     {planMeta.label}
                   </span>
                   {tier === "power" && (
-                    <Crown size={20} color="#FF6C01" fill="#FF6C01" />
+                    <Icon
+                      name="star"
+                      size="sm"
+                      style={{ color: "var(--drp-orange)" }}
+                    />
                   )}
                 </div>
                 <p
                   style={{
                     margin: "4px 0 0",
                     fontSize: 14,
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                   }}
                 >
                   {planMeta.limit}
@@ -300,7 +314,7 @@ export default function SettingsSubscriptionPage() {
                   style={{
                     margin: 0,
                     fontSize: 12,
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                   }}
                 >
                   Resets on {formattedReset}
@@ -341,7 +355,7 @@ export default function SettingsSubscriptionPage() {
                       padding: 16,
                       border: isCurrent
                         ? `2px solid ${plan.color}`
-                        : "2px solid #e5e5e5",
+                        : "var(--drp-border)",
                       background: isCurrent
                         ? `${plan.color}08`
                         : "var(--drp-cream)",
@@ -356,7 +370,7 @@ export default function SettingsSubscriptionPage() {
                           right: 12,
                           transform: "translateY(-50%)",
                           background: plan.color,
-                          color: "#fff",
+                          color: "var(--drp-white)",
                           fontSize: 10,
                           fontWeight: 800,
                           padding: "2px 8px",
@@ -383,7 +397,7 @@ export default function SettingsSubscriptionPage() {
                         style={{
                           margin: 0,
                           fontSize: 12,
-                          color: "var(--drp-grey)",
+                          color: "var(--drp-text-muted)",
                           fontWeight: 600,
                         }}
                       >
@@ -407,10 +421,14 @@ export default function SettingsSubscriptionPage() {
                             gap: 6,
                           }}
                         >
-                          <CheckCircle
-                            size={12}
-                            color={plan.color}
-                            style={{ marginTop: 2, flexShrink: 0 }}
+                          <Icon
+                            name="check"
+                            size="xs"
+                            style={{
+                              marginTop: 2,
+                              flexShrink: 0,
+                              color: plan.color,
+                            }}
                           />
                           <span
                             style={{ fontSize: 12, color: "var(--drp-black)" }}
@@ -455,31 +473,27 @@ export default function SettingsSubscriptionPage() {
                   style={{
                     margin: 0,
                     fontSize: 14,
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                   }}
                 >
                   Get more posts, advanced features, and unlimited creation.
                 </p>
               </div>
 
-              <a
+              <Button
+                as="a"
                 href="mailto:support@doctorpost.ai?subject=Upgrade%20Request"
+                variant="primary"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 8,
-                  padding: "12px 24px",
-                  background: "var(--drp-purple)",
-                  color: "#fff",
-                  fontWeight: 800,
-                  fontSize: 14,
-                  textDecoration: "none",
                   flexShrink: 0,
                 }}
               >
-                <Zap size={15} />
+                <Icon name="zap" size="sm" />
                 {tier === "free" ? "Upgrade to Pro" : "Upgrade to Power"}
-              </a>
+              </Button>
             </div>
           </Card>
         )}

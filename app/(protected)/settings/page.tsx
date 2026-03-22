@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Card } from "@doctorproject/react";
+import { Button, Card, Icon } from "@doctorproject/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import {
   BrandProfile,
@@ -21,18 +21,6 @@ import {
   ONEFORALL_IMAGE_MODELS,
 } from "@/lib/ai/constants";
 import { StraicoModelPicker } from "@/components/settings/StraicoModelPicker";
-import {
-  Loader,
-  CheckCircle,
-  XCircle,
-  ChevronDown,
-  ChevronRight,
-  Eye,
-  EyeOff,
-  Key,
-  ShieldCheck,
-  AlertCircle,
-} from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 type ValidationState =
@@ -56,10 +44,10 @@ function ValidationBadge({ status }: { status: ValidationState }) {
           textTransform: "uppercase",
           letterSpacing: "0.05em",
           background: "rgba(59, 130, 246, 0.1)",
-          color: "#2563eb",
+          color: "var(--drp-info)",
         }}
       >
-        <Loader size={10} className="animate-spin" />
+        <Icon name="loader" size="xs" className="animate-spin" />
         Verifying
       </span>
     );
@@ -77,10 +65,10 @@ function ValidationBadge({ status }: { status: ValidationState }) {
           textTransform: "uppercase",
           letterSpacing: "0.05em",
           background: "rgba(22, 163, 74, 0.1)",
-          color: "#16a34a",
+          color: "var(--drp-mint)",
         }}
       >
-        <ShieldCheck size={10} />
+        <Icon name="shield" size="xs" />
         Verified
       </span>
     );
@@ -97,10 +85,10 @@ function ValidationBadge({ status }: { status: ValidationState }) {
         textTransform: "uppercase",
         letterSpacing: "0.05em",
         background: "rgba(239, 68, 68, 0.1)",
-        color: "#dc2626",
+        color: "var(--drp-pink)",
       }}
     >
-      <AlertCircle size={10} />
+      <Icon name="close" size="xs" />
       Invalid
     </span>
   );
@@ -125,10 +113,14 @@ function StatusBadge({
         textTransform: "uppercase",
         letterSpacing: "0.05em",
         background: connected ? "rgba(22, 163, 74, 0.1)" : "rgba(0,0,0,0.05)",
-        color: connected ? "#16a34a" : "var(--drp-grey)",
+        color: connected ? "var(--drp-mint)" : "var(--drp-text-muted)",
       }}
     >
-      {connected ? <CheckCircle size={10} /> : <XCircle size={10} />}
+      {connected ? (
+        <Icon name="check" size="xs" />
+      ) : (
+        <Icon name="close" size="xs" />
+      )}
       {label || (connected ? "Connected" : "Not connected")}
     </span>
   );
@@ -151,11 +143,11 @@ function TestResultBlock({ test }: { test: TestState }) {
           alignItems: "center",
           gap: 6,
           fontSize: 12,
-          color: "var(--drp-grey)",
+          color: "var(--drp-text-muted)",
           padding: "8px 0",
         }}
       >
-        <Loader size={12} className="animate-spin" />
+        <Icon name="loader" size="sm" className="animate-spin" />
         {test.testType === "text"
           ? "Generating text..."
           : "Generating image (may take ~30s)..."}
@@ -170,7 +162,7 @@ function TestResultBlock({ test }: { test: TestState }) {
           border: "1px solid rgba(220, 38, 38, 0.2)",
           padding: "8px 12px",
           fontSize: 12,
-          color: "#dc2626",
+          color: "var(--drp-pink)",
         }}
       >
         {test.message}
@@ -186,22 +178,22 @@ function TestResultBlock({ test }: { test: TestState }) {
             border: "1px solid rgba(22, 163, 74, 0.2)",
             padding: "6px 12px",
             fontSize: 12,
-            color: "#166534",
+            color: "var(--drp-mint)",
             display: "flex",
             alignItems: "center",
             gap: 6,
           }}
         >
-          <CheckCircle size={14} />
+          <Icon name="check" size="sm" />
           Text model working correctly!
         </div>
         <div
           style={{
-            background: "var(--drp-bg-2, #f5f5f5)",
+            background: "var(--drp-surface)",
             border: "1px solid rgba(0,0,0,0.1)",
             padding: "10px 14px",
             fontSize: 13,
-            color: "var(--drp-text, #111)",
+            color: "var(--drp-black)",
             fontStyle: "italic",
           }}
         >
@@ -219,13 +211,13 @@ function TestResultBlock({ test }: { test: TestState }) {
             border: "1px solid rgba(22, 163, 74, 0.2)",
             padding: "6px 12px",
             fontSize: 12,
-            color: "#166534",
+            color: "var(--drp-mint)",
             display: "flex",
             alignItems: "center",
             gap: 6,
           }}
         >
-          <CheckCircle size={14} />
+          <Icon name="check" size="sm" />
           Image model working correctly!
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -656,7 +648,11 @@ export default function SettingsPage() {
           }}
         >
           <span
-            style={{ fontSize: 12, fontWeight: 700, color: "var(--drp-grey)" }}
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: "var(--drp-text-muted)",
+            }}
           >
             Claude:
           </span>
@@ -673,7 +669,11 @@ export default function SettingsPage() {
           }}
         >
           <span
-            style={{ fontSize: 12, fontWeight: 700, color: "var(--drp-grey)" }}
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: "var(--drp-text-muted)",
+            }}
           >
             Straico:
           </span>
@@ -690,7 +690,11 @@ export default function SettingsPage() {
           }}
         >
           <span
-            style={{ fontSize: 12, fontWeight: 700, color: "var(--drp-grey)" }}
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: "var(--drp-text-muted)",
+            }}
           >
             1ForAll:
           </span>
@@ -715,7 +719,7 @@ export default function SettingsPage() {
         <p
           style={{
             fontSize: "var(--drp-text-xs)",
-            color: "var(--drp-grey)",
+            color: "var(--drp-text-muted)",
             marginBottom: "var(--drp-space-4)",
           }}
         >
@@ -744,7 +748,11 @@ export default function SettingsPage() {
                 onClick={() => setShowPerplexityKey((p) => !p)}
                 style={{ padding: "4px 8px" }}
               >
-                {showPerplexityKey ? <EyeOff size={14} /> : <Eye size={14} />}
+                {showPerplexityKey ? (
+                  <Icon name="eye-off" size="sm" />
+                ) : (
+                  <Icon name="eye" size="sm" />
+                )}
               </Button>
             </div>
           </div>
@@ -778,7 +786,11 @@ export default function SettingsPage() {
                 onClick={() => setShowRedditSecret((p) => !p)}
                 style={{ padding: "4px 8px" }}
               >
-                {showRedditSecret ? <EyeOff size={14} /> : <Eye size={14} />}
+                {showRedditSecret ? (
+                  <Icon name="eye-off" size="sm" />
+                ) : (
+                  <Icon name="eye" size="sm" />
+                )}
               </Button>
             </div>
           </div>
@@ -799,17 +811,17 @@ export default function SettingsPage() {
             {
               id: "claude" as AiProviderType,
               label: "Claude",
-              color: "#7C3AED",
+              color: "var(--drp-purple)",
             },
             {
               id: "straico" as AiProviderType,
               label: "Straico",
-              color: "#F59E0B",
+              color: "var(--drp-orange)",
             },
             {
               id: "1forall" as AiProviderType,
               label: "1ForAll",
-              color: "#0EA5E9",
+              color: "var(--drp-info)",
             },
           ].map(({ id, label, color }) => {
             const isActive = expandedProvider === id;
@@ -829,7 +841,7 @@ export default function SettingsPage() {
                   fontFamily: "var(--drp-font-primary)",
                   fontSize: "var(--drp-text-md)",
                   fontWeight: isActive ? 700 : 400,
-                  color: isActive ? color : "var(--drp-grey)",
+                  color: isActive ? color : "var(--drp-text-muted)",
                   marginBottom: -2,
                   transition: "color 0.15s, border-color 0.15s",
                 }}
@@ -865,8 +877,8 @@ export default function SettingsPage() {
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
                     color: claudeReady
-                      ? "#7C3AED"
-                      : "var(--drp-error, #FF4444)",
+                      ? "var(--drp-purple)"
+                      : "var(--drp-pink)",
                     background: claudeReady
                       ? "rgba(124, 58, 237, 0.1)"
                       : "rgba(231, 76, 60, 0.1)",
@@ -894,14 +906,14 @@ export default function SettingsPage() {
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  color: "var(--drp-grey)",
+                  color: "var(--drp-text-muted)",
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
                   marginBottom: "var(--drp-space-2)",
                 }}
               >
-                <Key size={12} /> API Key
+                <Icon name="key" size="sm" /> API Key
               </label>
               <div style={{ position: "relative" }}>
                 <input
@@ -926,15 +938,25 @@ export default function SettingsPage() {
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                     padding: 0,
                   }}
                 >
-                  {showClaudeKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showClaudeKey ? (
+                    <Icon name="eye-off" size="md" />
+                  ) : (
+                    <Icon name="eye" size="md" />
+                  )}
                 </button>
               </div>
               {claudeValidation.state === "error" && (
-                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: "var(--drp-pink)",
+                    marginTop: 4,
+                  }}
+                >
                   {claudeValidation.message}
                 </p>
               )}
@@ -948,14 +970,14 @@ export default function SettingsPage() {
             >
               {claudeValidation.state === "validating" ? (
                 <>
-                  <Loader size={12} className="animate-spin" />
+                  <Icon name="loader" size="sm" className="animate-spin" />
                   Validating...
                 </>
               ) : (
                 "Validate Key"
               )}
             </Button>
-            <p style={{ fontSize: 10, color: "var(--drp-grey)" }}>
+            <p style={{ fontSize: 10, color: "var(--drp-text-muted)" }}>
               Claude uses direct browser API — model selection is automatic
               (Claude Sonnet 4.5).
             </p>
@@ -980,7 +1002,8 @@ export default function SettingsPage() {
                   {claudeTest.state === "loading" &&
                   claudeTest.testType === "text" ? (
                     <>
-                      <Loader size={12} className="animate-spin" /> Testing...
+                      <Icon name="loader" size="sm" className="animate-spin" />{" "}
+                      Testing...
                     </>
                   ) : (
                     "Test Text Model"
@@ -1017,8 +1040,8 @@ export default function SettingsPage() {
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
                     color: straicoReady
-                      ? "#F59E0B"
-                      : "var(--drp-error, #FF4444)",
+                      ? "var(--drp-orange)"
+                      : "var(--drp-pink)",
                     background: straicoReady
                       ? "rgba(245, 158, 11, 0.1)"
                       : "rgba(231, 76, 60, 0.1)",
@@ -1046,14 +1069,14 @@ export default function SettingsPage() {
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  color: "var(--drp-grey)",
+                  color: "var(--drp-text-muted)",
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
                   marginBottom: "var(--drp-space-2)",
                 }}
               >
-                <Key size={12} /> API Key
+                <Icon name="key" size="sm" /> API Key
               </label>
               <div style={{ position: "relative" }}>
                 <input
@@ -1078,15 +1101,25 @@ export default function SettingsPage() {
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                     padding: 0,
                   }}
                 >
-                  {showStraicoKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showStraicoKey ? (
+                    <Icon name="eye-off" size="md" />
+                  ) : (
+                    <Icon name="eye" size="md" />
+                  )}
                 </button>
               </div>
               {straicoValidation.state === "error" && (
-                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: "var(--drp-pink)",
+                    marginTop: 4,
+                  }}
+                >
                   {straicoValidation.message}
                 </p>
               )}
@@ -1100,7 +1133,7 @@ export default function SettingsPage() {
             >
               {straicoValidation.state === "validating" ? (
                 <>
-                  <Loader size={12} className="animate-spin" />
+                  <Icon name="loader" size="sm" className="animate-spin" />
                   Validating...
                 </>
               ) : (
@@ -1134,15 +1167,23 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--drp-grey)",
+                        color: "var(--drp-text-muted)",
                       }}
                     >
                       Model for Copy
                     </span>
                     {straicoModelOpen ? (
-                      <ChevronDown size={14} color="var(--drp-grey)" />
+                      <Icon
+                        name="arrow-down"
+                        size="sm"
+                        style={{ color: "var(--drp-text-muted)" }}
+                      />
                     ) : (
-                      <ChevronRight size={14} color="var(--drp-grey)" />
+                      <Icon
+                        name="arrow-right"
+                        size="sm"
+                        style={{ color: "var(--drp-text-muted)" }}
+                      />
                     )}
                   </button>
                   {straicoModelOpen && (
@@ -1188,15 +1229,23 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--drp-grey)",
+                        color: "var(--drp-text-muted)",
                       }}
                     >
                       Model for Image
                     </span>
                     {straicoImageOpen ? (
-                      <ChevronDown size={14} color="var(--drp-grey)" />
+                      <Icon
+                        name="arrow-down"
+                        size="sm"
+                        style={{ color: "var(--drp-text-muted)" }}
+                      />
                     ) : (
-                      <ChevronRight size={14} color="var(--drp-grey)" />
+                      <Icon
+                        name="arrow-right"
+                        size="sm"
+                        style={{ color: "var(--drp-text-muted)" }}
+                      />
                     )}
                   </button>
                   {straicoImageOpen && (
@@ -1242,7 +1291,12 @@ export default function SettingsPage() {
                     {straicoTest.state === "loading" &&
                     straicoTest.testType === "text" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <Icon
+                          name="loader"
+                          size="sm"
+                          className="animate-spin"
+                        />{" "}
+                        Testing...
                       </>
                     ) : (
                       "Test Text Model"
@@ -1266,7 +1320,12 @@ export default function SettingsPage() {
                     {straicoTest.state === "loading" &&
                     straicoTest.testType === "image" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <Icon
+                          name="loader"
+                          size="sm"
+                          className="animate-spin"
+                        />{" "}
+                        Testing...
                       </>
                     ) : (
                       "Test Image Model"
@@ -1304,8 +1363,8 @@ export default function SettingsPage() {
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
                     color: oneforallReady
-                      ? "#0EA5E9"
-                      : "var(--drp-error, #FF4444)",
+                      ? "var(--drp-info)"
+                      : "var(--drp-pink)",
                     background: oneforallReady
                       ? "rgba(14, 165, 233, 0.1)"
                       : "rgba(231, 76, 60, 0.1)",
@@ -1333,14 +1392,14 @@ export default function SettingsPage() {
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  color: "var(--drp-grey)",
+                  color: "var(--drp-text-muted)",
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
                   marginBottom: "var(--drp-space-2)",
                 }}
               >
-                <Key size={12} /> API Key
+                <Icon name="key" size="sm" /> API Key
               </label>
               <div style={{ position: "relative" }}>
                 <input
@@ -1365,15 +1424,25 @@ export default function SettingsPage() {
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                     padding: 0,
                   }}
                 >
-                  {showOneforallKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showOneforallKey ? (
+                    <Icon name="eye-off" size="md" />
+                  ) : (
+                    <Icon name="eye" size="md" />
+                  )}
                 </button>
               </div>
               {oneforallValidation.state === "error" && (
-                <p style={{ fontSize: 10, color: "#dc2626", marginTop: 4 }}>
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: "var(--drp-pink)",
+                    marginTop: 4,
+                  }}
+                >
                   {oneforallValidation.message}
                 </p>
               )}
@@ -1387,7 +1456,7 @@ export default function SettingsPage() {
             >
               {oneforallValidation.state === "validating" ? (
                 <>
-                  <Loader size={12} className="animate-spin" />
+                  <Icon name="loader" size="sm" className="animate-spin" />
                   Validating...
                 </>
               ) : (
@@ -1421,15 +1490,23 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--drp-grey)",
+                        color: "var(--drp-text-muted)",
                       }}
                     >
                       Model for Copy
                     </span>
                     {oneforallModelOpen ? (
-                      <ChevronDown size={14} color="var(--drp-grey)" />
+                      <Icon
+                        name="arrow-down"
+                        size="sm"
+                        style={{ color: "var(--drp-text-muted)" }}
+                      />
                     ) : (
-                      <ChevronRight size={14} color="var(--drp-grey)" />
+                      <Icon
+                        name="arrow-right"
+                        size="sm"
+                        style={{ color: "var(--drp-text-muted)" }}
+                      />
                     )}
                   </button>
                   {oneforallModelOpen && (
@@ -1474,15 +1551,23 @@ export default function SettingsPage() {
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "var(--drp-grey)",
+                        color: "var(--drp-text-muted)",
                       }}
                     >
                       Model for Image
                     </span>
                     {oneforallImageOpen ? (
-                      <ChevronDown size={14} color="var(--drp-grey)" />
+                      <Icon
+                        name="arrow-down"
+                        size="sm"
+                        style={{ color: "var(--drp-text-muted)" }}
+                      />
                     ) : (
-                      <ChevronRight size={14} color="var(--drp-grey)" />
+                      <Icon
+                        name="arrow-right"
+                        size="sm"
+                        style={{ color: "var(--drp-text-muted)" }}
+                      />
                     )}
                   </button>
                   {oneforallImageOpen && (
@@ -1528,7 +1613,12 @@ export default function SettingsPage() {
                     {oneforallTest.state === "loading" &&
                     oneforallTest.testType === "text" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <Icon
+                          name="loader"
+                          size="sm"
+                          className="animate-spin"
+                        />{" "}
+                        Testing...
                       </>
                     ) : (
                       "Test Text Model"
@@ -1552,7 +1642,12 @@ export default function SettingsPage() {
                     {oneforallTest.state === "loading" &&
                     oneforallTest.testType === "image" ? (
                       <>
-                        <Loader size={12} className="animate-spin" /> Testing...
+                        <Icon
+                          name="loader"
+                          size="sm"
+                          className="animate-spin"
+                        />{" "}
+                        Testing...
                       </>
                     ) : (
                       "Test Image Model"
@@ -1575,7 +1670,7 @@ export default function SettingsPage() {
         >
           {saving ? (
             <>
-              <Loader size={16} className="animate-spin" />
+              <Icon name="loader" size="md" className="animate-spin" />
               Saving & Validating...
             </>
           ) : (

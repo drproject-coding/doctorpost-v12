@@ -1,23 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useRef } from "react";
-import { Card } from "@doctorproject/react";
-import {
-  Zap,
-  Copy,
-  Check,
-  RefreshCw,
-  CheckCircle,
-  AlertCircle,
-  Loader,
-  ExternalLink,
-  Smartphone,
-  Monitor,
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  FileImage,
-} from "lucide-react";
+import { Card, Icon, Button, Loader } from "@doctorproject/react";
 import Link from "next/link";
 import { parseSSEStream } from "@/lib/sse";
 
@@ -168,7 +152,7 @@ function PipelineProgress({
                 <span
                   style={{
                     fontSize: 12,
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
@@ -180,7 +164,13 @@ function PipelineProgress({
               </>
             )}
             {isComplete && (
-              <span style={{ fontSize: 13, color: "#00A896", fontWeight: 700 }}>
+              <span
+                style={{
+                  fontSize: 13,
+                  color: "var(--drp-mint)",
+                  fontWeight: 700,
+                }}
+              >
                 All stages complete
               </span>
             )}
@@ -189,7 +179,7 @@ function PipelineProgress({
             style={{
               fontSize: 12,
               fontWeight: 800,
-              color: isComplete ? "#00A896" : "var(--drp-purple)",
+              color: isComplete ? "var(--drp-mint)" : "var(--drp-purple)",
               marginLeft: 12,
               whiteSpace: "nowrap",
             }}
@@ -223,12 +213,12 @@ function PipelineProgress({
                 <div
                   style={{
                     height: 6,
-                    borderRadius: 3,
+                    borderRadius: 0,
                     background: isDone
-                      ? "#00A896"
+                      ? "var(--drp-mint)"
                       : isActive
                         ? "var(--drp-purple)"
-                        : "#e8e8e8",
+                        : "var(--drp-surface)",
                     position: "relative",
                     overflow: "hidden",
                     transition: "background 0.4s ease",
@@ -255,12 +245,12 @@ function PipelineProgress({
                     fontWeight:
                       isDone || isActive || activeStep === s ? 700 : 400,
                     color: isDone
-                      ? "#00A896"
+                      ? "var(--drp-mint)"
                       : isActive
                         ? "var(--drp-purple)"
                         : activeStep === s
                           ? "var(--drp-purple)"
-                          : "#b0b0b0",
+                          : "var(--drp-text-muted)",
                     marginTop: 5,
                     textAlign: "center",
                     letterSpacing: 0.3,
@@ -300,9 +290,9 @@ function renderStageContent(
     color: "var(--drp-black)",
     maxHeight: 280,
     overflow: "auto",
-    background: "#f9f7f3",
+    background: "var(--drp-surface)",
     padding: 12,
-    border: "1px solid #e5e5e5",
+    border: "var(--drp-border-thin)",
   };
 
   // Writer: show streaming text as-is
@@ -342,7 +332,7 @@ function renderStageContent(
               style={{
                 margin: 0,
                 fontSize: 12,
-                color: "#555",
+                color: "var(--drp-text-secondary)",
                 fontStyle: "italic",
                 borderLeft: "3px solid var(--drp-purple)",
                 paddingLeft: 10,
@@ -397,7 +387,7 @@ function renderStageContent(
                 <span
                   style={{
                     fontSize: 10,
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                     padding: "2px 0",
                   }}
                 >
@@ -429,10 +419,10 @@ function renderStageContent(
       };
       const color =
         (d.total ?? 0) >= 75
-          ? "#00A896"
+          ? "var(--drp-mint)"
           : (d.total ?? 0) >= 60
-            ? "#FF6C01"
-            : "#E99898";
+            ? "var(--drp-orange)"
+            : "var(--drp-pink)";
       return (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -440,7 +430,7 @@ function renderStageContent(
               style={{
                 width: 56,
                 height: 56,
-                borderRadius: "50%",
+                borderRadius: 0,
                 border: `3px solid ${color}`,
                 display: "flex",
                 flexDirection: "column",
@@ -454,7 +444,7 @@ function renderStageContent(
               >
                 {d.total}
               </span>
-              <span style={{ fontSize: 9, color: "var(--drp-grey)" }}>
+              <span style={{ fontSize: 9, color: "var(--drp-text-muted)" }}>
                 /100
               </span>
             </div>
@@ -479,7 +469,7 @@ function renderStageContent(
                   style={{
                     margin: 0,
                     fontSize: 12,
-                    color: "#555",
+                    color: "var(--drp-text-secondary)",
                     lineHeight: 1.4,
                   }}
                 >
@@ -494,10 +484,10 @@ function renderStageContent(
                 const pct = Math.round((b.score / b.max) * 100);
                 const bc =
                   b.status === "excellent"
-                    ? "#00A896"
+                    ? "var(--drp-mint)"
                     : b.status === "good"
-                      ? "#FF6C01"
-                      : "#E99898";
+                      ? "var(--drp-orange)"
+                      : "var(--drp-pink)";
                 return (
                   <div
                     key={b.criterion}
@@ -506,7 +496,7 @@ function renderStageContent(
                     <span
                       style={{
                         fontSize: 11,
-                        color: "var(--drp-grey)",
+                        color: "var(--drp-text-muted)",
                         width: 110,
                         flexShrink: 0,
                         fontWeight: 600,
@@ -518,8 +508,8 @@ function renderStageContent(
                       style={{
                         flex: 1,
                         height: 5,
-                        background: "#e8e8e8",
-                        borderRadius: 3,
+                        background: "var(--drp-surface)",
+                        borderRadius: 0,
                         overflow: "hidden",
                       }}
                     >
@@ -528,7 +518,7 @@ function renderStageContent(
                           width: `${pct}%`,
                           height: "100%",
                           background: bc,
-                          borderRadius: 3,
+                          borderRadius: 0,
                           transition: "width 0.6s ease",
                         }}
                       />
@@ -573,9 +563,9 @@ function renderStageContent(
                 style={{
                   margin: 0,
                   fontSize: 12,
-                  color: "var(--drp-grey)",
+                  color: "var(--drp-text-muted)",
                   fontStyle: "italic",
-                  borderLeft: "3px solid #e5e5e5",
+                  borderLeft: "3px solid var(--drp-surface)",
                   paddingLeft: 8,
                   lineHeight: 1.4,
                 }}
@@ -622,7 +612,7 @@ function renderStageContent(
                 </div>
               ))}
               {d.slides.length > 6 && (
-                <span style={{ fontSize: 11, color: "var(--drp-grey)" }}>
+                <span style={{ fontSize: 11, color: "var(--drp-text-muted)" }}>
                   +{d.slides.length - 6} more slides
                 </span>
               )}
@@ -666,8 +656,8 @@ function StageCard({
         borderLeft: isActive
           ? "4px solid var(--drp-purple)"
           : isComplete
-            ? "4px solid #00A896"
-            : "4px solid #e5e5e5",
+            ? "4px solid var(--drp-mint)"
+            : "4px solid var(--drp-surface)",
         opacity: isPending ? 0.4 : 1,
         transition: "opacity 0.3s, border-left-color 0.3s",
       }}
@@ -714,41 +704,38 @@ function StageCard({
               color: isActive
                 ? "var(--drp-purple)"
                 : isComplete
-                  ? "#00A896"
-                  : "var(--drp-grey)",
+                  ? "var(--drp-mint)"
+                  : "var(--drp-text-muted)",
             }}
           >
             {meta.label}
           </span>
-          <span style={{ fontSize: 12, color: "var(--drp-grey)", flex: 1 }}>
+          <span
+            style={{ fontSize: 12, color: "var(--drp-text-muted)", flex: 1 }}
+          >
             {isActive ? meta.description : isComplete ? "Done" : "Waiting..."}
           </span>
-          {isActive && (
-            <Loader
-              size={15}
-              color="var(--drp-purple)"
-              style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
-            />
-          )}
+          {isActive && <Loader size="sm" style={{ flexShrink: 0 }} />}
           {isComplete && onCopy && (
-            <button
+            <Button
               onClick={onCopy}
+              variant="ghost"
+              size="sm"
               title={copiedProp ? "Copied!" : "Copy post"}
               style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
                 padding: 2,
-                display: "flex",
-                alignItems: "center",
-                color: copiedProp ? "#00A896" : "var(--drp-grey)",
+                color: copiedProp ? "var(--drp-mint)" : "var(--drp-text-muted)",
               }}
             >
-              {copiedProp ? <Check size={14} /> : <Copy size={14} />}
-            </button>
+              <Icon name={copiedProp ? "check" : "download"} size="sm" />
+            </Button>
           )}
           {isComplete && (
-            <CheckCircle size={15} color="#00A896" style={{ flexShrink: 0 }} />
+            <Icon
+              name="check"
+              size="sm"
+              style={{ color: "var(--drp-mint)", flexShrink: 0 }}
+            />
           )}
         </div>
 
@@ -782,10 +769,10 @@ function VisualStageCard({
         borderLeft: isActive
           ? "4px solid var(--drp-purple)"
           : isComplete
-            ? "4px solid #00A896"
+            ? "4px solid var(--drp-mint)"
             : error
-              ? "4px solid #E99898"
-              : "4px solid #e5e5e5",
+              ? "4px solid var(--drp-pink)"
+              : "4px solid var(--drp-surface)",
         opacity: isPending ? 0.4 : 1,
         transition: "opacity 0.3s, border-left-color 0.3s",
       }}
@@ -794,7 +781,7 @@ function VisualStageCard({
         <div
           style={{
             height: 3,
-            background: "#e8e8e8",
+            background: "var(--drp-surface)",
             position: "relative",
             overflow: "hidden",
           }}
@@ -832,10 +819,10 @@ function VisualStageCard({
               color: isActive
                 ? "var(--drp-purple)"
                 : isComplete
-                  ? "#00A896"
+                  ? "var(--drp-mint)"
                   : error
-                    ? "#E99898"
-                    : "var(--drp-grey)",
+                    ? "var(--drp-pink)"
+                    : "var(--drp-text-muted)",
             }}
           >
             Visual
@@ -843,7 +830,7 @@ function VisualStageCard({
           <span
             style={{
               fontSize: 12,
-              color: error ? "#E99898" : "var(--drp-grey)",
+              color: error ? "var(--drp-pink)" : "var(--drp-text-muted)",
               flex: 1,
             }}
           >
@@ -855,15 +842,13 @@ function VisualStageCard({
                   ? "Done"
                   : "Waiting..."}
           </span>
-          {isActive && (
-            <Loader
-              size={15}
-              color="var(--drp-purple)"
-              style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
-            />
-          )}
+          {isActive && <Loader size="sm" style={{ flexShrink: 0 }} />}
           {isComplete && (
-            <CheckCircle size={15} color="#00A896" style={{ flexShrink: 0 }} />
+            <Icon
+              name="check"
+              size="sm"
+              style={{ color: "var(--drp-mint)", flexShrink: 0 }}
+            />
           )}
         </div>
 
@@ -878,7 +863,7 @@ function VisualStageCard({
                 maxHeight: 320,
                 objectFit: "cover",
                 display: "block",
-                border: "1px solid #e5e5e5",
+                border: "var(--drp-border-thin)",
               }}
             />
             {promptUsed && (
@@ -886,7 +871,7 @@ function VisualStageCard({
                 style={{
                   margin: "10px 0 0",
                   fontSize: 11,
-                  color: "var(--drp-grey)",
+                  color: "var(--drp-text-muted)",
                   fontStyle: "italic",
                   lineHeight: 1.4,
                 }}
@@ -903,13 +888,18 @@ function VisualStageCard({
 }
 
 function ScoreCircle({ score }: { score: number }) {
-  const color = score >= 75 ? "#00A896" : score >= 60 ? "#FF6C01" : "#E99898";
+  const color =
+    score >= 75
+      ? "var(--drp-mint)"
+      : score >= 60
+        ? "var(--drp-orange)"
+        : "var(--drp-pink)";
   return (
     <div
       style={{
         width: 96,
         height: 96,
-        borderRadius: "50%",
+        borderRadius: 0,
         border: `6px solid ${color}`,
         display: "flex",
         flexDirection: "column",
@@ -921,7 +911,7 @@ function ScoreCircle({ score }: { score: number }) {
       <span style={{ fontSize: 30, fontWeight: 800, color, lineHeight: 1 }}>
         {score}
       </span>
-      <span style={{ fontSize: 10, color: "var(--drp-grey)" }}>/100</span>
+      <span style={{ fontSize: 10, color: "var(--drp-text-muted)" }}>/100</span>
     </div>
   );
 }
@@ -1501,7 +1491,9 @@ export default function StudioPage() {
           >
             Studio
           </h1>
-          <p style={{ margin: 0, color: "var(--drp-grey)", fontSize: 14 }}>
+          <p
+            style={{ margin: 0, color: "var(--drp-text-muted)", fontSize: 14 }}
+          >
             4-agent AI pipeline: Strategist → Writer → Scorer → Formatter
           </p>
         </div>
@@ -1596,7 +1588,7 @@ export default function StudioPage() {
                             gap: 10,
                             cursor: isRunning ? "default" : "pointer",
                             padding: "8px 10px",
-                            border: `2px solid ${format === f ? "var(--drp-purple)" : "#ccc"}`,
+                            border: `2px solid ${format === f ? "var(--drp-purple)" : "var(--drp-text-muted)"}`,
                             background:
                               format === f
                                 ? "rgba(99,29,237,0.05)"
@@ -1626,7 +1618,10 @@ export default function StudioPage() {
                               {f}
                             </div>
                             <div
-                              style={{ fontSize: 11, color: "var(--drp-grey)" }}
+                              style={{
+                                fontSize: 11,
+                                color: "var(--drp-text-muted)",
+                              }}
                             >
                               {f === "simple" && "Single text post"}
                               {f === "visual" && "Post + visual brief"}
@@ -1640,69 +1635,45 @@ export default function StudioPage() {
                 </div>
 
                 {/* Generate button */}
-                <button
+                <Button
                   onClick={() => void runPipeline()}
                   disabled={isRunning || topic.trim().length < 10}
                   style={{
                     width: "100%",
-                    padding: "12px 0",
-                    background:
-                      isRunning || topic.trim().length < 10
-                        ? "#aaa"
-                        : "var(--drp-purple)",
-                    color: "#fff",
-                    border: "none",
-                    fontWeight: 800,
-                    fontSize: 14,
-                    letterSpacing: 0.5,
-                    cursor:
-                      isRunning || topic.trim().length < 10
-                        ? "not-allowed"
-                        : "pointer",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 8,
-                    transition: "background 0.15s",
                   }}
                 >
                   {isRunning ? (
                     <>
-                      <Loader
-                        size={15}
-                        style={{ animation: "spin 1s linear infinite" }}
-                      />
+                      <Loader size="sm" />
                       Running…
                     </>
                   ) : (
                     <>
-                      <Zap size={15} />
+                      <Icon name="plus" size="sm" />
                       Generate
                     </>
                   )}
-                </button>
+                </Button>
 
                 {isComplete && (
-                  <button
+                  <Button
                     onClick={handleReset}
+                    variant="outline"
                     style={{
                       width: "100%",
                       marginTop: 8,
-                      padding: "10px 0",
-                      background: "transparent",
-                      border: "2px solid var(--drp-black)",
-                      fontWeight: 700,
-                      fontSize: 13,
-                      cursor: "pointer",
-                      color: "var(--drp-black)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       gap: 6,
                     }}
                   >
-                    <RefreshCw size={13} /> New Post
-                  </button>
+                    <Icon name="arrow-right" size="sm" /> New Post
+                  </Button>
                 )}
               </div>
             </Card>
@@ -1736,20 +1707,25 @@ export default function StudioPage() {
                           alignItems: "center",
                           gap: 4,
                           padding: "2px 10px",
-                          background: score.pass ? "#00A896" : "#FF6C01",
+                          background: score.pass
+                            ? "var(--drp-mint)"
+                            : "var(--drp-orange)",
                           color: "#fff",
                           fontWeight: 800,
                           fontSize: 11,
                           marginBottom: 6,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 4,
                         }}
                       >
                         {score.pass ? (
                           <>
-                            <CheckCircle size={11} /> PASS
+                            <Icon name="check" size="sm" /> PASS
                           </>
                         ) : (
                           <>
-                            <AlertCircle size={11} /> NEEDS WORK
+                            <Icon name="close" size="sm" /> NEEDS WORK
                           </>
                         )}
                       </div>
@@ -1757,7 +1733,7 @@ export default function StudioPage() {
                         style={{
                           margin: 0,
                           fontSize: 11,
-                          color: "var(--drp-grey)",
+                          color: "var(--drp-text-muted)",
                         }}
                       >
                         Threshold: 75/100
@@ -1778,10 +1754,14 @@ export default function StudioPage() {
                   style={{
                     padding: 64,
                     textAlign: "center",
-                    color: "var(--drp-grey)",
+                    color: "var(--drp-text-muted)",
                   }}
                 >
-                  <Zap size={48} style={{ marginBottom: 16, opacity: 0.25 }} />
+                  <Icon
+                    name="plus"
+                    size="sm"
+                    style={{ marginBottom: 16, opacity: 0.25 }}
+                  />
                   <p
                     style={{
                       fontWeight: 700,
@@ -1838,34 +1818,32 @@ export default function StudioPage() {
                 <div
                   style={{
                     display: "flex",
-                    borderBottom: "2px solid #e0e0e0",
+                    borderBottom: "var(--drp-border-thin)",
                     marginBottom: 16,
                   }}
                 >
                   {(["preview", "score"] as const).map((tab) => (
-                    <button
+                    <Button
                       key={tab}
+                      variant="ghost"
                       onClick={() => setResultTab(tab)}
                       style={{
                         padding: "10px 20px",
                         fontWeight: 700,
                         fontSize: 13,
-                        border: "none",
                         borderBottom:
                           resultTab === tab
                             ? "2px solid var(--drp-purple)"
                             : "2px solid transparent",
                         marginBottom: -2,
-                        background: "transparent",
                         color:
                           resultTab === tab
                             ? "var(--drp-purple)"
-                            : "var(--drp-grey)",
-                        cursor: "pointer",
+                            : "var(--drp-text-muted)",
                       }}
                     >
                       {tab === "preview" ? "Post" : "Score"}
-                    </button>
+                    </Button>
                   ))}
                 </div>
 
@@ -1894,7 +1872,7 @@ export default function StudioPage() {
                               style={{
                                 fontSize: 12,
                                 fontWeight: 400,
-                                color: "var(--drp-grey)",
+                                color: "var(--drp-text-muted)",
                               }}
                             >
                               {currentSlide + 1} / {totalSlides}
@@ -1915,109 +1893,75 @@ export default function StudioPage() {
                                   alignItems: "center",
                                   gap: 6,
                                   padding: "6px 14px",
-                                  background: "#00A896",
+                                  background: "var(--drp-mint)",
                                   color: "white",
                                   fontWeight: 700,
                                   fontSize: 13,
                                   textDecoration: "none",
                                 }}
                               >
-                                <CheckCircle size={14} />
+                                <Icon name="check" size="sm" />
                                 Saved
                               </a>
                             ) : (
-                              <button
+                              <Button
                                 onClick={() => void handleManualSave()}
                                 disabled={isSaving}
+                                size="sm"
                                 style={{
-                                  display: "flex",
+                                  display: "inline-flex",
                                   alignItems: "center",
                                   gap: 6,
-                                  padding: "6px 14px",
-                                  background: isSaving
-                                    ? "#aaa"
-                                    : "var(--drp-purple)",
-                                  color: "white",
-                                  border: "none",
-                                  fontWeight: 700,
-                                  fontSize: 13,
-                                  cursor: isSaving ? "not-allowed" : "pointer",
                                 }}
                               >
                                 {isSaving ? (
                                   <>
-                                    <Loader
-                                      size={13}
-                                      style={{
-                                        animation: "spin 1s linear infinite",
-                                      }}
-                                    />
-                                    Saving…
+                                    <Loader size="sm" /> Saving…
                                   </>
                                 ) : (
                                   <>
-                                    <ExternalLink size={13} />
-                                    Save to Library
+                                    <Icon name="arrow-right" size="sm" /> Save
+                                    to Library
                                   </>
                                 )}
-                              </button>
+                              </Button>
                             )}
-                            <button
+                            <Button
+                              variant="outline"
+                              size="sm"
                               onClick={() => void handleDownloadSlideImage()}
                               disabled={isExporting}
                               title="Download current slide as PNG"
                               style={{
-                                display: "flex",
+                                display: "inline-flex",
                                 alignItems: "center",
                                 gap: 6,
-                                padding: "6px 14px",
-                                border: "2px solid var(--drp-black)",
-                                background: "transparent",
-                                color: "var(--drp-black)",
-                                fontWeight: 700,
-                                fontSize: 13,
-                                cursor: isExporting ? "not-allowed" : "pointer",
                               }}
                             >
-                              <FileImage size={13} />
+                              <Icon name="download" size="sm" />
                               PNG
-                            </button>
-                            <button
+                            </Button>
+                            <Button
+                              size="sm"
                               onClick={() => void handleDownloadAllPdf()}
                               disabled={isExporting}
                               title="Download all slides as PDF"
                               style={{
-                                display: "flex",
+                                display: "inline-flex",
                                 alignItems: "center",
                                 gap: 6,
-                                padding: "6px 14px",
-                                background: isExporting
-                                  ? "#aaa"
-                                  : "var(--drp-black)",
-                                color: "white",
-                                border: "none",
-                                fontWeight: 700,
-                                fontSize: 13,
-                                cursor: isExporting ? "not-allowed" : "pointer",
                               }}
                             >
                               {isExporting ? (
                                 <>
-                                  <Loader
-                                    size={13}
-                                    style={{
-                                      animation: "spin 1s linear infinite",
-                                    }}
-                                  />
-                                  Exporting…
+                                  <Loader size="sm" /> Exporting…
                                 </>
                               ) : (
                                 <>
-                                  <Download size={13} />
-                                  PDF
+                                  <Icon name="download" size="sm" /> PDF
                                 </>
                               )}
-                            </button>
+                            </Button>
                           </div>
                         </div>
 
@@ -2029,7 +1973,7 @@ export default function StudioPage() {
                             height: 520,
                             margin: "0 auto",
                             background:
-                              "linear-gradient(135deg, #631DED 0%, #9B59F5 100%)",
+                              "linear-gradient(135deg, var(--drp-purple) 0%, #9B59F5 100%)",
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "space-between",
@@ -2047,7 +1991,7 @@ export default function StudioPage() {
                               right: 20,
                               width: 36,
                               height: 36,
-                              borderRadius: "50%",
+                              borderRadius: 0,
                               background: "rgba(255,255,255,0.2)",
                               display: "flex",
                               alignItems: "center",
@@ -2129,7 +2073,7 @@ export default function StudioPage() {
                                   style={{
                                     width: i === currentSlide ? 20 : 6,
                                     height: 6,
-                                    borderRadius: 3,
+                                    borderRadius: 0,
                                     background:
                                       i === currentSlide
                                         ? "white"
@@ -2152,7 +2096,8 @@ export default function StudioPage() {
                             marginTop: 16,
                           }}
                         >
-                          <button
+                          <Button
+                            variant="outline"
                             onClick={() =>
                               setCurrentSlide((s) => Math.max(0, s - 1))
                             }
@@ -2160,30 +2105,27 @@ export default function StudioPage() {
                             style={{
                               width: 40,
                               height: 40,
-                              border: "2px solid var(--drp-black)",
-                              background: "var(--drp-cream)",
-                              cursor:
-                                currentSlide === 0 ? "not-allowed" : "pointer",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
                               opacity: currentSlide === 0 ? 0.35 : 1,
                             }}
                           >
-                            <ChevronLeft size={20} />
-                          </button>
+                            <Icon name="arrow-left" size="sm" />
+                          </Button>
                           <span
                             style={{
                               fontSize: 13,
                               fontWeight: 700,
-                              color: "var(--drp-grey)",
+                              color: "var(--drp-text-muted)",
                               minWidth: 60,
                               textAlign: "center",
                             }}
                           >
                             {currentSlide + 1} / {totalSlides}
                           </span>
-                          <button
+                          <Button
+                            variant="outline"
                             onClick={() =>
                               setCurrentSlide((s) =>
                                 Math.min(totalSlides - 1, s + 1),
@@ -2193,12 +2135,6 @@ export default function StudioPage() {
                             style={{
                               width: 40,
                               height: 40,
-                              border: "2px solid var(--drp-black)",
-                              background: "var(--drp-cream)",
-                              cursor:
-                                currentSlide === totalSlides - 1
-                                  ? "not-allowed"
-                                  : "pointer",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -2206,8 +2142,8 @@ export default function StudioPage() {
                                 currentSlide === totalSlides - 1 ? 0.35 : 1,
                             }}
                           >
-                            <ChevronRight size={20} />
-                          </button>
+                            <Icon name="arrow-right" size="sm" />
+                          </Button>
                         </div>
 
                         {/* Thumbnail strip */}
@@ -2221,15 +2157,16 @@ export default function StudioPage() {
                           }}
                         >
                           {carouselSlides.map((slide, i) => (
-                            <button
+                            <Button
                               key={i}
+                              variant="ghost"
                               onClick={() => setCurrentSlide(i)}
                               style={{
                                 flexShrink: 0,
                                 width: 72,
                                 height: 72,
                                 background:
-                                  "linear-gradient(135deg, #631DED 0%, #9B59F5 100%)",
+                                  "linear-gradient(135deg, var(--drp-purple) 0%, #9B59F5 100%)",
                                 border:
                                   i === currentSlide
                                     ? "3px solid var(--drp-black)"
@@ -2269,7 +2206,7 @@ export default function StudioPage() {
                               >
                                 {slide.title}
                               </span>
-                            </button>
+                            </Button>
                           ))}
                         </div>
                       </div>
@@ -2315,22 +2252,22 @@ export default function StudioPage() {
                         {
                           label: "Angle",
                           value: strategy.angle,
-                          color: "#631DED",
+                          color: "var(--drp-purple)",
                         },
                         {
                           label: "Pillar",
                           value: strategy.pillar_name ?? strategy.pillar,
-                          color: "#00A896",
+                          color: "var(--drp-mint)",
                         },
                         {
                           label: "ICP",
                           value: strategy.icp_label,
-                          color: "#FF6C01",
+                          color: "var(--drp-orange)",
                         },
                         {
                           label: "Hook",
                           value: strategy.hook_type?.replace(/_/g, " "),
-                          color: "#D4A800",
+                          color: "var(--drp-warning)",
                         },
                         {
                           label: "Word Target",
@@ -2411,11 +2348,12 @@ export default function StudioPage() {
                             <div
                               style={{
                                 display: "flex",
-                                border: "1px solid #e0e0e0",
+                                border: "var(--drp-border-thin)",
                                 overflow: "hidden",
                               }}
                             >
-                              <button
+                              <Button
+                                variant="ghost"
                                 onClick={() => {
                                   setPreviewMode("mobile");
                                   setShowMore(false);
@@ -2433,15 +2371,13 @@ export default function StudioPage() {
                                   color:
                                     previewMode === "mobile"
                                       ? "white"
-                                      : "var(--drp-grey)",
-                                  border: "none",
-                                  cursor: "pointer",
+                                      : "var(--drp-text-muted)",
                                 }}
                               >
-                                <Smartphone size={12} />
                                 Mobile
-                              </button>
-                              <button
+                              </Button>
+                              <Button
+                                variant="ghost"
                                 onClick={() => {
                                   setPreviewMode("desktop");
                                   setShowMore(false);
@@ -2459,40 +2395,37 @@ export default function StudioPage() {
                                   color:
                                     previewMode === "desktop"
                                       ? "white"
-                                      : "var(--drp-grey)",
-                                  border: "none",
-                                  cursor: "pointer",
+                                      : "var(--drp-text-muted)",
                                 }}
                               >
-                                <Monitor size={12} />
                                 Desktop
-                              </button>
+                              </Button>
                             </div>
 
                             {/* Copy */}
-                            <button
+                            <Button
+                              variant="outline"
                               onClick={() => void handleCopy()}
                               style={{
                                 display: "flex",
                                 alignItems: "center",
                                 gap: 6,
                                 padding: "6px 14px",
-                                border: "2px solid var(--drp-black)",
-                                background: copied ? "#00A896" : "transparent",
+                                background: copied
+                                  ? "var(--drp-mint)"
+                                  : "transparent",
                                 color: copied ? "white" : "var(--drp-black)",
                                 fontWeight: 700,
                                 fontSize: 13,
-                                cursor: "pointer",
-                                transition: "background 0.2s",
                               }}
                             >
                               {copied ? (
-                                <Check size={14} />
+                                <Icon name="check" size="sm" />
                               ) : (
-                                <Copy size={14} />
+                                <Icon name="download" size="sm" />
                               )}
                               {copied ? "Copied!" : "Copy"}
-                            </button>
+                            </Button>
 
                             {/* Save / Library */}
                             {savedId ? (
@@ -2503,18 +2436,18 @@ export default function StudioPage() {
                                   alignItems: "center",
                                   gap: 6,
                                   padding: "6px 14px",
-                                  background: "#00A896",
+                                  background: "var(--drp-mint)",
                                   color: "white",
                                   fontWeight: 700,
                                   fontSize: 13,
                                   textDecoration: "none",
                                 }}
                               >
-                                <CheckCircle size={14} />
+                                <Icon name="check" size="sm" />
                                 Saved
                               </a>
                             ) : (
-                              <button
+                              <Button
                                 onClick={() => void handleManualSave()}
                                 disabled={isSaving}
                                 style={{
@@ -2522,33 +2455,22 @@ export default function StudioPage() {
                                   alignItems: "center",
                                   gap: 6,
                                   padding: "6px 14px",
-                                  background: isSaving
-                                    ? "#aaa"
-                                    : "var(--drp-purple)",
-                                  color: "white",
-                                  border: "none",
                                   fontWeight: 700,
                                   fontSize: 13,
-                                  cursor: isSaving ? "not-allowed" : "pointer",
                                 }}
                               >
                                 {isSaving ? (
                                   <>
-                                    <Loader
-                                      size={13}
-                                      style={{
-                                        animation: "spin 1s linear infinite",
-                                      }}
-                                    />
+                                    <Loader size="sm" />
                                     Saving…
                                   </>
                                 ) : (
                                   <>
-                                    <ExternalLink size={13} />
+                                    <Icon name="arrow-right" size="sm" />
                                     Save to Library
                                   </>
                                 )}
-                              </button>
+                              </Button>
                             )}
                           </div>
                         </div>
@@ -2559,9 +2481,8 @@ export default function StudioPage() {
                             maxWidth: containerWidth,
                             margin: "0 auto",
                             background: "white",
-                            borderRadius: 8,
-                            boxShadow:
-                              "0 0 0 1px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.1)",
+                            borderRadius: 0,
+                            boxShadow: "var(--drp-shadow-sm)",
                             overflow: "hidden",
                           }}
                         >
@@ -2578,7 +2499,7 @@ export default function StudioPage() {
                               style={{
                                 width: 48,
                                 height: 48,
-                                borderRadius: "50%",
+                                borderRadius: 0,
                                 background: "var(--drp-purple)",
                                 display: "flex",
                                 alignItems: "center",
@@ -2596,7 +2517,7 @@ export default function StudioPage() {
                                 style={{
                                   fontWeight: 600,
                                   fontSize: 14,
-                                  color: "#191919",
+                                  color: "var(--drp-black)",
                                 }}
                               >
                                 Your Name
@@ -2604,13 +2525,18 @@ export default function StudioPage() {
                               <div
                                 style={{
                                   fontSize: 12,
-                                  color: "#666666",
+                                  color: "var(--drp-text-muted)",
                                   lineHeight: 1.3,
                                 }}
                               >
                                 Your headline here
                               </div>
-                              <div style={{ fontSize: 12, color: "#666666" }}>
+                              <div
+                                style={{
+                                  fontSize: 12,
+                                  color: "var(--drp-text-muted)",
+                                }}
+                              >
                                 Just now
                               </div>
                             </div>
@@ -2634,13 +2560,11 @@ export default function StudioPage() {
                               {isTruncated && !showMore && "..."}
                             </pre>
                             {isTruncated && !showMore && (
-                              <button
+                              <Button
+                                variant="ghost"
                                 onClick={() => setShowMore(true)}
                                 style={{
-                                  background: "none",
-                                  border: "none",
-                                  color: "#666666",
-                                  cursor: "pointer",
+                                  color: "var(--drp-text-muted)",
                                   fontSize: 14,
                                   fontWeight: 600,
                                   padding: "4px 0",
@@ -2648,16 +2572,14 @@ export default function StudioPage() {
                                 }}
                               >
                                 ...see more
-                              </button>
+                              </Button>
                             )}
                             {showMore && isTruncated && (
-                              <button
+                              <Button
+                                variant="ghost"
                                 onClick={() => setShowMore(false)}
                                 style={{
-                                  background: "none",
-                                  border: "none",
-                                  color: "#666666",
-                                  cursor: "pointer",
+                                  color: "var(--drp-text-muted)",
                                   fontSize: 14,
                                   fontWeight: 600,
                                   padding: "4px 0",
@@ -2665,7 +2587,7 @@ export default function StudioPage() {
                                 }}
                               >
                                 show less
-                              </button>
+                              </Button>
                             )}
                           </div>
 
@@ -2673,11 +2595,11 @@ export default function StudioPage() {
                           <div
                             style={{
                               padding: "8px 16px",
-                              borderTop: "1px solid #e0e0e0",
+                              borderTop: "var(--drp-border-thin)",
                               display: "flex",
                               justifyContent: "space-between",
                               fontSize: 12,
-                              color: "#666666",
+                              color: "var(--drp-text-muted)",
                             }}
                           >
                             <span>0 reactions</span>
@@ -2688,12 +2610,12 @@ export default function StudioPage() {
                           <div
                             style={{
                               padding: "4px 16px 8px",
-                              borderTop: "1px solid #e0e0e0",
+                              borderTop: "var(--drp-border-thin)",
                               display: "flex",
                               justifyContent: "space-around",
                               fontSize: 13,
                               fontWeight: 600,
-                              color: "#666666",
+                              color: "var(--drp-text-muted)",
                             }}
                           >
                             <span>Like</span>
@@ -2709,7 +2631,7 @@ export default function StudioPage() {
                             marginTop: 12,
                             textAlign: "center",
                             fontSize: 12,
-                            color: "var(--drp-grey)",
+                            color: "var(--drp-text-muted)",
                           }}
                         >
                           Hook is{" "}
@@ -2730,7 +2652,7 @@ export default function StudioPage() {
                             marginTop: 4,
                             textAlign: "center",
                             fontSize: 11,
-                            color: "var(--drp-grey)",
+                            color: "var(--drp-text-muted)",
                           }}
                         >
                           {finalPostText.length} characters
@@ -2759,7 +2681,9 @@ export default function StudioPage() {
                               alignItems: "center",
                               gap: 4,
                               padding: "2px 10px",
-                              background: score.pass ? "#00A896" : "#FF6C01",
+                              background: score.pass
+                                ? "var(--drp-mint)"
+                                : "var(--drp-orange)",
                               color: "#fff",
                               fontWeight: 800,
                               fontSize: 11,
@@ -2768,11 +2692,11 @@ export default function StudioPage() {
                           >
                             {score.pass ? (
                               <>
-                                <CheckCircle size={11} /> PASS
+                                <Icon name="check" size="sm" /> PASS
                               </>
                             ) : (
                               <>
-                                <AlertCircle size={11} /> NEEDS WORK
+                                <Icon name="close" size="sm" /> NEEDS WORK
                               </>
                             )}
                           </div>
@@ -2780,7 +2704,7 @@ export default function StudioPage() {
                             style={{
                               margin: 0,
                               fontSize: 11,
-                              color: "var(--drp-grey)",
+                              color: "var(--drp-text-muted)",
                             }}
                           >
                             Threshold: 75/100
@@ -2801,10 +2725,10 @@ export default function StudioPage() {
                           const ratio = item.score / item.max;
                           const barColor =
                             ratio >= 0.75
-                              ? "#00A896"
+                              ? "var(--drp-mint)"
                               : ratio >= 0.6
-                                ? "#FF6C01"
-                                : "#E99898";
+                                ? "var(--drp-orange)"
+                                : "var(--drp-pink)";
                           return (
                             <div key={i}>
                               <div
@@ -2830,8 +2754,8 @@ export default function StudioPage() {
                               <div
                                 style={{
                                   height: 5,
-                                  background: "#eee",
-                                  borderRadius: 3,
+                                  background: "var(--drp-surface)",
+                                  borderRadius: 0,
                                   overflow: "hidden",
                                 }}
                               >
@@ -2849,7 +2773,7 @@ export default function StudioPage() {
                                   style={{
                                     margin: "4px 0 0",
                                     fontSize: 12,
-                                    color: "var(--drp-grey)",
+                                    color: "var(--drp-text-muted)",
                                     lineHeight: 1.4,
                                   }}
                                 >
@@ -2871,7 +2795,7 @@ export default function StudioPage() {
                               fontWeight: 800,
                               textTransform: "uppercase",
                               letterSpacing: 0.5,
-                              color: "#00A896",
+                              color: "var(--drp-mint)",
                             }}
                           >
                             Strengths
@@ -2891,7 +2815,7 @@ export default function StudioPage() {
                                   fontSize: 13,
                                   color: "var(--drp-black)",
                                   paddingLeft: 10,
-                                  borderLeft: "2px solid #00A896",
+                                  borderLeft: "2px solid var(--drp-mint)",
                                 }}
                               >
                                 {s}
@@ -2911,7 +2835,7 @@ export default function StudioPage() {
                               fontWeight: 800,
                               textTransform: "uppercase",
                               letterSpacing: 0.5,
-                              color: "#FF6C01",
+                              color: "var(--drp-orange)",
                             }}
                           >
                             Suggestions
@@ -2931,7 +2855,7 @@ export default function StudioPage() {
                                   fontSize: 13,
                                   color: "var(--drp-black)",
                                   paddingLeft: 10,
-                                  borderLeft: "2px solid #FF6C01",
+                                  borderLeft: "2px solid var(--drp-orange)",
                                 }}
                               >
                                 {s}
@@ -2958,12 +2882,16 @@ export default function StudioPage() {
                       flexWrap: "wrap",
                     }}
                   >
-                    <CheckCircle size={14} color="#00A896" />
+                    <Icon
+                      name="check"
+                      size="sm"
+                      style={{ color: "var(--drp-mint)", flexShrink: 0 }}
+                    />
                     <span
                       style={{
                         fontSize: 13,
                         fontWeight: 700,
-                        color: "#00A896",
+                        color: "var(--drp-mint)",
                       }}
                     >
                       Saved to Library
@@ -2980,7 +2908,7 @@ export default function StudioPage() {
                         textDecoration: "none",
                       }}
                     >
-                      View post <ExternalLink size={12} />
+                      View post <Icon name="arrow-right" size="sm" />
                     </a>
                   </div>
                 )}
@@ -2991,7 +2919,10 @@ export default function StudioPage() {
             {error && (
               <Card
                 variant="raised"
-                style={{ marginTop: 12, borderLeft: "4px solid #E99898" }}
+                style={{
+                  marginTop: 12,
+                  borderLeft: "4px solid var(--drp-pink)",
+                }}
               >
                 <div
                   style={{
@@ -3001,10 +2932,14 @@ export default function StudioPage() {
                     gap: 10,
                   }}
                 >
-                  <AlertCircle
-                    size={16}
-                    color="#E99898"
-                    style={{ marginTop: 2, flexShrink: 0 }}
+                  <Icon
+                    name="close"
+                    size="sm"
+                    style={{
+                      marginTop: 2,
+                      flexShrink: 0,
+                      color: "var(--drp-pink)",
+                    }}
                   />
                   <div>
                     <p
@@ -3012,7 +2947,7 @@ export default function StudioPage() {
                         fontWeight: 700,
                         fontSize: 14,
                         margin: "0 0 4px",
-                        color: "#E99898",
+                        color: "var(--drp-pink)",
                       }}
                     >
                       Pipeline Error

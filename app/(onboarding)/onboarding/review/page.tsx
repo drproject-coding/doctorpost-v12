@@ -2,17 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@doctorproject/react";
-import {
-  CheckCircle,
-  Edit2,
-  User,
-  Mic,
-  Target,
-  Users,
-  Briefcase,
-  Loader,
-} from "lucide-react";
+import { Button, Icon, Loader } from "@doctorproject/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import type { BrandProfile } from "@/lib/types";
 
@@ -99,7 +89,7 @@ function CompleteBadge() {
         borderRadius: 0,
       }}
     >
-      <CheckCircle size={11} />
+      <Icon name="check" size="xs" />
       COMPLETE
     </span>
   );
@@ -184,7 +174,7 @@ function SectionCard({
             (e.currentTarget as HTMLButtonElement).style.background = "none";
           }}
         >
-          <Edit2 size={12} />
+          <Icon name="edit" size="xs" />
           Edit
         </button>
       </div>
@@ -200,7 +190,11 @@ function SectionCard({
 function EmptyValue({ label }: { label: string }) {
   return (
     <span
-      style={{ color: "var(--drp-grey)", fontSize: 13, fontStyle: "italic" }}
+      style={{
+        color: "var(--drp-text-muted)",
+        fontSize: 13,
+        fontStyle: "italic",
+      }}
     >
       {label}
     </span>
@@ -216,7 +210,7 @@ function FieldRow({ label, value }: { label: string; value: string }) {
         style={{
           fontSize: 12,
           fontWeight: 700,
-          color: "var(--drp-grey)",
+          color: "var(--drp-text-muted)",
           minWidth: 120,
           textTransform: "uppercase",
           letterSpacing: "0.04em",
@@ -274,14 +268,11 @@ export default function OnboardingReviewPage() {
           justifyContent: "center",
           minHeight: "40vh",
           gap: 10,
-          color: "var(--drp-grey)",
+          color: "var(--drp-text-muted)",
           fontSize: 14,
         }}
       >
-        <Loader
-          size={20}
-          style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
-        />
+        <Loader size="sm" />
         Loading your profile…
       </div>
     );
@@ -290,7 +281,7 @@ export default function OnboardingReviewPage() {
   if (!profile) {
     return (
       <div style={{ textAlign: "center", padding: "40px 0" }}>
-        <p style={{ color: "var(--drp-grey)", fontSize: 14 }}>
+        <p style={{ color: "var(--drp-text-muted)", fontSize: 14 }}>
           {error ?? "Could not load profile."}
         </p>
         <button
@@ -334,7 +325,7 @@ export default function OnboardingReviewPage() {
           style={{
             margin: 0,
             fontSize: 15,
-            color: "var(--drp-grey)",
+            color: "var(--drp-text-muted)",
             lineHeight: 1.5,
           }}
         >
@@ -345,7 +336,7 @@ export default function OnboardingReviewPage() {
       {/* Section 1 — Identity */}
       <SectionCard
         title="Identity"
-        icon={<User size={16} />}
+        icon={null}
         accentColor="#631DED"
         sectionIndex={1}
         complete={isComplete(profile, 1)}
@@ -360,7 +351,7 @@ export default function OnboardingReviewPage() {
       {/* Section 2 — Voice & Tone */}
       <SectionCard
         title="Voice & Tone"
-        icon={<Mic size={16} />}
+        icon={null}
         accentColor="#FF6C01"
         sectionIndex={2}
         complete={isComplete(profile, 2)}
@@ -372,7 +363,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--drp-grey)",
+                color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -398,7 +389,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--drp-grey)",
+                color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -420,7 +411,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--drp-grey)",
+                color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 4,
@@ -445,7 +436,7 @@ export default function OnboardingReviewPage() {
       {/* Section 3 — Content Strategy */}
       <SectionCard
         title="Content Strategy"
-        icon={<Target size={16} />}
+        icon={null}
         accentColor="#00A896"
         sectionIndex={3}
         complete={isComplete(profile, 3)}
@@ -457,7 +448,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--drp-grey)",
+                color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 4,
@@ -486,7 +477,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--drp-grey)",
+                color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 4,
@@ -511,7 +502,7 @@ export default function OnboardingReviewPage() {
       {/* Section 4 — Audience */}
       <SectionCard
         title="Audience"
-        icon={<Users size={16} />}
+        icon={<Icon name="users" size="sm" />}
         accentColor="#B45309"
         sectionIndex={4}
         complete={isComplete(profile, 4)}
@@ -523,7 +514,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--drp-grey)",
+                color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -549,7 +540,7 @@ export default function OnboardingReviewPage() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--drp-grey)",
+                color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
                 marginBottom: 6,
@@ -569,7 +560,7 @@ export default function OnboardingReviewPage() {
       {/* Section 5 — Positioning */}
       <SectionCard
         title="Positioning"
-        icon={<Briefcase size={16} />}
+        icon={null}
         accentColor="#E99898"
         sectionIndex={5}
         complete={isComplete(profile, 5)}
@@ -635,15 +626,12 @@ export default function OnboardingReviewPage() {
         >
           {saving ? (
             <>
-              <Loader
-                size={16}
-                style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
-              />
+              <Loader size="sm" />
               Saving…
             </>
           ) : (
             <>
-              <CheckCircle size={16} />
+              <Icon name="check" size="sm" />
               Save &amp; Start Creating
             </>
           )}
@@ -657,7 +645,7 @@ export default function OnboardingReviewPage() {
             border: "none",
             cursor: saving ? "not-allowed" : "pointer",
             fontSize: 13,
-            color: "var(--drp-grey)",
+            color: "var(--drp-text-muted)",
             padding: "4px 0",
             transition: "color 0.12s",
             opacity: saving ? 0.5 : 1,
@@ -669,20 +657,12 @@ export default function OnboardingReviewPage() {
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.color =
-              "var(--drp-grey)";
+              "var(--drp-text-muted)";
           }}
         >
           ← Go back to wizard
         </button>
       </div>
-
-      {/* Spin keyframes */}
-      <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }

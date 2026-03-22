@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Icon } from "@doctorproject/react";
 import { BrandProfile, AiProviderType } from "@/lib/types";
 
 interface AiToolsSectionProps {
@@ -69,7 +69,7 @@ function KeyField({
           }}
           aria-label={show ? "Hide API key" : "Show API key"}
         >
-          {show ? <EyeOff size={16} /> : <Eye size={16} />}
+          {show ? <Icon name="eye-off" size="sm" />  : <Icon name="eye" size="sm" />}
         </button>
       </div>
     </div>

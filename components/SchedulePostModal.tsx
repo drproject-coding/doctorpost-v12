@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@doctorproject/react";
 import { PostStatus, DropdownOption } from "@/lib/types";
-import { X } from "lucide-react";
+import { Icon } from "@doctorproject/react";
 
 interface SchedulePostModalProps {
   isOpen: boolean;
@@ -101,7 +101,7 @@ const SchedulePostModal: React.FC<SchedulePostModalProps> = ({
         <div className="drp-modal__header">
           <h2 className="drp-modal__title">Schedule Post</h2>
           <button onClick={onClose} className="drp-modal__close">
-            <X size={20} />
+            <Icon name="x" size="md" />
           </button>
         </div>
 

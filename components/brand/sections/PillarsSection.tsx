@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Icon } from "@doctorproject/react";
 import { enhancedContentPillars } from "@/lib/dropdownData";
 import { BrandProfile, CustomPillar } from "@/lib/types";
 import { useConfirm } from "@/components/ConfirmDialog";
@@ -164,7 +164,7 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
                     alignItems: "center",
                   }}
                 >
-                  <Trash2 size={13} />
+                  <Icon name="trash" size="sm" />
                 </button>
               )}
 

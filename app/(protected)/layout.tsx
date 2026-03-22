@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { Loader } from "lucide-react";
+import { Loader } from "@doctorproject/react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { ToastProvider } from "@/components/Toast";
@@ -30,11 +30,7 @@ export default function ProtectedLayout({
         className="flex items-center justify-center h-screen"
         style={{ background: "var(--drp-cream)" }}
       >
-        <Loader
-          size={32}
-          className="animate-spin"
-          style={{ color: "var(--drp-purple)" }}
-        />
+        <Loader size="sm" />
       </div>
     );
   }

@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { useEffect } from "react";
-import { Loader } from "lucide-react";
+import { Loader } from "@doctorproject/react";
 
 const stepLabels: Record<number, string> = {
   1: "Identity",
@@ -43,7 +43,7 @@ export default function OnboardingLayout({
           justifyContent: "center",
         }}
       >
-        <Loader size={24} style={{ animation: "spin 1s linear infinite" }} />
+        <Loader size="sm" />
       </div>
     );
   }

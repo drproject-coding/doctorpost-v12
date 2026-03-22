@@ -3,8 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
-import { Pictogram } from "@doctorproject/react";
+import { Icon, Pictogram } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 
 interface SidebarProps {
@@ -69,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         onClick={onToggle}
         aria-label="Toggle sidebar"
       >
-        <ChevronLeft size={14} />
+        <Icon name="arrow-left" size="sm" />
       </button>
 
       {/* User Profile */}

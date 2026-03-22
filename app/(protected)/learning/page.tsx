@@ -142,7 +142,7 @@ export default function LearningPage() {
           display: "flex",
           gap: "var(--drp-space-2)",
           marginBottom: "var(--drp-space-4)",
-          borderBottom: "1px solid var(--drp-border-color, #e0e0e0)",
+          borderBottom: "1px solid var(--drp-black)",
           paddingBottom: "var(--drp-space-2)",
         }}
       >
@@ -232,7 +232,7 @@ export default function LearningPage() {
             <p
               style={{
                 fontSize: "var(--drp-text-sm)",
-                color: "var(--drp-grey)",
+                color: "var(--drp-text-muted)",
               }}
             >
               No rule proposals yet. Proposals are created when the learning

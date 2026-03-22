@@ -1,9 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, Button } from "@doctorproject/react";
-import { User, Mail, Camera, Check, Loader, AlertCircle } from "lucide-react";
+import {
+  Camera,
+  Mail,
+  User,
+  AlertCircle,
+  Check,
+  Loader as LucideLoader,
+} from "lucide-react";
+import { Card, Button, Icon } from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
+import "@doctorproject/react/styles";
 
 export default function SettingsProfilePage() {
   const { user } = useAuth();
@@ -102,7 +110,6 @@ export default function SettingsProfilePage() {
                 style={{
                   width: 80,
                   height: 80,
-                  borderRadius: "50%",
                   background: "var(--drp-purple)",
                   display: "flex",
                   alignItems: "center",
@@ -319,7 +326,7 @@ export default function SettingsProfilePage() {
             >
               {saving ? (
                 <>
-                  <Loader
+                  <LucideLoader
                     size={14}
                     style={{ animation: "spin 1s linear infinite" }}
                   />

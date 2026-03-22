@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Card } from "@doctorproject/react";
-import { RotateCcw, X, ChevronDown, ChevronRight } from "lucide-react";
+import { Button, Card, Icon } from "@doctorproject/react";
 import type {
   DocumentVersion,
   NcbDocumentVersionRow,
@@ -74,7 +73,7 @@ export function VersionHistory({
           Version History
         </h3>
         <Button variant="ghost" onClick={onClose}>
-          <X size={16} />
+          <Icon name="close" size="sm" />
         </Button>
       </div>
 
@@ -159,9 +158,9 @@ export function VersionHistory({
                     {new Date(v.createdAt).toLocaleDateString()}
                   </span>
                   {expanded === v.id ? (
-                    <ChevronDown size={14} />
+                    <Icon name="arrow-down" size="sm" />
                   ) : (
-                    <ChevronRight size={14} />
+                    <Icon name="arrow-right" size="sm" />
                   )}
                 </div>
               </div>
@@ -186,7 +185,6 @@ export function VersionHistory({
                       style={{ marginTop: "var(--drp-space-2)" }}
                       onClick={() => onRestore(v)}
                     >
-                      <RotateCcw size={14} />
                       Restore v{v.version}
                     </Button>
                   )}

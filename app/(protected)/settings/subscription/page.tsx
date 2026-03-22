@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card } from "@doctorproject/react";
-import { CheckCircle, Zap, Loader, AlertCircle, Crown } from "lucide-react";
+import { Card, Button, Icon } from "@doctorproject/react";
+import "@doctorproject/react/styles";
 import { useAuth } from "@/lib/auth-context";
 
 interface UserSettings {
@@ -24,7 +24,7 @@ const PLAN_FEATURES: Record<
 > = {
   free: {
     label: "Free",
-    color: "#888",
+    color: "var(--drp-text-muted)",
     limit: "5 posts/month",
     features: [
       "5 AI-generated posts per month",
@@ -47,7 +47,7 @@ const PLAN_FEATURES: Record<
   },
   power: {
     label: "Power",
-    color: "#FF6C01",
+    color: "var(--drp-orange)",
     limit: "Unlimited",
     features: [
       "Unlimited AI-generated posts",
@@ -119,12 +119,12 @@ export default function SettingsSubscriptionPage() {
   const usagePct = limit !== null ? Math.min(100, (used / limit) * 100) : 0;
   const usageColor =
     limit === null
-      ? "#00A896"
+      ? "var(--drp-mint)"
       : usagePct >= 90
-        ? "#E99898"
+        ? "var(--drp-pink)"
         : usagePct >= 70
-          ? "#FF6C01"
-          : "#00A896";
+          ? "var(--drp-orange)"
+          : "var(--drp-mint)";
 
   const formattedReset = resetDate
     ? new Date(resetDate).toLocaleDateString("en-US", {
@@ -167,12 +167,12 @@ export default function SettingsSubscriptionPage() {
               alignItems: "center",
               gap: 8,
               padding: "12px 16px",
-              background: "rgba(233,152,152,0.1)",
-              border: "1px solid #E99898",
+              background: "rgba(255, 108, 1, 0.08)",
+              border: "1px solid var(--drp-pink)",
               marginBottom: 16,
             }}
           >
-            <AlertCircle size={15} color="#E99898" />
+            <AlertCircle size={15} color="var(--drp-pink)" />
             <span style={{ fontSize: 13 }}>{error}</span>
           </div>
         )}
@@ -279,7 +279,7 @@ export default function SettingsSubscriptionPage() {
                 <div
                   style={{
                     height: 10,
-                    background: "#eee",
+                    background: "var(--drp-surface)",
                     position: "relative",
                     marginBottom: 8,
                   }}

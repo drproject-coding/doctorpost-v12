@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { ArrowLeft, Copy, Check, CheckCircle, Loader } from "lucide-react";
+import { Button, Icon, Loader } from "@doctorproject/react";
 
 interface Post {
   id: string;
@@ -46,14 +46,19 @@ function CopyButton({
   onCopy: () => void;
 }) {
   return (
-    <button
+    <Button
       onClick={onCopy}
-      className="drp-btn drp-btn--outline drp-btn--sm"
-      style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+      variant="outline"
+      size="sm"
+      style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
     >
-      {copied ? <Check size={13} /> : <Copy size={13} />}
+      {copied ? (
+        <Icon name="check" size="sm" />
+      ) : (
+        <Icon name="copy" size="sm" />
+      )}
       {copied ? "Copied!" : "Copy"}
-    </button>
+    </Button>
   );
 }
 
@@ -65,7 +70,7 @@ function SimpleView({ post, copied, onCopy }: ViewProps) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: 10,
+          marginBottom: 12,
         }}
       >
         <span
@@ -82,9 +87,9 @@ function SimpleView({ post, copied, onCopy }: ViewProps) {
       </div>
       <div
         style={{
-          background: "#F9F9F9",
-          border: "1px solid rgba(0,0,0,0.1)",
-          padding: "16px 20px",
+          background: "var(--drp-surface)",
+          border: "2px solid var(--drp-black)",
+          padding: 16,
           whiteSpace: "pre-wrap",
           lineHeight: 1.7,
           fontSize: 15,
@@ -122,7 +127,7 @@ function VisualView({ post, copied, onCopy }: ViewProps) {
               maxHeight: 420,
               objectFit: "cover",
               display: "block",
-              border: "1px solid rgba(0,0,0,0.1)",
+              border: "var(--drp-border-thin)",
             }}
           />
         </div>
@@ -132,7 +137,7 @@ function VisualView({ post, copied, onCopy }: ViewProps) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: 10,
+          marginBottom: 12,
         }}
       >
         <span
@@ -149,9 +154,9 @@ function VisualView({ post, copied, onCopy }: ViewProps) {
       </div>
       <div
         style={{
-          background: "#F9F9F9",
-          border: "1px solid rgba(0,0,0,0.1)",
-          padding: "16px 20px",
+          background: "var(--drp-surface)",
+          border: "var(--drp-border-thin)",
+          padding: 16,
           whiteSpace: "pre-wrap",
           lineHeight: 1.7,
           fontSize: 15,
@@ -193,22 +198,22 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
           >
             Slides ({slides.length})
           </span>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {slides.map((slide) => (
               <div
                 key={slide.number}
                 style={{
                   border: "1px solid rgba(0,0,0,0.1)",
-                  borderLeft: "3px solid #631DED",
-                  padding: "12px 16px",
-                  background: "#F9F9F9",
+                  borderLeft: "3px solid var(--drp-purple)",
+                  padding: 16,
+                  background: "var(--drp-surface)",
                 }}
               >
                 <div
                   style={{
                     display: "flex",
                     alignItems: "baseline",
-                    gap: 10,
+                    gap: 12,
                     marginBottom: 4,
                   }}
                 >
@@ -216,7 +221,7 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
                     style={{
                       fontSize: 11,
                       fontWeight: 800,
-                      color: "#631DED",
+                      color: "var(--drp-purple)",
                       textTransform: "uppercase",
                       letterSpacing: 1,
                       flexShrink: 0,
@@ -233,7 +238,7 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
                     margin: 0,
                     fontSize: 14,
                     lineHeight: 1.6,
-                    color: "#444",
+                    color: "var(--drp-text-secondary)",
                   }}
                 >
                   {slide.body}
@@ -249,7 +254,7 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: 10,
+          marginBottom: 12,
         }}
       >
         <span
@@ -266,9 +271,9 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
       </div>
       <div
         style={{
-          background: "#F9F9F9",
+          background: "var(--drp-surface)",
           border: "1px solid rgba(0,0,0,0.1)",
-          padding: "16px 20px",
+          padding: 16,
           whiteSpace: "pre-wrap",
           lineHeight: 1.7,
           fontSize: 15,
@@ -363,9 +368,7 @@ export default function PostDetailPage() {
       <div
         style={{ padding: 48, display: "flex", alignItems: "center", gap: 12 }}
       >
-        <Loader size={20} style={{ animation: "spin 1s linear infinite" }} />
-        <span>Loading…</span>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        <Loader size="sm" label="Loading…" />
       </div>
     );
   }
@@ -373,23 +376,20 @@ export default function PostDetailPage() {
   if (error || !post) {
     return (
       <div style={{ padding: 24 }}>
-        <button
+        <Button
           onClick={() => router.push("/library")}
+          variant="ghost"
+          size="sm"
           style={{
             display: "flex",
             alignItems: "center",
             gap: 6,
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontWeight: 700,
-            color: "var(--drp-purple)",
             marginBottom: 16,
           }}
         >
-          <ArrowLeft size={16} /> Library
-        </button>
-        <p style={{ color: "#E99898", fontWeight: 700 }}>
+          <Icon name="arrow-left" size="sm" /> Library
+        </Button>
+        <p style={{ color: "var(--drp-pink)", fontWeight: 700 }}>
           {error ?? "Post not found"}
         </p>
       </div>
@@ -404,9 +404,9 @@ export default function PostDetailPage() {
         : "Create";
 
   const sourceStyle = {
-    Studio: { bg: "#631DED1A", color: "#631DED" },
-    Factory: { bg: "#00A8961A", color: "#00A896" },
-    Create: { bg: "#FF6C011A", color: "#FF6C01" },
+    Studio: { bg: "rgba(99, 29, 237, 0.1)", color: "var(--drp-purple)" },
+    Factory: { bg: "rgba(0, 168, 150, 0.1)", color: "var(--drp-mint)" },
+    Create: { bg: "rgba(255, 108, 1, 0.1)", color: "var(--drp-orange)" },
   }[source];
 
   const date = post.scheduled_at
@@ -421,23 +421,19 @@ export default function PostDetailPage() {
     <div style={{ padding: "24px 24px 64px" }}>
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         {/* Header */}
-        <button
+        <Button
           onClick={() => router.push("/library")}
+          variant="ghost"
+          size="sm"
           style={{
             display: "flex",
             alignItems: "center",
             gap: 6,
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontWeight: 700,
-            color: "var(--drp-purple)",
             marginBottom: 20,
-            fontSize: 14,
           }}
         >
-          <ArrowLeft size={16} /> Library
-        </button>
+          <Icon name="arrow-left" size="sm" /> Library
+        </Button>
 
         <div
           style={{
@@ -489,16 +485,16 @@ export default function PostDetailPage() {
                     padding: "2px 10px",
                     background:
                       post.format === "carousel"
-                        ? "#631DED1A"
+                        ? "rgba(99, 29, 237, 0.1)"
                         : post.format === "visual"
-                          ? "#D4A8001A"
-                          : "#1212120D",
+                          ? "rgba(212, 168, 0, 0.1)"
+                          : "rgba(0, 0, 0, 0.05)",
                     color:
                       post.format === "carousel"
-                        ? "#631DED"
+                        ? "var(--drp-purple)"
                         : post.format === "visual"
-                          ? "#D4A800"
-                          : "#666",
+                          ? "var(--drp-warning)"
+                          : "var(--drp-text-muted)",
                     fontWeight: 800,
                     fontSize: 10,
                     textTransform: "uppercase",
@@ -523,7 +519,7 @@ export default function PostDetailPage() {
                 </span>
               )}
               {date && (
-                <span style={{ fontSize: 13, color: "var(--drp-grey)" }}>
+                <span style={{ fontSize: 13, color: "var(--drp-text-muted)" }}>
                   {date}
                 </span>
               )}
@@ -531,7 +527,10 @@ export default function PostDetailPage() {
                 <span
                   style={{
                     padding: "2px 10px",
-                    background: post.score >= 75 ? "#00A896" : "#FF6C01",
+                    background:
+                      post.score >= 75
+                        ? "var(--drp-mint)"
+                        : "var(--drp-orange)",
                     color: "#fff",
                     fontWeight: 800,
                     fontSize: 11,
@@ -544,7 +543,7 @@ export default function PostDetailPage() {
                 <span
                   style={{
                     padding: "2px 8px",
-                    background: "#00A896",
+                    background: "var(--drp-mint)",
                     color: "#fff",
                     fontWeight: 700,
                     fontSize: 11,
@@ -582,22 +581,20 @@ export default function PostDetailPage() {
         {/* Actions */}
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
           {post.status !== "published" && (
-            <button
+            <Button
               onClick={() => void handleMarkPublished()}
               disabled={markingPublished}
-              className="drp-btn drp-btn--outline"
+              variant="outline"
+              size="sm"
               style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
             >
               {markingPublished ? (
-                <Loader
-                  size={14}
-                  style={{ animation: "spin 1s linear infinite" }}
-                />
+                <Loader size="sm" />
               ) : (
-                <CheckCircle size={14} />
+                <Icon name="check-circle" size="sm" />
               )}
               {markingPublished ? "Saving…" : "Mark as Published"}
-            </button>
+            </Button>
           )}
         </div>
       </div>

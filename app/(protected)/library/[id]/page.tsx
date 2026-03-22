@@ -55,7 +55,7 @@ function CopyButton({
       {copied ? (
         <Icon name="check" size="sm" />
       ) : (
-        <Icon name="copy" size="sm" />
+        <Icon name="download" size="sm" />
       )}
       {copied ? "Copied!" : "Copy"}
     </Button>
@@ -591,7 +591,7 @@ export default function PostDetailPage() {
               {markingPublished ? (
                 <Loader size="sm" />
               ) : (
-                <Icon name="check-circle" size="sm" />
+                <Icon name="check" size="sm" />
               )}
               {markingPublished ? "Saving…" : "Mark as Published"}
             </Button>

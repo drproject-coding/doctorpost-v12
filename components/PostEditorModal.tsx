@@ -1,305 +1,366 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { Button } from "@doctorproject/react";
-import { ScheduledPost, PostStatus, DropdownOption } from "@/lib/types";
-import { X, Save, Loader, Calendar } from "lucide-react";
+import React, { useState } from "react";
+import { Button, Icon } from "@doctorproject/react";
+import type { FormattedPost } from "@/lib/knowledge/types";
 
 interface PostEditorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  post: ScheduledPost | null;
-  onSave: (updatedPost: ScheduledPost) => Promise<void>;
+  initialPost: FormattedPost;
+  onSave: (post: FormattedPost) => void;
+  isSaving?: boolean;
 }
 
-const statusOptions: DropdownOption[] = [
-  {
-    id: "draft",
-    value: "draft",
-    label: "Draft",
-    category: "Status",
-    description: "Post is a work in progress.",
-    exampleSnippet: "",
-    useCases: [],
-  },
-  {
-    id: "to-review",
-    value: "to-review",
-    label: "To Review",
-    category: "Status",
-    description: "Post is ready for review.",
-    exampleSnippet: "",
-    useCases: [],
-  },
-  {
-    id: "to-plan",
-    value: "to-plan",
-    label: "To Plan",
-    category: "Status",
-    description: "Post is ready for planning.",
-    exampleSnippet: "",
-    useCases: [],
-  },
-  {
-    id: "to-publish",
-    value: "to-publish",
-    label: "To Publish",
-    category: "Status",
-    description: "Post is ready to be published.",
-    exampleSnippet: "",
-    useCases: [],
-  },
-  {
-    id: "scheduled",
-    value: "scheduled",
-    label: "Scheduled",
-    category: "Status",
-    description: "Post is scheduled for a future date.",
-    exampleSnippet: "",
-    useCases: [],
-  },
-  {
-    id: "published",
-    value: "published",
-    label: "Published",
-    category: "Status",
-    description: "Post has been published.",
-    exampleSnippet: "",
-    useCases: [],
-  },
-];
-
-const DATED_STATUSES = new Set([
-  "to-plan",
-  "to-publish",
-  "scheduled",
-  "published",
-]);
-
-/** Convert ISO string to YYYY-MM-DD for <input type="date"> */
-function toDateInputValue(iso: string | undefined): string {
-  if (!iso) return "";
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return "";
-  return d.toISOString().slice(0, 10);
-}
-
-/** Convert YYYY-MM-DD back to ISO midnight UTC */
-function fromDateInputValue(val: string): string {
-  if (!val) return "";
-  return new Date(val + "T00:00:00").toISOString();
-}
-
-function formatDateTime(iso: string | undefined): string {
-  if (!iso) return "";
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return "";
-  return d.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
-const PostEditorModal: React.FC<PostEditorModalProps> = ({
+export function PostEditorModal({
   isOpen,
   onClose,
-  post,
+  initialPost,
   onSave,
-}) => {
-  const [editedTitle, setEditedTitle] = useState("");
-  const [editedContent, setEditedContent] = useState("");
-  const [editedStatus, setEditedStatus] = useState<PostStatus>("draft");
-  const [editedDate, setEditedDate] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
+  isSaving = false,
+}: PostEditorModalProps) {
+  const [post, setPost] = useState<FormattedPost>(initialPost);
+  const [editingField, setEditingField] = useState<keyof FormattedPost | null>(
+    null,
+  );
 
-  useEffect(() => {
-    if (isOpen && post) {
-      setEditedTitle(post.title);
-      setEditedContent(post.content);
-      setEditedStatus(post.status);
-      setEditedDate(toDateInputValue(post.scheduledAt));
-      setSaveError(null);
-      setSaveSuccess(null);
-    }
-  }, [isOpen, post]);
+  if (!isOpen) return null;
 
-  if (!isOpen || !post) return null;
+  const handleFieldChange = (field: keyof FormattedPost, value: unknown) => {
+    setPost((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
-  const showDatePicker = DATED_STATUSES.has(editedStatus);
-  const dateLabel =
-    editedStatus === "published" ? "Published Date" : "Planned Date";
-
-  const handleSave = async () => {
-    if (!post) return;
-
-    setIsSaving(true);
-    setSaveError(null);
-    setSaveSuccess(null);
-
-    const updatedPost: ScheduledPost = {
-      ...post,
-      title: editedTitle,
-      content: editedContent,
-      status: editedStatus,
-      scheduledAt:
-        showDatePicker && editedDate
-          ? fromDateInputValue(editedDate)
-          : post.scheduledAt,
-    };
-
-    try {
-      await onSave(updatedPost);
-      setSaveSuccess("Post saved successfully!");
-      setTimeout(() => {
-        setSaveSuccess(null);
-        onClose();
-      }, 1500);
-    } catch (error) {
-      console.error("Failed to save post:", error);
-      setSaveError("Failed to save post. Please try again.");
-    } finally {
-      setIsSaving(false);
-    }
+  const handleSave = () => {
+    onSave(post);
   };
 
   return (
-    <div className="drp-overlay">
-      <div className="drp-modal w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="drp-modal__header">
-          <h2 className="drp-modal__title">Edit Post: {post.title}</h2>
-          <button onClick={onClose} className="drp-modal__close">
-            <X size={20} />
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: "white",
+          borderRadius: 8,
+          padding: "var(--drp-space-4)",
+          maxWidth: 600,
+          maxHeight: "90vh",
+          overflowY: "auto",
+          boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "var(--drp-space-4)",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "var(--drp-text-h5)",
+              fontWeight: 700,
+              margin: 0,
+            }}
+          >
+            Edit Post
+          </h2>
+          <button
+            onClick={onClose}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Icon name="x" size={20} />
           </button>
         </div>
 
-        <div className="drp-modal__body">
-          {saveError && (
-            <div className="bg-red-100 text-red-800 border-2 border-red-300 rounded-drp-md p-3 mb-4 text-sm font-medium">
-              {saveError}
-            </div>
-          )}
-          {saveSuccess && (
-            <div className="bg-green-100 text-green-800 border-2 border-green-300 rounded-drp-md p-3 mb-4 text-sm font-medium">
-              {saveSuccess}
-            </div>
-          )}
-
-          {/* Read-only metadata */}
-          {(post.createdAt ?? post.updatedAt) && (
-            <div
-              style={{
-                display: "flex",
-                gap: 16,
-                fontSize: 11,
-                color: "#888",
-                marginBottom: 16,
-                padding: "6px 10px",
-                background: "#f8f8f8",
-                border: "1px solid #e0e0e0",
-              }}
-            >
-              {post.createdAt && (
-                <span>Created {formatDateTime(post.createdAt)}</span>
-              )}
-              {post.updatedAt && post.updatedAt !== post.createdAt && (
-                <span>Updated {formatDateTime(post.updatedAt)}</span>
-              )}
-            </div>
-          )}
-
-          <div className="mb-4 flex flex-col gap-2">
-            <label htmlFor="edit-title" className="drp-field__label block">
-              Title
-            </label>
-            <input
-              type="text"
-              id="edit-title"
-              className="drp-input w-full"
-              value={editedTitle}
-              onChange={(e) => setEditedTitle(e.target.value)}
-              disabled={isSaving}
-            />
+        {/* Content Field */}
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
+          <label
+            style={{
+              display: "block",
+              fontWeight: 600,
+              marginBottom: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+            }}
+          >
+            Post Content
+          </label>
+          <textarea
+            value={post.content}
+            onChange={(e) => handleFieldChange("content", e.target.value)}
+            style={{
+              width: "100%",
+              minHeight: 150,
+              padding: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+              fontFamily: "inherit",
+              border: "var(--drp-border)",
+              boxSizing: "border-box",
+            }}
+          />
+          <div style={{ fontSize: "var(--drp-text-xs)", color: "var(--drp-grey)", marginTop: "var(--drp-space-1)" }}>
+            {post.content?.length || 0} characters
           </div>
-
-          <div className="mb-4 flex flex-col gap-2">
-            <label htmlFor="edit-content" className="drp-field__label block">
-              Content
-            </label>
-            <textarea
-              id="edit-content"
-              className="drp-input w-full h-48 resize-y"
-              value={editedContent}
-              onChange={(e) => setEditedContent(e.target.value)}
-              disabled={isSaving}
-            ></textarea>
-          </div>
-
-          <div className="mb-4 flex flex-col gap-2">
-            <label htmlFor="edit-status" className="drp-field__label block">
-              Status
-            </label>
-            <select
-              id="edit-status"
-              className="drp-input w-full"
-              value={editedStatus}
-              onChange={(e) => setEditedStatus(e.target.value as PostStatus)}
-              disabled={isSaving}
-            >
-              {statusOptions.map((option) => (
-                <option key={option.id} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {showDatePicker && (
-            <div className="mb-4 flex flex-col gap-2">
-              <label
-                htmlFor="edit-date"
-                className="drp-field__label block"
-                style={{ display: "flex", alignItems: "center", gap: 6 }}
-              >
-                <Calendar size={14} />
-                {dateLabel}
-              </label>
-              <input
-                type="date"
-                id="edit-date"
-                className="drp-input w-full"
-                value={editedDate}
-                onChange={(e) => setEditedDate(e.target.value)}
-                disabled={isSaving}
-              />
-            </div>
-          )}
         </div>
 
-        <div className="drp-modal__footer">
-          <Button onClick={onClose} variant="secondary" disabled={isSaving}>
+        {/* Suggested Pinned Comment */}
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
+          <label
+            style={{
+              display: "block",
+              fontWeight: 600,
+              marginBottom: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+            }}
+          >
+            Suggested Pinned Comment
+          </label>
+          <textarea
+            value={post.suggestedPinnedComment || ""}
+            onChange={(e) =>
+              handleFieldChange("suggestedPinnedComment", e.target.value)
+            }
+            style={{
+              width: "100%",
+              minHeight: 80,
+              padding: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+              fontFamily: "inherit",
+              border: "var(--drp-border)",
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
+
+        {/* Hook Position Override */}
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
+          <label
+            style={{
+              display: "block",
+              fontWeight: 600,
+              marginBottom: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+            }}
+          >
+            Hook Position
+          </label>
+          <div
+            style={{
+              display: "flex",
+              gap: "var(--drp-space-2)",
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <label style={{ marginRight: "var(--drp-space-2)" }}>
+                <input
+                  type="checkbox"
+                  checked={post.hookBeforeFold?.mobile ?? false}
+                  onChange={(e) =>
+                    handleFieldChange("hookBeforeFold", {
+                      ...post.hookBeforeFold,
+                      mobile: e.target.checked,
+                    })
+                  }
+                  style={{ marginRight: 4 }}
+                />
+                Mobile
+              </label>
+            </div>
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={post.hookBeforeFold?.desktop ?? false}
+                  onChange={(e) =>
+                    handleFieldChange("hookBeforeFold", {
+                      ...post.hookBeforeFold,
+                      desktop: e.target.checked,
+                    })
+                  }
+                  style={{ marginRight: 4 }}
+                />
+                Desktop
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Metadata Fields */}
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
+          <label
+            style={{
+              display: "block",
+              fontWeight: 600,
+              marginBottom: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+            }}
+          >
+            Template
+          </label>
+          <input
+            type="text"
+            value={post.metadata?.template || ""}
+            onChange={(e) =>
+              handleFieldChange("metadata", {
+                ...post.metadata,
+                template: e.target.value,
+              })
+            }
+            style={{
+              width: "100%",
+              padding: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+              border: "var(--drp-border)",
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
+
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
+          <label
+            style={{
+              display: "block",
+              fontWeight: 600,
+              marginBottom: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+            }}
+          >
+            Pillar
+          </label>
+          <input
+            type="text"
+            value={post.metadata?.pillar || ""}
+            onChange={(e) =>
+              handleFieldChange("metadata", {
+                ...post.metadata,
+                pillar: e.target.value,
+              })
+            }
+            style={{
+              width: "100%",
+              padding: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+              border: "var(--drp-border)",
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
+
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
+          <label
+            style={{
+              display: "block",
+              fontWeight: 600,
+              marginBottom: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+            }}
+          >
+            Score
+          </label>
+          <input
+            type="number"
+            value={post.metadata?.score || 0}
+            onChange={(e) =>
+              handleFieldChange("metadata", {
+                ...post.metadata,
+                score: Number(e.target.value),
+              })
+            }
+            style={{
+              width: "100%",
+              padding: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+              border: "var(--drp-border)",
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
+
+        {/* Date Picker */}
+        <div style={{ marginBottom: "var(--drp-space-4)" }}>
+          <label
+            style={{
+              display: "block",
+              fontWeight: 600,
+              marginBottom: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+            }}
+          >
+            <Icon name="calendar" size={14} />
+            {" "}Publish Date
+          </label>
+          <input
+            type="date"
+            style={{
+              width: "100%",
+              padding: "var(--drp-space-2)",
+              fontSize: "var(--drp-text-sm)",
+              border: "var(--drp-border)",
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
+
+        {/* Action Buttons */}
+        <div
+          style={{
+            display: "flex",
+            gap: "var(--drp-space-2)",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>
           <Button
-            onClick={() => handleSave()}
             variant="primary"
+            onClick={handleSave}
             disabled={isSaving}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--drp-space-2)",
+            }}
           >
             {isSaving ? (
-              <span className="flex items-center">
-                <Loader size={16} className="animate-spin mr-2" /> Saving...
-              </span>
+              <>
+                <Icon name="loader" size={16} className="animate-spin mr-2" />
+                Saving...
+              </>
             ) : (
-              <span className="flex items-center">
-                <Save size={16} className="mr-2" /> Save Changes
-              </span>
+              <>
+                <Icon name="save" size={16} className="mr-2" />
+                Save Changes
+              </>
             )}
           </Button>
         </div>
       </div>
     </div>
   );
-};
-
-export default PostEditorModal;
+}

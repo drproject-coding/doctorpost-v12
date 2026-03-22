@@ -1,20 +1,7 @@
 "use client";
 import type React from "react";
 import { useState, useMemo } from "react";
-import { Select } from "@doctorproject/react";
-import {
-  Search,
-  Star,
-  Coins,
-  ChevronDown,
-  ChevronUp,
-  Zap,
-  Image as ImageIcon,
-  Globe,
-  ThumbsUp,
-  ThumbsDown,
-  Loader,
-} from "lucide-react";
+import { Select, Icon } from "@doctorproject/react";
 import type { AiModel, StraicoUserInfo } from "@/lib/types";
 
 type SortOption = "quality" | "price-asc" | "price-desc" | "newest";
@@ -41,23 +28,23 @@ function QualityBadge({ level }: { level: number }) {
         display: "inline-flex",
         alignItems: "center",
         gap: 2,
-        color: "#d97706",
+        color: "var(--drp-orange)",
       }}
       title={`Editor's choice: ${level}/3`}
     >
       {Array.from({ length: stars }, (_, i) => (
-        <Star key={i} size={10} fill="currentColor" />
+        <Icon key={i} name="star" size="xs" />
       ))}
     </span>
   );
 }
 
 function FeatureBadge({ label }: { label: string }) {
-  const iconMap: Record<string, typeof Zap> = {
-    "Image input": ImageIcon,
-    "Web search": Globe,
+  const iconMap: Record<string, string> = {
+    "Image input": "image",
+    "Web search": "globe",
   };
-  const Icon = iconMap[label] || Zap;
+  const iconName = iconMap[label] ?? "zap";
   return (
     <span
       style={{
@@ -73,7 +60,7 @@ function FeatureBadge({ label }: { label: string }) {
         letterSpacing: "0.05em",
       }}
     >
-      <Icon size={10} />
+      <Icon name={iconName} size="xs" />
       {label}
     </span>
   );
@@ -180,8 +167,14 @@ export function StraicoModelPicker({
             border: "1px solid rgba(217, 119, 6, 0.25)",
           }}
         >
-          <Coins size={14} style={{ color: "#d97706" }} />
-          <span style={{ fontSize: 12, fontWeight: 700, color: "#92400e" }}>
+          <Icon name="coins" size="sm" style={{ color: "var(--drp-orange)" }} />
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: "var(--drp-text-secondary)",
+            }}
+          >
             {formatNumber(userInfo.coins)} coins
           </span>
           <span
@@ -192,7 +185,7 @@ export function StraicoModelPicker({
               letterSpacing: "0.05em",
               padding: "2px 6px",
               background: "rgba(217, 119, 6, 0.15)",
-              color: "#92400e",
+              color: "var(--drp-text-secondary)",
             }}
           >
             {userInfo.plan}
@@ -209,14 +202,15 @@ export function StraicoModelPicker({
         }}
       >
         <div style={{ position: "relative" }}>
-          <Search
-            size={14}
+          <Icon
+            name="search"
+            size="sm"
             style={{
               position: "absolute",
               left: 10,
               top: "50%",
               transform: "translateY(-50%)",
-              color: "var(--drp-grey)",
+              color: "var(--drp-text-muted)",
             }}
           />
           <input
@@ -277,10 +271,10 @@ export function StraicoModelPicker({
             padding: "var(--drp-space-4) 0",
             gap: "var(--drp-space-2)",
             fontSize: 12,
-            color: "var(--drp-grey)",
+            color: "var(--drp-text-muted)",
           }}
         >
-          <Loader size={14} className="animate-spin" />
+          <Icon name="loader" size="sm" className="animate-spin" />
           Loading models...
         </div>
       )}
@@ -378,13 +372,14 @@ export function StraicoModelPicker({
                         gap: 12,
                         marginTop: 4,
                         fontSize: 10,
-                        color: "var(--drp-grey)",
+                        color: "var(--drp-text-muted)",
                       }}
                     >
                       {model.pricing && (
                         <span title="Cost per 100 words">
-                          <Coins
-                            size={10}
+                          <Icon
+                            name="coins"
+                            size="xs"
                             style={{
                               display: "inline",
                               marginRight: 2,
@@ -396,8 +391,9 @@ export function StraicoModelPicker({
                       )}
                       {!model.pricing && model.creditsPerInputToken != null && (
                         <span title="Credits per token (in/out)">
-                          <Coins
-                            size={10}
+                          <Icon
+                            name="coins"
+                            size="xs"
                             style={{
                               display: "inline",
                               marginRight: 2,
@@ -423,7 +419,7 @@ export function StraicoModelPicker({
                       <p
                         style={{
                           fontSize: 10,
-                          color: "var(--drp-grey)",
+                          color: "var(--drp-text-muted)",
                           marginTop: 4,
                           lineHeight: 1.4,
                           overflow: "hidden",
@@ -454,7 +450,7 @@ export function StraicoModelPicker({
                             textTransform: "uppercase",
                             letterSpacing: "0.05em",
                             background: "rgba(37, 99, 235, 0.08)",
-                            color: "#2563eb",
+                            color: "var(--drp-info)",
                           }}
                         >
                           {app}
@@ -495,11 +491,11 @@ export function StraicoModelPicker({
                 >
                   {isExpanded ? (
                     <>
-                      Hide details <ChevronUp size={10} />
+                      Hide details <Icon name="arrow-up" size="xs" />
                     </>
                   ) : (
                     <>
-                      Show details <ChevronDown size={10} />
+                      Show details <Icon name="arrow-down" size="xs" />
                     </>
                   )}
                 </button>
@@ -522,7 +518,7 @@ export function StraicoModelPicker({
                     <p
                       style={{
                         fontSize: 11,
-                        color: "var(--drp-grey)",
+                        color: "var(--drp-text-muted)",
                         lineHeight: 1.4,
                       }}
                     >
@@ -530,14 +526,15 @@ export function StraicoModelPicker({
                     </p>
                   )}
                   {model.pricing && (
-                    <p style={{ fontSize: 11, color: "var(--drp-grey)" }}>
-                      <Coins
-                        size={11}
+                    <p style={{ fontSize: 11, color: "var(--drp-text-muted)" }}>
+                      <Icon
+                        name="coins"
+                        size="xs"
                         style={{
                           display: "inline",
                           marginRight: 4,
                           verticalAlign: "-1px",
-                          color: "#d97706",
+                          color: "var(--drp-orange)",
                         }}
                       />
                       ~{model.pricing.coins} coins per {model.pricing.words}{" "}
@@ -545,14 +542,15 @@ export function StraicoModelPicker({
                     </p>
                   )}
                   {!model.pricing && model.creditsPerInputToken != null && (
-                    <p style={{ fontSize: 11, color: "var(--drp-grey)" }}>
-                      <Coins
-                        size={11}
+                    <p style={{ fontSize: 11, color: "var(--drp-text-muted)" }}>
+                      <Icon
+                        name="coins"
+                        size="xs"
                         style={{
                           display: "inline",
                           marginRight: 4,
                           verticalAlign: "-1px",
-                          color: "#d97706",
+                          color: "var(--drp-orange)",
                         }}
                       />
                       {model.creditsPerInputToken} credits/input token &middot;{" "}
@@ -560,7 +558,7 @@ export function StraicoModelPicker({
                     </p>
                   )}
                   {model.maxTokens && (
-                    <p style={{ fontSize: 11, color: "var(--drp-grey)" }}>
+                    <p style={{ fontSize: 11, color: "var(--drp-text-muted)" }}>
                       This model supports up to{" "}
                       <strong>{model.maxTokens.max.toLocaleString()}</strong>{" "}
                       output tokens
@@ -576,11 +574,11 @@ export function StraicoModelPicker({
                           gap: 4,
                           fontSize: 10,
                           fontWeight: 700,
-                          color: "#16a34a",
+                          color: "var(--drp-mint)",
                           marginBottom: 4,
                         }}
                       >
-                        <ThumbsUp size={10} /> Strengths
+                        <Icon name="thumbs-up" size="xs" /> Strengths
                       </p>
                       <ul
                         style={{
@@ -597,7 +595,7 @@ export function StraicoModelPicker({
                             key={i}
                             style={{
                               fontSize: 11,
-                              color: "var(--drp-grey)",
+                              color: "var(--drp-text-muted)",
                               paddingLeft: 12,
                               position: "relative",
                             }}
@@ -606,7 +604,7 @@ export function StraicoModelPicker({
                               style={{
                                 position: "absolute",
                                 left: 0,
-                                color: "#22c55e",
+                                color: "var(--drp-mint)",
                               }}
                             >
                               &bull;
@@ -627,11 +625,11 @@ export function StraicoModelPicker({
                           gap: 4,
                           fontSize: 10,
                           fontWeight: 700,
-                          color: "#ef4444",
+                          color: "var(--drp-pink)",
                           marginBottom: 4,
                         }}
                       >
-                        <ThumbsDown size={10} /> Weaknesses
+                        <Icon name="thumbs-down" size="xs" /> Weaknesses
                       </p>
                       <ul
                         style={{
@@ -648,7 +646,7 @@ export function StraicoModelPicker({
                             key={i}
                             style={{
                               fontSize: 11,
-                              color: "var(--drp-grey)",
+                              color: "var(--drp-text-muted)",
                               paddingLeft: 12,
                               position: "relative",
                             }}
@@ -657,7 +655,7 @@ export function StraicoModelPicker({
                               style={{
                                 position: "absolute",
                                 left: 0,
-                                color: "#f87171",
+                                color: "var(--drp-pink)",
                               }}
                             >
                               &bull;
@@ -678,7 +676,7 @@ export function StraicoModelPicker({
           <p
             style={{
               fontSize: 12,
-              color: "var(--drp-grey)",
+              color: "var(--drp-text-muted)",
               textAlign: "center",
               padding: "var(--drp-space-4) 0",
             }}
@@ -696,7 +694,7 @@ export function StraicoModelPicker({
             borderTop: "var(--drp-border)",
           }}
         >
-          <p style={{ fontSize: 10, color: "var(--drp-grey)" }}>
+          <p style={{ fontSize: 10, color: "var(--drp-text-muted)" }}>
             Selected:{" "}
             <span style={{ fontWeight: 700, color: "var(--drp-black)" }}>
               {selectedModel.label}

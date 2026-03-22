@@ -89,7 +89,7 @@ function CompleteBadge() {
         borderRadius: 0,
       }}
     >
-      <Icon name="check" size="xs" />
+      <Icon name="check" size="sm" />
       COMPLETE
     </span>
   );
@@ -174,7 +174,7 @@ function SectionCard({
             (e.currentTarget as HTMLButtonElement).style.background = "none";
           }}
         >
-          <Icon name="edit" size="xs" />
+          <Icon name="edit" size="sm" />
           Edit
         </button>
       </div>

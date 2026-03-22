@@ -1,10 +1,9 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { Card } from "@doctorproject/react";
+import { Card, Icon } from "@doctorproject/react";
 import { getScheduledPosts, updatePost, deletePost } from "@/lib/api";
 import { useToast } from "@/components/Toast";
 import { ScheduledPost } from "@/lib/types";
-import { Calendar } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import PostEditorModal from "@/components/PostEditorModal";
 
@@ -24,6 +23,18 @@ const FORMAT_STYLE: Record<string, { bg: string; color: string }> = {
   carousel: { bg: "#631DED1A", color: "#631DED" },
   visual: { bg: "#D4A8001A", color: "#D4A800" },
   simple: { bg: "#1212120D", color: "#666" },
+};
+
+const STATUS_STYLE: Record<
+  string,
+  { bg: string; color: string; label: string }
+> = {
+  draft: { bg: "#8888881A", color: "#666666", label: "Draft" },
+  "to-review": { bg: "#FF6C011A", color: "#FF6C01", label: "To Review" },
+  "to-plan": { bg: "#D4A8001A", color: "#D4A800", label: "To Plan" },
+  "to-publish": { bg: "#631DED1A", color: "#631DED", label: "To Publish" },
+  scheduled: { bg: "#00A8961A", color: "#00A896", label: "Scheduled" },
+  published: { bg: "#00AA001A", color: "#00AA00", label: "Published" },
 };
 
 const STATUS_FILTERS = [
@@ -185,6 +196,8 @@ export default function LibraryPage() {
           {STATUS_FILTERS.map((f) => {
             const count = statusCounts[f.id] ?? 0;
             const active = filter === f.id;
+            const ss = f.id !== "all" ? STATUS_STYLE[f.id] : null;
+            const activeColor = ss?.color ?? "#000";
             return (
               <button
                 key={f.id}
@@ -193,10 +206,12 @@ export default function LibraryPage() {
                   padding: "4px 12px",
                   fontSize: 12,
                   fontWeight: 700,
-                  border: "2px solid #000",
+                  border: active
+                    ? `2px solid ${activeColor}`
+                    : "2px solid #ccc",
                   cursor: "pointer",
-                  background: active ? "#000" : "#f5f5f5",
-                  color: active ? "#fff" : "#333",
+                  background: active ? (ss?.bg ?? "#0000001A") : "#fff",
+                  color: active ? activeColor : "#555",
                   display: "flex",
                   alignItems: "center",
                   gap: 5,
@@ -206,7 +221,7 @@ export default function LibraryPage() {
                 {count > 0 && (
                   <span
                     style={{
-                      background: active ? "rgba(255,255,255,0.25)" : "#ddd",
+                      background: active ? activeColor : "#eee",
                       color: active ? "#fff" : "#555",
                       borderRadius: 8,
                       padding: "0 5px",
@@ -342,7 +357,7 @@ export default function LibraryPage() {
                               fontWeight: 700,
                             }}
                           >
-                            <Calendar size={11} />
+                            <Icon name="calendar" size="sm" />
                             {dateLabel} {scheduledFmt}
                           </span>
                         )}
@@ -356,12 +371,30 @@ export default function LibraryPage() {
                         flexShrink: 0,
                       }}
                     >
-                      <span
-                        className={`drp-tag drp-tag--filled ${post.status}`}
-                      >
-                        {post.status.charAt(0).toUpperCase() +
-                          post.status.slice(1)}
-                      </span>
+                      {(() => {
+                        const ss = STATUS_STYLE[post.status] ?? {
+                          bg: "#8888881A",
+                          color: "#666",
+                          label: post.status,
+                        };
+                        return (
+                          <span
+                            style={{
+                              background: ss.bg,
+                              color: ss.color,
+                              border: `1.5px solid ${ss.color}`,
+                              padding: "2px 8px",
+                              fontSize: 10,
+                              fontWeight: 800,
+                              textTransform: "uppercase",
+                              letterSpacing: 0.8,
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {ss.label}
+                          </span>
+                        );
+                      })()}
                       <a
                         href={`/library/${post.uuid ?? post.id}`}
                         className="text-sm bg-gray-100 py-1 px-3 rounded-drp-md border-2 border-black font-bold hover:bg-gray-200"

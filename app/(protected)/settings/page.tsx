@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Card, Icon } from "@doctorproject/react";
+import { Button, Card, Icon, Loader } from "@doctorproject/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import {
   BrandProfile,
@@ -47,7 +47,7 @@ function ValidationBadge({ status }: { status: ValidationState }) {
           color: "var(--drp-info)",
         }}
       >
-        <Icon name="loader" size="xs" className="animate-spin" />
+        <Loader size="sm" />
         Verifying
       </span>
     );
@@ -68,7 +68,7 @@ function ValidationBadge({ status }: { status: ValidationState }) {
           color: "var(--drp-mint)",
         }}
       >
-        <Icon name="shield" size="xs" />
+        <Icon name="check" size="sm" />
         Verified
       </span>
     );
@@ -88,7 +88,7 @@ function ValidationBadge({ status }: { status: ValidationState }) {
         color: "var(--drp-pink)",
       }}
     >
-      <Icon name="close" size="xs" />
+      <Icon name="close" size="sm" />
       Invalid
     </span>
   );
@@ -117,9 +117,9 @@ function StatusBadge({
       }}
     >
       {connected ? (
-        <Icon name="check" size="xs" />
+        <Icon name="check" size="sm" />
       ) : (
-        <Icon name="close" size="xs" />
+        <Icon name="close" size="sm" />
       )}
       {label || (connected ? "Connected" : "Not connected")}
     </span>
@@ -147,7 +147,7 @@ function TestResultBlock({ test }: { test: TestState }) {
           padding: "8px 0",
         }}
       >
-        <Icon name="loader" size="sm" className="animate-spin" />
+        <Loader size="sm" />
         {test.testType === "text"
           ? "Generating text..."
           : "Generating image (may take ~30s)..."}
@@ -913,7 +913,7 @@ export default function SettingsPage() {
                   marginBottom: "var(--drp-space-2)",
                 }}
               >
-                <Icon name="key" size="sm" /> API Key
+                API Key
               </label>
               <div style={{ position: "relative" }}>
                 <input
@@ -970,7 +970,7 @@ export default function SettingsPage() {
             >
               {claudeValidation.state === "validating" ? (
                 <>
-                  <Icon name="loader" size="sm" className="animate-spin" />
+                  <Loader size="sm" />
                   Validating...
                 </>
               ) : (
@@ -1002,8 +1002,7 @@ export default function SettingsPage() {
                   {claudeTest.state === "loading" &&
                   claudeTest.testType === "text" ? (
                     <>
-                      <Icon name="loader" size="sm" className="animate-spin" />{" "}
-                      Testing...
+                      <Loader size="sm" /> Testing...
                     </>
                   ) : (
                     "Test Text Model"
@@ -1076,7 +1075,7 @@ export default function SettingsPage() {
                   marginBottom: "var(--drp-space-2)",
                 }}
               >
-                <Icon name="key" size="sm" /> API Key
+                API Key
               </label>
               <div style={{ position: "relative" }}>
                 <input
@@ -1133,7 +1132,7 @@ export default function SettingsPage() {
             >
               {straicoValidation.state === "validating" ? (
                 <>
-                  <Icon name="loader" size="sm" className="animate-spin" />
+                  <Loader size="sm" />
                   Validating...
                 </>
               ) : (
@@ -1173,17 +1172,23 @@ export default function SettingsPage() {
                       Model for Copy
                     </span>
                     {straicoModelOpen ? (
-                      <Icon
-                        name="arrow-down"
-                        size="sm"
-                        style={{ color: "var(--drp-text-muted)" }}
-                      />
+                      <span
+                        style={{
+                          color: "var(--drp-text-muted)",
+                          display: "flex",
+                        }}
+                      >
+                        <Icon name="arrow-down" size="sm" />
+                      </span>
                     ) : (
-                      <Icon
-                        name="arrow-right"
-                        size="sm"
-                        style={{ color: "var(--drp-text-muted)" }}
-                      />
+                      <span
+                        style={{
+                          color: "var(--drp-text-muted)",
+                          display: "flex",
+                        }}
+                      >
+                        <Icon name="arrow-right" size="sm" />
+                      </span>
                     )}
                   </button>
                   {straicoModelOpen && (
@@ -1235,17 +1240,23 @@ export default function SettingsPage() {
                       Model for Image
                     </span>
                     {straicoImageOpen ? (
-                      <Icon
-                        name="arrow-down"
-                        size="sm"
-                        style={{ color: "var(--drp-text-muted)" }}
-                      />
+                      <span
+                        style={{
+                          color: "var(--drp-text-muted)",
+                          display: "flex",
+                        }}
+                      >
+                        <Icon name="arrow-down" size="sm" />
+                      </span>
                     ) : (
-                      <Icon
-                        name="arrow-right"
-                        size="sm"
-                        style={{ color: "var(--drp-text-muted)" }}
-                      />
+                      <span
+                        style={{
+                          color: "var(--drp-text-muted)",
+                          display: "flex",
+                        }}
+                      >
+                        <Icon name="arrow-right" size="sm" />
+                      </span>
                     )}
                   </button>
                   {straicoImageOpen && (
@@ -1291,12 +1302,7 @@ export default function SettingsPage() {
                     {straicoTest.state === "loading" &&
                     straicoTest.testType === "text" ? (
                       <>
-                        <Icon
-                          name="loader"
-                          size="sm"
-                          className="animate-spin"
-                        />{" "}
-                        Testing...
+                        <Loader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Text Model"
@@ -1320,12 +1326,7 @@ export default function SettingsPage() {
                     {straicoTest.state === "loading" &&
                     straicoTest.testType === "image" ? (
                       <>
-                        <Icon
-                          name="loader"
-                          size="sm"
-                          className="animate-spin"
-                        />{" "}
-                        Testing...
+                        <Loader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Image Model"
@@ -1399,7 +1400,7 @@ export default function SettingsPage() {
                   marginBottom: "var(--drp-space-2)",
                 }}
               >
-                <Icon name="key" size="sm" /> API Key
+                API Key
               </label>
               <div style={{ position: "relative" }}>
                 <input
@@ -1456,7 +1457,7 @@ export default function SettingsPage() {
             >
               {oneforallValidation.state === "validating" ? (
                 <>
-                  <Icon name="loader" size="sm" className="animate-spin" />
+                  <Loader size="sm" />
                   Validating...
                 </>
               ) : (
@@ -1496,17 +1497,23 @@ export default function SettingsPage() {
                       Model for Copy
                     </span>
                     {oneforallModelOpen ? (
-                      <Icon
-                        name="arrow-down"
-                        size="sm"
-                        style={{ color: "var(--drp-text-muted)" }}
-                      />
+                      <span
+                        style={{
+                          color: "var(--drp-text-muted)",
+                          display: "flex",
+                        }}
+                      >
+                        <Icon name="arrow-down" size="sm" />
+                      </span>
                     ) : (
-                      <Icon
-                        name="arrow-right"
-                        size="sm"
-                        style={{ color: "var(--drp-text-muted)" }}
-                      />
+                      <span
+                        style={{
+                          color: "var(--drp-text-muted)",
+                          display: "flex",
+                        }}
+                      >
+                        <Icon name="arrow-right" size="sm" />
+                      </span>
                     )}
                   </button>
                   {oneforallModelOpen && (
@@ -1557,17 +1564,23 @@ export default function SettingsPage() {
                       Model for Image
                     </span>
                     {oneforallImageOpen ? (
-                      <Icon
-                        name="arrow-down"
-                        size="sm"
-                        style={{ color: "var(--drp-text-muted)" }}
-                      />
+                      <span
+                        style={{
+                          color: "var(--drp-text-muted)",
+                          display: "flex",
+                        }}
+                      >
+                        <Icon name="arrow-down" size="sm" />
+                      </span>
                     ) : (
-                      <Icon
-                        name="arrow-right"
-                        size="sm"
-                        style={{ color: "var(--drp-text-muted)" }}
-                      />
+                      <span
+                        style={{
+                          color: "var(--drp-text-muted)",
+                          display: "flex",
+                        }}
+                      >
+                        <Icon name="arrow-right" size="sm" />
+                      </span>
                     )}
                   </button>
                   {oneforallImageOpen && (
@@ -1613,12 +1626,7 @@ export default function SettingsPage() {
                     {oneforallTest.state === "loading" &&
                     oneforallTest.testType === "text" ? (
                       <>
-                        <Icon
-                          name="loader"
-                          size="sm"
-                          className="animate-spin"
-                        />{" "}
-                        Testing...
+                        <Loader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Text Model"
@@ -1642,12 +1650,7 @@ export default function SettingsPage() {
                     {oneforallTest.state === "loading" &&
                     oneforallTest.testType === "image" ? (
                       <>
-                        <Icon
-                          name="loader"
-                          size="sm"
-                          className="animate-spin"
-                        />{" "}
-                        Testing...
+                        <Loader size="sm" /> Testing...
                       </>
                     ) : (
                       "Test Image Model"
@@ -1670,7 +1673,7 @@ export default function SettingsPage() {
         >
           {saving ? (
             <>
-              <Icon name="loader" size="md" className="animate-spin" />
+              <Loader size="sm" />
               Saving & Validating...
             </>
           ) : (

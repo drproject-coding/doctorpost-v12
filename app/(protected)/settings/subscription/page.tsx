@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, Button, Icon } from "@doctorproject/react";
+import { Card, Button, Icon, Loader } from "@doctorproject/react";
 import "@doctorproject/react/styles";
 import { useAuth } from "@/lib/auth-context";
 
@@ -102,11 +102,7 @@ export default function SettingsSubscriptionPage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Icon
-            name="loader"
-            size="sm"
-            style={{ animation: "spin 1s linear infinite" }}
-          />
+          <Loader size="sm" />
           <span style={{ fontWeight: 600 }}>Loading…</span>
         </div>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
@@ -178,11 +174,9 @@ export default function SettingsSubscriptionPage() {
               marginBottom: 16,
             }}
           >
-            <Icon
-              name="close"
-              size="sm"
-              style={{ color: "var(--drp-pink)", flexShrink: 0 }}
-            />
+            <span style={{ color: "var(--drp-pink)", flexShrink: 0 }}>
+              <Icon name="close" size="sm" />
+            </span>
             <span style={{ fontSize: 13 }}>{error}</span>
           </div>
         )}
@@ -224,11 +218,9 @@ export default function SettingsSubscriptionPage() {
                     {planMeta.label}
                   </span>
                   {tier === "power" && (
-                    <Icon
-                      name="star"
-                      size="sm"
-                      style={{ color: "var(--drp-orange)" }}
-                    />
+                    <span style={{ color: "var(--drp-orange)", fontSize: 14 }}>
+                      ★
+                    </span>
                   )}
                 </div>
                 <p
@@ -421,15 +413,16 @@ export default function SettingsSubscriptionPage() {
                             gap: 6,
                           }}
                         >
-                          <Icon
-                            name="check"
-                            size="xs"
+                          <span
                             style={{
                               marginTop: 2,
                               flexShrink: 0,
                               color: plan.color,
+                              display: "flex",
                             }}
-                          />
+                          >
+                            <Icon name="check" size="sm" />
+                          </span>
                           <span
                             style={{ fontSize: 12, color: "var(--drp-black)" }}
                           >
@@ -481,9 +474,11 @@ export default function SettingsSubscriptionPage() {
               </div>
 
               <Button
-                as="a"
-                href="mailto:support@doctorpost.ai?subject=Upgrade%20Request"
                 variant="primary"
+                onClick={() => {
+                  window.location.href =
+                    "mailto:support@doctorpost.ai?subject=Upgrade%20Request";
+                }}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -491,7 +486,6 @@ export default function SettingsSubscriptionPage() {
                   flexShrink: 0,
                 }}
               >
-                <Icon name="zap" size="sm" />
                 {tier === "free" ? "Upgrade to Pro" : "Upgrade to Power"}
               </Button>
             </div>

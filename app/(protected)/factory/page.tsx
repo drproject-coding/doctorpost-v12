@@ -898,7 +898,7 @@ export default function FactoryPage() {
               onClick={() => handleRetryFromPhase(state.phase as PipelinePhase)}
               disabled={running}
             >
-              <Icon name="arrow-right" size="xs" />
+              <Icon name="arrow-right" size="sm" />
               Continue
             </Button>
           </div>
@@ -1086,7 +1086,7 @@ export default function FactoryPage() {
                 }}
               >
                 <Button variant="primary" onClick={handleDiscover}>
-                  <Icon name="arrow-right" size="xs" />
+                  <Icon name="arrow-right" size="sm" />
                   Research This Topic
                 </Button>
               </div>
@@ -1112,7 +1112,7 @@ export default function FactoryPage() {
                 }}
               >
                 <Button variant="primary" onClick={handleEvidence}>
-                  <Icon name="arrow-right" size="xs" />
+                  <Icon name="arrow-right" size="sm" />
                   Gather Evidence
                 </Button>
               </div>
@@ -1155,7 +1155,7 @@ export default function FactoryPage() {
                   style={{ width: 200 }}
                 />
                 <Button variant="primary" onClick={handleWrite}>
-                  <Icon name="arrow-right" size="xs" />
+                  <Icon name="arrow-right" size="sm" />
                   Write Draft
                 </Button>
               </div>
@@ -1231,7 +1231,7 @@ export default function FactoryPage() {
                 onClick={handleFormat}
                 disabled={!allGuardrailsPassing()}
               >
-                <Icon name="arrow-right" size="xs" />
+                <Icon name="arrow-right" size="sm" />
                 Format for LinkedIn
               </Button>
             </div>

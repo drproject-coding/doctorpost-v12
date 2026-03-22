@@ -1,7 +1,7 @@
 "use client";
 import type React from "react";
 import { useState, useMemo } from "react";
-import { Select, Icon } from "@doctorproject/react";
+import { Select, Icon, Loader } from "@doctorproject/react";
 import type { AiModel, StraicoUserInfo } from "@/lib/types";
 
 type SortOption = "quality" | "price-asc" | "price-desc" | "newest";
@@ -33,18 +33,15 @@ function QualityBadge({ level }: { level: number }) {
       title={`Editor's choice: ${level}/3`}
     >
       {Array.from({ length: stars }, (_, i) => (
-        <Icon key={i} name="star" size="xs" />
+        <span key={i} style={{ fontSize: 12 }}>
+          ★
+        </span>
       ))}
     </span>
   );
 }
 
 function FeatureBadge({ label }: { label: string }) {
-  const iconMap: Record<string, string> = {
-    "Image input": "image",
-    "Web search": "globe",
-  };
-  const iconName = iconMap[label] ?? "zap";
   return (
     <span
       style={{
@@ -60,7 +57,6 @@ function FeatureBadge({ label }: { label: string }) {
         letterSpacing: "0.05em",
       }}
     >
-      <Icon name={iconName} size="xs" />
       {label}
     </span>
   );
@@ -167,7 +163,6 @@ export function StraicoModelPicker({
             border: "1px solid rgba(217, 119, 6, 0.25)",
           }}
         >
-          <Icon name="coins" size="sm" style={{ color: "var(--drp-orange)" }} />
           <span
             style={{
               fontSize: 12,
@@ -202,17 +197,18 @@ export function StraicoModelPicker({
         }}
       >
         <div style={{ position: "relative" }}>
-          <Icon
-            name="search"
-            size="sm"
+          <span
             style={{
               position: "absolute",
               left: 10,
               top: "50%",
               transform: "translateY(-50%)",
               color: "var(--drp-text-muted)",
+              display: "flex",
             }}
-          />
+          >
+            <Icon name="search" size="sm" />
+          </span>
           <input
             type="text"
             value={search}
@@ -274,7 +270,7 @@ export function StraicoModelPicker({
             color: "var(--drp-text-muted)",
           }}
         >
-          <Icon name="loader" size="sm" className="animate-spin" />
+          <Loader size="sm" />
           Loading models...
         </div>
       )}
@@ -377,29 +373,11 @@ export function StraicoModelPicker({
                     >
                       {model.pricing && (
                         <span title="Cost per 100 words">
-                          <Icon
-                            name="coins"
-                            size="xs"
-                            style={{
-                              display: "inline",
-                              marginRight: 2,
-                              verticalAlign: "-1px",
-                            }}
-                          />
                           {model.pricing.coins}/{model.pricing.words}w
                         </span>
                       )}
                       {!model.pricing && model.creditsPerInputToken != null && (
                         <span title="Credits per token (in/out)">
-                          <Icon
-                            name="coins"
-                            size="xs"
-                            style={{
-                              display: "inline",
-                              marginRight: 2,
-                              verticalAlign: "-1px",
-                            }}
-                          />
                           {model.creditsPerInputToken}↑ /{" "}
                           {model.creditsPerOutputToken ?? 0}↓
                         </span>
@@ -491,11 +469,11 @@ export function StraicoModelPicker({
                 >
                   {isExpanded ? (
                     <>
-                      Hide details <Icon name="arrow-up" size="xs" />
+                      Hide details <Icon name="arrow-up" size="sm" />
                     </>
                   ) : (
                     <>
-                      Show details <Icon name="arrow-down" size="xs" />
+                      Show details <Icon name="arrow-down" size="sm" />
                     </>
                   )}
                 </button>
@@ -527,32 +505,12 @@ export function StraicoModelPicker({
                   )}
                   {model.pricing && (
                     <p style={{ fontSize: 11, color: "var(--drp-text-muted)" }}>
-                      <Icon
-                        name="coins"
-                        size="xs"
-                        style={{
-                          display: "inline",
-                          marginRight: 4,
-                          verticalAlign: "-1px",
-                          color: "var(--drp-orange)",
-                        }}
-                      />
                       ~{model.pricing.coins} coins per {model.pricing.words}{" "}
                       words
                     </p>
                   )}
                   {!model.pricing && model.creditsPerInputToken != null && (
                     <p style={{ fontSize: 11, color: "var(--drp-text-muted)" }}>
-                      <Icon
-                        name="coins"
-                        size="xs"
-                        style={{
-                          display: "inline",
-                          marginRight: 4,
-                          verticalAlign: "-1px",
-                          color: "var(--drp-orange)",
-                        }}
-                      />
                       {model.creditsPerInputToken} credits/input token &middot;{" "}
                       {model.creditsPerOutputToken ?? 0} credits/output token
                     </p>
@@ -578,7 +536,7 @@ export function StraicoModelPicker({
                           marginBottom: 4,
                         }}
                       >
-                        <Icon name="thumbs-up" size="xs" /> Strengths
+                        Strengths
                       </p>
                       <ul
                         style={{
@@ -629,7 +587,7 @@ export function StraicoModelPicker({
                           marginBottom: 4,
                         }}
                       >
-                        <Icon name="thumbs-down" size="xs" /> Weaknesses
+                        Weaknesses
                       </p>
                       <ul
                         style={{

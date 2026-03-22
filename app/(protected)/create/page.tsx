@@ -724,7 +724,7 @@ export default function CreatePage() {
                     color: "var(--drp-grey)",
                   }}
                 >
-                  <Icon name="eye" size="xs" />
+                  <Icon name="eye" size="sm" />
                   <span>Preview tone prompt:</span>
                   {profile.tones.map((toneId) => {
                     const tone = enhancedToneOptions.find(

@@ -1,6 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Icon, Loader } from "@doctorproject/react";
+import {
+  Button,
+  Icon,
+  Loader,
+  Input,
+  Textarea,
+  Select,
+} from "@doctorproject/react";
 import type { ScheduledPost } from "@/lib/types";
 
 interface PostEditorModalProps {
@@ -116,18 +123,10 @@ export function PostEditorModal({
           >
             Title
           </label>
-          <input
+          <Input
             type="text"
             value={editedPost.title}
             onChange={(e) => handleFieldChange("title", e.target.value)}
-            style={{
-              width: "100%",
-              padding: "var(--drp-space-2)",
-              fontSize: "var(--drp-text-sm)",
-              fontFamily: "inherit",
-              border: "var(--drp-border)",
-              boxSizing: "border-box",
-            }}
           />
         </div>
 
@@ -143,18 +142,10 @@ export function PostEditorModal({
           >
             Post Content
           </label>
-          <textarea
+          <Textarea
             value={editedPost.content}
             onChange={(e) => handleFieldChange("content", e.target.value)}
-            style={{
-              width: "100%",
-              minHeight: 150,
-              padding: "var(--drp-space-2)",
-              fontSize: "var(--drp-text-sm)",
-              fontFamily: "inherit",
-              border: "var(--drp-border)",
-              boxSizing: "border-box",
-            }}
+            style={{ minHeight: 150 }}
           />
           <div
             style={{
@@ -179,31 +170,24 @@ export function PostEditorModal({
           >
             Status
           </label>
-          <select
+          <Select
             value={editedPost.status}
             onChange={(e) =>
               handleFieldChange(
                 "status",
-                e.target.value as ScheduledPost["status"],
+                (e as React.ChangeEvent<HTMLSelectElement>).target
+                  .value as ScheduledPost["status"],
               )
             }
-            style={{
-              width: "100%",
-              padding: "var(--drp-space-2)",
-              fontSize: "var(--drp-text-sm)",
-              fontFamily: "inherit",
-              border: "var(--drp-border)",
-              boxSizing: "border-box",
-              background: "white",
-            }}
-          >
-            <option value="draft">Draft</option>
-            <option value="to-review">To Review</option>
-            <option value="to-plan">To Plan</option>
-            <option value="to-publish">To Publish</option>
-            <option value="scheduled">Scheduled</option>
-            <option value="published">Published</option>
-          </select>
+            options={[
+              { value: "draft", label: "Draft" },
+              { value: "to-review", label: "To Review" },
+              { value: "to-plan", label: "To Plan" },
+              { value: "to-publish", label: "To Publish" },
+              { value: "scheduled", label: "Scheduled" },
+              { value: "published", label: "Published" },
+            ]}
+          />
         </div>
 
         {/* Publish Date */}
@@ -218,19 +202,12 @@ export function PostEditorModal({
           >
             <Icon name="calendar" size="sm" /> Publish Date
           </label>
-          <input
+          <Input
             type="date"
             value={
               editedPost.scheduledAt ? editedPost.scheduledAt.slice(0, 10) : ""
             }
             onChange={(e) => handleFieldChange("scheduledAt", e.target.value)}
-            style={{
-              width: "100%",
-              padding: "var(--drp-space-2)",
-              fontSize: "var(--drp-text-sm)",
-              border: "var(--drp-border)",
-              boxSizing: "border-box",
-            }}
           />
         </div>
 

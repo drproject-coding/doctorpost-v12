@@ -1,6 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card, Icon, Loader, Select } from "@doctorproject/react";
+import {
+  Button,
+  Card,
+  Icon,
+  Loader,
+  Select,
+  Input,
+  Textarea,
+} from "@doctorproject/react";
 import { useAuth } from "@/lib/auth-context";
 import type { DocumentCategory } from "@/lib/knowledge/types";
 
@@ -138,11 +146,10 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
             style={{ marginBottom: "var(--drp-space-4)" }}
           >
             <label className="drp-field__label">Upload .md file</label>
-            <input
+            <Input
               type="file"
               accept=".md,.txt"
               onChange={handleFileUpload}
-              className="drp-input"
               style={{ padding: "var(--drp-space-2)" }}
             />
             {fileName && (
@@ -161,8 +168,7 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
           {/* Text paste */}
           <div className="drp-field">
             <label className="drp-field__label">Or paste content</label>
-            <textarea
-              className="drp-input"
+            <Textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Paste markdown content here..."
@@ -201,8 +207,7 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
           <div className="drp-form-stack">
             <div className="drp-field">
               <label className="drp-field__label">Document Name</label>
-              <input
-                className="drp-input"
+              <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. brand-voice"
@@ -225,8 +230,7 @@ export function ImportFlow({ onComplete, onCancel }: ImportFlowProps) {
               </Select>
               <div className="drp-field">
                 <label className="drp-field__label">Subcategory</label>
-                <input
-                  className="drp-input"
+                <Input
                   value={subcategory}
                   onChange={(e) => setSubcategory(e.target.value)}
                   placeholder="e.g. hooks, closers"

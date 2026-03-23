@@ -6,7 +6,7 @@ interface ScoreBadgeProps {
 }
 
 export default function ScoreBadge({ score, size = "sm" }: ScoreBadgeProps) {
-  const fontSize = size === "sm" ? 9 : 10;
+  const fontSize = size === "sm" ? "var(--drp-text-xs)" : "var(--drp-text-xs)";
   const padding = size === "sm" ? "0 3px" : "0 4px";
   const marginRight = size === "sm" ? 4 : 6;
 

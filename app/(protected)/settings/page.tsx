@@ -1,6 +1,13 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Card, Icon, Loader } from "@doctorproject/react";
+import {
+  Button,
+  Card,
+  Icon,
+  Loader,
+  Input,
+  Select,
+} from "@doctorproject/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import {
   BrandProfile,
@@ -39,7 +46,7 @@ function ValidationBadge({ status }: { status: ValidationState }) {
           alignItems: "center",
           gap: 4,
           padding: "2px 8px",
-          fontSize: 10,
+          fontSize: "var(--drp-text-xs)",
           fontWeight: 700,
           textTransform: "uppercase",
           letterSpacing: "0.05em",
@@ -60,7 +67,7 @@ function ValidationBadge({ status }: { status: ValidationState }) {
           alignItems: "center",
           gap: 4,
           padding: "2px 8px",
-          fontSize: 10,
+          fontSize: "var(--drp-text-xs)",
           fontWeight: 700,
           textTransform: "uppercase",
           letterSpacing: "0.05em",
@@ -80,7 +87,7 @@ function ValidationBadge({ status }: { status: ValidationState }) {
         alignItems: "center",
         gap: 4,
         padding: "2px 8px",
-        fontSize: 10,
+        fontSize: "var(--drp-text-xs)",
         fontWeight: 700,
         textTransform: "uppercase",
         letterSpacing: "0.05em",
@@ -108,7 +115,7 @@ function StatusBadge({
         alignItems: "center",
         gap: 4,
         padding: "2px 8px",
-        fontSize: 10,
+        fontSize: "var(--drp-text-xs)",
         fontWeight: 700,
         textTransform: "uppercase",
         letterSpacing: "0.05em",
@@ -142,7 +149,7 @@ function TestResultBlock({ test }: { test: TestState }) {
           display: "flex",
           alignItems: "center",
           gap: 6,
-          fontSize: 12,
+          fontSize: "var(--drp-text-sm)",
           color: "var(--drp-text-muted)",
           padding: "8px 0",
         }}
@@ -161,7 +168,7 @@ function TestResultBlock({ test }: { test: TestState }) {
           background: "rgba(220, 38, 38, 0.06)",
           border: "1px solid rgba(220, 38, 38, 0.2)",
           padding: "8px 12px",
-          fontSize: 12,
+          fontSize: "var(--drp-text-sm)",
           color: "var(--drp-pink)",
         }}
       >
@@ -177,7 +184,7 @@ function TestResultBlock({ test }: { test: TestState }) {
             background: "rgba(22, 163, 74, 0.06)",
             border: "1px solid rgba(22, 163, 74, 0.2)",
             padding: "6px 12px",
-            fontSize: 12,
+            fontSize: "var(--drp-text-sm)",
             color: "var(--drp-mint)",
             display: "flex",
             alignItems: "center",
@@ -192,7 +199,7 @@ function TestResultBlock({ test }: { test: TestState }) {
             background: "var(--drp-surface)",
             border: "1px solid rgba(0,0,0,0.1)",
             padding: "10px 14px",
-            fontSize: 13,
+            fontSize: "var(--drp-text-sm)",
             color: "var(--drp-black)",
             fontStyle: "italic",
           }}
@@ -210,7 +217,7 @@ function TestResultBlock({ test }: { test: TestState }) {
             background: "rgba(22, 163, 74, 0.06)",
             border: "1px solid rgba(22, 163, 74, 0.2)",
             padding: "6px 12px",
-            fontSize: 12,
+            fontSize: "var(--drp-text-sm)",
             color: "var(--drp-mint)",
             display: "flex",
             alignItems: "center",
@@ -649,7 +656,7 @@ export default function SettingsPage() {
         >
           <span
             style={{
-              fontSize: 12,
+              fontSize: "var(--drp-text-sm)",
               fontWeight: 700,
               color: "var(--drp-text-muted)",
             }}
@@ -670,7 +677,7 @@ export default function SettingsPage() {
         >
           <span
             style={{
-              fontSize: 12,
+              fontSize: "var(--drp-text-sm)",
               fontWeight: 700,
               color: "var(--drp-text-muted)",
             }}
@@ -691,7 +698,7 @@ export default function SettingsPage() {
         >
           <span
             style={{
-              fontSize: 12,
+              fontSize: "var(--drp-text-sm)",
               fontWeight: 700,
               color: "var(--drp-text-muted)",
             }}
@@ -733,8 +740,7 @@ export default function SettingsPage() {
           <div className="drp-field">
             <label className="drp-field__label">Perplexity API Key</label>
             <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
-              <input
-                className="drp-input"
+              <Input
                 type={showPerplexityKey ? "text" : "password"}
                 value={perplexityApiKey}
                 onChange={(e) => setPerplexityApiKey(e.target.value)}
@@ -760,8 +766,7 @@ export default function SettingsPage() {
           {/* Reddit */}
           <div className="drp-field">
             <label className="drp-field__label">Reddit Client ID</label>
-            <input
-              className="drp-input"
+            <Input
               value={redditClientId}
               onChange={(e) => setRedditClientId(e.target.value)}
               onBlur={() => void saveProfileSilent()}
@@ -771,8 +776,7 @@ export default function SettingsPage() {
           <div className="drp-field">
             <label className="drp-field__label">Reddit Client Secret</label>
             <div style={{ display: "flex", gap: "var(--drp-space-2)" }}>
-              <input
-                className="drp-input"
+              <Input
                 type={showRedditSecret ? "text" : "password"}
                 value={redditClientSecret}
                 onChange={(e) => setRedditClientSecret(e.target.value)}
@@ -872,7 +876,7 @@ export default function SettingsPage() {
               {isClaude && (
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: "var(--drp-text-xs)",
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
@@ -902,7 +906,7 @@ export default function SettingsPage() {
             <div>
               <label
                 style={{
-                  fontSize: 11,
+                  fontSize: "var(--drp-text-xs)",
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
@@ -916,7 +920,7 @@ export default function SettingsPage() {
                 API Key
               </label>
               <div style={{ position: "relative" }}>
-                <input
+                <Input
                   type={showClaudeKey ? "text" : "password"}
                   value={claudeApiKey}
                   onChange={(e) => {
@@ -924,7 +928,6 @@ export default function SettingsPage() {
                     setClaudeValidation({ state: "idle" });
                   }}
                   placeholder="sk-ant-..."
-                  className="drp-input"
                   style={{ width: "100%", paddingRight: 40 }}
                 />
                 <button
@@ -952,7 +955,7 @@ export default function SettingsPage() {
               {claudeValidation.state === "error" && (
                 <p
                   style={{
-                    fontSize: 10,
+                    fontSize: "var(--drp-text-xs)",
                     color: "var(--drp-pink)",
                     marginTop: 4,
                   }}
@@ -977,7 +980,12 @@ export default function SettingsPage() {
                 "Validate Key"
               )}
             </Button>
-            <p style={{ fontSize: 10, color: "var(--drp-text-muted)" }}>
+            <p
+              style={{
+                fontSize: "var(--drp-text-xs)",
+                color: "var(--drp-text-muted)",
+              }}
+            >
               Claude uses direct browser API — model selection is automatic
               (Claude Sonnet 4.5).
             </p>
@@ -1034,7 +1042,7 @@ export default function SettingsPage() {
               {isStraico && (
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: "var(--drp-text-xs)",
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
@@ -1064,7 +1072,7 @@ export default function SettingsPage() {
             <div>
               <label
                 style={{
-                  fontSize: 11,
+                  fontSize: "var(--drp-text-xs)",
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
@@ -1078,7 +1086,7 @@ export default function SettingsPage() {
                 API Key
               </label>
               <div style={{ position: "relative" }}>
-                <input
+                <Input
                   type={showStraicoKey ? "text" : "password"}
                   value={straicoApiKey}
                   onChange={(e) => {
@@ -1086,7 +1094,6 @@ export default function SettingsPage() {
                     setStraicoValidation({ state: "idle" });
                   }}
                   placeholder="Your Straico API key"
-                  className="drp-input"
                   style={{ width: "100%", paddingRight: 40 }}
                 />
                 <button
@@ -1114,7 +1121,7 @@ export default function SettingsPage() {
               {straicoValidation.state === "error" && (
                 <p
                   style={{
-                    fontSize: 10,
+                    fontSize: "var(--drp-text-xs)",
                     color: "var(--drp-pink)",
                     marginTop: 4,
                   }}
@@ -1162,7 +1169,7 @@ export default function SettingsPage() {
                   >
                     <span
                       style={{
-                        fontSize: 11,
+                        fontSize: "var(--drp-text-xs)",
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
@@ -1230,7 +1237,7 @@ export default function SettingsPage() {
                   >
                     <span
                       style={{
-                        fontSize: 11,
+                        fontSize: "var(--drp-text-xs)",
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
@@ -1359,7 +1366,7 @@ export default function SettingsPage() {
               {isOneforall && (
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: "var(--drp-text-xs)",
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
@@ -1389,7 +1396,7 @@ export default function SettingsPage() {
             <div>
               <label
                 style={{
-                  fontSize: 11,
+                  fontSize: "var(--drp-text-xs)",
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
@@ -1403,7 +1410,7 @@ export default function SettingsPage() {
                 API Key
               </label>
               <div style={{ position: "relative" }}>
-                <input
+                <Input
                   type={showOneforallKey ? "text" : "password"}
                   value={oneforallApiKey}
                   onChange={(e) => {
@@ -1411,7 +1418,6 @@ export default function SettingsPage() {
                     setOneforallValidation({ state: "idle" });
                   }}
                   placeholder="Your 1ForAll API key"
-                  className="drp-input"
                   style={{ width: "100%", paddingRight: 40 }}
                 />
                 <button
@@ -1439,7 +1445,7 @@ export default function SettingsPage() {
               {oneforallValidation.state === "error" && (
                 <p
                   style={{
-                    fontSize: 10,
+                    fontSize: "var(--drp-text-xs)",
                     color: "var(--drp-pink)",
                     marginTop: 4,
                   }}
@@ -1487,7 +1493,7 @@ export default function SettingsPage() {
                   >
                     <span
                       style={{
-                        fontSize: 11,
+                        fontSize: "var(--drp-text-xs)",
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
@@ -1554,7 +1560,7 @@ export default function SettingsPage() {
                   >
                     <span
                       style={{
-                        fontSize: 11,
+                        fontSize: "var(--drp-text-xs)",
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",

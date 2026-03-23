@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card } from "@doctorproject/react";
+import { Button, Card, Input, Textarea } from "@doctorproject/react";
 import { getBrandProfile, updateBrandProfile } from "@/lib/api";
 import type { BrandProfile } from "@/lib/types";
 
@@ -132,6 +132,7 @@ function TagInput({ value, onChange, placeholder }: TagInputProps) {
           fontSize: "14px",
           background: "transparent",
           color: "var(--drp-black)",
+          fontFamily: "inherit",
         }}
       />
     </div>
@@ -314,47 +315,50 @@ function Step1({
         style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}
       >
         <LabeledField label="First Name" error={errors.firstName}>
-          <input
-            style={{
-              ...inputStyle,
-              borderColor: errors.firstName ? "#e53e3e" : "var(--drp-grey)",
-            }}
+          <Input
             value={state.firstName}
-            onChange={set("firstName")}
+            onChange={(e) =>
+              set("firstName")(e as React.ChangeEvent<HTMLInputElement>)
+            }
             placeholder="Jane"
             autoFocus
+            error={!!errors.firstName}
           />
         </LabeledField>
         <LabeledField label="Last Name">
-          <input
-            style={inputStyle}
+          <Input
             value={state.lastName}
-            onChange={set("lastName")}
+            onChange={(e) =>
+              set("lastName")(e as React.ChangeEvent<HTMLInputElement>)
+            }
             placeholder="Smith"
           />
         </LabeledField>
       </div>
       <LabeledField label="Company / Brand Name">
-        <input
-          style={inputStyle}
+        <Input
           value={state.companyName}
-          onChange={set("companyName")}
+          onChange={(e) =>
+            set("companyName")(e as React.ChangeEvent<HTMLInputElement>)
+          }
           placeholder="Acme Corp"
         />
       </LabeledField>
       <LabeledField label="Your Role / Title">
-        <input
-          style={inputStyle}
+        <Input
           value={state.role}
-          onChange={set("role")}
+          onChange={(e) =>
+            set("role")(e as React.ChangeEvent<HTMLInputElement>)
+          }
           placeholder="Head of Marketing"
         />
       </LabeledField>
       <LabeledField label="Industry">
-        <input
-          style={inputStyle}
+        <Input
           value={state.industry}
-          onChange={set("industry")}
+          onChange={(e) =>
+            set("industry")(e as React.ChangeEvent<HTMLInputElement>)
+          }
           placeholder="SaaS / Healthcare / Finance…"
         />
       </LabeledField>
@@ -416,8 +420,7 @@ function Step2({
         label="Copy Guideline"
         hint="Any additional instructions for your writing style (optional)."
       >
-        <textarea
-          style={textareaStyle}
+        <Textarea
           value={state.copyGuideline}
           onChange={(e) =>
             onChange({ ...state, copyGuideline: e.target.value })
@@ -458,16 +461,13 @@ function Step3({
         hint="Describe your main content themes and topics."
         error={errors.contentStrategy}
       >
-        <textarea
-          style={{
-            ...textareaStyle,
-            borderColor: errors.contentStrategy ? "#e53e3e" : "var(--drp-grey)",
-          }}
+        <Textarea
           value={state.contentStrategy}
           onChange={(e) =>
             onChange({ ...state, contentStrategy: e.target.value })
           }
           placeholder="e.g. I cover AI productivity, leadership lessons from startup failures, and data-driven marketing tactics."
+          error={!!errors.contentStrategy}
         />
       </LabeledField>
 
@@ -475,8 +475,7 @@ function Step3({
         label="Brand Definition"
         hint="What makes your content unique? How do you define value?"
       >
-        <textarea
-          style={textareaStyle}
+        <Textarea
           value={state.definition}
           onChange={(e) => onChange({ ...state, definition: e.target.value })}
           placeholder="e.g. I translate complex technical concepts into actionable frameworks that non-technical executives can implement immediately."
@@ -564,15 +563,11 @@ function Step5({
         hint="How do you describe your value? This is often the first sentence of your LinkedIn bio."
         error={errors.positioning}
       >
-        <textarea
-          style={{
-            ...textareaStyle,
-            minHeight: "128px",
-            borderColor: errors.positioning ? "#e53e3e" : "var(--drp-grey)",
-          }}
+        <Textarea
           value={state.positioning}
           onChange={(e) => onChange({ ...state, positioning: e.target.value })}
           placeholder="e.g. I help B2B SaaS companies grow from $1M to $10M ARR by building content-led demand engines — without paid ads."
+          error={!!errors.positioning}
         />
       </LabeledField>
     </div>

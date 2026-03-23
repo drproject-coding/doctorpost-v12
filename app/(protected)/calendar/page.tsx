@@ -204,7 +204,7 @@ export default function CalendarPage() {
                 className="flex items-center text-sm text-gray-700"
               >
                 <span
-                  className={`w-3 h-3 rounded-full border-2 ${getStatusColorClasses(
+                  className={`w-3 h-3 border-2 ${getStatusColorClasses(
                     option.value as PostStatus,
                   )
                     .split(" ")[0]
@@ -217,11 +217,11 @@ export default function CalendarPage() {
               </div>
             ))}
             <div className="flex items-center text-sm text-gray-700">
-              <span className="w-3 h-3 rounded-full border-2 border-gray-300 bg-purple-50 mr-2"></span>
+              <span className="w-3 h-3 border-2 border-gray-300 bg-purple-50 mr-2"></span>
               Today&apos;s Date
             </div>
             <div className="flex items-center text-sm text-gray-700">
-              <span className="w-3 h-3 rounded-full border-2 border-drp-yellow bg-yellow-100 mr-2"></span>
+              <span className="w-3 h-3 border-2 border-drp-yellow bg-yellow-100 mr-2"></span>
               Selected Date
             </div>
           </div>

@@ -216,12 +216,12 @@ export default function LoginPage() {
         {error && (
           <div
             style={{
-              marginTop: "24px",
-              padding: "12px",
+              marginTop: "var(--drp-text-h4)",
+              padding: "var(--drp-text-sm)",
               background: "rgba(233,152,152,0.2)",
               border: "2px solid var(--drp-pink)",
               color: "#991B1B",
-              fontSize: "14px",
+              fontSize: "var(--drp-text-md)",
               fontWeight: 500,
             }}
           >

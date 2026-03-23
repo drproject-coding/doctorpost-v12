@@ -62,12 +62,12 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
             style={{
               background: "white",
               border: "1px solid #121212",
-              padding: "24px",
+              padding: "var(--drp-text-h4)",
               minWidth: 320,
               maxWidth: 480,
               display: "flex",
               flexDirection: "column",
-              gap: "16px",
+              gap: "var(--drp-text-lg)",
             }}
           >
             {state.title && (

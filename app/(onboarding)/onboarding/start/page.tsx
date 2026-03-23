@@ -26,7 +26,7 @@ function OptionCard({
         minWidth: 0,
         display: "flex",
         flexDirection: "column",
-        gap: "20px",
+        gap: "var(--drp-text-h5)",
         backgroundColor: "var(--drp-cream)",
         cursor: "pointer",
         transition: "background-color 0.15s ease",
@@ -44,14 +44,14 @@ function OptionCard({
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "10px",
+          gap: "var(--drp-text-xs)",
           flex: 1,
         }}
       >
         <h2
           style={{
             margin: 0,
-            fontSize: "20px",
+            fontSize: "var(--drp-text-h5)",
             fontWeight: 700,
             color: "var(--drp-black)",
             lineHeight: 1.2,
@@ -62,7 +62,7 @@ function OptionCard({
         <p
           style={{
             margin: 0,
-            fontSize: "15px",
+            fontSize: "var(--drp-text-h6)",
             color: "var(--drp-text-muted)",
             lineHeight: 1.55,
           }}
@@ -123,7 +123,7 @@ export default function OnboardingStartPage() {
           <p
             style={{
               margin: 0,
-              fontSize: "16px",
+              fontSize: "var(--drp-text-lg)",
               color: "var(--drp-text-muted)",
               lineHeight: 1.5,
             }}
@@ -136,7 +136,7 @@ export default function OnboardingStartPage() {
           style={{
             display: "flex",
             flexDirection: "row",
-            gap: "24px",
+            gap: "var(--drp-text-h4)",
             flexWrap: "wrap",
           }}
         >
@@ -161,7 +161,7 @@ export default function OnboardingStartPage() {
               background: "none",
               border: "none",
               cursor: "pointer",
-              fontSize: "14px",
+              fontSize: "var(--drp-text-md)",
               color: "var(--drp-text-muted)",
               padding: "4px 0",
               textDecoration: "none",

@@ -72,7 +72,7 @@ const OffersSection: React.FC<OffersSectionProps> = ({
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-sm)" }}>
       {offers.length > 0 && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
           {offers.map((offer, i) => (
@@ -104,7 +104,7 @@ const OffersSection: React.FC<OffersSectionProps> = ({
                   lineHeight: 1,
                   color: "#121212",
                   fontWeight: "700",
-                  fontSize: "14px",
+                  fontSize: "var(--drp-text-md)",
                 }}
               >
                 ×

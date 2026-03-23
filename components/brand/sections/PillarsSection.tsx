@@ -104,12 +104,12 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
     : allPillars.filter((p) => selectedIds.includes(p.id));
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-sm)" }}>
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-          gap: "12px",
+          gap: "var(--drp-text-sm)",
         }}
       >
         {visiblePillars.map((pillar) => {
@@ -189,7 +189,7 @@ const PillarsSection: React.FC<PillarsSectionProps> = ({
                 </span>
                 {pillar.isTrending && (
                   <span
-                    style={{ fontSize: "13px", lineHeight: 1 }}
+                    style={{ fontSize: "var(--drp-text-sm)", lineHeight: 1 }}
                     title="Trending"
                     aria-label="Trending"
                   >

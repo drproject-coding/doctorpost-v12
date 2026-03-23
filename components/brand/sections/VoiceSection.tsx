@@ -53,7 +53,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
 
   if (editing) {
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-lg)" }}>
         {/* Tones */}
         <div>
           <label
@@ -99,12 +99,12 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
         <div>
           <label
             className="drp-field__label"
-            style={{ display: "block", marginBottom: "10px" }}
+            style={{ display: "block", marginBottom: "var(--drp-text-xs)" }}
           >
             Style Guide
           </label>
           <div
-            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-xs)" }}
           >
             {/* Emoji */}
             <label
@@ -121,15 +121,15 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
                 onChange={handleEmojiChange}
                 style={{
                   accentColor: "#631DED",
-                  width: "16px",
-                  height: "16px",
+                  width: "var(--drp-text-lg)",
+                  height: "var(--drp-text-lg)",
                 }}
               />
               <span style={{ fontSize: "var(--drp-text-sm)" }}>Use Emoji</span>
             </label>
 
             {/* Hashtags */}
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--drp-text-xs)" }}>
               <label
                 className="drp-field__label"
                 style={{ minWidth: "80px", margin: 0 }}
@@ -147,7 +147,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
             </div>
 
             {/* Links */}
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--drp-text-xs)" }}>
               <label
                 className="drp-field__label"
                 style={{ minWidth: "80px", margin: 0 }}
@@ -199,7 +199,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-lg)" }}>
       {/* Tones */}
       <div>
         <p className="drp-field__label" style={{ marginBottom: "8px" }}>
@@ -267,7 +267,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
         <p className="drp-field__label" style={{ marginBottom: "8px" }}>
           Style Guide
         </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--drp-text-sm)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span
               style={{

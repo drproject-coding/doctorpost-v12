@@ -57,9 +57,9 @@ export default function SignupPage() {
       >
         <h1
           style={{
-            fontSize: "24px",
+            fontSize: "var(--drp-text-h4)",
             fontWeight: 700,
-            marginBottom: "24px",
+            marginBottom: "var(--drp-text-h4)",
             color: "var(--drp-purple)",
           }}
         >
@@ -70,14 +70,14 @@ export default function SignupPage() {
           onSubmit={(e) => void handleSubmit(e)}
           style={{ textAlign: "left" }}
         >
-          <div style={{ marginBottom: "16px" }}>
+          <div style={{ marginBottom: "var(--drp-text-lg)" }}>
             <label
               htmlFor="name"
               style={{
                 display: "block",
                 fontWeight: 600,
                 marginBottom: "6px",
-                fontSize: "14px",
+                fontSize: "var(--drp-text-md)",
               }}
             >
               Full name
@@ -94,14 +94,14 @@ export default function SignupPage() {
             />
           </div>
 
-          <div style={{ marginBottom: "16px" }}>
+          <div style={{ marginBottom: "var(--drp-text-lg)" }}>
             <label
               htmlFor="email"
               style={{
                 display: "block",
                 fontWeight: 600,
                 marginBottom: "6px",
-                fontSize: "14px",
+                fontSize: "var(--drp-text-md)",
               }}
             >
               Email
@@ -118,14 +118,14 @@ export default function SignupPage() {
             />
           </div>
 
-          <div style={{ marginBottom: "24px" }}>
+          <div style={{ marginBottom: "var(--drp-text-h4)" }}>
             <label
               htmlFor="password"
               style={{
                 display: "block",
                 fontWeight: 600,
                 marginBottom: "6px",
-                fontSize: "14px",
+                fontSize: "var(--drp-text-md)",
               }}
             >
               Password
@@ -146,7 +146,7 @@ export default function SignupPage() {
                 onClick={() => setShowPassword((prev) => !prev)}
                 style={{
                   position: "absolute",
-                  right: "10px",
+                  right: "var(--drp-text-xs)",
                   top: "50%",
                   transform: "translateY(-50%)",
                   background: "none",
@@ -171,13 +171,13 @@ export default function SignupPage() {
           {error && (
             <div
               style={{
-                marginBottom: "16px",
+                marginBottom: "var(--drp-text-lg)",
                 padding: "10px 14px",
                 background: "#fee2e2",
                 border: "2px solid #ef4444",
                 borderRadius: 0,
                 color: "#b91c1c",
-                fontSize: "14px",
+                fontSize: "var(--drp-text-md)",
               }}
             >
               {error}
@@ -208,7 +208,7 @@ export default function SignupPage() {
           </Button>
         </form>
 
-        <p style={{ marginTop: "20px", fontSize: "14px" }}>
+        <p style={{ marginTop: "var(--drp-text-h5)", fontSize: "var(--drp-text-md)" }}>
           Already have an account?{" "}
           <a
             href="/login"

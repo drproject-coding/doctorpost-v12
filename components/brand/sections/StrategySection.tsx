@@ -84,7 +84,7 @@ const StrategySection: React.FC<StrategySectionProps> = ({
     <div
       style={{
         display: "grid",
-        gap: "24px",
+        gap: "var(--drp-text-h4)",
       }}
     >
       {/* Content Strategy */}

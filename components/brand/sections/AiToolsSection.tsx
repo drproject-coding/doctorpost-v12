@@ -57,7 +57,7 @@ function KeyField({
           onClick={() => setShow((s) => !s)}
           style={{
             position: "absolute",
-            right: "10px",
+            right: "var(--drp-text-xs)",
             background: "none",
             border: "none",
             cursor: "pointer",
@@ -205,7 +205,7 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
       {/* Provider selector */}
       <div className="drp-field">
         <label className="drp-field__label">AI Provider</label>
-        <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "var(--drp-text-lg)", flexWrap: "wrap" }}>
           {PROVIDERS.map((p) => (
             <label
               key={p}

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card } from "@doctorproject/react";
+import { Button, Card, Input, Textarea } from "@doctorproject/react";
 import { Icon } from "@doctorproject/react";
 
 interface CampaignSetupProps {
@@ -91,8 +91,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
         <div className="drp-form-stack">
           <div className="drp-field">
             <label className="drp-field__label">Campaign Name</label>
-            <input
-              className="drp-input"
+            <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Q2 2026 Authority Building"
@@ -103,8 +102,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
           <div className="drp-form-row">
             <div className="drp-field">
               <label className="drp-field__label">Duration (weeks)</label>
-              <input
-                className="drp-input"
+              <Input
                 type="number"
                 min={1}
                 max={52}
@@ -115,8 +113,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
             </div>
             <div className="drp-field">
               <label className="drp-field__label">Posts per week</label>
-              <input
-                className="drp-input"
+              <Input
                 type="number"
                 min={1}
                 max={7}
@@ -127,8 +124,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
             </div>
             <div className="drp-field">
               <label className="drp-field__label">Start Date</label>
-              <input
-                className="drp-input"
+              <Input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
@@ -138,8 +134,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
 
           <div className="drp-field">
             <label className="drp-field__label">Goals</label>
-            <textarea
-              className="drp-input"
+            <Textarea
               value={goals}
               onChange={(e) => setGoals(e.target.value)}
               placeholder="What do you want to achieve with this campaign?"
@@ -182,8 +177,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                   >
                     {pillar}
                   </span>
-                  <input
-                    className="drp-input"
+                  <Input
                     type="number"
                     min={0}
                     max={100}
@@ -219,8 +213,7 @@ export function CampaignSetup({ onSubmit, disabled }: CampaignSetupProps) {
                   gap: "var(--drp-space-2)",
                 }}
               >
-                <input
-                  className="drp-input"
+                <Input
                   value={newPillar}
                   onChange={(e) => setNewPillar(e.target.value)}
                   placeholder="New pillar..."

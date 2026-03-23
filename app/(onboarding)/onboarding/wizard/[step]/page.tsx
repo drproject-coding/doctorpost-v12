@@ -95,7 +95,7 @@ function TagInput({ value, onChange, placeholder }: TagInputProps) {
             padding: "2px 10px 2px 10px",
             background: "var(--drp-purple)",
             color: "#fff",
-            fontSize: "13px",
+            fontSize: "var(--drp-text-sm)",
             fontWeight: 500,
           }}
         >
@@ -110,7 +110,7 @@ function TagInput({ value, onChange, placeholder }: TagInputProps) {
               color: "#fff",
               cursor: "pointer",
               padding: "0 0 0 4px",
-              fontSize: "14px",
+              fontSize: "var(--drp-text-md)",
               lineHeight: 1,
             }}
           >
@@ -129,7 +129,7 @@ function TagInput({ value, onChange, placeholder }: TagInputProps) {
           outline: "none",
           flex: 1,
           minWidth: "120px",
-          fontSize: "14px",
+          fontSize: "var(--drp-text-md)",
           background: "transparent",
           color: "var(--drp-black)",
           fontFamily: "inherit",
@@ -179,7 +179,7 @@ function ChipSelector({ options, selected, onChange, max }: ChipSelectorProps) {
                 max !== undefined && selected.length >= max && !active
                   ? "not-allowed"
                   : "pointer",
-              fontSize: "13px",
+              fontSize: "var(--drp-text-sm)",
               fontWeight: active ? 600 : 400,
               opacity:
                 max !== undefined && selected.length >= max && !active
@@ -213,7 +213,7 @@ function LabeledField({ label, error, children, hint }: LabeledFieldProps) {
       <label
         style={{
           fontWeight: 600,
-          fontSize: "13px",
+          fontSize: "var(--drp-text-sm)",
           color: "var(--drp-black)",
           letterSpacing: "0.03em",
           textTransform: "uppercase",
@@ -225,7 +225,7 @@ function LabeledField({ label, error, children, hint }: LabeledFieldProps) {
         <p
           style={{
             margin: 0,
-            fontSize: "12px",
+            fontSize: "var(--drp-text-sm)",
             color: "var(--drp-grey)",
             lineHeight: 1.4,
           }}
@@ -235,7 +235,7 @@ function LabeledField({ label, error, children, hint }: LabeledFieldProps) {
       )}
       {children}
       {error && (
-        <p style={{ margin: 0, fontSize: "12px", color: "#e53e3e" }}>{error}</p>
+        <p style={{ margin: 0, fontSize: "var(--drp-text-sm)", color: "#e53e3e" }}>{error}</p>
       )}
     </div>
   );
@@ -246,7 +246,7 @@ const inputStyle: React.CSSProperties = {
   padding: "10px 12px",
   border: "1.5px solid var(--drp-grey)",
   outline: "none",
-  fontSize: "14px",
+  fontSize: "var(--drp-text-md)",
   background: "#fff",
   color: "var(--drp-black)",
   boxSizing: "border-box",
@@ -310,9 +310,9 @@ function Step1({
       onChange({ ...state, [key]: e.target.value });
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-h5)" }}>
       <div
-        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}
+        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--drp-text-lg)" }}
       >
         <LabeledField label="First Name" error={errors.firstName}>
           <Input
@@ -390,7 +390,7 @@ function Step2({
   errors: Step2Errors;
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-h4)" }}>
       <LabeledField
         label="Tones (select 3–5)"
         hint="Choose the tones that best represent your communication style."
@@ -455,7 +455,7 @@ function Step3({
   errors: Step3Errors;
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-h4)" }}>
       <LabeledField
         label="Content Strategy"
         hint="Describe your main content themes and topics."
@@ -508,7 +508,7 @@ function Step4({
   errors: Step4Errors;
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-h4)" }}>
       <LabeledField
         label="Target Audience"
         hint="Type an audience segment and press Enter or comma to add it."
@@ -557,7 +557,7 @@ function Step5({
   errors: Step5Errors;
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-h4)" }}>
       <LabeledField
         label="Positioning Statement"
         hint="How do you describe your value? This is often the first sentence of your LinkedIn bio."
@@ -593,7 +593,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          fontSize: "11px",
+          fontSize: "var(--drp-text-xs)",
           color: "var(--drp-grey)",
           letterSpacing: "0.06em",
           textTransform: "uppercase",
@@ -839,7 +839,7 @@ export default function WizardStepPage({
           background: "var(--drp-cream)",
         }}
       >
-        <p style={{ color: "var(--drp-grey)", fontSize: "14px" }}>Loading…</p>
+        <p style={{ color: "var(--drp-grey)", fontSize: "var(--drp-text-md)" }}>Loading…</p>
       </div>
     );
   }
@@ -854,11 +854,11 @@ export default function WizardStepPage({
           alignItems: "center",
           justifyContent: "center",
           background: "var(--drp-cream)",
-          padding: "24px",
+          padding: "var(--drp-text-h4)",
         }}
       >
         <Card style={{ maxWidth: "480px", width: "100%", padding: "32px" }}>
-          <p style={{ color: "#e53e3e", marginBottom: "16px" }}>{loadError}</p>
+          <p style={{ color: "#e53e3e", marginBottom: "var(--drp-text-lg)" }}>{loadError}</p>
           <Button onClick={() => window.location.reload()}>Retry</Button>
         </Card>
       </div>
@@ -883,17 +883,17 @@ export default function WizardStepPage({
         <Card
           style={{
             padding: "36px 40px",
-            marginTop: "16px",
+            marginTop: "var(--drp-text-lg)",
             border: "1.5px solid var(--drp-black)",
             background: "#fff",
           }}
         >
           {/* Header */}
-          <div style={{ marginBottom: "28px" }}>
+          <div style={{ marginBottom: "var(--drp-text-h4)" }}>
             <h1
               style={{
                 margin: "0 0 8px",
-                fontSize: "22px",
+                fontSize: "var(--drp-text-h5)",
                 fontWeight: 700,
                 color: "var(--drp-black)",
                 letterSpacing: "-0.02em",
@@ -904,7 +904,7 @@ export default function WizardStepPage({
             <p
               style={{
                 margin: 0,
-                fontSize: "14px",
+                fontSize: "var(--drp-text-md)",
                 color: "var(--drp-grey)",
                 lineHeight: 1.5,
               }}
@@ -954,9 +954,9 @@ export default function WizardStepPage({
           {saveError && (
             <p
               style={{
-                marginTop: "16px",
+                marginTop: "var(--drp-text-lg)",
                 marginBottom: 0,
-                fontSize: "13px",
+                fontSize: "var(--drp-text-sm)",
                 color: "#e53e3e",
               }}
             >
@@ -971,7 +971,7 @@ export default function WizardStepPage({
               justifyContent: "space-between",
               alignItems: "center",
               marginTop: "32px",
-              gap: "12px",
+              gap: "var(--drp-text-sm)",
             }}
           >
             <Button

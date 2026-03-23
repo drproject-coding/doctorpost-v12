@@ -28,7 +28,7 @@ export default function DebugPage() {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "monospace" }}>
+    <div style={{ padding: "var(--drp-text-h5)", fontFamily: "monospace" }}>
       <h1>Debug: Post Creation</h1>
 
       <button
@@ -36,7 +36,7 @@ export default function DebugPage() {
         disabled={loading}
         style={{
           padding: "10px 20px",
-          fontSize: "16px",
+          fontSize: "var(--drp-text-lg)",
           cursor: loading ? "not-allowed" : "pointer",
         }}
       >
@@ -45,7 +45,7 @@ export default function DebugPage() {
 
       {error && (
         <div
-          style={{ color: "red", marginTop: "20px", whiteSpace: "pre-wrap" }}
+          style={{ color: "red", marginTop: "var(--drp-text-h5)", whiteSpace: "pre-wrap" }}
         >
           <strong>Error:</strong> {error}
         </div>
@@ -54,10 +54,10 @@ export default function DebugPage() {
       {result && (
         <div
           style={{
-            marginTop: "20px",
+            marginTop: "var(--drp-text-h5)",
             whiteSpace: "pre-wrap",
             backgroundColor: "#f0f0f0",
-            padding: "10px",
+            padding: "var(--drp-text-xs)",
           }}
         >
           <strong>Response:</strong>

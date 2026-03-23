@@ -74,7 +74,7 @@ export function FormattedOutput({
           <div
             style={{
               display: "flex",
-              border: "1px solid var(--drp-border-color, #e0e0e0)",
+              border: "var(--drp-border-thin)",
               overflow: "hidden",
             }}
           >
@@ -185,13 +185,32 @@ export function FormattedOutput({
             Y
           </div>
           <div>
-            <div style={{ fontWeight: 600, fontSize: "var(--drp-text-md)", color: "#191919" }}>
+            <div
+              style={{
+                fontWeight: 600,
+                fontSize: "var(--drp-text-md)",
+                color: "var(--drp-black)",
+              }}
+            >
               Your Name
             </div>
-            <div style={{ fontSize: "var(--drp-text-sm)", color: "#666666", lineHeight: 1.3 }}>
+            <div
+              style={{
+                fontSize: "var(--drp-text-sm)",
+                color: "var(--drp-text-muted)",
+                lineHeight: 1.3,
+              }}
+            >
               Your headline here
             </div>
-            <div style={{ fontSize: "var(--drp-text-sm)", color: "#666666" }}>Just now</div>
+            <div
+              style={{
+                fontSize: "var(--drp-text-sm)",
+                color: "var(--drp-text-muted)",
+              }}
+            >
+              Just now
+            </div>
           </div>
         </div>
 
@@ -206,7 +225,7 @@ export function FormattedOutput({
               fontFamily:
                 '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
               margin: 0,
-              color: "#191919",
+              color: "var(--drp-black)",
             }}
           >
             {displayContent || "(No content)"}
@@ -218,7 +237,7 @@ export function FormattedOutput({
               style={{
                 background: "none",
                 border: "none",
-                color: "#666666",
+                color: "var(--drp-text-muted)",
                 cursor: "pointer",
                 fontSize: "var(--drp-text-md)",
                 fontWeight: 600,
@@ -235,7 +254,7 @@ export function FormattedOutput({
               style={{
                 background: "none",
                 border: "none",
-                color: "#666666",
+                color: "var(--drp-text-muted)",
                 cursor: "pointer",
                 fontSize: "var(--drp-text-md)",
                 fontWeight: 600,
@@ -252,11 +271,11 @@ export function FormattedOutput({
         <div
           style={{
             padding: "8px 16px",
-            borderTop: "1px solid #e0e0e0",
+            borderTop: "var(--drp-border-thin)",
             display: "flex",
             justifyContent: "space-between",
             fontSize: "var(--drp-text-sm)",
-            color: "#666666",
+            color: "var(--drp-text-muted)",
           }}
         >
           <span>0 reactions</span>
@@ -267,12 +286,12 @@ export function FormattedOutput({
         <div
           style={{
             padding: "4px 16px 8px",
-            borderTop: "1px solid #e0e0e0",
+            borderTop: "var(--drp-border-thin)",
             display: "flex",
             justifyContent: "space-around",
             fontSize: "var(--drp-text-sm)",
             fontWeight: 600,
-            color: "#666666",
+            color: "var(--drp-text-muted)",
           }}
         >
           <span>Like</span>

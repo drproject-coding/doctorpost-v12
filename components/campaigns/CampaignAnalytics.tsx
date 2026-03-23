@@ -9,10 +9,10 @@ interface CampaignAnalyticsProps {
 }
 
 const FUNNEL: { status: CampaignPostStatus; label: string; color: string }[] = [
-  { status: "waiting_review", label: "Generated", color: "#e0e0e0" },
-  { status: "validated", label: "Validated", color: "#0066CC" },
-  { status: "in_progress", label: "Writing", color: "#E85D04" },
-  { status: "published", label: "Published", color: "#00AA66" },
+  { status: "waiting_review", label: "Generated", color: "var(--drp-surface)" },
+  { status: "validated", label: "Validated", color: "var(--drp-purple)" },
+  { status: "in_progress", label: "Writing", color: "var(--drp-orange)" },
+  { status: "published", label: "Published", color: "var(--drp-success)" },
 ];
 
 export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
@@ -25,22 +25,26 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
     (counts.published || 0);
 
   const funnelData = [
-    { label: "Generated", count: total, color: "#888" },
-    { label: "Reviewed", count: reviewed, color: "#555" },
+    { label: "Generated", count: total, color: "var(--drp-text-muted)" },
+    { label: "Reviewed", count: reviewed, color: "var(--drp-text-secondary)" },
     {
       label: "Validated",
       count:
         (counts.validated || 0) +
         (counts.in_progress || 0) +
         (counts.published || 0),
-      color: "#0066CC",
+      color: "var(--drp-purple)",
     },
     {
       label: "Writing",
       count: (counts.in_progress || 0) + (counts.published || 0),
-      color: "#E85D04",
+      color: "var(--drp-orange)",
     },
-    { label: "Published", count: counts.published || 0, color: "#00AA66" },
+    {
+      label: "Published",
+      count: counts.published || 0,
+      color: "var(--drp-success)",
+    },
   ];
 
   return (
@@ -141,7 +145,7 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
           style={{
             marginTop: "var(--drp-space-3)",
             fontSize: "var(--drp-text-xs)",
-            color: "#990000",
+            color: "var(--drp-error)",
           }}
         >
           {counts.rejected} idea{counts.rejected !== 1 ? "s" : ""} rejected

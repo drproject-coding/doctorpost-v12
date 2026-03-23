@@ -6,11 +6,31 @@ const STATUS_CONFIG: Record<
   CampaignPostStatus,
   { label: string; bg: string; color: string }
 > = {
-  waiting_review: { label: "Waiting review", bg: "#e0e0e0", color: "#444" },
-  validated: { label: "Validated", bg: "#0066CC", color: "#fff" },
-  rejected: { label: "Rejected", bg: "#FFCCCC", color: "#990000" },
-  in_progress: { label: "In progress", bg: "#E85D04", color: "#fff" },
-  published: { label: "Published", bg: "#00AA66", color: "#fff" },
+  waiting_review: {
+    label: "Waiting review",
+    bg: "var(--drp-surface)",
+    color: "var(--drp-text-primary)",
+  },
+  validated: {
+    label: "Validated",
+    bg: "var(--drp-purple)",
+    color: "var(--drp-white)",
+  },
+  rejected: {
+    label: "Rejected",
+    bg: "rgba(255, 68, 68, 0.15)",
+    color: "var(--drp-error)",
+  },
+  in_progress: {
+    label: "In progress",
+    bg: "var(--drp-orange)",
+    color: "var(--drp-white)",
+  },
+  published: {
+    label: "Published",
+    bg: "var(--drp-success)",
+    color: "var(--drp-white)",
+  },
 };
 
 interface IdeaStatusBadgeProps {

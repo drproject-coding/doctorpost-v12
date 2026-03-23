@@ -53,7 +53,13 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
 
   if (editing) {
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-lg)" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--drp-text-lg)",
+        }}
+      >
         {/* Tones */}
         <div>
           <label
@@ -104,7 +110,11 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
             Style Guide
           </label>
           <div
-            style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-xs)" }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--drp-text-xs)",
+            }}
           >
             {/* Emoji */}
             <label
@@ -129,7 +139,13 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
             </label>
 
             {/* Hashtags */}
-            <div style={{ display: "flex", alignItems: "center", gap: "var(--drp-text-xs)" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--drp-text-xs)",
+              }}
+            >
               <label
                 className="drp-field__label"
                 style={{ minWidth: "80px", margin: 0 }}
@@ -147,7 +163,13 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
             </div>
 
             {/* Links */}
-            <div style={{ display: "flex", alignItems: "center", gap: "var(--drp-text-xs)" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--drp-text-xs)",
+              }}
+            >
               <label
                 className="drp-field__label"
                 style={{ minWidth: "80px", margin: 0 }}
@@ -199,7 +221,13 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--drp-text-lg)" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--drp-text-lg)",
+      }}
+    >
       {/* Tones */}
       <div>
         <p className="drp-field__label" style={{ marginBottom: "8px" }}>
@@ -212,7 +240,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
                 key={tone}
                 style={{
                   backgroundColor: "rgba(255, 108, 1, 0.15)",
-                  color: "#FF6C01",
+                  color: "var(--drp-orange)",
                   padding: "3px 10px",
                   fontSize: "var(--drp-text-sm)",
                   fontWeight: 500,
@@ -267,7 +295,13 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
         <p className="drp-field__label" style={{ marginBottom: "8px" }}>
           Style Guide
         </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--drp-text-sm)" }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "var(--drp-text-sm)",
+          }}
+        >
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span
               style={{
@@ -331,8 +365,8 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
               <span
                 key={taboo}
                 style={{
-                  backgroundColor: "rgba(220, 38, 38, 0.12)",
-                  color: "#dc2626",
+                  backgroundColor: "rgba(255, 68, 68, 0.12)",
+                  color: "var(--drp-error)",
                   padding: "3px 10px",
                   fontSize: "var(--drp-text-sm)",
                   fontWeight: 500,

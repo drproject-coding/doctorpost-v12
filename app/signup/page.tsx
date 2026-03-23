@@ -173,10 +173,10 @@ export default function SignupPage() {
               style={{
                 marginBottom: "var(--drp-text-lg)",
                 padding: "10px 14px",
-                background: "#fee2e2",
-                border: "2px solid #ef4444",
+                background: "rgba(255, 68, 68, 0.12)",
+                border: "2px solid var(--drp-error)",
                 borderRadius: 0,
-                color: "#b91c1c",
+                color: "var(--drp-error)",
                 fontSize: "var(--drp-text-md)",
               }}
             >
@@ -208,7 +208,12 @@ export default function SignupPage() {
           </Button>
         </form>
 
-        <p style={{ marginTop: "var(--drp-text-h5)", fontSize: "var(--drp-text-md)" }}>
+        <p
+          style={{
+            marginTop: "var(--drp-text-h5)",
+            fontSize: "var(--drp-text-md)",
+          }}
+        >
           Already have an account?{" "}
           <a
             href="/login"

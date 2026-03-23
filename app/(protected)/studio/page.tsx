@@ -666,7 +666,7 @@ function StageCard({
         <div
           style={{
             height: 3,
-            background: "#e8e8e8",
+            background: "var(--drp-surface)",
             position: "relative",
             overflow: "hidden",
           }}
@@ -1991,7 +1991,7 @@ export default function StudioPage() {
                             height: 520,
                             margin: "0 auto",
                             background:
-                              "linear-gradient(135deg, var(--drp-purple) 0%, #9B59F5 100%)",
+                              "linear-gradient(135deg, var(--drp-purple) 0%, var(--drp-purple) 100%)",
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "space-between",
@@ -2184,7 +2184,7 @@ export default function StudioPage() {
                                 width: 72,
                                 height: 72,
                                 background:
-                                  "linear-gradient(135deg, var(--drp-purple) 0%, #9B59F5 100%)",
+                                  "linear-gradient(135deg, var(--drp-purple) 0%, var(--drp-purple) 100%)",
                                 border:
                                   i === currentSlide
                                     ? "3px solid var(--drp-black)"
@@ -2571,7 +2571,7 @@ export default function StudioPage() {
                                 fontFamily:
                                   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                                 margin: 0,
-                                color: "#191919",
+                                color: "var(--drp-black)",
                               }}
                             >
                               {displayContent || "(No content)"}

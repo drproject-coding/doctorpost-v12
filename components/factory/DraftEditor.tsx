@@ -25,11 +25,11 @@ interface StructureSection {
 }
 
 const SECTION_STYLES: Record<string, { color: string; bg: string }> = {
-  Hook: { color: "#7c3aed", bg: "rgba(124, 58, 237, 0.08)" },
-  Problem: { color: "#dc2626", bg: "rgba(220, 38, 38, 0.06)" },
-  Solution: { color: "#059669", bg: "rgba(5, 150, 105, 0.06)" },
-  Body: { color: "#0369a1", bg: "rgba(3, 105, 161, 0.06)" },
-  CTA: { color: "#d97706", bg: "rgba(217, 119, 6, 0.08)" },
+  Hook: { color: "var(--drp-purple)", bg: "rgba(99, 29, 237, 0.08)" },
+  Problem: { color: "var(--drp-error)", bg: "rgba(255, 68, 68, 0.06)" },
+  Solution: { color: "var(--drp-success)", bg: "rgba(0, 170, 0, 0.06)" },
+  Body: { color: "var(--drp-text-primary)", bg: "rgba(3, 105, 161, 0.06)" },
+  CTA: { color: "var(--drp-orange)", bg: "rgba(255, 108, 1, 0.08)" },
 };
 
 function parseStructure(content: string): StructureSection[] {

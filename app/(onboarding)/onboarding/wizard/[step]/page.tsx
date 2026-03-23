@@ -235,7 +235,7 @@ function LabeledField({ label, error, children, hint }: LabeledFieldProps) {
       )}
       {children}
       {error && (
-        <p style={{ margin: 0, fontSize: "var(--drp-text-sm)", color: "#e53e3e" }}>{error}</p>
+        <p style={{ margin: 0, fontSize: "var(--drp-text-sm)", color: "var(--drp-error)" }}>{error}</p>
       )}
     </div>
   );
@@ -858,7 +858,7 @@ export default function WizardStepPage({
         }}
       >
         <Card style={{ maxWidth: "480px", width: "100%", padding: "32px" }}>
-          <p style={{ color: "#e53e3e", marginBottom: "var(--drp-text-lg)" }}>{loadError}</p>
+          <p style={{ color: "var(--drp-error)", marginBottom: "var(--drp-text-lg)" }}>{loadError}</p>
           <Button onClick={() => window.location.reload()}>Retry</Button>
         </Card>
       </div>
@@ -957,7 +957,7 @@ export default function WizardStepPage({
                 marginTop: "var(--drp-text-lg)",
                 marginBottom: 0,
                 fontSize: "var(--drp-text-sm)",
-                color: "#e53e3e",
+                color: "var(--drp-error)",
               }}
             >
               {saveError}

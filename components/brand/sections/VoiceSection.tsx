@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Input, Textarea, Select } from "@doctorproject/react";
 import { BrandProfile } from "@/lib/types";
 
 interface VoiceSectionProps {
@@ -61,8 +62,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
           >
             Voice Tones
           </label>
-          <input
-            className="drp-input"
+          <Input
             type="text"
             defaultValue={profile.tones.join(", ")}
             onChange={handleTonesChange}
@@ -87,13 +87,11 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
           >
             Copy Guideline
           </label>
-          <textarea
-            className="drp-input"
-            rows={4}
+          <Textarea
             defaultValue={profile.copyGuideline}
             onChange={handleCopyGuidelineChange}
             placeholder="Describe your writing style..."
-            style={{ resize: "vertical", width: "100%" }}
+            style={{ width: "100%" }}
           />
         </div>
 
@@ -138,8 +136,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
               >
                 Hashtags
               </label>
-              <input
-                className="drp-input"
+              <Input
                 type="number"
                 min={0}
                 max={10}
@@ -157,16 +154,18 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
               >
                 Links
               </label>
-              <select
-                className="drp-input"
-                defaultValue={profile.styleGuide.links}
-                onChange={handleLinksChange}
+              <Select
+                options={[
+                  { value: "end", label: "End of post" },
+                  { value: "inline", label: "Inline" },
+                  { value: "none", label: "None" },
+                ]}
+                value={profile.styleGuide.links}
+                onChange={(e) =>
+                  handleLinksChange(e as React.ChangeEvent<HTMLSelectElement>)
+                }
                 style={{ width: "160px" }}
-              >
-                <option value="end">End of post</option>
-                <option value="inline">Inline</option>
-                <option value="none">None</option>
-              </select>
+              />
             </div>
           </div>
         </div>
@@ -179,8 +178,7 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
           >
             Taboos
           </label>
-          <input
-            className="drp-input"
+          <Input
             type="text"
             defaultValue={profile.taboos.join(", ")}
             onChange={handleTaboosChange}

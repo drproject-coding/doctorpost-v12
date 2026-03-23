@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Icon } from "@doctorproject/react";
+import { Icon, Input } from "@doctorproject/react";
 import { BrandProfile, AiProviderType } from "@/lib/types";
 
 interface AiToolsSectionProps {
@@ -43,10 +43,9 @@ function KeyField({
       <div
         style={{ position: "relative", display: "flex", alignItems: "center" }}
       >
-        <input
+        <Input
           id={id}
           type={show ? "text" : "password"}
-          className="drp-input"
           style={{ width: "100%", paddingRight: "40px" }}
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -69,7 +68,11 @@ function KeyField({
           }}
           aria-label={show ? "Hide API key" : "Show API key"}
         >
-          {show ? <Icon name="eye-off" size="sm" />  : <Icon name="eye" size="sm" />}
+          {show ? (
+            <Icon name="eye-off" size="sm" />
+          ) : (
+            <Icon name="eye" size="sm" />
+          )}
         </button>
       </div>
     </div>
@@ -251,10 +254,9 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
         <label className="drp-field__label" htmlFor="ai-straico-model">
           Straico model
         </label>
-        <input
+        <Input
           id="ai-straico-model"
           type="text"
-          className="drp-input"
           style={{ width: "100%" }}
           value={profile.straicoModel}
           onChange={(e) => onChange({ straicoModel: e.target.value })}
@@ -274,10 +276,9 @@ const AiToolsSection: React.FC<AiToolsSectionProps> = ({
         <label className="drp-field__label" htmlFor="ai-oneforall-model">
           1ForAll model
         </label>
-        <input
+        <Input
           id="ai-oneforall-model"
           type="text"
-          className="drp-input"
           style={{ width: "100%" }}
           value={profile.oneforallModel}
           onChange={(e) => onChange({ oneforallModel: e.target.value })}

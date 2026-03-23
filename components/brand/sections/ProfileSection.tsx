@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Input } from "@doctorproject/react";
 import { BrandProfile } from "@/lib/types";
 
 interface ProfileSectionProps {
@@ -160,10 +161,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           <label className="drp-field__label" htmlFor="profile-first-name">
             First Name
           </label>
-          <input
+          <Input
             id="profile-first-name"
             type="text"
-            className="drp-input"
             value={profile.firstName}
             onChange={(e) => onChange({ firstName: e.target.value })}
             placeholder="First name"
@@ -173,10 +173,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           <label className="drp-field__label" htmlFor="profile-last-name">
             Last Name
           </label>
-          <input
+          <Input
             id="profile-last-name"
             type="text"
-            className="drp-input"
             value={profile.lastName}
             onChange={(e) => onChange({ lastName: e.target.value })}
             placeholder="Last name"
@@ -189,10 +188,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         <label className="drp-field__label" htmlFor="profile-company">
           Company
         </label>
-        <input
+        <Input
           id="profile-company"
           type="text"
-          className="drp-input"
           style={{ width: "100%" }}
           value={profile.companyName}
           onChange={(e) => onChange({ companyName: e.target.value })}
@@ -205,10 +203,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         <label className="drp-field__label" htmlFor="profile-role">
           Role
         </label>
-        <input
+        <Input
           id="profile-role"
           type="text"
-          className="drp-input"
           style={{ width: "100%" }}
           value={profile.role}
           onChange={(e) => onChange({ role: e.target.value })}
@@ -221,10 +218,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         <label className="drp-field__label" htmlFor="profile-industry">
           Industry
         </label>
-        <input
+        <Input
           id="profile-industry"
           type="text"
-          className="drp-input"
           style={{ width: "100%" }}
           value={profile.industry}
           onChange={(e) => onChange({ industry: e.target.value })}
@@ -237,10 +233,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         <label className="drp-field__label" htmlFor="profile-audience">
           Audience
         </label>
-        <input
+        <Input
           id="profile-audience"
           type="text"
-          className="drp-input"
           style={{ width: "100%" }}
           value={profile.audience.join(", ")}
           onChange={(e) => handleAudienceChange(e.target.value)}

@@ -174,7 +174,7 @@ export function IdeaInbox({ onSelect }: IdeaInboxProps) {
                     style={{
                       fontWeight: 700,
                       textTransform: "uppercase",
-                      fontSize: 10,
+                      fontSize: "var(--drp-text-xs)",
                     }}
                   >
                     {idea.topicCard.pillar}

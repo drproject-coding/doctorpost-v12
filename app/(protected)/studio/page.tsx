@@ -125,7 +125,7 @@ function PipelineProgress({
             <span
               style={{
                 fontWeight: 800,
-                fontSize: 13,
+                fontSize: "var(--drp-text-sm)",
                 color: "var(--drp-black)",
                 whiteSpace: "nowrap",
                 flexShrink: 0,
@@ -135,12 +135,12 @@ function PipelineProgress({
             </span>
             {activeMeta && !isComplete && (
               <>
-                <span style={{ color: "#ccc", fontSize: 12, flexShrink: 0 }}>
+                <span style={{ color: "#ccc", fontSize: "var(--drp-text-sm)", flexShrink: 0 }}>
                   ·
                 </span>
                 <span
                   style={{
-                    fontSize: 13,
+                    fontSize: "var(--drp-text-sm)",
                     fontWeight: 700,
                     color: "var(--drp-purple)",
                     whiteSpace: "nowrap",
@@ -151,7 +151,7 @@ function PipelineProgress({
                 </span>
                 <span
                   style={{
-                    fontSize: 12,
+                    fontSize: "var(--drp-text-sm)",
                     color: "var(--drp-text-muted)",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -166,7 +166,7 @@ function PipelineProgress({
             {isComplete && (
               <span
                 style={{
-                  fontSize: 13,
+                  fontSize: "var(--drp-text-sm)",
                   color: "var(--drp-mint)",
                   fontWeight: 700,
                 }}
@@ -177,7 +177,7 @@ function PipelineProgress({
           </div>
           <span
             style={{
-              fontSize: 12,
+              fontSize: "var(--drp-text-sm)",
               fontWeight: 800,
               color: isComplete ? "var(--drp-mint)" : "var(--drp-purple)",
               marginLeft: 12,
@@ -241,7 +241,7 @@ function PipelineProgress({
                 </div>
                 <div
                   style={{
-                    fontSize: 10,
+                    fontSize: "var(--drp-text-xs)",
                     fontWeight:
                       isDone || isActive || activeStep === s ? 700 : 400,
                     color: isDone
@@ -282,7 +282,7 @@ function renderStageContent(
 
   const preStyle: React.CSSProperties = {
     fontFamily: "inherit",
-    fontSize: 12,
+    fontSize: "var(--drp-text-sm)",
     lineHeight: 1.6,
     whiteSpace: "pre-wrap",
     wordBreak: "break-word",
@@ -318,7 +318,7 @@ function renderStageContent(
             <p
               style={{
                 margin: 0,
-                fontSize: 13,
+                fontSize: "var(--drp-text-sm)",
                 fontWeight: 700,
                 color: "var(--drp-black)",
                 lineHeight: 1.4,
@@ -331,7 +331,7 @@ function renderStageContent(
             <p
               style={{
                 margin: 0,
-                fontSize: 12,
+                fontSize: "var(--drp-text-sm)",
                 color: "var(--drp-text-secondary)",
                 fontStyle: "italic",
                 borderLeft: "3px solid var(--drp-purple)",
@@ -356,7 +356,7 @@ function renderStageContent(
                 <li
                   key={i}
                   style={{
-                    fontSize: 12,
+                    fontSize: "var(--drp-text-sm)",
                     color: "var(--drp-black)",
                     lineHeight: 1.4,
                   }}
@@ -371,7 +371,7 @@ function renderStageContent(
               {d.pillar_name && (
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: "var(--drp-text-xs)",
                     fontWeight: 700,
                     background: "rgba(100,60,220,0.1)",
                     color: "var(--drp-purple)",
@@ -386,7 +386,7 @@ function renderStageContent(
               {d.icp_label && (
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: "var(--drp-text-xs)",
                     color: "var(--drp-text-muted)",
                     padding: "2px 0",
                   }}
@@ -440,18 +440,18 @@ function renderStageContent(
               }}
             >
               <span
-                style={{ fontSize: 20, fontWeight: 800, color, lineHeight: 1 }}
+                style={{ fontSize: "var(--drp-text-h5)", fontWeight: 800, color, lineHeight: 1 }}
               >
                 {d.total}
               </span>
-              <span style={{ fontSize: 9, color: "var(--drp-text-muted)" }}>
+              <span style={{ fontSize: "var(--drp-text-xs)", color: "var(--drp-text-muted)" }}>
                 /100
               </span>
             </div>
             <div>
               <span
                 style={{
-                  fontSize: 11,
+                  fontSize: "var(--drp-text-xs)",
                   fontWeight: 800,
                   color,
                   background: `${color}18`,
@@ -468,7 +468,7 @@ function renderStageContent(
                 <p
                   style={{
                     margin: 0,
-                    fontSize: 12,
+                    fontSize: "var(--drp-text-sm)",
                     color: "var(--drp-text-secondary)",
                     lineHeight: 1.4,
                   }}
@@ -495,7 +495,7 @@ function renderStageContent(
                   >
                     <span
                       style={{
-                        fontSize: 11,
+                        fontSize: "var(--drp-text-xs)",
                         color: "var(--drp-text-muted)",
                         width: 110,
                         flexShrink: 0,
@@ -525,7 +525,7 @@ function renderStageContent(
                     </div>
                     <span
                       style={{
-                        fontSize: 11,
+                        fontSize: "var(--drp-text-xs)",
                         fontWeight: 700,
                         color: bc,
                         width: 30,
@@ -562,7 +562,7 @@ function renderStageContent(
               <p
                 style={{
                   margin: 0,
-                  fontSize: 12,
+                  fontSize: "var(--drp-text-sm)",
                   color: "var(--drp-text-muted)",
                   fontStyle: "italic",
                   borderLeft: "3px solid var(--drp-surface)",
@@ -582,14 +582,14 @@ function renderStageContent(
                     display: "flex",
                     gap: 8,
                     alignItems: "flex-start",
-                    fontSize: 12,
+                    fontSize: "var(--drp-text-sm)",
                   }}
                 >
                   <span
                     style={{
                       fontWeight: 800,
                       color: "var(--drp-purple)",
-                      fontSize: 11,
+                      fontSize: "var(--drp-text-xs)",
                       whiteSpace: "nowrap",
                       paddingTop: 1,
                     }}
@@ -612,7 +612,7 @@ function renderStageContent(
                 </div>
               ))}
               {d.slides.length > 6 && (
-                <span style={{ fontSize: 11, color: "var(--drp-text-muted)" }}>
+                <span style={{ fontSize: "var(--drp-text-xs)", color: "var(--drp-text-muted)" }}>
                   +{d.slides.length - 6} more slides
                 </span>
               )}
@@ -698,7 +698,7 @@ function StageCard({
           <span
             style={{
               fontWeight: 800,
-              fontSize: 12,
+              fontSize: "var(--drp-text-sm)",
               textTransform: "uppercase",
               letterSpacing: 1,
               color: isActive
@@ -711,7 +711,7 @@ function StageCard({
             {meta.label}
           </span>
           <span
-            style={{ fontSize: 12, color: "var(--drp-text-muted)", flex: 1 }}
+            style={{ fontSize: "var(--drp-text-sm)", color: "var(--drp-text-muted)", flex: 1 }}
           >
             {isActive ? meta.description : isComplete ? "Done" : "Waiting..."}
           </span>
@@ -821,7 +821,7 @@ function VisualStageCard({
           <span
             style={{
               fontWeight: 800,
-              fontSize: 12,
+              fontSize: "var(--drp-text-sm)",
               textTransform: "uppercase",
               letterSpacing: 1,
               color: isActive
@@ -837,7 +837,7 @@ function VisualStageCard({
           </span>
           <span
             style={{
-              fontSize: 12,
+              fontSize: "var(--drp-text-sm)",
               color: error ? "var(--drp-pink)" : "var(--drp-text-muted)",
               flex: 1,
             }}
@@ -886,7 +886,7 @@ function VisualStageCard({
               <p
                 style={{
                   margin: "10px 0 0",
-                  fontSize: 11,
+                  fontSize: "var(--drp-text-xs)",
                   color: "var(--drp-text-muted)",
                   fontStyle: "italic",
                   lineHeight: 1.4,
@@ -924,10 +924,10 @@ function ScoreCircle({ score }: { score: number }) {
         flexShrink: 0,
       }}
     >
-      <span style={{ fontSize: 30, fontWeight: 800, color, lineHeight: 1 }}>
+      <span style={{ fontSize: "var(--drp-text-h3)", fontWeight: 800, color, lineHeight: 1 }}>
         {score}
       </span>
-      <span style={{ fontSize: 10, color: "var(--drp-text-muted)" }}>/100</span>
+      <span style={{ fontSize: "var(--drp-text-xs)", color: "var(--drp-text-muted)" }}>/100</span>
     </div>
   );
 }
@@ -1499,7 +1499,7 @@ export default function StudioPage() {
         <div style={{ marginBottom: 24 }}>
           <h1
             style={{
-              fontSize: 28,
+              fontSize: "var(--drp-text-h4)",
               fontWeight: 800,
               margin: "0 0 6px",
               color: "var(--drp-black)",
@@ -1508,7 +1508,7 @@ export default function StudioPage() {
             Studio
           </h1>
           <p
-            style={{ margin: 0, color: "var(--drp-text-muted)", fontSize: 14 }}
+            style={{ margin: 0, color: "var(--drp-text-muted)", fontSize: "var(--drp-text-md)" }}
           >
             4-agent AI pipeline: Strategist → Writer → Scorer → Formatter
           </p>
@@ -1531,7 +1531,7 @@ export default function StudioPage() {
                 <h2
                   style={{
                     fontWeight: 800,
-                    fontSize: 15,
+                    fontSize: "var(--drp-text-h6)",
                     margin: "0 0 16px",
                     color: "var(--drp-black)",
                   }}
@@ -1545,7 +1545,7 @@ export default function StudioPage() {
                     style={{
                       display: "block",
                       fontWeight: 700,
-                      fontSize: 11,
+                      fontSize: "var(--drp-text-xs)",
                       textTransform: "uppercase",
                       letterSpacing: 0.5,
                       marginBottom: 6,
@@ -1566,7 +1566,7 @@ export default function StudioPage() {
                       border: "2px solid var(--drp-black)",
                       background: "var(--drp-cream)",
                       fontFamily: "inherit",
-                      fontSize: 13,
+                      fontSize: "var(--drp-text-sm)",
                       lineHeight: 1.5,
                       resize: "vertical",
                       outline: "none",
@@ -1582,7 +1582,7 @@ export default function StudioPage() {
                     style={{
                       display: "block",
                       fontWeight: 700,
-                      fontSize: 11,
+                      fontSize: "var(--drp-text-xs)",
                       textTransform: "uppercase",
                       letterSpacing: 0.5,
                       marginBottom: 10,
@@ -1627,7 +1627,7 @@ export default function StudioPage() {
                             <div
                               style={{
                                 fontWeight: 700,
-                                fontSize: 12,
+                                fontSize: "var(--drp-text-sm)",
                                 textTransform: "capitalize",
                               }}
                             >
@@ -1635,7 +1635,7 @@ export default function StudioPage() {
                             </div>
                             <div
                               style={{
-                                fontSize: 11,
+                                fontSize: "var(--drp-text-xs)",
                                 color: "var(--drp-text-muted)",
                               }}
                             >
@@ -1728,7 +1728,7 @@ export default function StudioPage() {
                             : "var(--drp-orange)",
                           color: "#fff",
                           fontWeight: 800,
-                          fontSize: 11,
+                          fontSize: "var(--drp-text-xs)",
                           marginBottom: 6,
                         }}
                       >
@@ -1745,7 +1745,7 @@ export default function StudioPage() {
                       <p
                         style={{
                           margin: 0,
-                          fontSize: 11,
+                          fontSize: "var(--drp-text-xs)",
                           color: "var(--drp-text-muted)",
                         }}
                       >
@@ -1783,14 +1783,14 @@ export default function StudioPage() {
                   <p
                     style={{
                       fontWeight: 700,
-                      fontSize: 16,
+                      fontSize: "var(--drp-text-lg)",
                       margin: "0 0 8px",
                       color: "var(--drp-black)",
                     }}
                   >
                     Ready to create
                   </p>
-                  <p style={{ fontSize: 14, margin: 0 }}>
+                  <p style={{ fontSize: "var(--drp-text-md)", margin: 0 }}>
                     Enter a topic and click Generate to run the 4-agent pipeline
                   </p>
                 </div>
@@ -1848,7 +1848,7 @@ export default function StudioPage() {
                       style={{
                         padding: "10px 20px",
                         fontWeight: 700,
-                        fontSize: 13,
+                        fontSize: "var(--drp-text-sm)",
                         borderBottom:
                           resultTab === tab
                             ? "2px solid var(--drp-purple)"
@@ -1883,12 +1883,12 @@ export default function StudioPage() {
                           }}
                         >
                           <h3
-                            style={{ fontSize: 15, fontWeight: 700, margin: 0 }}
+                            style={{ fontSize: "var(--drp-text-h6)", fontWeight: 700, margin: 0 }}
                           >
                             Carousel Preview{" "}
                             <span
                               style={{
-                                fontSize: 12,
+                                fontSize: "var(--drp-text-sm)",
                                 fontWeight: 400,
                                 color: "var(--drp-text-muted)",
                               }}
@@ -1914,7 +1914,7 @@ export default function StudioPage() {
                                   background: "var(--drp-mint)",
                                   color: "white",
                                   fontWeight: 700,
-                                  fontSize: 13,
+                                  fontSize: "var(--drp-text-sm)",
                                   textDecoration: "none",
                                 }}
                               >
@@ -2014,7 +2014,7 @@ export default function StudioPage() {
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
-                              fontSize: 13,
+                              fontSize: "var(--drp-text-sm)",
                               fontWeight: 800,
                               color: "white",
                             }}
@@ -2053,7 +2053,7 @@ export default function StudioPage() {
                               <p
                                 style={{
                                   margin: 0,
-                                  fontSize: 16,
+                                  fontSize: "var(--drp-text-lg)",
                                   color: "rgba(255,255,255,0.85)",
                                   lineHeight: 1.6,
                                 }}
@@ -2075,7 +2075,7 @@ export default function StudioPage() {
                           >
                             <span
                               style={{
-                                fontSize: 11,
+                                fontSize: "var(--drp-text-xs)",
                                 color: "rgba(255,255,255,0.6)",
                                 fontWeight: 700,
                                 textTransform: "uppercase",
@@ -2133,7 +2133,7 @@ export default function StudioPage() {
                           </Button>
                           <span
                             style={{
-                              fontSize: 13,
+                              fontSize: "var(--drp-text-sm)",
                               fontWeight: 700,
                               color: "var(--drp-text-muted)",
                               minWidth: 60,
@@ -2203,7 +2203,7 @@ export default function StudioPage() {
                                   position: "absolute",
                                   top: 4,
                                   left: 5,
-                                  fontSize: 9,
+                                  fontSize: "var(--drp-text-xs)",
                                   fontWeight: 800,
                                   color: "rgba(255,255,255,0.7)",
                                 }}
@@ -2212,7 +2212,7 @@ export default function StudioPage() {
                               </span>
                               <span
                                 style={{
-                                  fontSize: 9,
+                                  fontSize: "var(--drp-text-xs)",
                                   fontWeight: 700,
                                   color: "white",
                                   lineHeight: 1.2,
@@ -2257,7 +2257,7 @@ export default function StudioPage() {
                       <h3
                         style={{
                           fontWeight: 800,
-                          fontSize: 12,
+                          fontSize: "var(--drp-text-sm)",
                           textTransform: "uppercase",
                           letterSpacing: 0.5,
                           margin: "0 0 12px",
@@ -2308,7 +2308,7 @@ export default function StudioPage() {
                           >
                             <span
                               style={{
-                                fontSize: 10,
+                                fontSize: "var(--drp-text-xs)",
                                 fontWeight: 800,
                                 textTransform: "uppercase",
                                 letterSpacing: 0.5,
@@ -2321,7 +2321,7 @@ export default function StudioPage() {
                             </span>
                             <span
                               style={{
-                                fontSize: 13,
+                                fontSize: "var(--drp-text-sm)",
                                 fontWeight: 600,
                                 color: "var(--drp-black)",
                               }}
@@ -2351,7 +2351,7 @@ export default function StudioPage() {
                           }}
                         >
                           <h3
-                            style={{ fontSize: 15, fontWeight: 700, margin: 0 }}
+                            style={{ fontSize: "var(--drp-text-h6)", fontWeight: 700, margin: 0 }}
                           >
                             LinkedIn Preview
                           </h3>
@@ -2381,7 +2381,7 @@ export default function StudioPage() {
                                   alignItems: "center",
                                   gap: 4,
                                   padding: "5px 10px",
-                                  fontSize: 12,
+                                  fontSize: "var(--drp-text-sm)",
                                   background:
                                     previewMode === "mobile"
                                       ? "var(--drp-purple)"
@@ -2405,7 +2405,7 @@ export default function StudioPage() {
                                   alignItems: "center",
                                   gap: 4,
                                   padding: "5px 10px",
-                                  fontSize: 12,
+                                  fontSize: "var(--drp-text-sm)",
                                   background:
                                     previewMode === "desktop"
                                       ? "var(--drp-purple)"
@@ -2434,7 +2434,7 @@ export default function StudioPage() {
                                   : "transparent",
                                 color: copied ? "white" : "var(--drp-black)",
                                 fontWeight: 700,
-                                fontSize: 13,
+                                fontSize: "var(--drp-text-sm)",
                               }}
                             >
                               {copied ? (
@@ -2457,7 +2457,7 @@ export default function StudioPage() {
                                   background: "var(--drp-mint)",
                                   color: "white",
                                   fontWeight: 700,
-                                  fontSize: 13,
+                                  fontSize: "var(--drp-text-sm)",
                                   textDecoration: "none",
                                 }}
                               >
@@ -2474,7 +2474,7 @@ export default function StudioPage() {
                                   gap: 6,
                                   padding: "6px 14px",
                                   fontWeight: 700,
-                                  fontSize: 13,
+                                  fontSize: "var(--drp-text-sm)",
                                 }}
                               >
                                 {isSaving ? (
@@ -2524,7 +2524,7 @@ export default function StudioPage() {
                                 justifyContent: "center",
                                 color: "white",
                                 fontWeight: 700,
-                                fontSize: 18,
+                                fontSize: "var(--drp-text-h6)",
                                 flexShrink: 0,
                               }}
                             >
@@ -2534,7 +2534,7 @@ export default function StudioPage() {
                               <div
                                 style={{
                                   fontWeight: 600,
-                                  fontSize: 14,
+                                  fontSize: "var(--drp-text-md)",
                                   color: "var(--drp-black)",
                                 }}
                               >
@@ -2542,7 +2542,7 @@ export default function StudioPage() {
                               </div>
                               <div
                                 style={{
-                                  fontSize: 12,
+                                  fontSize: "var(--drp-text-sm)",
                                   color: "var(--drp-text-muted)",
                                   lineHeight: 1.3,
                                 }}
@@ -2551,7 +2551,7 @@ export default function StudioPage() {
                               </div>
                               <div
                                 style={{
-                                  fontSize: 12,
+                                  fontSize: "var(--drp-text-sm)",
                                   color: "var(--drp-text-muted)",
                                 }}
                               >
@@ -2564,7 +2564,7 @@ export default function StudioPage() {
                           <div style={{ padding: "0 16px 12px" }}>
                             <pre
                               style={{
-                                fontSize: 14,
+                                fontSize: "var(--drp-text-md)",
                                 lineHeight: 1.5,
                                 whiteSpace: "pre-wrap",
                                 wordWrap: "break-word",
@@ -2583,7 +2583,7 @@ export default function StudioPage() {
                                 onClick={() => setShowMore(true)}
                                 style={{
                                   color: "var(--drp-text-muted)",
-                                  fontSize: 14,
+                                  fontSize: "var(--drp-text-md)",
                                   fontWeight: 600,
                                   padding: "4px 0",
                                   display: "block",
@@ -2598,7 +2598,7 @@ export default function StudioPage() {
                                 onClick={() => setShowMore(false)}
                                 style={{
                                   color: "var(--drp-text-muted)",
-                                  fontSize: 14,
+                                  fontSize: "var(--drp-text-md)",
                                   fontWeight: 600,
                                   padding: "4px 0",
                                   display: "block",
@@ -2616,7 +2616,7 @@ export default function StudioPage() {
                               borderTop: "var(--drp-border-thin)",
                               display: "flex",
                               justifyContent: "space-between",
-                              fontSize: 12,
+                              fontSize: "var(--drp-text-sm)",
                               color: "var(--drp-text-muted)",
                             }}
                           >
@@ -2631,7 +2631,7 @@ export default function StudioPage() {
                               borderTop: "var(--drp-border-thin)",
                               display: "flex",
                               justifyContent: "space-around",
-                              fontSize: 13,
+                              fontSize: "var(--drp-text-sm)",
                               fontWeight: 600,
                               color: "var(--drp-text-muted)",
                             }}
@@ -2648,7 +2648,7 @@ export default function StudioPage() {
                           style={{
                             marginTop: 12,
                             textAlign: "center",
-                            fontSize: 12,
+                            fontSize: "var(--drp-text-sm)",
                             color: "var(--drp-text-muted)",
                           }}
                         >
@@ -2669,7 +2669,7 @@ export default function StudioPage() {
                           style={{
                             marginTop: 4,
                             textAlign: "center",
-                            fontSize: 11,
+                            fontSize: "var(--drp-text-xs)",
                             color: "var(--drp-text-muted)",
                           }}
                         >
@@ -2704,7 +2704,7 @@ export default function StudioPage() {
                                 : "var(--drp-orange)",
                               color: "#fff",
                               fontWeight: 800,
-                              fontSize: 11,
+                              fontSize: "var(--drp-text-xs)",
                               marginBottom: 6,
                             }}
                           >
@@ -2721,7 +2721,7 @@ export default function StudioPage() {
                           <p
                             style={{
                               margin: 0,
-                              fontSize: 11,
+                              fontSize: "var(--drp-text-xs)",
                               color: "var(--drp-text-muted)",
                             }}
                           >
@@ -2756,12 +2756,12 @@ export default function StudioPage() {
                                   marginBottom: 4,
                                 }}
                               >
-                                <span style={{ fontSize: 13, fontWeight: 700 }}>
+                                <span style={{ fontSize: "var(--drp-text-sm)", fontWeight: 700 }}>
                                   {item.criterion}
                                 </span>
                                 <span
                                   style={{
-                                    fontSize: 13,
+                                    fontSize: "var(--drp-text-sm)",
                                     fontWeight: 700,
                                     color: barColor,
                                   }}
@@ -2790,7 +2790,7 @@ export default function StudioPage() {
                                 <p
                                   style={{
                                     margin: "4px 0 0",
-                                    fontSize: 12,
+                                    fontSize: "var(--drp-text-sm)",
                                     color: "var(--drp-text-muted)",
                                     lineHeight: 1.4,
                                   }}
@@ -2809,7 +2809,7 @@ export default function StudioPage() {
                           <p
                             style={{
                               margin: "0 0 8px",
-                              fontSize: 11,
+                              fontSize: "var(--drp-text-xs)",
                               fontWeight: 800,
                               textTransform: "uppercase",
                               letterSpacing: 0.5,
@@ -2830,7 +2830,7 @@ export default function StudioPage() {
                                 key={i}
                                 style={{
                                   margin: 0,
-                                  fontSize: 13,
+                                  fontSize: "var(--drp-text-sm)",
                                   color: "var(--drp-black)",
                                   paddingLeft: 10,
                                   borderLeft: "2px solid var(--drp-mint)",
@@ -2849,7 +2849,7 @@ export default function StudioPage() {
                           <p
                             style={{
                               margin: "0 0 8px",
-                              fontSize: 11,
+                              fontSize: "var(--drp-text-xs)",
                               fontWeight: 800,
                               textTransform: "uppercase",
                               letterSpacing: 0.5,
@@ -2870,7 +2870,7 @@ export default function StudioPage() {
                                 key={i}
                                 style={{
                                   margin: 0,
-                                  fontSize: 13,
+                                  fontSize: "var(--drp-text-sm)",
                                   color: "var(--drp-black)",
                                   paddingLeft: 10,
                                   borderLeft: "2px solid var(--drp-orange)",
@@ -2911,7 +2911,7 @@ export default function StudioPage() {
                     </span>
                     <span
                       style={{
-                        fontSize: 13,
+                        fontSize: "var(--drp-text-sm)",
                         fontWeight: 700,
                         color: "var(--drp-mint)",
                       }}
@@ -2921,7 +2921,7 @@ export default function StudioPage() {
                     <a
                       href={`/library/${savedId}`}
                       style={{
-                        fontSize: 13,
+                        fontSize: "var(--drp-text-sm)",
                         fontWeight: 700,
                         color: "var(--drp-purple)",
                         display: "inline-flex",
@@ -2968,7 +2968,7 @@ export default function StudioPage() {
                     <p
                       style={{
                         fontWeight: 700,
-                        fontSize: 14,
+                        fontSize: "var(--drp-text-md)",
                         margin: "0 0 4px",
                         color: "var(--drp-pink)",
                       }}
@@ -2977,7 +2977,7 @@ export default function StudioPage() {
                     </p>
                     <p
                       style={{
-                        fontSize: 13,
+                        fontSize: "var(--drp-text-sm)",
                         margin: 0,
                         color: "var(--drp-black)",
                       }}
@@ -2991,7 +2991,7 @@ export default function StudioPage() {
                         style={{
                           display: "inline-block",
                           marginTop: 8,
-                          fontSize: 13,
+                          fontSize: "var(--drp-text-sm)",
                           fontWeight: 700,
                           color: "var(--drp-purple)",
                           textDecoration: "none",

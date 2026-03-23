@@ -59,7 +59,7 @@ export function BrandSection({
         >
           <span
             style={{
-              fontSize: 10,
+              fontSize: "var(--drp-text-xs)",
               fontWeight: 800,
               textTransform: "uppercase",
               letterSpacing: "0.08em",

@@ -27,7 +27,7 @@ export default function ContentAngleChips({
             title={option.description}
             style={{
               padding: "6px 14px",
-              fontSize: 13,
+              fontSize: "var(--drp-text-sm)",
               fontWeight: isSelected ? 700 : 500,
               border: isSelected
                 ? "2px solid var(--drp-purple, #631DED)"
@@ -50,7 +50,7 @@ export default function ContentAngleChips({
                   position: "absolute",
                   top: -8,
                   right: -6,
-                  fontSize: 9,
+                  fontSize: "var(--drp-text-xs)",
                   fontWeight: 800,
                   background: "var(--drp-purple, #631DED)",
                   color: "#fff",

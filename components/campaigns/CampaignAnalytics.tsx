@@ -116,7 +116,7 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
               </div>
               <div
                 style={{
-                  fontSize: 10,
+                  fontSize: "var(--drp-text-xs)",
                   color: "var(--drp-grey)",
                   textAlign: "center",
                   whiteSpace: "nowrap",
@@ -126,7 +126,7 @@ export function CampaignAnalytics({ counts, total }: CampaignAnalyticsProps) {
               </div>
               <div
                 style={{
-                  fontSize: 10,
+                  fontSize: "var(--drp-text-xs)",
                   color: "var(--drp-grey)",
                 }}
               >

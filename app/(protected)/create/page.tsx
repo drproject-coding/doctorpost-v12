@@ -504,7 +504,7 @@ export default function CreatePage() {
                         <span
                           className="drp-tag drp-tag--filled"
                           style={{
-                            fontSize: 11,
+                            fontSize: "var(--drp-text-xs)",
                             padding: "2px 8px",
                             background:
                               sub.source === "google_trends"

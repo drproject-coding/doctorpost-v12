@@ -69,7 +69,7 @@ export default function SettingsProfilePage() {
         <div style={{ marginBottom: 28 }}>
           <h1
             style={{
-              fontSize: 26,
+              fontSize: "var(--drp-text-h4)",
               fontWeight: 800,
               margin: "0 0 6px",
               color: "var(--drp-black)",
@@ -78,7 +78,7 @@ export default function SettingsProfilePage() {
             Profile
           </h1>
           <p
-            style={{ margin: 0, color: "var(--drp-text-muted)", fontSize: 14 }}
+            style={{ margin: 0, color: "var(--drp-text-muted)", fontSize: "var(--drp-text-md)" }}
           >
             Manage your personal information
           </p>
@@ -90,7 +90,7 @@ export default function SettingsProfilePage() {
             <h2
               style={{
                 fontWeight: 800,
-                fontSize: 15,
+                fontSize: "var(--drp-text-h6)",
                 margin: "0 0 20px",
                 color: "var(--drp-black)",
               }}
@@ -125,7 +125,7 @@ export default function SettingsProfilePage() {
                   />
                 ) : (
                   <span
-                    style={{ fontSize: 28, fontWeight: 800, color: "#fff" }}
+                    style={{ fontSize: "var(--drp-text-h4)", fontWeight: 800, color: "#fff" }}
                   >
                     {initials}
                   </span>
@@ -137,7 +137,7 @@ export default function SettingsProfilePage() {
                   style={{
                     margin: "0 0 4px",
                     fontWeight: 700,
-                    fontSize: 14,
+                    fontSize: "var(--drp-text-md)",
                     color: "var(--drp-black)",
                   }}
                 >
@@ -146,7 +146,7 @@ export default function SettingsProfilePage() {
                 <p
                   style={{
                     margin: "0 0 12px",
-                    fontSize: 13,
+                    fontSize: "var(--drp-text-sm)",
                     color: "var(--drp-text-muted)",
                   }}
                 >
@@ -159,7 +159,7 @@ export default function SettingsProfilePage() {
                     gap: 6,
                     padding: "6px 12px",
                     border: "2px solid var(--drp-border)",
-                    fontSize: 12,
+                    fontSize: "var(--drp-text-sm)",
                     fontWeight: 700,
                     color: "var(--drp-text-muted)",
                     cursor: "not-allowed",
@@ -178,7 +178,7 @@ export default function SettingsProfilePage() {
             <h2
               style={{
                 fontWeight: 800,
-                fontSize: 15,
+                fontSize: "var(--drp-text-h6)",
                 margin: "0 0 20px",
                 color: "var(--drp-black)",
               }}
@@ -194,7 +194,7 @@ export default function SettingsProfilePage() {
                   alignItems: "center",
                   gap: 6,
                   fontWeight: 700,
-                  fontSize: 12,
+                  fontSize: "var(--drp-text-sm)",
                   textTransform: "uppercase",
                   letterSpacing: 0.5,
                   marginBottom: 8,
@@ -216,7 +216,7 @@ export default function SettingsProfilePage() {
                   border: "2px solid var(--drp-black)",
                   background: "var(--drp-cream)",
                   fontFamily: "inherit",
-                  fontSize: 14,
+                  fontSize: "var(--drp-text-md)",
                   outline: "none",
                   boxSizing: "border-box",
                   color: "var(--drp-black)",
@@ -232,7 +232,7 @@ export default function SettingsProfilePage() {
                   alignItems: "center",
                   gap: 6,
                   fontWeight: 700,
-                  fontSize: 12,
+                  fontSize: "var(--drp-text-sm)",
                   textTransform: "uppercase",
                   letterSpacing: 0.5,
                   marginBottom: 8,
@@ -252,7 +252,7 @@ export default function SettingsProfilePage() {
                   border: "2px solid var(--drp-border)",
                   background: "var(--drp-surface)",
                   fontFamily: "inherit",
-                  fontSize: 14,
+                  fontSize: "var(--drp-text-md)",
                   outline: "none",
                   boxSizing: "border-box",
                   color: "var(--drp-text-muted)",
@@ -262,7 +262,7 @@ export default function SettingsProfilePage() {
               <p
                 style={{
                   margin: "6px 0 0",
-                  fontSize: 12,
+                  fontSize: "var(--drp-text-sm)",
                   color: "var(--drp-text-muted)",
                 }}
               >
@@ -286,7 +286,7 @@ export default function SettingsProfilePage() {
                 <span style={{ color: "var(--drp-pink)" }}>
                   <Icon name="close" size="sm" />
                 </span>
-                <span style={{ fontSize: 13, color: "var(--drp-black)" }}>
+                <span style={{ fontSize: "var(--drp-text-sm)", color: "var(--drp-black)" }}>
                   {error}
                 </span>
               </div>
@@ -308,7 +308,7 @@ export default function SettingsProfilePage() {
                 color: "var(--drp-white)",
                 border: "none",
                 fontWeight: 800,
-                fontSize: 14,
+                fontSize: "var(--drp-text-md)",
                 cursor:
                   saving || !displayName.trim() || displayName === user?.name
                     ? "not-allowed"

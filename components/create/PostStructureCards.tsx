@@ -249,7 +249,7 @@ function PostPreview({ structureId }: { structureId: string }) {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 5,
-                fontSize: 10,
+                fontSize: "var(--drp-text-xs)",
                 fontWeight: 700,
                 textTransform: "uppercase",
                 letterSpacing: 0.6,
@@ -286,7 +286,7 @@ function PostPreview({ structureId }: { structureId: string }) {
           >
             <div
               style={{
-                fontSize: 9,
+                fontSize: "var(--drp-text-xs)",
                 fontWeight: 800,
                 textTransform: "uppercase",
                 letterSpacing: 0.8,
@@ -304,7 +304,7 @@ function PostPreview({ structureId }: { structureId: string }) {
                   key={j}
                   style={{
                     margin: 0,
-                    fontSize: 12,
+                    fontSize: "var(--drp-text-sm)",
                     lineHeight: 1.6,
                     color: "#1a1a1a",
                     fontFamily: "var(--drp-font-mono, monospace)",
@@ -408,7 +408,7 @@ export default function PostStructureCards({
               <span
                 style={{
                   fontWeight: isSelected ? 700 : 600,
-                  fontSize: 13,
+                  fontSize: "var(--drp-text-sm)",
                   color: isSelected ? "var(--drp-purple, #631DED)" : "inherit",
                 }}
               >
@@ -416,7 +416,7 @@ export default function PostStructureCards({
               </span>
               <span
                 style={{
-                  fontSize: 11,
+                  fontSize: "var(--drp-text-xs)",
                   color: "var(--drp-text-muted)",
                   lineHeight: 1.3,
                 }}
@@ -435,7 +435,7 @@ export default function PostStructureCards({
                 }
                 style={{
                   marginTop: 4,
-                  fontSize: 10,
+                  fontSize: "var(--drp-text-xs)",
                   fontWeight: 700,
                   color: isPreviewing ? "#631DED" : "rgba(0,0,0,0.35)",
                   textDecoration: "underline",

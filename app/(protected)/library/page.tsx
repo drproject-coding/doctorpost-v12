@@ -204,7 +204,7 @@ export default function LibraryPage() {
                 onClick={() => setFilter(f.id)}
                 style={{
                   padding: "4px 12px",
-                  fontSize: 12,
+                  fontSize: "var(--drp-text-sm)",
                   fontWeight: 700,
                   border: active
                     ? `2px solid ${activeColor}`
@@ -225,7 +225,7 @@ export default function LibraryPage() {
                       color: active ? "#fff" : "#555",
                       borderRadius: 8,
                       padding: "0 5px",
-                      fontSize: 10,
+                      fontSize: "var(--drp-text-xs)",
                       fontWeight: 800,
                     }}
                   >
@@ -247,7 +247,7 @@ export default function LibraryPage() {
             style={{
               width: "100%",
               padding: "8px 12px",
-              fontSize: 14,
+              fontSize: "var(--drp-text-md)",
               border: "2px solid #000",
               outline: "none",
               fontFamily: "inherit",
@@ -298,7 +298,7 @@ export default function LibraryPage() {
                             background: srcStyle.bg,
                             color: srcStyle.color,
                             padding: "1px 7px",
-                            fontSize: 10,
+                            fontSize: "var(--drp-text-xs)",
                             fontWeight: 800,
                             textTransform: "uppercase",
                             letterSpacing: 0.8,
@@ -316,7 +316,7 @@ export default function LibraryPage() {
                                   background: s.bg,
                                   color: s.color,
                                   padding: "1px 7px",
-                                  fontSize: 10,
+                                  fontSize: "var(--drp-text-xs)",
                                   fontWeight: 800,
                                   textTransform: "uppercase",
                                   letterSpacing: 0.8,
@@ -327,7 +327,7 @@ export default function LibraryPage() {
                             );
                           })()}
                         {post.pillar && (
-                          <span style={{ fontSize: 11, color: "#666" }}>
+                          <span style={{ fontSize: "var(--drp-text-xs)", color: "#666" }}>
                             {post.pillar}
                           </span>
                         )}
@@ -338,7 +338,7 @@ export default function LibraryPage() {
                           display: "flex",
                           gap: 12,
                           flexWrap: "wrap",
-                          fontSize: 11,
+                          fontSize: "var(--drp-text-xs)",
                           color: "#888",
                         }}
                       >
@@ -384,7 +384,7 @@ export default function LibraryPage() {
                               color: ss.color,
                               border: `1.5px solid ${ss.color}`,
                               padding: "2px 8px",
-                              fontSize: 10,
+                              fontSize: "var(--drp-text-xs)",
                               fontWeight: 800,
                               textTransform: "uppercase",
                               letterSpacing: 0.8,
@@ -447,7 +447,7 @@ export default function LibraryPage() {
             >
               ← Prev
             </button>
-            <span style={{ fontSize: 13, fontWeight: 600 }}>
+            <span style={{ fontSize: "var(--drp-text-sm)", fontWeight: 600 }}>
               {page} / {totalPages} &nbsp;({filteredPosts.length} posts)
             </span>
             <button

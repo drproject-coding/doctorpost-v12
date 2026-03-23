@@ -65,12 +65,12 @@ export default function OnboardingLayout({
           alignItems: "center",
         }}
       >
-        <span style={{ fontWeight: 700, fontSize: 18 }}>DoctorPost</span>
+        <span style={{ fontWeight: 700, fontSize: "var(--drp-text-h6)" }}>DoctorPost</span>
         <button
           onClick={() => router.push("/dashboard")}
           style={{
             color: "var(--drp-grey)",
-            fontSize: 14,
+            fontSize: "var(--drp-text-md)",
             background: "none",
             border: "none",
             cursor: "pointer",
@@ -97,10 +97,10 @@ export default function OnboardingLayout({
                 marginBottom: 8,
               }}
             >
-              <span style={{ fontSize: 13, fontWeight: 600 }}>
+              <span style={{ fontSize: "var(--drp-text-sm)", fontWeight: 600 }}>
                 Step {step} of 5
               </span>
-              <span style={{ fontSize: 13, color: "var(--drp-grey)" }}>
+              <span style={{ fontSize: "var(--drp-text-sm)", color: "var(--drp-grey)" }}>
                 {stepLabels[step!]}
               </span>
             </div>

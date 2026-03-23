@@ -23,7 +23,7 @@ export default function PostGoalSelector({
             onClick={() => onChange(goal.id)}
             style={{
               padding: "5px 12px",
-              fontSize: 13,
+              fontSize: "var(--drp-text-sm)",
               fontWeight: isSelected ? 700 : 500,
               border: isSelected
                 ? "2px solid var(--drp-purple, #631DED)"

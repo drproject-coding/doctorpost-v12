@@ -178,20 +178,20 @@ export function FormattedOutput({
               justifyContent: "center",
               color: "white",
               fontWeight: 700,
-              fontSize: 18,
+              fontSize: "var(--drp-text-h6)",
               flexShrink: 0,
             }}
           >
             Y
           </div>
           <div>
-            <div style={{ fontWeight: 600, fontSize: 14, color: "#191919" }}>
+            <div style={{ fontWeight: 600, fontSize: "var(--drp-text-md)", color: "#191919" }}>
               Your Name
             </div>
-            <div style={{ fontSize: 12, color: "#666666", lineHeight: 1.3 }}>
+            <div style={{ fontSize: "var(--drp-text-sm)", color: "#666666", lineHeight: 1.3 }}>
               Your headline here
             </div>
-            <div style={{ fontSize: 12, color: "#666666" }}>Just now</div>
+            <div style={{ fontSize: "var(--drp-text-sm)", color: "#666666" }}>Just now</div>
           </div>
         </div>
 
@@ -199,7 +199,7 @@ export function FormattedOutput({
         <div style={{ padding: "0 16px 12px" }}>
           <pre
             style={{
-              fontSize: 14,
+              fontSize: "var(--drp-text-md)",
               lineHeight: 1.5,
               whiteSpace: "pre-wrap",
               wordWrap: "break-word",
@@ -220,7 +220,7 @@ export function FormattedOutput({
                 border: "none",
                 color: "#666666",
                 cursor: "pointer",
-                fontSize: 14,
+                fontSize: "var(--drp-text-md)",
                 fontWeight: 600,
                 padding: "4px 0",
                 display: "block",
@@ -237,7 +237,7 @@ export function FormattedOutput({
                 border: "none",
                 color: "#666666",
                 cursor: "pointer",
-                fontSize: 14,
+                fontSize: "var(--drp-text-md)",
                 fontWeight: 600,
                 padding: "4px 0",
                 display: "block",
@@ -255,7 +255,7 @@ export function FormattedOutput({
             borderTop: "1px solid #e0e0e0",
             display: "flex",
             justifyContent: "space-between",
-            fontSize: 12,
+            fontSize: "var(--drp-text-sm)",
             color: "#666666",
           }}
         >
@@ -270,7 +270,7 @@ export function FormattedOutput({
             borderTop: "1px solid #e0e0e0",
             display: "flex",
             justifyContent: "space-around",
-            fontSize: 13,
+            fontSize: "var(--drp-text-sm)",
             fontWeight: 600,
             color: "#666666",
           }}

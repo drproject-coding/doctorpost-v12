@@ -147,7 +147,7 @@ export default function SettingsSubscriptionPage() {
         <div style={{ marginBottom: 28 }}>
           <h1
             style={{
-              fontSize: 26,
+              fontSize: "var(--drp-text-h4)",
               fontWeight: 800,
               margin: "0 0 6px",
               color: "var(--drp-black)",
@@ -156,7 +156,7 @@ export default function SettingsSubscriptionPage() {
             Subscription
           </h1>
           <p
-            style={{ margin: 0, color: "var(--drp-text-muted)", fontSize: 14 }}
+            style={{ margin: 0, color: "var(--drp-text-muted)", fontSize: "var(--drp-text-md)" }}
           >
             Your current plan and usage
           </p>
@@ -177,7 +177,7 @@ export default function SettingsSubscriptionPage() {
             <span style={{ color: "var(--drp-pink)", flexShrink: 0 }}>
               <Icon name="close" size="sm" />
             </span>
-            <span style={{ fontSize: 13 }}>{error}</span>
+            <span style={{ fontSize: "var(--drp-text-sm)" }}>{error}</span>
           </div>
         )}
 
@@ -198,7 +198,7 @@ export default function SettingsSubscriptionPage() {
                 <p
                   style={{
                     margin: "0 0 6px",
-                    fontSize: 12,
+                    fontSize: "var(--drp-text-sm)",
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: 0.5,
@@ -210,7 +210,7 @@ export default function SettingsSubscriptionPage() {
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <span
                     style={{
-                      fontSize: 28,
+                      fontSize: "var(--drp-text-h4)",
                       fontWeight: 800,
                       color: planMeta.color,
                     }}
@@ -218,7 +218,7 @@ export default function SettingsSubscriptionPage() {
                     {planMeta.label}
                   </span>
                   {tier === "power" && (
-                    <span style={{ color: "var(--drp-orange)", fontSize: 14 }}>
+                    <span style={{ color: "var(--drp-orange)", fontSize: "var(--drp-text-md)" }}>
                       ★
                     </span>
                   )}
@@ -226,7 +226,7 @@ export default function SettingsSubscriptionPage() {
                 <p
                   style={{
                     margin: "4px 0 0",
-                    fontSize: 14,
+                    fontSize: "var(--drp-text-md)",
                     color: "var(--drp-text-muted)",
                   }}
                 >
@@ -239,7 +239,7 @@ export default function SettingsSubscriptionPage() {
                   padding: "6px 16px",
                   border: `2px solid ${planMeta.color}`,
                   fontWeight: 800,
-                  fontSize: 12,
+                  fontSize: "var(--drp-text-sm)",
                   textTransform: "uppercase",
                   letterSpacing: 1,
                   color: planMeta.color,
@@ -262,7 +262,7 @@ export default function SettingsSubscriptionPage() {
                 <span
                   style={{
                     fontWeight: 700,
-                    fontSize: 12,
+                    fontSize: "var(--drp-text-sm)",
                     textTransform: "uppercase",
                     letterSpacing: 0.5,
                   }}
@@ -272,7 +272,7 @@ export default function SettingsSubscriptionPage() {
                 <span
                   style={{
                     fontWeight: 800,
-                    fontSize: 16,
+                    fontSize: "var(--drp-text-lg)",
                     color: usageColor,
                   }}
                 >
@@ -305,7 +305,7 @@ export default function SettingsSubscriptionPage() {
                 <p
                   style={{
                     margin: 0,
-                    fontSize: 12,
+                    fontSize: "var(--drp-text-sm)",
                     color: "var(--drp-text-muted)",
                   }}
                 >
@@ -322,7 +322,7 @@ export default function SettingsSubscriptionPage() {
             <h2
               style={{
                 fontWeight: 800,
-                fontSize: 15,
+                fontSize: "var(--drp-text-h6)",
                 margin: "0 0 20px",
                 color: "var(--drp-black)",
               }}
@@ -363,7 +363,7 @@ export default function SettingsSubscriptionPage() {
                           transform: "translateY(-50%)",
                           background: plan.color,
                           color: "var(--drp-white)",
-                          fontSize: 10,
+                          fontSize: "var(--drp-text-xs)",
                           fontWeight: 800,
                           padding: "2px 8px",
                           textTransform: "uppercase",
@@ -379,7 +379,7 @@ export default function SettingsSubscriptionPage() {
                         style={{
                           margin: "0 0 2px",
                           fontWeight: 800,
-                          fontSize: 16,
+                          fontSize: "var(--drp-text-lg)",
                           color: plan.color,
                         }}
                       >
@@ -388,7 +388,7 @@ export default function SettingsSubscriptionPage() {
                       <p
                         style={{
                           margin: 0,
-                          fontSize: 12,
+                          fontSize: "var(--drp-text-sm)",
                           color: "var(--drp-text-muted)",
                           fontWeight: 600,
                         }}
@@ -424,7 +424,7 @@ export default function SettingsSubscriptionPage() {
                             <Icon name="check" size="sm" />
                           </span>
                           <span
-                            style={{ fontSize: 12, color: "var(--drp-black)" }}
+                            style={{ fontSize: "var(--drp-text-sm)", color: "var(--drp-black)" }}
                           >
                             {feature}
                           </span>
@@ -456,7 +456,7 @@ export default function SettingsSubscriptionPage() {
                   style={{
                     margin: "0 0 4px",
                     fontWeight: 800,
-                    fontSize: 16,
+                    fontSize: "var(--drp-text-lg)",
                     color: "var(--drp-black)",
                   }}
                 >
@@ -465,7 +465,7 @@ export default function SettingsSubscriptionPage() {
                 <p
                   style={{
                     margin: 0,
-                    fontSize: 14,
+                    fontSize: "var(--drp-text-md)",
                     color: "var(--drp-text-muted)",
                   }}
                 >

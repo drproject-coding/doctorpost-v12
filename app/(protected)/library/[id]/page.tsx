@@ -76,7 +76,7 @@ function SimpleView({ post, copied, onCopy }: ViewProps) {
         <span
           style={{
             fontWeight: 700,
-            fontSize: 13,
+            fontSize: "var(--drp-text-sm)",
             textTransform: "uppercase",
             letterSpacing: 1,
           }}
@@ -92,7 +92,7 @@ function SimpleView({ post, copied, onCopy }: ViewProps) {
           padding: 16,
           whiteSpace: "pre-wrap",
           lineHeight: 1.7,
-          fontSize: 15,
+          fontSize: "var(--drp-text-h6)",
         }}
       >
         {post.content}
@@ -143,7 +143,7 @@ function VisualView({ post, copied, onCopy }: ViewProps) {
         <span
           style={{
             fontWeight: 700,
-            fontSize: 13,
+            fontSize: "var(--drp-text-sm)",
             textTransform: "uppercase",
             letterSpacing: 1,
           }}
@@ -159,7 +159,7 @@ function VisualView({ post, copied, onCopy }: ViewProps) {
           padding: 16,
           whiteSpace: "pre-wrap",
           lineHeight: 1.7,
-          fontSize: 15,
+          fontSize: "var(--drp-text-h6)",
         }}
       >
         {postText}
@@ -189,7 +189,7 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
           <span
             style={{
               fontWeight: 700,
-              fontSize: 13,
+              fontSize: "var(--drp-text-sm)",
               textTransform: "uppercase",
               letterSpacing: 1,
               display: "block",
@@ -219,7 +219,7 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
                 >
                   <span
                     style={{
-                      fontSize: 11,
+                      fontSize: "var(--drp-text-xs)",
                       fontWeight: 800,
                       color: "var(--drp-purple)",
                       textTransform: "uppercase",
@@ -229,14 +229,14 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
                   >
                     {slide.number}
                   </span>
-                  <span style={{ fontWeight: 700, fontSize: 14 }}>
+                  <span style={{ fontWeight: 700, fontSize: "var(--drp-text-md)" }}>
                     {slide.title}
                   </span>
                 </div>
                 <p
                   style={{
                     margin: 0,
-                    fontSize: 14,
+                    fontSize: "var(--drp-text-md)",
                     lineHeight: 1.6,
                     color: "var(--drp-text-secondary)",
                   }}
@@ -260,7 +260,7 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
         <span
           style={{
             fontWeight: 700,
-            fontSize: 13,
+            fontSize: "var(--drp-text-sm)",
             textTransform: "uppercase",
             letterSpacing: 1,
           }}
@@ -276,7 +276,7 @@ function CarouselView({ post, copied, onCopy }: ViewProps) {
           padding: 16,
           whiteSpace: "pre-wrap",
           lineHeight: 1.7,
-          fontSize: 15,
+          fontSize: "var(--drp-text-h6)",
         }}
       >
         {postText}
@@ -448,7 +448,7 @@ export default function PostDetailPage() {
           <div>
             <h1
               style={{
-                fontSize: 22,
+                fontSize: "var(--drp-text-h5)",
                 fontWeight: 800,
                 margin: "0 0 8px",
                 lineHeight: 1.3,
@@ -471,7 +471,7 @@ export default function PostDetailPage() {
                   background: sourceStyle.bg,
                   color: sourceStyle.color,
                   fontWeight: 800,
-                  fontSize: 10,
+                  fontSize: "var(--drp-text-xs)",
                   textTransform: "uppercase",
                   letterSpacing: 1,
                 }}
@@ -496,7 +496,7 @@ export default function PostDetailPage() {
                           ? "var(--drp-warning)"
                           : "var(--drp-text-muted)",
                     fontWeight: 800,
-                    fontSize: 10,
+                    fontSize: "var(--drp-text-xs)",
                     textTransform: "uppercase",
                     letterSpacing: 1,
                   }}
@@ -510,7 +510,7 @@ export default function PostDetailPage() {
                     padding: "2px 10px",
                     border: "2px solid var(--drp-black)",
                     fontWeight: 700,
-                    fontSize: 11,
+                    fontSize: "var(--drp-text-xs)",
                     textTransform: "uppercase",
                     letterSpacing: 1,
                   }}
@@ -519,7 +519,7 @@ export default function PostDetailPage() {
                 </span>
               )}
               {date && (
-                <span style={{ fontSize: 13, color: "var(--drp-text-muted)" }}>
+                <span style={{ fontSize: "var(--drp-text-sm)", color: "var(--drp-text-muted)" }}>
                   {date}
                 </span>
               )}
@@ -533,7 +533,7 @@ export default function PostDetailPage() {
                         : "var(--drp-orange)",
                     color: "#fff",
                     fontWeight: 800,
-                    fontSize: 11,
+                    fontSize: "var(--drp-text-xs)",
                   }}
                 >
                   {post.score}/100
@@ -546,7 +546,7 @@ export default function PostDetailPage() {
                     background: "var(--drp-mint)",
                     color: "#fff",
                     fontWeight: 700,
-                    fontSize: 11,
+                    fontSize: "var(--drp-text-xs)",
                     textTransform: "uppercase",
                   }}
                 >

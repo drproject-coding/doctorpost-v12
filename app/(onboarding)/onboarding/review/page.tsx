@@ -33,7 +33,7 @@ function Tag({ label, color }: { label: string; color: string }) {
       style={{
         display: "inline-block",
         padding: "3px 10px",
-        fontSize: 12,
+        fontSize: "var(--drp-text-sm)",
         fontWeight: 600,
         border: `1.5px solid ${color}`,
         color,
@@ -56,7 +56,7 @@ function IncompleteBadge() {
       style={{
         display: "inline-block",
         padding: "2px 8px",
-        fontSize: 11,
+        fontSize: "var(--drp-text-xs)",
         fontWeight: 700,
         background: "#FEF3C7",
         color: "#92400E",
@@ -80,7 +80,7 @@ function CompleteBadge() {
         alignItems: "center",
         gap: 4,
         padding: "2px 8px",
-        fontSize: 11,
+        fontSize: "var(--drp-text-xs)",
         fontWeight: 700,
         background: "#D1FAE5",
         color: "#065F46",
@@ -140,7 +140,7 @@ function SectionCard({
           <span
             style={{
               fontWeight: 700,
-              fontSize: 15,
+              fontSize: "var(--drp-text-h6)",
               color: "var(--drp-black)",
             }}
           >
@@ -160,7 +160,7 @@ function SectionCard({
             border: "1.5px solid var(--drp-black)",
             cursor: "pointer",
             padding: "4px 12px",
-            fontSize: 12,
+            fontSize: "var(--drp-text-sm)",
             fontWeight: 600,
             color: "var(--drp-black)",
             borderRadius: 0,
@@ -192,7 +192,7 @@ function EmptyValue({ label }: { label: string }) {
     <span
       style={{
         color: "var(--drp-text-muted)",
-        fontSize: 13,
+        fontSize: "var(--drp-text-sm)",
         fontStyle: "italic",
       }}
     >
@@ -208,7 +208,7 @@ function FieldRow({ label, value }: { label: string; value: string }) {
     <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
       <span
         style={{
-          fontSize: 12,
+          fontSize: "var(--drp-text-sm)",
           fontWeight: 700,
           color: "var(--drp-text-muted)",
           minWidth: 120,
@@ -220,7 +220,7 @@ function FieldRow({ label, value }: { label: string; value: string }) {
         {label}
       </span>
       <span
-        style={{ fontSize: 13, color: "var(--drp-black)", lineHeight: 1.5 }}
+        style={{ fontSize: "var(--drp-text-sm)", color: "var(--drp-black)", lineHeight: 1.5 }}
       >
         {value || <EmptyValue label="Not set" />}
       </span>
@@ -269,7 +269,7 @@ export default function OnboardingReviewPage() {
           minHeight: "40vh",
           gap: 10,
           color: "var(--drp-text-muted)",
-          fontSize: 14,
+          fontSize: "var(--drp-text-md)",
         }}
       >
         <Loader size="sm" />
@@ -281,7 +281,7 @@ export default function OnboardingReviewPage() {
   if (!profile) {
     return (
       <div style={{ textAlign: "center", padding: "40px 0" }}>
-        <p style={{ color: "var(--drp-text-muted)", fontSize: 14 }}>
+        <p style={{ color: "var(--drp-text-muted)", fontSize: "var(--drp-text-md)" }}>
           {error ?? "Could not load profile."}
         </p>
         <button
@@ -293,7 +293,7 @@ export default function OnboardingReviewPage() {
             cursor: "pointer",
             color: "var(--drp-purple)",
             fontWeight: 600,
-            fontSize: 14,
+            fontSize: "var(--drp-text-md)",
           }}
         >
           ← Go to wizard
@@ -324,7 +324,7 @@ export default function OnboardingReviewPage() {
         <p
           style={{
             margin: 0,
-            fontSize: 15,
+            fontSize: "var(--drp-text-h6)",
             color: "var(--drp-text-muted)",
             lineHeight: 1.5,
           }}
@@ -361,7 +361,7 @@ export default function OnboardingReviewPage() {
           <div style={{ marginBottom: 10 }}>
             <div
               style={{
-                fontSize: 12,
+                fontSize: "var(--drp-text-sm)",
                 fontWeight: 700,
                 color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
@@ -387,7 +387,7 @@ export default function OnboardingReviewPage() {
           <div style={{ marginBottom: 10 }}>
             <div
               style={{
-                fontSize: 12,
+                fontSize: "var(--drp-text-sm)",
                 fontWeight: 700,
                 color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
@@ -409,7 +409,7 @@ export default function OnboardingReviewPage() {
           <div>
             <div
               style={{
-                fontSize: 12,
+                fontSize: "var(--drp-text-sm)",
                 fontWeight: 700,
                 color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
@@ -422,7 +422,7 @@ export default function OnboardingReviewPage() {
             <p
               style={{
                 margin: 0,
-                fontSize: 13,
+                fontSize: "var(--drp-text-sm)",
                 color: "var(--drp-black)",
                 lineHeight: 1.6,
               }}
@@ -446,7 +446,7 @@ export default function OnboardingReviewPage() {
           <div style={{ marginBottom: profile.definition ? 12 : 0 }}>
             <div
               style={{
-                fontSize: 12,
+                fontSize: "var(--drp-text-sm)",
                 fontWeight: 700,
                 color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
@@ -459,7 +459,7 @@ export default function OnboardingReviewPage() {
             <p
               style={{
                 margin: 0,
-                fontSize: 13,
+                fontSize: "var(--drp-text-sm)",
                 color: "var(--drp-black)",
                 lineHeight: 1.6,
               }}
@@ -475,7 +475,7 @@ export default function OnboardingReviewPage() {
           <div>
             <div
               style={{
-                fontSize: 12,
+                fontSize: "var(--drp-text-sm)",
                 fontWeight: 700,
                 color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
@@ -488,7 +488,7 @@ export default function OnboardingReviewPage() {
             <p
               style={{
                 margin: 0,
-                fontSize: 13,
+                fontSize: "var(--drp-text-sm)",
                 color: "var(--drp-black)",
                 lineHeight: 1.6,
               }}
@@ -512,7 +512,7 @@ export default function OnboardingReviewPage() {
           <div style={{ marginBottom: profile.offers.length > 0 ? 10 : 0 }}>
             <div
               style={{
-                fontSize: 12,
+                fontSize: "var(--drp-text-sm)",
                 fontWeight: 700,
                 color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
@@ -538,7 +538,7 @@ export default function OnboardingReviewPage() {
           <div>
             <div
               style={{
-                fontSize: 12,
+                fontSize: "var(--drp-text-sm)",
                 fontWeight: 700,
                 color: "var(--drp-text-muted)",
                 textTransform: "uppercase",
@@ -570,7 +570,7 @@ export default function OnboardingReviewPage() {
           <p
             style={{
               margin: 0,
-              fontSize: 13,
+              fontSize: "var(--drp-text-sm)",
               color: "var(--drp-black)",
               lineHeight: 1.6,
             }}
@@ -590,7 +590,7 @@ export default function OnboardingReviewPage() {
             background: "#FEF2F2",
             border: "1.5px solid #F87171",
             color: "#B91C1C",
-            fontSize: 13,
+            fontSize: "var(--drp-text-sm)",
             marginBottom: 16,
             borderRadius: 0,
           }}
@@ -619,7 +619,7 @@ export default function OnboardingReviewPage() {
             alignItems: "center",
             justifyContent: "center",
             gap: 8,
-            fontSize: 15,
+            fontSize: "var(--drp-text-h6)",
             fontWeight: 700,
             padding: "12px 28px",
           }}
@@ -644,7 +644,7 @@ export default function OnboardingReviewPage() {
             background: "none",
             border: "none",
             cursor: saving ? "not-allowed" : "pointer",
-            fontSize: 13,
+            fontSize: "var(--drp-text-sm)",
             color: "var(--drp-text-muted)",
             padding: "4px 0",
             transition: "color 0.12s",

@@ -6,7 +6,7 @@ Systematically close the design system compliance gaps identified in the DS audi
 
 ## Phases
 
-- [ ] **Phase 1: DS Compliance Fixes** - Replace raw form elements, fix color tokens, remove border-radius violations, fix font sizes
+- [x] **Phase 1: DS Compliance Fixes** - Replace raw form elements, fix color tokens, remove border-radius violations, fix font sizes ✅ 2026-03-23
 
 ## Phase Details
 
@@ -26,8 +26,8 @@ Systematically close the design system compliance gaps identified in the DS audi
 
 Plans:
 
-- [ ] 01-ds-compliance-fixes-01-PLAN.md — Replace form inputs (60+ raw inputs → DS components)
-- [ ] 01-ds-compliance-fixes-02-PLAN.md — Replace hardcoded hex colors (40+ colors → DS tokens)
-- [ ] 01-ds-compliance-fixes-03-PLAN.md — Fix rounded corners + typography (calendar page fixes)
+- [x] 01-ds-compliance-fixes-01-PLAN.md — Replace form inputs (60+ raw inputs → DS components) ✅
+- [x] 01-ds-compliance-fixes-02-PLAN.md — Replace hardcoded hex colors (43 colors → DS tokens) ✅
+- [x] 01-ds-compliance-fixes-03-PLAN.md — Fix rounded corners + typography (301 font sizes, 3 rounded-full) ✅
 
 **Audit source**: `.planning/phases/ds-audit/ds-UAT.md`

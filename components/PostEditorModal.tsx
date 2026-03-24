@@ -179,15 +179,14 @@ export function PostEditorModal({
                   .value as ScheduledPost["status"],
               )
             }
-            options={[
-              { value: "draft", label: "Draft" },
-              { value: "to-review", label: "To Review" },
-              { value: "to-plan", label: "To Plan" },
-              { value: "to-publish", label: "To Publish" },
-              { value: "scheduled", label: "Scheduled" },
-              { value: "published", label: "Published" },
-            ]}
-          />
+          >
+            <option value="draft">Draft</option>
+            <option value="to-review">To Review</option>
+            <option value="to-plan">To Plan</option>
+            <option value="to-publish">To Publish</option>
+            <option value="scheduled">Scheduled</option>
+            <option value="published">Published</option>
+          </Select>
         </div>
 
         {/* Publish Date */}

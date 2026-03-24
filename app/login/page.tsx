@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Card, Loader, Icon } from "@doctorproject/react";
+import { Button, Card, Loader, Icon, Input } from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 
@@ -160,20 +160,18 @@ export default function LoginPage() {
                   className="space-y-4"
                 >
                   <div>
-                    <input
+                    <Input
                       type="email"
-                      className="drp-input"
                       style={{ width: "100%" }}
                       placeholder="Email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
-                  <div className="relative">
-                    <input
+                  <div style={{ position: "relative" }}>
+                    <Input
                       type={showPassword ? "text" : "password"}
-                      className="drp-input pr-10"
-                      style={{ width: "100%" }}
+                      style={{ width: "100%", paddingRight: "40px" }}
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -181,7 +179,19 @@ export default function LoginPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      style={{
+                        position: "absolute",
+                        right: "var(--drp-space-3)",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: 0,
+                        display: "flex",
+                        alignItems: "center",
+                        color: "inherit",
+                      }}
                     >
                       {showPassword ? (
                         <Icon name="eye-off" size="sm" />

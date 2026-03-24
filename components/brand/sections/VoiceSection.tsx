@@ -177,17 +177,16 @@ const VoiceSection: React.FC<VoiceSectionProps> = ({
                 Links
               </label>
               <Select
-                options={[
-                  { value: "end", label: "End of post" },
-                  { value: "inline", label: "Inline" },
-                  { value: "none", label: "None" },
-                ]}
                 value={profile.styleGuide.links}
                 onChange={(e) =>
                   handleLinksChange(e as React.ChangeEvent<HTMLSelectElement>)
                 }
                 style={{ width: "160px" }}
-              />
+              >
+                <option value="end">End of post</option>
+                <option value="inline">Inline</option>
+                <option value="none">None</option>
+              </Select>
             </div>
           </div>
         </div>

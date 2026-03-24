@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Card, Loader, Icon } from "@doctorproject/react";
+import { Button, Card, Loader, Icon, Input } from "@doctorproject/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 
@@ -70,76 +70,43 @@ export default function SignupPage() {
           onSubmit={(e) => void handleSubmit(e)}
           style={{ textAlign: "left" }}
         >
-          <div style={{ marginBottom: "var(--drp-text-lg)" }}>
-            <label
-              htmlFor="name"
-              style={{
-                display: "block",
-                fontWeight: 600,
-                marginBottom: "6px",
-                fontSize: "var(--drp-text-md)",
-              }}
-            >
-              Full name
-            </label>
-            <input
+          <div style={{ marginBottom: "var(--drp-space-4)" }}>
+            <Input
               id="name"
               type="text"
-              className="drp-input"
+              label="Full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
               autoComplete="name"
-              style={{ width: "100%", borderRadius: 0 }}
+              style={{ width: "100%" }}
             />
           </div>
 
-          <div style={{ marginBottom: "var(--drp-text-lg)" }}>
-            <label
-              htmlFor="email"
-              style={{
-                display: "block",
-                fontWeight: 600,
-                marginBottom: "6px",
-                fontSize: "var(--drp-text-md)",
-              }}
-            >
-              Email
-            </label>
-            <input
+          <div style={{ marginBottom: "var(--drp-space-4)" }}>
+            <Input
               id="email"
               type="email"
-              className="drp-input"
+              label="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              style={{ width: "100%", borderRadius: 0 }}
+              style={{ width: "100%" }}
             />
           </div>
 
-          <div style={{ marginBottom: "var(--drp-text-h4)" }}>
-            <label
-              htmlFor="password"
-              style={{
-                display: "block",
-                fontWeight: 600,
-                marginBottom: "6px",
-                fontSize: "var(--drp-text-md)",
-              }}
-            >
-              Password
-            </label>
+          <div style={{ marginBottom: "var(--drp-space-6)" }}>
             <div style={{ position: "relative" }}>
-              <input
+              <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                className="drp-input"
+                label="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="new-password"
-                style={{ width: "100%", borderRadius: 0, paddingRight: "40px" }}
+                style={{ width: "100%", paddingRight: "40px" }}
               />
               <button
                 type="button"

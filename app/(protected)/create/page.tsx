@@ -33,7 +33,6 @@ export default function CreatePage() {
   const { user, loadingAuth } = useAuth();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<BrandProfile | null>(null);
-  const [activeSubNav, setActiveSubNav] = useState("generate-post");
 
   // Form values
   const [postStructure, setPostStructure] = useState("");
@@ -98,8 +97,8 @@ export default function CreatePage() {
         if (psOpt) setPostStructure(psOpt.value);
         if (caOpt) setContentAngle(caOpt.value);
         if (cpOpt) setContentPillar(cpOpt.value);
-      } catch (error) {
-        console.error("Failed to load profile:", error);
+      } catch {
+        // Profile fetch failed — the !profile guard below shows the error state
       } finally {
         setLoading(false);
       }
@@ -143,8 +142,13 @@ export default function CreatePage() {
     try {
       const results = await findSubtopics(topic, 5, aiSettings ?? undefined);
       setSubtopics(results);
-    } catch (error) {
-      console.error("Failed to find subtopics:", error);
+      if (results.length === 0) {
+        setSaveFeedback("No subtopics found. Try a different topic.");
+        setTimeout(() => setSaveFeedback(null), 4000);
+      }
+    } catch {
+      setSaveFeedback("Failed to find subtopics. Please try again.");
+      setTimeout(() => setSaveFeedback(null), 4000);
     } finally {
       setLoadingSubtopics(false);
     }
@@ -162,14 +166,14 @@ export default function CreatePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic: topicText, subtopic: subtopicText }),
       });
-      if (!res.ok) return;
+      if (!res.ok) return; // Non-fatal: user can still generate without AI suggestions
       const result = (await res.json()) as PostRecommendation;
       setRecommendation(result);
       if (result.postStructure) setPostStructure(result.postStructure);
       if (result.contentAngle) setContentAngle(result.contentAngle);
       if (result.contentPillar) setContentPillar(result.contentPillar);
-    } catch (error) {
-      console.error("Failed to get recommendations:", error);
+    } catch {
+      // Non-fatal: user can still generate without AI recommendations
     } finally {
       setLoadingRecommendation(false);
     }
@@ -196,7 +200,7 @@ export default function CreatePage() {
   };
 
   const handleGeneratePostClick = async () => {
-    if (!profile || !topic) {
+    if (!profile || !topic.trim()) {
       setSaveFeedback("Please fill in a topic before generating.");
       setTimeout(() => setSaveFeedback(null), 3000);
       return;
@@ -264,8 +268,7 @@ export default function CreatePage() {
       };
       await savePostDraft(newPost);
       setSaveFeedback("Saved to Library!");
-    } catch (error) {
-      console.error("Failed to save draft:", error);
+    } catch {
       setSaveFeedback("Failed to save draft. Please try again.");
     } finally {
       setSaving(false);
@@ -305,8 +308,7 @@ export default function CreatePage() {
       await schedulePost(newPost);
       setSaveFeedback("Post scheduled successfully!");
       setIsScheduleModalOpen(false);
-    } catch (error) {
-      console.error("Failed to schedule post:", error);
+    } catch {
       setSaveFeedback("Failed to schedule post. Please try again.");
     } finally {
       setSaving(false);
@@ -347,8 +349,10 @@ export default function CreatePage() {
           alignItems: "center",
           justifyContent: "center",
           minHeight: 200,
+          gap: "var(--drp-space-3)",
         }}
       >
+        <Loader size="sm" />
         <p>Loading brand profile...</p>
       </Card>
     );
@@ -360,7 +364,10 @@ export default function CreatePage() {
         Please go to{" "}
         <a
           href="/settings"
-          style={{ fontWeight: 700, textDecoration: "underline" }}
+          style={{
+            fontWeight: "var(--drp-weight-bold)",
+            textDecoration: "underline",
+          }}
         >
           Settings
         </a>{" "}
@@ -374,510 +381,423 @@ export default function CreatePage() {
       <h1
         style={{
           fontSize: "var(--drp-text-h3)",
-          fontWeight: 700,
+          fontWeight: "var(--drp-weight-bold)",
           marginBottom: "var(--drp-space-6)",
         }}
       >
         Create New Post
       </h1>
 
-      {/* Sub-navigation tabs */}
       <div
         style={{
-          display: "flex",
-          gap: "var(--drp-space-2)",
-          marginBottom: "var(--drp-space-6)",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "var(--drp-space-6)",
         }}
+        className="create-grid"
       >
-        <Button
-          onClick={() => setActiveSubNav("generate-post")}
-          variant={activeSubNav === "generate-post" ? "primary" : undefined}
-        >
-          Generate Post
-        </Button>
-        <Button
-          onClick={() => setActiveSubNav("content-strategy")}
-          variant={activeSubNav === "content-strategy" ? "primary" : undefined}
-        >
-          Content Strategy
-        </Button>
-      </div>
-
-      {activeSubNav === "generate-post" && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "var(--drp-space-6)",
-          }}
-          className="create-grid"
-        >
-          {/* Left Column: Input Form */}
-          <Card variant="raised">
-            <h2
-              style={{
-                fontSize: "var(--drp-text-h5)",
-                fontWeight: 700,
-                marginBottom: "var(--drp-space-4)",
-              }}
-            >
-              Post Details
-            </h2>
-
-            <div className="drp-form-stack">
-              {/* Topic field */}
-              <div className="drp-field drp-field--has-icon">
-                <label htmlFor="topic-input" className="drp-field__label">
-                  Topic
-                </label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type="text"
-                    id="topic-input"
-                    className="drp-input"
-                    style={{ width: "100%", paddingRight: 40 }}
-                    value={topic}
-                    onChange={handleTopicChange}
-                    placeholder="e.g., 'AI in healthcare'"
-                  />
-                  <button
-                    onClick={() => void handleFindSubtopics()}
-                    disabled={loadingSubtopics || !topic.trim()}
-                    aria-label="Find Subtopics"
-                    style={{
-                      position: "absolute",
-                      right: 8,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: 4,
-                    }}
-                  >
-                    {loadingSubtopics ? (
-                      <Loader size="sm" />
-                    ) : (
-                      <Icon name="search" size="sm" />
-                    )}
-                  </button>
-                </div>
-
-                {subtopics.length > 0 && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "var(--drp-space-2)",
-                      marginTop: "var(--drp-space-3)",
-                    }}
-                  >
-                    <span className="drp-field__label">
-                      Subtopic Suggestions
-                    </span>
-                    {subtopics.map((sub) => (
-                      <button
-                        key={sub.id}
-                        type="button"
-                        onClick={() => void handleSelectSubtopic(sub)}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          padding: "var(--drp-space-2) var(--drp-space-3)",
-                          border:
-                            selectedSubtopic?.id === sub.id
-                              ? "2px solid var(--drp-purple)"
-                              : "var(--drp-border)",
-                          background:
-                            selectedSubtopic?.id === sub.id
-                              ? "var(--drp-purple-20)"
-                              : "var(--drp-cream)",
-                          cursor: "pointer",
-                          textAlign: "left",
-                          width: "100%",
-                          fontFamily: "var(--drp-font-primary)",
-                          fontSize: "var(--drp-text-md)",
-                        }}
-                      >
-                        <span style={{ fontWeight: 500 }}>{sub.text}</span>
-                        <span
-                          className="drp-tag drp-tag--filled"
-                          style={{
-                            fontSize: "var(--drp-text-xs)",
-                            padding: "2px 8px",
-                            background:
-                              sub.source === "google_trends"
-                                ? "var(--drp-purple-20)"
-                                : sub.source === "google_questions"
-                                  ? "rgba(0, 170, 0, 0.12)"
-                                  : "rgba(255, 170, 0, 0.15)",
-                          }}
-                        >
-                          {getSourceBadgeLabel(sub.source)}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Core Takeaway */}
-              <div className="drp-field">
-                <label htmlFor="coreTakeaway" className="drp-field__label">
-                  Core Takeaway (Optional)
-                </label>
-                <textarea
-                  id="coreTakeaway"
-                  className="drp-input"
-                  style={{ width: "100%", minHeight: 80, resize: "vertical" }}
-                  value={coreTakeaway}
-                  onChange={(e) => setCoreTakeaway(e.target.value)}
-                  placeholder="What's the single most important thing readers should remember?"
-                />
-              </div>
-
-              {/* CTA Goal */}
-              <div className="drp-field">
-                <label htmlFor="ctaGoal" className="drp-field__label">
-                  Call to Action Goal (Optional)
-                </label>
-                <input
-                  type="text"
-                  id="ctaGoal"
-                  className="drp-input"
-                  style={{ width: "100%" }}
-                  value={ctaGoal}
-                  onChange={(e) => setCtaGoal(e.target.value)}
-                  placeholder="e.g., 'Visit my website', 'Share your thoughts'"
-                />
-              </div>
-
-              {/* Post Structure */}
-              <div
-                className="drp-field"
-                style={{
-                  borderLeft: "3px solid #631DED",
-                  paddingLeft: "var(--drp-space-3)",
-                }}
-              >
-                <label
-                  className="drp-field__label"
-                  style={{ color: "#631DED" }}
-                >
-                  Post Structure
-                </label>
-                <PostStructureCards
-                  selected={postStructure}
-                  onChange={setPostStructure}
-                />
-              </div>
-
-              {/* Content Angle */}
-              <div
-                className="drp-field"
-                style={{
-                  borderLeft: "3px solid #00A896",
-                  paddingLeft: "var(--drp-space-3)",
-                }}
-              >
-                <label
-                  className="drp-field__label"
-                  style={{ color: "#00A896" }}
-                >
-                  Content Angle
-                </label>
-                <ContentAngleChips
-                  selected={contentAngle}
-                  suggested={
-                    loadingRecommendation ? null : recommendation?.contentAngle
-                  }
-                  onChange={setContentAngle}
-                />
-              </div>
-
-              {/* Content Pillar */}
-              <div
-                className="drp-field"
-                style={{
-                  borderLeft: "3px solid #059669",
-                  paddingLeft: "var(--drp-space-3)",
-                }}
-              >
-                <EnhancedDropdown
-                  label="Content Pillar"
-                  options={enhancedContentPillars}
-                  value={contentPillar}
-                  onChange={setContentPillar}
-                  placeholder="Select a content pillar"
-                  loading={loadingRecommendation}
-                />
-              </div>
-
-              {/* AI Recommendation reasoning — collapsible */}
-              {recommendation && recommendation.confidence > 0 && (
-                <div
-                  style={{
-                    border: "1px solid rgba(99,29,237,0.2)",
-                    background: "rgba(99,29,237,0.03)",
-                    padding: "var(--drp-space-3)",
-                  }}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setShowRecommendationReasoning((v) => !v)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      width: "100%",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: 0,
-                      fontFamily: "var(--drp-font-primary)",
-                      fontSize: "var(--drp-text-sm)",
-                      fontWeight: 600,
-                      color: "var(--drp-purple)",
-                    }}
-                  >
-                    <span>
-                      AI Recommendations (
-                      {Math.round(recommendation.confidence * 100)}% confidence)
-                    </span>
-                    {showRecommendationReasoning ? (
-                      <Icon name="arrow-up" size="sm" />
-                    ) : (
-                      <Icon name="arrow-down" size="sm" />
-                    )}
-                  </button>
-
-                  {showRecommendationReasoning && (
-                    <div
-                      style={{
-                        marginTop: "var(--drp-space-3)",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "var(--drp-space-2)",
-                        fontSize: "var(--drp-text-sm)",
-                        color: "var(--drp-grey)",
-                      }}
-                    >
-                      {recommendation.reasoning.contentAngle && (
-                        <p>
-                          <strong>Content Angle:</strong>{" "}
-                          {recommendation.reasoning.contentAngle}
-                        </p>
-                      )}
-                      {recommendation.reasoning.postStructure && (
-                        <p>
-                          <strong>Post Structure:</strong>{" "}
-                          {recommendation.reasoning.postStructure}
-                        </p>
-                      )}
-                      {recommendation.reasoning.contentPillar && (
-                        <p>
-                          <strong>Content Pillar:</strong>{" "}
-                          {recommendation.reasoning.contentPillar}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Generate button */}
-              <Button
-                onClick={() => void handleGeneratePostClick()}
-                variant="primary"
-                block
-                disabled={
-                  loadingRecommendation ||
-                  !topic ||
-                  !postStructure ||
-                  !contentAngle ||
-                  !contentPillar
-                }
-              >
-                {loadingRecommendation ? (
-                  <>
-                    <Loader size="sm" />
-                    Getting Recommendations...
-                  </>
-                ) : (
-                  <>
-                    <Icon name="arrow-right" size="sm" />
-                    Generate Post
-                  </>
-                )}
-              </Button>
-
-              {/* Tone prompt preview */}
-              {profile.tones.length > 0 && (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "var(--drp-space-2)",
-                    flexWrap: "wrap",
-                    fontSize: "var(--drp-text-sm)",
-                    color: "var(--drp-grey)",
-                  }}
-                >
-                  <Icon name="eye" size="sm" />
-                  <span>Preview tone prompt:</span>
-                  {profile.tones.map((toneId) => {
-                    const tone = enhancedToneOptions.find(
-                      (t) => t.id === toneId,
-                    );
-                    return (
-                      <button
-                        key={toneId}
-                        type="button"
-                        onClick={() => setPreviewToneId(toneId)}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          fontFamily: "var(--drp-font-primary)",
-                          fontSize: "var(--drp-text-sm)",
-                          color: "var(--drp-purple)",
-                          fontWeight: 600,
-                          textDecoration: "underline",
-                          padding: 0,
-                        }}
-                      >
-                        {tone?.label ?? toneId}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-
-              {saveFeedback && (
-                <Alert
-                  variant={
-                    saveFeedback.includes("successfully") ||
-                    saveFeedback.includes("Saved")
-                      ? "success"
-                      : "error"
-                  }
-                >
-                  {saveFeedback}
-                </Alert>
-              )}
-            </div>
-          </Card>
-
-          {/* Right Column: Generated Post */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "var(--drp-space-4)",
-            }}
-          >
-            <PostGenerator
-              ref={postGeneratorRef}
-              parameters={postGenerationParams}
-              profile={profile}
-              aiSettings={aiSettings!}
-              triggerGeneration={triggerPostGeneration}
-              onContentGenerated={handleContentGenerated}
-            />
-            {generatedContent && (
-              <div className="drp-form-actions">
-                <Button
-                  onClick={() => void handleSaveDraft()}
-                  style={{ flex: 1 }}
-                  disabled={saving}
-                >
-                  {saving ? <Loader size="sm" /> : null}
-                  {saving ? "Saving…" : "Save to Library"}
-                </Button>
-                <Button
-                  onClick={handleOpenScheduleModal}
-                  variant="primary"
-                  style={{ flex: 1 }}
-                  disabled={saving}
-                >
-                  Schedule Post
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {activeSubNav === "content-strategy" && (
+        {/* Left Column: Input Form */}
         <Card variant="raised">
           <h2
             style={{
               fontSize: "var(--drp-text-h5)",
-              fontWeight: 700,
+              fontWeight: "var(--drp-weight-bold)",
               marginBottom: "var(--drp-space-4)",
             }}
           >
-            Your Content Strategy
+            Post Details
           </h2>
+
           <div className="drp-form-stack">
+            {/* Topic field */}
+            <div className="drp-field drp-field--has-icon">
+              <label htmlFor="topic-input" className="drp-field__label">
+                Topic
+              </label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type="text"
+                  id="topic-input"
+                  className="drp-input"
+                  style={{ width: "100%", paddingRight: 40 }}
+                  value={topic}
+                  onChange={handleTopicChange}
+                  placeholder="e.g., 'AI in healthcare'"
+                  maxLength={200}
+                />
+                <button
+                  onClick={() => void handleFindSubtopics()}
+                  disabled={loadingSubtopics || !topic.trim()}
+                  aria-label="Find Subtopics"
+                  style={{
+                    position: "absolute",
+                    right: 8,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 4,
+                  }}
+                >
+                  {loadingSubtopics ? (
+                    <Loader size="sm" />
+                  ) : (
+                    <Icon name="search" size="sm" />
+                  )}
+                </button>
+              </div>
+
+              {subtopics.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "var(--drp-space-2)",
+                    marginTop: "var(--drp-space-3)",
+                  }}
+                >
+                  <span className="drp-field__label">Subtopic Suggestions</span>
+                  {subtopics.map((sub) => (
+                    <button
+                      key={sub.id}
+                      type="button"
+                      onClick={() => void handleSelectSubtopic(sub)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "var(--drp-space-2) var(--drp-space-3)",
+                        border:
+                          selectedSubtopic?.id === sub.id
+                            ? "2px solid var(--drp-purple)"
+                            : "var(--drp-border)",
+                        background:
+                          selectedSubtopic?.id === sub.id
+                            ? "rgba(99,29,237,0.12)"
+                            : "var(--drp-surface)",
+                        cursor: "pointer",
+                        textAlign: "left",
+                        width: "100%",
+                        fontFamily: "var(--drp-font-primary)",
+                        fontSize: "var(--drp-text-md)",
+                      }}
+                    >
+                      <span style={{ fontWeight: "var(--drp-weight-medium)" }}>
+                        {sub.text}
+                      </span>
+                      <span
+                        className="drp-tag drp-tag--filled"
+                        style={{
+                          fontSize: "var(--drp-text-xs)",
+                          padding: "2px 8px",
+                          background:
+                            sub.source === "google_trends"
+                              ? "rgba(99,29,237,0.12)"
+                              : sub.source === "google_questions"
+                                ? "rgba(0, 170, 0, 0.12)"
+                                : "rgba(255, 170, 0, 0.15)",
+                        }}
+                      >
+                        {getSourceBadgeLabel(sub.source)}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Core Takeaway */}
             <div className="drp-field">
-              <h3 className="drp-field__label">Content Strategy Overview</h3>
-              <p>
-                {profile.contentStrategy ??
-                  "No content strategy defined yet. Go to Settings to add one."}
-              </p>
+              <label htmlFor="coreTakeaway" className="drp-field__label">
+                Core Takeaway (Optional)
+              </label>
+              <textarea
+                id="coreTakeaway"
+                className="drp-input"
+                style={{ width: "100%", minHeight: 80, resize: "vertical" }}
+                value={coreTakeaway}
+                onChange={(e) => setCoreTakeaway(e.target.value)}
+                placeholder="What's the single most important thing readers should remember?"
+              />
             </div>
+
+            {/* CTA Goal */}
             <div className="drp-field">
-              <h3 className="drp-field__label">Brand Definition</h3>
-              <p>
-                {profile.definition ??
-                  "No brand definition provided. Go to Settings to add one."}
-              </p>
+              <label htmlFor="ctaGoal" className="drp-field__label">
+                Call to Action Goal (Optional)
+              </label>
+              <input
+                type="text"
+                id="ctaGoal"
+                className="drp-input"
+                style={{ width: "100%" }}
+                value={ctaGoal}
+                onChange={(e) => setCtaGoal(e.target.value)}
+                placeholder="e.g., 'Visit my website', 'Share your thoughts'"
+              />
             </div>
-            <div className="drp-field">
-              <h3 className="drp-field__label">Copy Guidelines</h3>
-              <p>
-                {profile.copyGuideline ??
-                  "No copy guidelines set. Go to Settings to add them."}
-              </p>
+
+            {/* Post Structure */}
+            <div
+              className="drp-field"
+              style={{
+                borderLeft: "3px solid var(--drp-purple)",
+                paddingLeft: "var(--drp-space-3)",
+              }}
+            >
+              <label
+                className="drp-field__label"
+                style={{ color: "var(--drp-purple)" }}
+              >
+                Post Structure
+              </label>
+              <PostStructureCards
+                selected={postStructure}
+                onChange={setPostStructure}
+              />
             </div>
-            <div className="drp-field">
-              <h3 className="drp-field__label">Audience</h3>
-              <p>
-                {profile.audience.join(", ") ||
-                  "No audience defined. Go to Settings to add one."}
-              </p>
+
+            {/* Content Angle */}
+            <div
+              className="drp-field"
+              style={{
+                borderLeft: "3px solid var(--drp-orange)",
+                paddingLeft: "var(--drp-space-3)",
+              }}
+            >
+              <label
+                className="drp-field__label"
+                style={{ color: "var(--drp-orange)" }}
+              >
+                Content Angle
+              </label>
+              <ContentAngleChips
+                selected={contentAngle}
+                suggested={
+                  loadingRecommendation ? null : recommendation?.contentAngle
+                }
+                onChange={setContentAngle}
+              />
             </div>
-            <div className="drp-field">
-              <h3 className="drp-field__label">Tones</h3>
-              <p>
-                {profile.tones.join(", ") ||
-                  "No tones defined. Go to Settings to add them."}
-              </p>
+
+            {/* Content Pillar */}
+            <div
+              className="drp-field"
+              style={{
+                borderLeft: "3px solid var(--drp-success)",
+                paddingLeft: "var(--drp-space-3)",
+              }}
+            >
+              <EnhancedDropdown
+                label="Content Pillar"
+                options={enhancedContentPillars}
+                value={contentPillar}
+                onChange={setContentPillar}
+                placeholder="Select a content pillar"
+                loading={loadingRecommendation}
+              />
             </div>
-            <div className="drp-field">
-              <h3 className="drp-field__label">Offers</h3>
-              <p>
-                {profile.offers.join(", ") ||
-                  "No offers defined. Go to Settings to add them."}
-              </p>
-            </div>
-            <div className="drp-field">
-              <h3 className="drp-field__label">Taboos</h3>
-              <p>
-                {profile.taboos.join(", ") ||
-                  "No taboo topics defined. Go to Settings to add them."}
-              </p>
-            </div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Link href="/settings" className="drp-btn">
-                Edit Strategy in Settings
-              </Link>
-            </div>
+
+            {/* AI Recommendation reasoning — collapsible */}
+            {recommendation && recommendation.confidence > 0 && (
+              <div
+                style={{
+                  border: "1px solid rgba(99,29,237,0.2)",
+                  background: "rgba(99,29,237,0.03)",
+                  padding: "var(--drp-space-3)",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setShowRecommendationReasoning((v) => !v)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                    fontFamily: "var(--drp-font-primary)",
+                    fontSize: "var(--drp-text-sm)",
+                    fontWeight: "var(--drp-weight-semibold)",
+                    color: "var(--drp-purple)",
+                  }}
+                >
+                  <span>
+                    AI Recommendations (
+                    {Math.round(recommendation.confidence * 100)}% confidence)
+                  </span>
+                  {showRecommendationReasoning ? (
+                    <Icon name="arrow-up" size="sm" />
+                  ) : (
+                    <Icon name="arrow-down" size="sm" />
+                  )}
+                </button>
+
+                {showRecommendationReasoning && (
+                  <div
+                    style={{
+                      marginTop: "var(--drp-space-3)",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "var(--drp-space-2)",
+                      fontSize: "var(--drp-text-sm)",
+                      color: "var(--drp-text-muted)",
+                    }}
+                  >
+                    {recommendation.reasoning.contentAngle && (
+                      <p>
+                        <strong>Content Angle:</strong>{" "}
+                        {recommendation.reasoning.contentAngle}
+                      </p>
+                    )}
+                    {recommendation.reasoning.postStructure && (
+                      <p>
+                        <strong>Post Structure:</strong>{" "}
+                        {recommendation.reasoning.postStructure}
+                      </p>
+                    )}
+                    {recommendation.reasoning.contentPillar && (
+                      <p>
+                        <strong>Content Pillar:</strong>{" "}
+                        {recommendation.reasoning.contentPillar}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Generate button */}
+            <Button
+              onClick={() => void handleGeneratePostClick()}
+              variant="primary"
+              block
+              disabled={
+                loadingRecommendation ||
+                !topic.trim() ||
+                !postStructure ||
+                !contentAngle ||
+                !contentPillar
+              }
+            >
+              {loadingRecommendation ? (
+                <>
+                  <Loader size="sm" />
+                  Getting Recommendations...
+                </>
+              ) : (
+                <>
+                  <Icon name="arrow-right" size="sm" />
+                  Generate Post
+                </>
+              )}
+            </Button>
+
+            {/* Tone prompt preview */}
+            {profile.tones.length > 0 && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "var(--drp-space-2)",
+                  flexWrap: "wrap",
+                  fontSize: "var(--drp-text-sm)",
+                  color: "var(--drp-text-muted)",
+                }}
+              >
+                <Icon name="eye" size="sm" />
+                <span>Preview tone prompt:</span>
+                {profile.tones.map((toneId) => {
+                  const tone = enhancedToneOptions.find((t) => t.id === toneId);
+                  return (
+                    <button
+                      key={toneId}
+                      type="button"
+                      onClick={() => setPreviewToneId(toneId)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        fontFamily: "var(--drp-font-primary)",
+                        fontSize: "var(--drp-text-sm)",
+                        color: "var(--drp-purple)",
+                        fontWeight: "var(--drp-weight-semibold)",
+                        textDecoration: "underline",
+                        padding: 0,
+                      }}
+                    >
+                      {tone?.label ?? toneId}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {saveFeedback && (
+              <Alert
+                variant={
+                  saveFeedback.includes("successfully") ||
+                  saveFeedback.includes("Saved")
+                    ? "success"
+                    : "error"
+                }
+              >
+                {saveFeedback}
+              </Alert>
+            )}
           </div>
         </Card>
-      )}
+
+        {/* Right Column: Generated Post */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--drp-space-4)",
+          }}
+        >
+          <PostGenerator
+            ref={postGeneratorRef}
+            parameters={postGenerationParams}
+            profile={profile}
+            aiSettings={aiSettings!}
+            triggerGeneration={triggerPostGeneration}
+            onContentGenerated={handleContentGenerated}
+          />
+          {generatedContent && (
+            <div className="drp-form-actions">
+              <Button
+                onClick={() => void handleSaveDraft()}
+                style={{ flex: 1 }}
+                disabled={saving}
+              >
+                <span
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "var(--drp-space-2)",
+                  }}
+                >
+                  {saving && <Loader size="sm" />}
+                  {saving ? "Saving…" : "Save to Library"}
+                </span>
+              </Button>
+              <Button
+                onClick={handleOpenScheduleModal}
+                variant="primary"
+                style={{ flex: 1 }}
+                disabled={saving}
+              >
+                Schedule Post
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
 
       <SchedulePostModal
         isOpen={isScheduleModalOpen}
